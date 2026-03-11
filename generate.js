@@ -27,16 +27,17 @@ function sleep(ms) {
 }
 
 async function generate() {
-  console.log("Searching for latest news...");
+  // Step 1: Search using Haiku (high rate limits, cheap)
+  console.log("Searching for latest news (Haiku)...");
 
   var searchResponse = await client.messages.create({
-    model: "claude-opus-4-6",
+    model: "claude-haiku-4-5-20251001",
     max_tokens: 2000,
     tools: [{ type: "web_search_20250305", name: "web_search" }],
     messages: [
       {
         role: "user",
-        content: "Search for today's major news for " + dateStr + ": world events, Trump/Musk updates, AI news, crypto prices, gold/silver prices, Malaysia news, fun stories. Give me 15 items total, brief summaries only.",
+        content: "Search for today's major news for " + dateStr + ": world events, Trump/Musk updates, AI news, crypto prices (BTC ETH), gold/silver prices in USD and MYR, Malaysia news, fun/quirky stories. Give me 15-20 items total, brief summaries only.",
       },
     ],
   });
@@ -58,13 +59,68 @@ async function generate() {
 
   console.log("Search context length: " + searchContext.length + " chars");
 
-  // Wait 65 seconds to reset the per-minute token rate limit
-  console.log("Waiting 65 seconds for rate limit reset...");
-  await sleep(65000);
+  // Step 2: Generate HTML using Opus (best quality)
+  console.log("Generating HTML edition (Opus)...");
 
-  console.log("Generating HTML edition...");
-
-  var prompt = "You are Zeus Daily, the God's Eye View. Today is " + dateStr + ". Generate Vol." + volNumber + " as a complete self-contained HTML file.\n\nNews context:\n" + searchContext + "\n\nCross-reference stories, find hidden connections, deliver sharp 信息差 + 预测 for every item.\n\nDESIGN: bg #faf8f4, text #2c2420, gold #b8964a, purple #5c3d8f. Fonts: Playfair Display + Crimson Pro + Space Mono (Google Fonts). Zeus Eye SVG viewBox 120x52 almond shape, nebula iris #b088f9 to #6b4c9a to #2d1b4e, gold outline. Eye blinks via setAttribute on path d, pupil tracks mouse. Static 4x2 financial dashboard. Stamp freezes on click.\n\nSECTIONS: 1.哲思寄语 2.世界要闻(4-5 items) 3.权力之声(Trump/Musk) 4.AI前沿(3-4 items) 5.币圈 6.贵金属财经 7.本地视角·马来西亚 8.轻松趣闻(5+) 9.星座运势(all 12) 10.沉静结语 11.已阅打卡\n\nEach news item: SVG illustration + 上帝视角 box with 信息差 and 预测.\n\nES5 ONLY: var only, function keyword, no arrows, single script before </body>, no SMIL.\n\nHeader: ZEUS DAILY / THE GOD'S EYE VIEW. Footer: A Zeus 9 Publication · zeus9.ai. Date: " + dateStr + "\n\nOutput ONLY raw HTML, no markdown, no fences.";
+  var prompt = [
+    "You are Zeus Daily — THE GOD'S EYE VIEW. Today is " + dateStr + ". Generate Vol." + volNumber + " as a single complete self-contained HTML file.",
+    "",
+    "=== NEWS CONTEXT ===",
+    searchContext,
+    "",
+    "=== MISSION ===",
+    "Do NOT merely summarize. Cross-reference ALL stories, find hidden connections, expose what mainstream media misses. Every 信息差 and 预测 must be sharp, specific, non-obvious.",
+    "",
+    "=== LOCKED DESIGN SPEC (20260311) ===",
+    "",
+    "COLORS: bg #faf8f4, text #2c2420, gold #b8964a, gold-dark #8a6d2f, purple #5c3d8f",
+    "",
+    "FONTS (Google Fonts): Playfair Display 400/700/900, Crimson Pro 400/600, Space Mono 400",
+    "",
+    "ZEUS EYE — LOCKED GEOMETRY (凤眼 phoenix eye):",
+    "viewBox '0 0 120 52'. Outer almond gold path (stroke #b8964a stroke-width 1.5 fill none):",
+    "M10,26 C25,8 45,4 60,4 C75,4 95,8 110,26 C95,44 75,48 60,48 C45,48 25,44 10,26 Z",
+    "Iris radial gradient cx=60 cy=26 r=18: #b088f9 0%, #6b4c9a 45%, #2d1b4e 100%",
+    "Iris circle cx=60 cy=26 r=18. Pupil cx=60 cy=26 r=7 fill #1a0d2e.",
+    "Gold glow ring cx=60 cy=26 r=18 stroke #b8964a stroke-width 1 opacity 0.6.",
+    "Highlight1 cx=54 cy=21 r=3 fill white opacity 0.7. Highlight2 cx=58 cy=19 r=1.5 fill white opacity 0.5.",
+    "Eyelid path id=eyelidPath fill #faf8f4. Open: M10,26 C25,26 45,26 60,26 C75,26 95,26 110,26 L110,26 C95,26 75,26 60,26 C45,26 25,26 10,26 Z",
+    "Closed: M10,26 C25,8 45,4 60,4 C75,4 95,8 110,26 C95,44 75,48 60,48 C45,48 25,44 10,26 Z",
+    "Blink every 4-8s randomly via setAttribute on eyelidPath d. Pupil tracks mouse, clamp cx 54-66 cy 20-32.",
+    "",
+    "FINANCIAL DASHBOARD (static 4x2 grid, no ticker):",
+    "Row1: BTC/USD | ETH/USD | Gold XAU/USD | Silver XAG/USD",
+    "Row2: USD/MYR | Crude Oil | S&P 500 | Fear & Greed Index",
+    "Style: Space Mono, dark bg #1a1208, gold borders, gold text for values.",
+    "",
+    "STAMP: Red circular seal SVG. 已阅(top arc) 打卡(bottom arc) date in center. Purple border #5c3d8f red ink #cc2200.",
+    "window.doStamp(): on click stamp appears, time FREEZES at click time, button unclickable after.",
+    "",
+    "=== SECTIONS (MANDATORY ORDER) ===",
+    "1. 哲思寄语 — original philosophical opening connected to today's themes",
+    "2. 世界要闻 — 4-5 items. Each: SVG illustration + headline + summary + 上帝视角 box (信息差 + 预测)",
+    "3. 权力之声 — Trump & Musk, 2-3 items. Same format.",
+    "4. AI前沿 — 3-4 AI items today only. Same format.",
+    "5. 币圈 — BTC+ETH prominent, 2-3 items. Same format.",
+    "6. 贵金属财经 — Gold/Silver with MYR context. 1-2 items. Same format.",
+    "7. 本地视角·马来西亚 — 2-3 Malaysia items. Same format.",
+    "8. 轻松趣闻 — 5+ fun stories. Same format.",
+    "9. 星座运势 — All 12 signs in grid, 2 sentences each.",
+    "10. 沉静结语 — Meditative poetic closing.",
+    "11. 已阅打卡 — Stamp section centered.",
+    "",
+    "=== ES5 RULES (ABSOLUTE) ===",
+    "var ONLY. No const, no let. function keyword ONLY, zero arrow functions.",
+    "('0'+n).slice(-2) for zero-padding. Single <script> before </body>.",
+    "No SMIL. No animate tags. No beginElement. Blink via setAttribute only.",
+    "",
+    "=== BRAND ===",
+    "Header: ZEUS DAILY (Playfair 900 gold) / THE GOD'S EYE VIEW (Space Mono)",
+    "Footer: A Zeus 9 Publication · zeus9.ai · Vol." + volNumber,
+    "Title tag: Zeus Daily Vol." + volNumber + " · " + dateStr,
+    "",
+    "Output ONLY raw HTML starting with <!DOCTYPE html>. No markdown. No fences. No explanation."
+  ].join("\n");
 
   var html = "";
 
