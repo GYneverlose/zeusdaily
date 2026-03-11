@@ -6,8 +6,8 @@ const client = new Anthropic();
 
 // Today's date info
 const now = new Date();
-const dateStr = now.toISOString().split("T")[0]; // 2026-03-12
-const dateCompact = dateStr.replace(/-/g, ""); // 20260312
+const dateStr = now.toISOString().split("T")[0];
+const dateCompact = dateStr.replace(/-/g, "");
 const fileName = "zeus-daily-" + dateCompact + ".html";
 const filePath = path.join("zeusdaily", fileName);
 
@@ -17,166 +17,79 @@ if (fs.existsSync(filePath)) {
   process.exit(0);
 }
 
-// Load editions.json (with fallback if not exists)
-const editionsPath = path.join("zeusdaily", "editions.json");
-var editionsData = { editions: [] };
-if (fs.existsSync(editionsPath)) {
-  editionsData = JSON.parse(fs.readFileSync(editionsPath, "utf8"));
-}
-const volNumber = String(editionsData.editions.length + 1).padStart(3, "0");
+// Load editions.json
+var editionsPath = path.join("zeusdaily", "editions.json");
+var editionsData = JSON.parse(fs.readFileSync(editionsPath, "utf8"));
+var volNumber = String(editionsData.editions.length + 1);
+while (volNumber.length < 3) volNumber = "0" + volNumber;
 
 console.log("Generating Zeus Daily Vol." + volNumber + " for " + dateStr + "...");
 
 async function generate() {
-  // ─── Step 1: Search for today's news ───────────────────────────────────────
   console.log("Searching for latest news...");
 
-  const searchResponse = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 8000,
+  var searchResponse = await client.messages.create({
+    model: "claude-opus-4-6",
+    max_tokens: 4000,
     tools: [{ type: "web_search_20250305", name: "web_search" }],
-    tool_choice: { type: "auto" },
-    system: "You are a news researcher. Use web_search multiple times to gather comprehensive, up-to-date news. Search for each category separately to get the most results.",
     messages: [
       {
         role: "user",
-        content:
-          "Today is " + dateStr + ". Please search for the following news categories one by one:\n" +
-          "1. Top global world news today\n" +
-          "2. Trump and Elon Musk latest news today\n" +
-          "3. AI and technology news today (new models, launches, breakthroughs)\n" +
-          "4. Bitcoin Ethereum crypto prices and news today\n" +
-          "5. Gold silver precious metals prices today\n" +
-          "6. Malaysia news today\n" +
-          "7. Funny quirky viral stories today\n\n" +
-          "Search each category and compile a detailed summary with at least 3-4 stories per category.",
+        content: "Search for today's top global news, AI developments, crypto market, gold/silver prices, and Malaysia news for " + dateStr + ". Get at least 15-20 news items across these categories: world news, Trump/Musk updates, AI frontier, crypto, precious metals, Malaysia local news, and fun/quirky stories.",
       },
     ],
   });
 
-  // Extract ALL content - both text synthesis AND raw tool results
-  var searchContext = "";
-
-  searchResponse.content.forEach(function(block) {
-    if (block.type === "text") {
-      searchContext += block.text + "\n\n";
-    } else if (block.type === "tool_result") {
-      // Raw search results from web_search tool
-      if (block.content) {
-        block.content.forEach(function(item) {
-          if (item.type === "text") {
-            searchContext += item.text + "\n\n";
-          }
-        });
+  // Extract ALL content blocks including tool results
+  var searchContext = searchResponse.content
+    .map(function(b) {
+      if (b.type === "text") return b.text;
+      if (b.type === "tool_result") {
+        return (b.content || []).map(function(c) { return c.text || ""; }).join("\n");
       }
-    }
-  });
-
-  // Also extract from nested tool_use → tool_result pairs
-  // The web search tool returns results embedded differently, capture everything
-  var rawText = JSON.stringify(searchResponse.content);
-  // Pull out any text snippets from the raw response as fallback
-  if (searchContext.trim().length < 500) {
-    console.log("Warning: search context seems short, using raw response...");
-    searchContext = rawText;
-  }
+      return "";
+    })
+    .filter(Boolean)
+    .join("\n");
 
   console.log("Search context length: " + searchContext.length + " chars");
 
-  // ─── Step 2: Generate full HTML newspaper ───────────────────────────────────
   console.log("Generating HTML edition...");
 
-  const prompt =
-    "You are Zeus Daily, a premium AI-powered daily newspaper with 'The God's Eye View'.\n\n" +
-    "Today is " + dateStr + ". Generate Vol." + volNumber + " of Zeus Daily as a COMPLETE, self-contained HTML file.\n\n" +
-    "NEWS CONTEXT (use all of this, prioritise the most impactful stories):\n" +
-    searchContext + "\n\n" +
-    "═══════════════════════════════════════\n" +
-    "STRICT DESIGN REQUIREMENTS:\n" +
-    "═══════════════════════════════════════\n" +
-    "- Background: #faf8f4 (cream white), Text: #2c2420 (dark), Gold: #b8964a, Purple: #5c3d8f\n" +
-    "- Fonts: Playfair Display + Crimson Pro + Space Mono (Google Fonts)\n" +
-    "- Zeus Eye logo: SVG viewBox='0 0 120 52', almond/杏眼 shape\n" +
-    "  Upper lid: M6,26 Q60,-8 114,26  Lower lid: M6,26 Q60,60 114,26\n" +
-    "  Gold stroke 1.5px + eyeGlow filter. Iris r=18 nebula gradient (#b088f9→#6b4c9a→#2d1b4e)\n" +
-    "  Pupil r=6 black + pupilGlow gold r=8. Two highlights: white r=1.5 + gold r=0.8\n" +
-    "- Eye blinks every 4-8 seconds (setAttribute on path d, 200ms closed)\n" +
-    "- Pupil tracks mouse (4px movement)\n" +
-    "- Static 4×2 financial dashboard (8 cells, no scrolling ticker)\n" +
-    "- Section header eyes: viewBox='0 0 36 16', mini eyes viewBox='0 0 24 11'\n" +
-    "- Already-read stamp: window.doStamp, time freezes on click (no setInterval)\n\n" +
-    "═══════════════════════════════════════\n" +
-    "SECTIONS IN ORDER:\n" +
-    "═══════════════════════════════════════\n" +
-    "1. 哲思寄语 — Opening philosophical reflection (original, deep, poetic)\n" +
-    "2. 世界要闻 — World news, 4-5 items with SVG illustrations\n" +
-    "3. 权力之声 — Trump & Musk latest (2-3 items)\n" +
-    "4. AI前沿 — AI news 3-4 items (must be today's fresh news)\n" +
-    "5. 币圈 — Crypto with price data + chart visual\n" +
-    "6. 贵金属财经 — Gold/Silver with Malaysian Ringgit context\n" +
-    "7. 本地视角·马来西亚 — Malaysia news 2-3 items\n" +
-    "8. 轻松趣闻 — 5+ fun/quirky stories (MUST have at least 5)\n" +
-    "9. 星座运势 — All 12 horoscopes (brief, witty)\n" +
-    "10. 沉静结语 — Closing reflection (poetic, memorable)\n" +
-    "11. 已阅打卡 — Check-in stamp button with eye\n\n" +
-    "EVERY news item must have:\n" +
-    "- A creative SVG illustration (thematic, beautiful)\n" +
-    "- 上帝视角 box containing:\n" +
-    "  · 信息差: insight the masses miss\n" +
-    "  · 预测: bold, specific prediction\n\n" +
-    "═══════════════════════════════════════\n" +
-    "TECHNICAL REQUIREMENTS (CRITICAL - ES5 ONLY):\n" +
-    "═══════════════════════════════════════\n" +
-    "- ALL JS must use var (NO const, NO let)\n" +
-    "- ALL functions must use function keyword (NO arrow functions =>)\n" +
-    "- Use ('0'+n).slice(-2) instead of padStart()\n" +
-    "- Single <script> block placed just before </body>\n" +
-    "- NO SMIL animate elements (no <animate>, no beginElement)\n" +
-    "- Blink eye: use setAttribute to swap path d attribute\n" +
-    "- Stamp: window.doStamp global function, capture time once, never update again\n" +
-    "- blinkAll() function syncs all eyes simultaneously\n\n" +
-    "═══════════════════════════════════════\n" +
-    "BRAND:\n" +
-    "═══════════════════════════════════════\n" +
-    "- Header: ZEUS DAILY / THE GOD'S EYE VIEW\n" +
-    "- Footer: A Zeus 9 Publication · zeus9.ai\n" +
-    "- Edition date: " + dateStr + " · Vol." + volNumber + "\n\n" +
-    "Output ONLY the complete HTML document. No explanation. No markdown code fences. Start with <!DOCTYPE html>.";
+  var prompt = "You are Zeus Daily, the God's Eye View — a premium AI newspaper that sees what others cannot. Today is " + dateStr + ". Generate Vol." + volNumber + " as a complete self-contained HTML file.\n\nNews context from web search:\n" + searchContext + "\n\nYour task: Do NOT merely summarize the news. Cross-reference all stories, find hidden connections, identify what the mainstream media is missing, and deliver sharp 信息差 (information asymmetry) + 预测 (predictions) for every item. Your analysis must feel like it comes from an omniscient observer outside the system.\n\nSTRICT DESIGN (match exactly):\n- Background #faf8f4, text #2c2420, gold #b8964a, purple #5c3d8f\n- Fonts: Playfair Display + Crimson Pro + Space Mono via Google Fonts\n- Zeus Eye SVG: viewBox 120x52, almond/phoenix shape, nebula iris gradient #b088f9 to #6b4c9a to #2d1b4e, gold outline #b8964a\n- Eye blinks every 4-8 seconds via setAttribute on path d, pupil tracks mouse\n- Static 4x2 financial dashboard\n- Stamp button: time freezes on click, window.doStamp function\n\nSECTIONS IN ORDER:\n1. 哲思寄语 — original philosophical opening, not a generic quote\n2. 世界要闻 — 4-5 world news items\n3. 权力之声 — Trump and Musk, 2-3 items\n4. AI前沿 — 3-4 AI items, today only\n5. 币圈 — crypto with prices\n6. 贵金属财经 — gold/silver, Malaysia context\n7. 本地视角·马来西亚 — 2-3 Malaysia items\n8. 轻松趣闻 — 5+ fun/quirky stories\n9. 星座运势 — all 12 signs\n10. 沉静结语 — meditative closing\n11. 已阅打卡 — check-in stamp\n\nEVERY news item requires:\n- Creative thematic SVG illustration\n- 上帝视角 box with 信息差 and 预测 (must be sharp, specific, non-obvious)\n\nES5 ONLY — STRICT:\n- var only, no const or let\n- function declarations only, no arrow functions\n- ('0'+n).slice(-2) not padStart\n- Single script block before </body>\n- No SMIL, no beginElement\n- Blink via setAttribute on SVG path d attribute\n\nBRAND:\n- Header: ZEUS DAILY / THE GOD'S EYE VIEW\n- Footer: A Zeus 9 Publication · zeus9.ai\n- Date: " + dateStr + "\n\nOutput ONLY raw HTML. No markdown, no explanation, no fences.";
 
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 32000,   // ← FIXED: was 16000, need 32000 for full HTML
+  var html = "";
+
+  var stream = await client.messages.stream({
+    model: "claude-opus-4-6",
+    max_tokens: 16000,
     messages: [{ role: "user", content: prompt }],
   });
 
-  var html = response.content
-    .filter(function(b) { return b.type === "text"; })
-    .map(function(b) { return b.text; })
-    .join("");
+  for await (var chunk of stream) {
+    if (
+      chunk.type === "content_block_delta" &&
+      chunk.delta.type === "text_delta"
+    ) {
+      html += chunk.delta.text;
+    }
+  }
 
-  // Clean up any accidental markdown fences
+  // Clean markdown fences if present
   html = html.replace(/^```html\n?/i, "").replace(/\n?```$/i, "").trim();
 
-  // Sanity check - make sure we got a real HTML file
-  if (html.length < 5000) {
-    throw new Error("Generated HTML is too short (" + html.length + " chars) - likely truncated or failed");
+  if (!html || html.length < 1000) {
+    throw new Error("Generated HTML too short. Length: " + html.length);
   }
-  console.log("HTML length: " + html.length + " chars");
 
-  // ─── Step 3: Save files ──────────────────────────────────────────────────────
-  // Ensure output directory exists
-  if (!fs.existsSync("zeusdaily")) {
-    fs.mkdirSync("zeusdaily", { recursive: true });
-  }
+  console.log("HTML generated: " + html.length + " chars");
 
   fs.writeFileSync(filePath, html, "utf8");
-  console.log("✅ Saved: " + fileName);
+  console.log("Saved: " + fileName);
 
-  // Update index.html (latest edition redirect/display)
   fs.writeFileSync(path.join("zeusdaily", "index.html"), html, "utf8");
-  console.log("✅ Updated index.html");
+  console.log("Updated index.html");
 
-  // Update editions.json
   var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   var d = new Date(dateStr + "T00:00:00");
   var summary = "Vol." + volNumber + " · " + months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
@@ -190,7 +103,7 @@ async function generate() {
   });
 
   fs.writeFileSync(editionsPath, JSON.stringify(editionsData, null, 2), "utf8");
-  console.log("✅ Updated editions.json");
+  console.log("Updated editions.json");
 
   console.log("\n🔱 Zeus Daily Vol." + volNumber + " generated successfully!");
 }
