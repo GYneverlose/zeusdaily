@@ -52,6 +52,11 @@ async function generate() {
     .filter(Boolean)
     .join("\n");
 
+  // Truncate to avoid rate limit (30k input tokens per minute)
+  if (searchContext.length > 8000) {
+    searchContext = searchContext.slice(0, 8000);
+  }
+
   console.log("Search context length: " + searchContext.length + " chars");
 
   console.log("Generating HTML edition...");
