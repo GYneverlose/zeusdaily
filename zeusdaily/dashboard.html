@@ -2,1194 +2,462 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Zeus Daily · 神之视界</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Zeus Daily</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --cream: #faf8f4;
-  --cream2: #f0e8d6;
-  --cream3: #e4d5bc;
-  --ink: #1a0f00;
-  --ink2: #3d2a10;
-  --ink3: #6b4e28;
-  --gold: #b8964a;
-  --gold2: #8a6d2f;
-  --gold3: #d4af6a;
-  --purple: #5c3d8f;
-  --purple2: #3d2060;
-  --border: rgba(139,105,58,0.2);
-  --border2: rgba(139,105,58,0.08);
-  --shadow: 0 2px 20px rgba(26,15,0,0.08);
-  --shadow2: 0 8px 40px rgba(26,15,0,0.14);
-  --nav-h: 64px;
-  --header-h: 56px;
-}
+:root{--bg:#0c0a07;--bg1:#131009;--bg2:#1c160e;--bg3:#251d12;--gold:#c9a84c;--gold2:#e8c96a;--gold3:#8a6a28;--cream:#f5ede0;--cream2:#e8d8c0;--dim:#6b5a3a;--dim2:#3d2e18;--purple:#7c5cbf;--line:rgba(201,168,76,.12);--line2:rgba(201,168,76,.06);--nav:68px;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,serif;font-size:16px;}
+#app{display:flex;height:100vh;height:100dvh;}
+#sidebar{width:260px;min-height:100vh;background:var(--bg1);border-right:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0;}
+.sb-top{padding:36px 28px 28px;border-bottom:1px solid var(--line);}
+.sb-wordmark{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:3px;}
+.sb-tagline{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;}
+.sb-eye-area{padding:28px;border-bottom:1px solid var(--line);display:flex;justify-content:center;}
+.sb-nav{flex:1;padding:16px 0;}
+.sb-item{display:flex;align-items:center;gap:14px;padding:14px 28px;cursor:pointer;position:relative;transition:all .2s;font-family:'Rajdhani',sans-serif;font-size:12px;letter-spacing:2.5px;color:var(--dim);text-transform:uppercase;font-weight:600;}
+.sb-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:var(--gold);transition:width .15s;}
+.sb-item:hover{color:var(--cream2);background:rgba(201,168,76,.04);}
+.sb-item.on{color:var(--gold2);}
+.sb-item.on::before{width:2px;}
+.sb-icon{font-size:15px;width:18px;text-align:center;}
+.sb-bottom{padding:20px 28px;border-top:1px solid var(--line);}
+.sb-user-email{font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:1.5px;color:var(--dim);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-level-tag{display:inline-flex;align-items:center;gap:6px;font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gold3);text-transform:uppercase;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);padding:4px 10px;margin-bottom:12px;}
+.sb-logout{background:none;border:none;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;color:var(--dim2);text-transform:uppercase;transition:color .2s;padding:0;}
+.sb-logout:hover{color:var(--dim);}
+#content{flex:1;overflow:hidden;display:flex;flex-direction:column;min-width:0;}
+#topbar{height:52px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;background:var(--bg);position:relative;z-index:10;}
+.tb-left{display:flex;align-items:center;gap:14px;}
+.tb-page-name{font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;}
+.tb-lv{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gold3);border:1px solid rgba(201,168,76,.2);padding:3px 8px;text-transform:uppercase;}
+#pages{flex:1;overflow:hidden;position:relative;}
+.page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transition:opacity .25s ease;-webkit-overflow-scrolling:touch;}
+.page.on{opacity:1;pointer-events:auto;}
+.page::-webkit-scrollbar{width:3px;}
+.page::-webkit-scrollbar-thumb{background:var(--dim2);}
 
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html { scroll-behavior: smooth; }
+/* TODAY */
+.today-masthead{padding:36px 28px 28px;border-bottom:1px solid var(--line);position:relative;}
+.tm-issue{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
+.tm-date{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,40px);font-weight:400;color:var(--cream);line-height:1.05;margin-bottom:6px;}
+.tm-dow{font-family:'EB Garamond',serif;font-size:15px;font-style:italic;color:var(--dim);}
+.tm-eye{position:absolute;right:28px;top:50%;transform:translateY(-50%);opacity:.5;}
+.today-ritual{margin:24px;border:1px solid var(--line);overflow:hidden;}
+.ritual-bar{background:var(--bg2);padding:6px 18px;display:flex;align-items:center;justify-content:space-between;}
+.ritual-label{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;}
+.ritual-streak{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gold3);text-transform:uppercase;}
+.ritual-body{padding:24px 22px;background:var(--bg1);}
+.ritual-body.done{background:var(--bg2);}
+.ritual-text{font-family:'Playfair Display',serif;font-size:19px;font-style:italic;color:var(--cream);line-height:1.45;margin-bottom:20px;}
+.ritual-body.done .ritual-text{color:var(--dim);font-size:16px;}
+.ritual-row{display:flex;gap:10px;}
+.btn-primary{flex:1;background:var(--gold);color:var(--bg);border:none;padding:13px 16px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:2.5px;cursor:pointer;text-transform:uppercase;transition:background .15s;}
+.btn-primary:hover{background:var(--gold2);}
+.btn-primary:disabled{background:var(--bg3);color:var(--dim);cursor:default;}
+.btn-secondary{background:transparent;border:1px solid var(--line);color:var(--dim);padding:13px 16px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all .15s;white-space:nowrap;}
+.btn-secondary:hover{border-color:var(--gold3);color:var(--gold3);}
+.today-strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.strip-cell{padding:18px 12px;text-align:center;border-right:1px solid var(--line);}
+.strip-cell:last-child{border-right:none;}
+.strip-n{font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);line-height:1;}
+.strip-l{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-top:5px;}
+.today-latest-hd{padding:28px 24px 14px;display:flex;align-items:baseline;justify-content:space-between;}
+.section-hd{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);}
+.section-more{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gold3);text-transform:uppercase;cursor:pointer;border:none;background:none;padding:0;}
+.section-more:hover{color:var(--gold);}
+.ed-row{display:flex;align-items:center;border-top:1px solid var(--line2);text-decoration:none;color:inherit;transition:background .15s;cursor:pointer;}
+.ed-row:hover{background:var(--bg2);}
+.ed-num{width:64px;flex-shrink:0;padding:18px 16px;text-align:center;border-right:1px solid var(--line2);}
+.ed-num-n{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold3);line-height:1;}
+.ed-num-l{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.ed-info{flex:1;padding:18px;min-width:0;}
+.ed-date{font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:4px;}
+.ed-title{font-family:'Playfair Display',serif;font-size:15px;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ed-arrow{padding:18px;color:var(--dim);font-size:12px;flex-shrink:0;}
 
-body {
-  background: var(--cream);
-  color: var(--ink);
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 16px;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+/* ARCHIVE */
+.arc-toolbar{display:flex;align-items:stretch;border-bottom:1px solid var(--line);}
+.arc-search-wrap{flex:1;display:flex;align-items:center;padding:0 20px;gap:10px;border-right:1px solid var(--line);}
+.arc-search-icon{color:var(--dim);font-size:14px;}
+.arc-search{flex:1;background:none;border:none;outline:none;font-family:'EB Garamond',serif;font-size:15px;color:var(--cream);padding:14px 0;}
+.arc-search::placeholder{color:var(--dim);font-style:italic;}
+.arc-years{display:flex;overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+.arc-years::-webkit-scrollbar{display:none;}
+.yr-btn{padding:14px 16px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--dim);text-transform:uppercase;background:none;border:none;cursor:pointer;border-right:1px solid var(--line);white-space:nowrap;transition:color .15s;}
+.yr-btn.on{color:var(--gold);}
+.yr-btn:hover{color:var(--cream);}
+.issue-card{display:flex;border-bottom:1px solid var(--line2);text-decoration:none;color:inherit;transition:background .15s;}
+.issue-card:hover{background:var(--bg1);}
+.issue-index{width:80px;flex-shrink:0;padding:24px 16px;border-right:1px solid var(--line2);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;}
+.issue-vol{font-family:'Playfair Display',serif;font-size:30px;color:var(--gold3);line-height:1;}
+.issue-vol-l{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
+.issue-body{flex:1;padding:22px 18px;min-width:0;}
+.issue-date{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:3px;color:var(--gold3);text-transform:uppercase;margin-bottom:8px;}
+.issue-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);line-height:1.3;margin-bottom:14px;}
+.issue-actions{display:flex;gap:10px;}
+.ia-read{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:2.5px;color:var(--bg);background:var(--gold);border:none;padding:7px 16px;cursor:pointer;text-transform:uppercase;text-decoration:none;transition:background .15s;}
+.ia-read:hover{background:var(--gold2);}
+.ia-save{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:600;letter-spacing:2px;color:var(--dim);background:none;border:1px solid var(--line);padding:7px 14px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
+.ia-save.saved{color:var(--gold);border-color:rgba(201,168,76,.4);}
+.ia-save:hover{border-color:var(--gold3);color:var(--gold3);}
 
-/* ── GRAIN OVERLAY ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
+/* COLLECTION */
+.col-empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;text-align:center;}
+.col-empty-sym{font-size:32px;color:var(--dim2);margin-bottom:16px;}
+.col-empty-h{font-family:'Playfair Display',serif;font-size:22px;font-style:italic;color:var(--dim);margin-bottom:8px;}
+.col-empty-p{font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:2px;color:var(--dim2);text-transform:uppercase;line-height:2;}
 
-/* ── HEADER ── */
-#header {
-  position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
-  background: var(--cream);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 20px;
-  z-index: 200;
-}
-.header-brand {
-  display: flex; align-items: center; gap: 10px;
-}
-.header-eye {
-  cursor: pointer;
-}
-.brand-text .title {
-  font-family: 'Playfair Display', serif;
-  font-size: 15px; font-weight: 900;
-  letter-spacing: 3px; color: var(--ink);
-  line-height: 1;
-}
-.brand-text .sub {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 9px; letter-spacing: 2.5px;
-  color: var(--ink3); text-transform: uppercase;
-  margin-top: 1px;
-}
-.header-right {
-  display: flex; align-items: center; gap: 12px;
-}
-.level-pill {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 10px; font-weight: 700; letter-spacing: 2px;
-  padding: 4px 10px;
-  border: 1px solid var(--border);
-  color: var(--ink3);
-  background: transparent;
-  text-transform: uppercase;
-}
-.logout-btn {
-  background: none; border: none; cursor: pointer;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px; color: var(--ink3);
-  letter-spacing: 1px; padding: 4px;
-}
+/* PROFILE */
+.prof-banner{padding:40px 28px;border-bottom:1px solid var(--line);position:relative;overflow:hidden;}
+.prof-banner::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(124,92,191,.15) 0%,transparent 70%);pointer-events:none;}
+.pb-label{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:12px;}
+.pb-lv-name{font-family:'Playfair Display',serif;font-size:38px;font-style:italic;color:var(--cream);line-height:1;}
+.pb-lv-chi{font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:3px;color:var(--purple);text-transform:uppercase;margin-top:6px;}
+.pb-days{display:flex;align-items:baseline;gap:8px;margin-top:20px;}
+.pb-days-n{font-family:'Playfair Display',serif;font-size:58px;color:var(--gold);line-height:1;}
+.pb-days-l{font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;}
+.pb-next{font-family:'EB Garamond',serif;font-size:13px;font-style:italic;color:var(--dim);margin-top:10px;}
+.prof-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line);}
+.pg-cell{padding:22px 24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);}
+.pg-cell:nth-child(even){border-right:none;}
+.pg-cell:nth-last-child(-n+2){border-bottom:none;}
+.pg-n{font-family:'Playfair Display',serif;font-size:36px;color:var(--cream);line-height:1;}
+.pg-l{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2.5px;color:var(--dim);text-transform:uppercase;margin-top:6px;}
+.lv-journey{padding:28px;}
+.lv-journey-hd{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);margin-bottom:24px;}
+.lv-step{display:flex;align-items:flex-start;gap:18px;margin-bottom:24px;position:relative;}
+.lv-step::after{content:'';position:absolute;left:15px;top:36px;bottom:-24px;width:1px;background:var(--line);}
+.lv-step:last-child::after{display:none;}
+.lv-node{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--dim);background:var(--bg);position:relative;z-index:1;transition:all .3s;}
+.lv-node.past{border-color:var(--gold3);color:var(--gold3);background:rgba(201,168,76,.06);}
+.lv-node.now{border-color:var(--purple);color:var(--purple);background:rgba(124,92,191,.1);box-shadow:0 0 0 4px rgba(124,92,191,.1);}
+.lv-step-info{padding-top:4px;flex:1;}
+.lv-step-name{font-family:'Playfair Display',serif;font-size:16px;color:var(--cream);}
+.lv-step-name.past{color:var(--gold3);}
+.lv-step-name.now{color:var(--purple);}
+.lv-step-req{font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.lv-check{color:var(--gold);}
+.prof-account{border-top:1px solid var(--line);padding:24px 28px;}
+.prof-account-email{font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:14px;}
+.btn-logout-full{background:none;border:1px solid var(--line);color:var(--dim);padding:10px 20px;font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.btn-logout-full:hover{border-color:rgba(201,168,76,.4);color:var(--gold3);}
 
-/* ── MAIN ── */
-#main {
-  padding-top: var(--header-h);
-  padding-bottom: calc(var(--nav-h) + 16px);
-  min-height: 100vh;
-}
+/* BOTTOM NAV */
+#bottomnav{display:none;border-top:1px solid var(--line);background:var(--bg);}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 0;cursor:pointer;background:none;border:none;border-top:2px solid transparent;transition:all .2s;}
+.bn-icon{font-size:17px;color:var(--dim);transition:color .2s;}
+.bn-label{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;transition:color .2s;}
+.bn-item.on{border-top-color:var(--gold);}
+.bn-item.on .bn-icon,.bn-item.on .bn-label{color:var(--gold);}
 
-/* ── SECTIONS ── */
-.section { display: none; animation: fadeUp 0.35s ease; }
-.section.active { display: block; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+/* TOAST */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg3);border:1px solid var(--line);border-bottom:2px solid var(--gold);color:var(--cream);font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 22px;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:999;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ── BOTTOM NAV ── */
-#bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  height: var(--nav-h);
-  background: var(--cream);
-  border-top: 1px solid var(--border);
-  display: flex; align-items: stretch;
-  z-index: 200;
-  padding-bottom: env(safe-area-inset-bottom);
+@media(max-width:767px){
+  #sidebar{display:none;}
+  #app{flex-direction:column;}
+  #content{flex:1;min-height:0;}
+  #bottomnav{display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom);}
+  #topbar{padding:0 16px;}
+  .today-masthead{padding:24px 16px 20px;}
+  .tm-eye{display:none;}
+  .today-ritual{margin:16px;}
+  .ritual-body{padding:18px 16px;}
+  .today-strip{}
+  .strip-n{font-size:22px;}
+  .today-latest-hd{padding:22px 16px 12px;}
+  .issue-index{width:60px;padding:18px 12px;}
+  .issue-vol{font-size:22px;}
+  .issue-body{padding:16px 14px;}
+  .issue-title{font-size:16px;}
+  .prof-banner{padding:28px 18px;}
+  .pb-lv-name{font-size:30px;}
+  .pb-days-n{font-size:44px;}
+  .pg-n{font-size:28px;}
+  .pg-cell{padding:18px 16px;}
+  .lv-journey{padding:20px 16px;}
+  .prof-account{padding:20px 16px;}
+  #toast{bottom:calc(68px + 16px);}
+}
+@media(min-width:768px){
+  .arc-toolbar{max-width:none;}
 }
-.nav-tab {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 4px;
-  cursor: pointer; border: none; background: none;
-  transition: all 0.2s; padding: 8px 0;
-}
-.nav-tab .nav-icon {
-  font-size: 18px; line-height: 1;
-  color: var(--ink3); transition: all 0.2s;
-}
-.nav-tab .nav-label {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 9px; letter-spacing: 1.5px;
-  color: var(--ink3); transition: all 0.2s;
-  text-transform: uppercase;
-}
-.nav-tab.active .nav-icon,
-.nav-tab.active .nav-label { color: var(--gold2); }
-.nav-tab.active { border-top: 2px solid var(--gold); }
-
-/* ── OVERVIEW ── */
-.ov-hero {
-  padding: 28px 20px 0;
-}
-.ov-greeting {
-  font-family: 'Playfair Display', serif;
-  font-size: 13px; font-style: italic;
-  color: var(--ink3); letter-spacing: 0.5px;
-}
-.ov-date {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px; letter-spacing: 3px;
-  color: var(--gold2); text-transform: uppercase;
-  margin-top: 4px;
-}
-
-/* CHECKIN RITUAL */
-.checkin-block {
-  margin: 20px;
-  border: 1px solid var(--border);
-  background: var(--ink);
-  padding: 24px 22px;
-  position: relative; overflow: hidden;
-}
-.checkin-block::before {
-  content: '';
-  position: absolute; top: -30px; right: -30px;
-  width: 100px; height: 100px;
-  background: radial-gradient(circle, rgba(184,150,74,0.12) 0%, transparent 70%);
-}
-.checkin-block.done { background: var(--cream2); border-color: var(--border2); }
-.checkin-label {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 10px; letter-spacing: 3px;
-  color: rgba(250,248,244,0.5); text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.checkin-block.done .checkin-label { color: var(--ink3); }
-.checkin-msg {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px; color: var(--cream);
-  line-height: 1.3;
-}
-.checkin-block.done .checkin-msg { color: var(--ink); font-size: 16px; }
-.checkin-actions { display: flex; gap: 10px; margin-top: 18px; align-items: center; }
-.btn-checkin {
-  background: var(--gold); color: var(--ink);
-  border: none; padding: 11px 22px;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 13px; font-weight: 700; letter-spacing: 2px;
-  cursor: pointer; text-transform: uppercase;
-  transition: background 0.2s; flex: 1;
-}
-.btn-checkin:hover { background: var(--gold3); }
-.btn-checkin:disabled { opacity: 0.5; cursor: default; }
-.btn-read {
-  background: transparent;
-  border: 1px solid rgba(250,248,244,0.25);
-  color: rgba(250,248,244,0.7);
-  padding: 11px 18px;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 12px; font-weight: 600; letter-spacing: 2px;
-  cursor: pointer; text-transform: uppercase;
-  transition: all 0.2s; white-space: nowrap;
-}
-.checkin-block.done .btn-read {
-  border-color: var(--border);
-  color: var(--ink3);
-}
-.btn-read:hover { border-color: var(--gold); color: var(--gold2); }
-
-/* STATS ROW */
-.stats-row {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 1px; background: var(--border);
-  margin: 0 20px; border: 1px solid var(--border);
-}
-.stat-item {
-  background: var(--cream); padding: 16px 12px; text-align: center;
-}
-.stat-n {
-  font-family: 'Playfair Display', serif;
-  font-size: 26px; color: var(--ink); line-height: 1;
-}
-.stat-l {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 9px; letter-spacing: 1.5px;
-  color: var(--ink3); text-transform: uppercase;
-  margin-top: 4px;
-}
-
-/* LEVEL PROGRESS */
-.level-section {
-  margin: 20px;
-  border: 1px solid var(--border);
-  padding: 20px;
-  background: var(--cream2);
-}
-.level-header {
-  display: flex; justify-content: space-between; align-items: baseline;
-  margin-bottom: 14px;
-}
-.level-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 16px; color: var(--purple);
-}
-.level-num {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px; letter-spacing: 2px; color: var(--ink3);
-}
-.level-track {
-  display: flex; gap: 3px; align-items: center;
-  margin-bottom: 8px;
-}
-.level-dot {
-  flex: 1; height: 3px; background: var(--border);
-  border-radius: 2px; transition: background 0.4s;
-}
-.level-dot.filled { background: var(--gold); }
-.level-dot.active { background: var(--purple); }
-.level-subtext {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 13px; font-style: italic; color: var(--ink3);
-}
-
-/* LATEST EDITIONS */
-.section-header {
-  display: flex; align-items: baseline; justify-content: space-between;
-  padding: 20px 20px 12px;
-}
-.section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px; color: var(--ink);
-}
-.section-link {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px; letter-spacing: 1.5px;
-  color: var(--gold2); text-transform: uppercase;
-  cursor: pointer; border: none; background: none;
-  padding: 0;
-}
-
-.edition-row {
-  display: flex; align-items: center;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border2);
-  gap: 14px; cursor: pointer;
-  transition: background 0.15s;
-  text-decoration: none; color: inherit;
-}
-.edition-row:hover { background: var(--cream2); }
-.edition-vol-badge {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 10px; font-weight: 700; letter-spacing: 2px;
-  color: var(--cream); background: var(--gold2);
-  padding: 3px 8px; white-space: nowrap; text-transform: uppercase;
-  min-width: 52px; text-align: center;
-}
-.edition-info { flex: 1; min-width: 0; }
-.edition-date-text {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 12px; letter-spacing: 1px; color: var(--ink3);
-}
-.edition-title-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 15px; color: var(--ink);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  margin-top: 2px;
-}
-.edition-arrow { color: var(--gold); font-size: 14px; }
-
-/* ── ARCHIVE ── */
-.archive-filters {
-  padding: 16px 20px 0;
-  display: flex; gap: 8px; flex-wrap: wrap;
-}
-.filter-tag {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
-  padding: 6px 14px; border: 1px solid var(--border);
-  background: transparent; color: var(--ink3);
-  cursor: pointer; text-transform: uppercase; transition: all 0.2s;
-}
-.filter-tag.active {
-  background: var(--ink); color: var(--cream);
-  border-color: var(--ink);
-}
-.archive-search {
-  margin: 14px 20px 0;
-  display: flex; align-items: center;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 12px;
-}
-.archive-search input {
-  flex: 1; background: none; border: none; outline: none;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 16px; color: var(--ink);
-  padding: 4px 0;
-}
-.archive-search input::placeholder { color: var(--ink3); font-style: italic; }
-.archive-list { margin-top: 8px; }
-
-/* Big edition card for archive */
-.arc-card {
-  display: block; padding: 20px;
-  border-bottom: 1px solid var(--border2);
-  text-decoration: none; color: inherit;
-  transition: background 0.15s; position: relative;
-}
-.arc-card:hover { background: var(--cream2); }
-.arc-card-top {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
-}
-.arc-vol {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 10px; font-weight: 700; letter-spacing: 2px;
-  color: var(--gold2); text-transform: uppercase;
-}
-.arc-date {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px; letter-spacing: 1px; color: var(--ink3);
-}
-.arc-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px; color: var(--ink); line-height: 1.3;
-  margin-bottom: 6px;
-}
-.arc-sub {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 14px; font-style: italic; color: var(--ink3);
-}
-.arc-collect-btn {
-  position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
-  background: none; border: 1px solid var(--border);
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--ink3); font-size: 14px;
-  transition: all 0.2s;
-}
-.arc-collect-btn.collected { background: var(--gold); color: var(--cream); border-color: var(--gold); }
-.arc-collect-btn:hover { border-color: var(--gold); color: var(--gold2); }
-
-/* ── COLLECTION ── */
-.col-empty {
-  padding: 60px 20px; text-align: center;
-}
-.col-empty-icon { font-size: 36px; margin-bottom: 14px; opacity: 0.3; }
-.col-empty-text {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px; font-style: italic; color: var(--ink3);
-}
-.col-empty-sub {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 14px; color: var(--ink3); margin-top: 8px;
-}
-
-/* ── PROFILE ── */
-.profile-hero {
-  margin: 20px; background: var(--ink);
-  padding: 28px 22px; position: relative; overflow: hidden;
-}
-.profile-hero::after {
-  content: ''; position: absolute;
-  right: -20px; bottom: -20px; width: 120px; height: 120px;
-  background: radial-gradient(circle, rgba(92,61,143,0.3) 0%, transparent 70%);
-}
-.profile-email {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px; letter-spacing: 2px; color: rgba(250,248,244,0.5);
-  text-transform: uppercase; margin-bottom: 8px;
-}
-.profile-lv-display {
-  font-family: 'Playfair Display', serif;
-  font-size: 28px; color: var(--cream); font-style: italic;
-  line-height: 1.1;
-}
-.profile-lv-sub {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 14px; color: rgba(250,248,244,0.5);
-  margin-top: 4px; font-style: italic;
-}
-.profile-days-big {
-  font-family: 'Playfair Display', serif;
-  font-size: 48px; color: var(--gold);
-  margin-top: 16px; line-height: 1;
-}
-.profile-days-label {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 10px; letter-spacing: 3px;
-  color: rgba(250,248,244,0.4); text-transform: uppercase;
-  margin-top: 2px;
-}
-
-.levels-track {
-  margin: 20px;
-}
-.lv-row {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px 0; border-bottom: 1px solid var(--border2);
-}
-.lv-circle {
-  width: 36px; height: 36px; border-radius: 50%;
-  border: 2px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 12px; font-weight: 700; color: var(--ink3);
-  flex-shrink: 0;
-}
-.lv-circle.reached { border-color: var(--gold); color: var(--gold); background: rgba(184,150,74,0.08); }
-.lv-circle.current { border-color: var(--purple); color: var(--purple); background: rgba(92,61,143,0.08); box-shadow: 0 0 0 3px rgba(92,61,143,0.12); }
-.lv-info { flex: 1; }
-.lv-name { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--ink); }
-.lv-req { font-family: 'Rajdhani', sans-serif; font-size: 11px; letter-spacing: 1px; color: var(--ink3); margin-top: 2px; }
-.lv-check { color: var(--gold); font-size: 16px; }
-
-.profile-stats-grid {
-  margin: 0 20px 20px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-}
-.ps-card {
-  border: 1px solid var(--border);
-  padding: 18px 16px;
-  background: var(--cream2);
-}
-.ps-n {
-  font-family: 'Playfair Display', serif;
-  font-size: 32px; color: var(--ink); line-height: 1;
-}
-.ps-l {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 10px; letter-spacing: 2px; color: var(--ink3);
-  text-transform: uppercase; margin-top: 6px;
-}
-
-/* ── DESKTOP SIDEBAR ── */
-@media (min-width: 768px) {
-  #header { left: 240px; }
-  #sidebar-desktop {
-    position: fixed; left: 0; top: 0; bottom: 0; width: 240px;
-    background: var(--ink);
-    display: flex; flex-direction: column;
-    z-index: 300; border-right: 1px solid rgba(184,150,74,0.15);
-  }
-  #main { margin-left: 240px; max-width: 720px; }
-  #bottom-nav { display: none; }
-
-  .ds-logo {
-    padding: 32px 24px 24px;
-    border-bottom: 1px solid rgba(184,150,74,0.12);
-  }
-  .ds-brand {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px; font-weight: 900; letter-spacing: 3px;
-    color: var(--cream); line-height: 1;
-  }
-  .ds-sub {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 9px; letter-spacing: 3px; color: rgba(250,248,244,0.35);
-    text-transform: uppercase; margin-top: 4px;
-  }
-  .ds-eye-wrap { padding: 24px; display: flex; justify-content: center; border-bottom: 1px solid rgba(184,150,74,0.12); }
-  .ds-nav { flex: 1; padding: 20px 0; }
-  .ds-nav-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 13px 24px; cursor: pointer;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
-    color: rgba(250,248,244,0.4); text-transform: uppercase;
-    border-left: 3px solid transparent; transition: all 0.2s;
-  }
-  .ds-nav-item:hover { color: rgba(250,248,244,0.7); background: rgba(184,150,74,0.05); }
-  .ds-nav-item.active { color: var(--gold3); border-left-color: var(--gold); background: rgba(184,150,74,0.08); }
-  .ds-nav-icon { font-size: 16px; width: 20px; text-align: center; }
-  .ds-footer {
-    padding: 20px 24px;
-    border-top: 1px solid rgba(184,150,74,0.12);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 10px; letter-spacing: 1.5px; color: rgba(250,248,244,0.25);
-  }
-  .logout-ds {
-    background: none; border: none;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 10px; letter-spacing: 1.5px; color: rgba(250,248,244,0.25);
-    cursor: pointer; text-transform: uppercase;
-    display: block; margin-top: 6px; padding: 0;
-  }
-  .logout-ds:hover { color: rgba(250,248,244,0.5); }
-}
-@media (max-width: 767px) {
-  #sidebar-desktop { display: none; }
-}
-
-/* ── LOADING / EMPTY ── */
-.loading-text {
-  padding: 40px 20px; text-align: center;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 16px; font-style: italic; color: var(--ink3);
-}
-.section-rule {
-  height: 1px; background: var(--border2);
-  margin: 0 20px;
-}
-
-/* ── TOAST ── */
-#toast {
-  position: fixed; bottom: calc(var(--nav-h) + 12px); left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--ink); color: var(--cream);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 12px; letter-spacing: 1.5px;
-  padding: 10px 20px; opacity: 0;
-  transition: all 0.3s; pointer-events: none;
-  white-space: nowrap; z-index: 9999;
-  border-bottom: 2px solid var(--gold);
-}
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-@media (min-width: 768px) { #toast { bottom: 20px; } }
 </style>
 </head>
 <body>
+<div id="app">
+  <div id="sidebar">
+    <div class="sb-top">
+      <div class="sb-wordmark">Zeus Daily</div>
+      <div class="sb-tagline">The God's Eye View</div>
+    </div>
+    <div class="sb-eye-area">
+      <svg id="eye-sb" width="140" height="60" viewBox="0 0 120 52">
+        <defs>
+          <radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient>
+          <filter id="gf"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <clipPath id="ec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath>
+        </defs>
+        <path id="ep" d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#c9a84c" stroke-width="1" filter="url(#gf)"/>
+        <g clip-path="url(#ec)">
+          <ellipse id="iris" cx="60" cy="26" rx="18" ry="18" fill="url(#ng)"/>
+          <ellipse id="pupil" cx="60" cy="26" rx="7" ry="7" fill="#0c0a07"/>
+          <ellipse cx="66" cy="21" rx="2.5" ry="1.8" fill="rgba(255,255,255,0.2)"/>
+        </g>
+      </svg>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-item on" onclick="go('today')"><span class="sb-icon">◈</span>Today</div>
+      <div class="sb-item" onclick="go('archive')"><span class="sb-icon">▦</span>Archive</div>
+      <div class="sb-item" onclick="go('collection')"><span class="sb-icon">◎</span>Collection</div>
+      <div class="sb-item" onclick="go('profile')"><span class="sb-icon">◉</span>Profile</div>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-user-email" id="sb-email">—</div>
+      <div class="sb-level-tag" id="sb-lv">Lv.1 · Observer</div>
+      <button class="sb-logout" onclick="logout()">Sign out</button>
+    </div>
+  </div>
 
-<!-- DESKTOP SIDEBAR -->
-<div id="sidebar-desktop">
-  <div class="ds-logo">
-    <div class="ds-brand">ZEUS DAILY</div>
-    <div class="ds-sub">The God's Eye View</div>
+  <div id="content">
+    <div id="topbar">
+      <div class="tb-left">
+        <svg width="36" height="16" viewBox="0 0 120 52">
+          <defs><radialGradient id="tg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="tc"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath></defs>
+          <path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+          <g clip-path="url(#tc)"><ellipse id="t-iris" cx="60" cy="26" rx="18" ry="18" fill="url(#tg)"/><ellipse id="t-pupil" cx="60" cy="26" rx="7" ry="7" fill="#0c0a07"/></g>
+        </svg>
+        <span class="tb-page-name" id="tb-name">Today</span>
+      </div>
+      <div class="tb-lv" id="tb-lv">Lv.1</div>
+    </div>
+
+    <div id="pages">
+
+      <div class="page on" id="p-today">
+        <div class="today-masthead">
+          <div class="tm-issue" id="tm-issue">Zeus Daily</div>
+          <div class="tm-date" id="tm-date">—</div>
+          <div class="tm-dow" id="tm-dow">—</div>
+          <div class="tm-eye">
+            <svg width="90" height="38" viewBox="0 0 120 52">
+              <defs><radialGradient id="meg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="mec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath></defs>
+              <path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#c9a84c" stroke-width="1"/>
+              <g clip-path="url(#mec)"><ellipse cx="60" cy="26" rx="18" ry="18" fill="url(#meg)"/><ellipse cx="60" cy="26" rx="7" ry="7" fill="#0c0a07"/></g>
+            </svg>
+          </div>
+        </div>
+        <div class="today-ritual">
+          <div class="ritual-bar">
+            <span class="ritual-label">Daily Ritual</span>
+            <span class="ritual-streak" id="ritual-streak">0 day streak</span>
+          </div>
+          <div class="ritual-body" id="ritual-body">
+            <div class="ritual-text" id="ritual-text">今日尚未打卡<br>神之眼在等待你的到来</div>
+            <div class="ritual-row">
+              <button class="btn-primary" id="btn-checkin" onclick="doCheckin()">⚡ 今日打卡</button>
+              <button class="btn-secondary" onclick="readLatest()">阅读今日</button>
+            </div>
+          </div>
+        </div>
+        <div class="today-strip">
+          <div class="strip-cell"><div class="strip-n" id="st-days">0</div><div class="strip-l">订阅天</div></div>
+          <div class="strip-cell"><div class="strip-n" id="st-checkins">0</div><div class="strip-l">累计打卡</div></div>
+          <div class="strip-cell"><div class="strip-n" id="st-streak">0</div><div class="strip-l">连续天</div></div>
+          <div class="strip-cell"><div class="strip-n" id="st-col">0</div><div class="strip-l">我的收藏</div></div>
+        </div>
+        <div class="today-latest-hd">
+          <div class="section-hd">最新期数</div>
+          <button class="section-more" onclick="go('archive')">全部 →</button>
+        </div>
+        <div id="today-eds"></div>
+        <div style="height:32px;"></div>
+      </div>
+
+      <div class="page" id="p-archive">
+        <div class="arc-toolbar">
+          <div class="arc-search-wrap">
+            <span class="arc-search-icon">⌕</span>
+            <input class="arc-search" id="arc-q" placeholder="搜索期数…" oninput="filterArc()">
+          </div>
+          <div class="arc-years" id="arc-years"></div>
+        </div>
+        <div id="arc-list"></div>
+        <div style="height:32px;"></div>
+      </div>
+
+      <div class="page" id="p-collection">
+        <div id="col-list"></div>
+      </div>
+
+      <div class="page" id="p-profile">
+        <div class="prof-banner">
+          <div class="pb-label">文明等级 · The God's Eye Order</div>
+          <div class="pb-lv-name" id="pb-lvname">Observer</div>
+          <div class="pb-lv-chi" id="pb-lvchi">观察者</div>
+          <div class="pb-days"><div class="pb-days-n" id="pb-days">0</div><div class="pb-days-l">订阅天数</div></div>
+          <div class="pb-next" id="pb-next">—</div>
+        </div>
+        <div class="prof-grid">
+          <div class="pg-cell"><div class="pg-n" id="pg-checkins">0</div><div class="pg-l">累计打卡</div></div>
+          <div class="pg-cell"><div class="pg-n" id="pg-streak">0</div><div class="pg-l">连续天数</div></div>
+          <div class="pg-cell"><div class="pg-n" id="pg-col">0</div><div class="pg-l">收藏期数</div></div>
+          <div class="pg-cell"><div class="pg-n" id="pg-eds">0</div><div class="pg-l">已发期数</div></div>
+        </div>
+        <div class="lv-journey">
+          <div class="lv-journey-hd">文明进阶之路</div>
+          <div class="lv-step"><div class="lv-node" id="ln1">I</div><div class="lv-step-info"><div class="lv-step-name" id="ls1">Observer · 观察者</div><div class="lv-step-req">第 0 天起</div></div><span class="lv-check" id="lk1"></span></div>
+          <div class="lv-step"><div class="lv-node" id="ln2">II</div><div class="lv-step-info"><div class="lv-step-name" id="ls2">Scholar · 学者</div><div class="lv-step-req">第 30 天起</div></div><span class="lv-check" id="lk2"></span></div>
+          <div class="lv-step"><div class="lv-node" id="ln3">III</div><div class="lv-step-info"><div class="lv-step-name" id="ls3">Prophet · 先知</div><div class="lv-step-req">第 90 天起</div></div><span class="lv-check" id="lk3"></span></div>
+          <div class="lv-step"><div class="lv-node" id="ln4">IV</div><div class="lv-step-info"><div class="lv-step-name" id="ls4">Sage · 贤者</div><div class="lv-step-req">第 180 天起</div></div><span class="lv-check" id="lk4"></span></div>
+          <div class="lv-step"><div class="lv-node" id="ln5">V</div><div class="lv-step-info"><div class="lv-step-name" id="ls5">Creator · 造物主</div><div class="lv-step-req">第 365 天起</div></div><span class="lv-check" id="lk5"></span></div>
+        </div>
+        <div class="prof-account">
+          <div class="prof-account-email" id="pa-email">—</div>
+          <button class="btn-logout-full" onclick="logout()">退出登录</button>
+        </div>
+      </div>
+
+    </div>
   </div>
-  <div class="ds-eye-wrap">
-    <svg id="ds-eye" width="120" height="52" viewBox="0 0 120 52">
-      <defs>
-        <radialGradient id="iris-g" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#b088f9"/>
-          <stop offset="45%" stop-color="#6b4c9a"/>
-          <stop offset="100%" stop-color="#2d1b4e"/>
-        </radialGradient>
-        <filter id="gg">
-          <feGaussianBlur stdDeviation="1.5" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <clipPath id="ec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath>
-      </defs>
-      <path id="ep" d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#b8964a" stroke-width="1" filter="url(#gg)"/>
-      <g clip-path="url(#ec)">
-        <ellipse id="ds-iris" cx="60" cy="26" rx="18" ry="18" fill="url(#iris-g)"/>
-        <ellipse id="ds-pupil" cx="60" cy="26" rx="7" ry="7" fill="#0a0806"/>
-        <ellipse cx="66" cy="21" rx="3" ry="2" fill="rgba(255,255,255,0.2)"/>
-      </g>
-    </svg>
-  </div>
-  <div class="ds-nav">
-    <div class="ds-nav-item active" onclick="goto('overview')"><span class="ds-nav-icon">◈</span>总览</div>
-    <div class="ds-nav-item" onclick="goto('archive')"><span class="ds-nav-icon">▣</span>历期日报</div>
-    <div class="ds-nav-item" onclick="goto('collection')"><span class="ds-nav-icon">◎</span>我的收藏</div>
-    <div class="ds-nav-item" onclick="goto('profile')"><span class="ds-nav-icon">◉</span>我的档案</div>
-  </div>
-  <div class="ds-footer">
-    <div id="ds-email">–</div>
-    <button class="logout-ds" onclick="doLogout()">退出登录</button>
+
+  <div id="bottomnav">
+    <button class="bn-item on" id="bn-today" onclick="go('today')"><span class="bn-icon">◈</span><span class="bn-label">Today</span></button>
+    <button class="bn-item" id="bn-archive" onclick="go('archive')"><span class="bn-icon">▦</span><span class="bn-label">Archive</span></button>
+    <button class="bn-item" id="bn-collection" onclick="go('collection')"><span class="bn-icon">◎</span><span class="bn-label">Collection</span></button>
+    <button class="bn-item" id="bn-profile" onclick="go('profile')"><span class="bn-icon">◉</span><span class="bn-label">Profile</span></button>
   </div>
 </div>
-
-<!-- MOBILE HEADER -->
-<div id="header">
-  <div class="header-brand">
-    <svg class="header-eye" id="h-eye" width="44" height="20" viewBox="0 0 120 52">
-      <defs>
-        <radialGradient id="hig" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#b088f9"/>
-          <stop offset="45%" stop-color="#6b4c9a"/>
-          <stop offset="100%" stop-color="#2d1b4e"/>
-        </radialGradient>
-        <clipPath id="hec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath>
-      </defs>
-      <path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#b8964a" stroke-width="1.5"/>
-      <g clip-path="url(#hec)">
-        <ellipse id="h-iris" cx="60" cy="26" rx="18" ry="18" fill="url(#hig)"/>
-        <ellipse id="h-pupil" cx="60" cy="26" rx="7" ry="7" fill="#1a0f00"/>
-        <ellipse cx="66" cy="21" rx="3" ry="2" fill="rgba(255,255,255,0.2)"/>
-      </g>
-    </svg>
-    <div class="brand-text">
-      <div class="title">ZEUS DAILY</div>
-      <div class="sub">The God's Eye View</div>
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="level-pill" id="h-level">LV.1</div>
-    <button class="logout-btn" onclick="doLogout()">退出</button>
-  </div>
-</div>
-
-<!-- MAIN CONTENT -->
-<div id="main">
-
-  <!-- OVERVIEW -->
-  <div class="section active" id="sec-overview">
-    <div class="ov-hero">
-      <div class="ov-greeting" id="greeting">欢迎归来</div>
-      <div class="ov-date" id="today-str">–</div>
-    </div>
-
-    <div class="checkin-block" id="checkin-block">
-      <div class="checkin-label">每日打卡</div>
-      <div class="checkin-msg" id="checkin-msg">今日尚未打卡<br>神之眼在等待你的到来</div>
-      <div class="checkin-actions">
-        <button class="btn-checkin" id="btn-checkin" onclick="doCheckin()">⚡ 今日打卡</button>
-        <button class="btn-read" id="btn-read-today" onclick="readLatest()">阅读今日</button>
-      </div>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-n" id="s-days">0</div>
-        <div class="stat-l">订阅天数</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-n" id="s-total">0</div>
-        <div class="stat-l">累计打卡</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-n" id="s-streak">0</div>
-        <div class="stat-l">连续天数</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-n" id="s-col">0</div>
-        <div class="stat-l">收藏期数</div>
-      </div>
-    </div>
-
-    <div class="level-section">
-      <div class="level-header">
-        <div class="level-name" id="lv-name">Observer</div>
-        <div class="level-num" id="lv-num">Lv.1</div>
-      </div>
-      <div class="level-track">
-        <div class="level-dot" id="ldt1"></div>
-        <div class="level-dot" id="ldt2"></div>
-        <div class="level-dot" id="ldt3"></div>
-        <div class="level-dot" id="ldt4"></div>
-        <div class="level-dot" id="ldt5"></div>
-      </div>
-      <div class="level-subtext" id="lv-sub">再坚持 30 天成为 Scholar</div>
-    </div>
-
-    <div class="section-header">
-      <div class="section-title">最新期数</div>
-      <button class="section-link" onclick="goto('archive')">全部期数 →</button>
-    </div>
-    <div id="ov-editions"></div>
-  </div>
-
-  <!-- ARCHIVE -->
-  <div class="section" id="sec-archive">
-    <div class="archive-filters" id="year-filters"></div>
-    <div class="archive-search">
-      <input id="arc-search" placeholder="搜索期数..." oninput="filterArchive()">
-    </div>
-    <div class="archive-list" id="arc-list">
-      <div class="loading-text">加载期数中…</div>
-    </div>
-  </div>
-
-  <!-- COLLECTION -->
-  <div class="section" id="sec-collection">
-    <div class="section-header">
-      <div class="section-title">我的收藏</div>
-      <div id="col-count" style="font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:2px;color:var(--ink3);"></div>
-    </div>
-    <div id="col-list"></div>
-  </div>
-
-  <!-- PROFILE -->
-  <div class="section" id="sec-profile">
-    <div class="profile-hero">
-      <div class="profile-email" id="p-email">–</div>
-      <div class="profile-lv-display" id="p-lv-name">Observer</div>
-      <div class="profile-lv-sub">文明等级 · 第一阶</div>
-      <div class="profile-days-big" id="p-days">0</div>
-      <div class="profile-days-label">订阅天数</div>
-    </div>
-
-    <div class="profile-stats-grid">
-      <div class="ps-card">
-        <div class="ps-n" id="ps-total">0</div>
-        <div class="ps-l">累计打卡</div>
-      </div>
-      <div class="ps-card">
-        <div class="ps-n" id="ps-streak">0</div>
-        <div class="ps-l">连续天数</div>
-      </div>
-      <div class="ps-card">
-        <div class="ps-n" id="ps-col">0</div>
-        <div class="ps-l">收藏期数</div>
-      </div>
-      <div class="ps-card">
-        <div class="ps-n" id="ps-editions">0</div>
-        <div class="ps-l">已发期数</div>
-      </div>
-    </div>
-
-    <div class="section-header"><div class="section-title">文明进阶</div></div>
-    <div class="levels-track">
-      <div class="lv-row" id="lvr1">
-        <div class="lv-circle lv-c" id="lvc1">Lv.1</div>
-        <div class="lv-info"><div class="lv-name">Observer · 观察者</div><div class="lv-req">第 0 天起</div></div>
-        <div class="lv-check" id="lvk1"></div>
-      </div>
-      <div class="lv-row">
-        <div class="lv-circle lv-c" id="lvc2">Lv.2</div>
-        <div class="lv-info"><div class="lv-name">Scholar · 学者</div><div class="lv-req">第 30 天起</div></div>
-        <div class="lv-check" id="lvk2"></div>
-      </div>
-      <div class="lv-row">
-        <div class="lv-circle lv-c" id="lvc3">Lv.3</div>
-        <div class="lv-info"><div class="lv-name">Prophet · 先知</div><div class="lv-req">第 90 天起</div></div>
-        <div class="lv-check" id="lvk3"></div>
-      </div>
-      <div class="lv-row">
-        <div class="lv-circle lv-c" id="lvc4">Lv.4</div>
-        <div class="lv-info"><div class="lv-name">Sage · 贤者</div><div class="lv-req">第 180 天起</div></div>
-        <div class="lv-check" id="lvk4"></div>
-      </div>
-      <div class="lv-row">
-        <div class="lv-circle lv-c" id="lvc5">Lv.5</div>
-        <div class="lv-info"><div class="lv-name">Creator · 造物主</div><div class="lv-req">第 365 天起</div></div>
-        <div class="lv-check" id="lvk5"></div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- /main -->
-
-<!-- MOBILE BOTTOM NAV -->
-<nav id="bottom-nav">
-  <button class="nav-tab active" id="nt-overview" onclick="goto('overview')">
-    <span class="nav-icon">◈</span>
-    <span class="nav-label">总览</span>
-  </button>
-  <button class="nav-tab" id="nt-archive" onclick="goto('archive')">
-    <span class="nav-icon">▣</span>
-    <span class="nav-label">日报</span>
-  </button>
-  <button class="nav-tab" id="nt-collection" onclick="goto('collection')">
-    <span class="nav-icon">◎</span>
-    <span class="nav-label">收藏</span>
-  </button>
-  <button class="nav-tab" id="nt-profile" onclick="goto('profile')">
-    <span class="nav-icon">◉</span>
-    <span class="nav-label">档案</span>
-  </button>
-</nav>
-
 <div id="toast"></div>
 
 <script>
-var SURL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
-var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
-var LEVELS = [
-  {n:1, name:'Observer', req:0, sub:'再坚持 {n} 天成为 Scholar'},
-  {n:2, name:'Scholar', req:30, sub:'再坚持 {n} 天成为 Prophet'},
-  {n:3, name:'Prophet', req:90, sub:'再坚持 {n} 天成为 Sage'},
-  {n:4, name:'Sage', req:180, sub:'再坚持 {n} 天成为 Creator'},
-  {n:5, name:'Creator', req:365, sub:'已抵达最高文明等级'}
-];
-
-var currentUser = null;
-var userProfile = null;
-var allEditions = [];
-var myCollections = [];
-var checkinDone = false;
-var userDays = 0;
-var totalCheckins = 0;
-var streakDays = 0;
-
-function sbH() {
-  return { 'apikey': SKEY, 'Authorization': 'Bearer ' + SKEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+var SURL='https://ruuksrwlgsenkkkkapbu.supabase.co';
+var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
+var LVS=[{n:1,name:'Observer',chi:'观察者',req:0},{n:2,name:'Scholar',chi:'学者',req:30},{n:3,name:'Prophet',chi:'先知',req:90},{n:4,name:'Sage',chi:'贤者',req:180},{n:5,name:'Creator',chi:'造物主',req:365}];
+var user=null,editions=[],collections=[],checkinDone=false,userDays=0,totalCk=0,streak=0,activeYear='all';
+function sbH(){return{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json','Prefer':'return=representation'};}
+(function(){var k='sb-'+SURL.split('//')[1].split('.')[0]+'-auth-token';var raw=localStorage.getItem(k);if(!raw){location.href='index.html';return;}try{var s=JSON.parse(raw);user=s.user||(s.currentSession&&s.currentSession.user);if(!user){location.href='index.html';return;}boot();}catch(e){location.href='index.html';}})();
+function logout(){var k='sb-'+SURL.split('//')[1].split('.')[0]+'-auth-token';localStorage.removeItem(k);location.href='index.html';}
+function pad(n){return n<10?'0'+n:String(n);}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function fmtDate(d){if(!d||d.length<8)return d||'';return d.slice(0,4)+'.'+d.slice(4,6)+'.'+d.slice(6,8);}
+function boot(){
+  var d=new Date();
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var dows=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('tm-date').textContent=months[d.getMonth()]+' '+pad(d.getDate())+', '+d.getFullYear();
+  document.getElementById('tm-dow').textContent=dows[d.getDay()];
+  var h=d.getHours();
+  document.getElementById('tm-issue').textContent='Zeus Daily · '+(h<5?'深夜好':h<9?'早安':h<12?'上午好':h<18?'下午好':'晚上好');
+  loadEditions();loadUserData();loadCollections();eyeLoop();
 }
-
-function toast(msg) {
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(el._t);
-  el._t = setTimeout(function() { el.classList.remove('show'); }, 2800);
+function loadEditions(){
+  fetch('editions.json').then(function(r){return r.json();}).then(function(d){
+    editions=(d.editions||[]).slice().reverse();
+    document.getElementById('pg-eds').textContent=editions.length;
+    renderTodayEds();buildArcYears();filterArc();
+  }).catch(function(){});
 }
-
-// ── AUTH CHECK ───────────────────────────────────────
-(function checkAuth() {
-  var raw = localStorage.getItem('sb-' + SURL.split('//')[1].split('.')[0] + '-auth-token');
-  if (!raw) { location.href = 'index.html'; return; }
-  try {
-    var sess = JSON.parse(raw);
-    var u = sess.user || (sess.currentSession && sess.currentSession.user);
-    if (!u) { location.href = 'index.html'; return; }
-    currentUser = u;
-    init();
-  } catch(e) { location.href = 'index.html'; }
-})();
-
-function doLogout() {
-  var key = 'sb-' + SURL.split('//')[1].split('.')[0] + '-auth-token';
-  localStorage.removeItem(key);
-  location.href = 'index.html';
+function renderTodayEds(){
+  var el=document.getElementById('today-eds');
+  var list=editions.slice(0,5);
+  if(!list.length){el.innerHTML='<div style="padding:28px 24px;font-family:EB Garamond,serif;font-style:italic;color:var(--dim);font-size:15px;">暂无期数</div>';return;}
+  el.innerHTML=list.map(function(e){return'<a class="ed-row" href="'+e.filename+'" target="_blank"><div class="ed-num"><div class="ed-num-n">'+(e.vol||'?')+'</div><div class="ed-num-l">Vol</div></div><div class="ed-info"><div class="ed-date">'+fmtDate(e.date)+'</div><div class="ed-title">'+(e.title||'Zeus Daily · '+e.date)+'</div></div><div class="ed-arrow">→</div></a>';}).join('');
 }
-
-// ── INIT ─────────────────────────────────────────────
-function init() {
-  var email = currentUser.email || '';
-  document.getElementById('ds-email').textContent = email;
-  document.getElementById('p-email').textContent = email;
-
-  var now = new Date();
-  var days = ['日','一','二','三','四','五','六'];
-  document.getElementById('today-str').textContent =
-    now.getFullYear() + ' · ' + pad(now.getMonth()+1) + '月' + pad(now.getDate()) + '日 · 星期' + days[now.getDay()];
-
-  var h = now.getHours();
-  var greet = h < 6 ? '夜深了，神之眼依然守望' : h < 12 ? '早安，视界清明' : h < 18 ? '午后，洞察依旧' : '晚上好，神之眼常亮';
-  document.getElementById('greeting').textContent = greet;
-
-  loadEditions();
-  loadUserData();
+function buildArcYears(){
+  var ys={};editions.forEach(function(e){if(e.date)ys[e.date.slice(0,4)]=1;});
+  var years=Object.keys(ys).sort().reverse();
+  var html='<button class="yr-btn on" onclick="setYear(\'all\',this)">全部</button>';
+  years.forEach(function(y){html+='<button class="yr-btn" onclick="setYear(\''+y+'\',this)">'+y+'</button>';});
+  document.getElementById('arc-years').innerHTML=html;
 }
-
-function pad(n) { return String(n).length < 2 ? '0' + n : String(n); }
-
-// ── EDITIONS ─────────────────────────────────────────
-function loadEditions() {
-  fetch('editions.json').then(function(r) { return r.json(); })
-    .then(function(d) {
-      allEditions = (d.editions || []).slice().reverse();
-      document.getElementById('ps-editions').textContent = allEditions.length;
-      renderOvEditions();
-      renderArchive();
-    }).catch(function() {});
+function setYear(y,el){activeYear=y;document.querySelectorAll('.yr-btn').forEach(function(b){b.classList.remove('on');});el.classList.add('on');filterArc();}
+function filterArc(){
+  var q=(document.getElementById('arc-q').value||'').toLowerCase();
+  var f=editions.filter(function(e){var ym=activeYear==='all'||((e.date||'').slice(0,4)===activeYear);var qm=!q||(e.date||'').indexOf(q)>=0||(e.vol||'').indexOf(q)>=0||(e.title||'').toLowerCase().indexOf(q)>=0;return ym&&qm;});
+  var el=document.getElementById('arc-list');
+  if(!f.length){el.innerHTML='<div style="padding:40px;text-align:center;font-family:EB Garamond,serif;font-style:italic;color:var(--dim);font-size:16px;">无匹配期数</div>';return;}
+  el.innerHTML=f.map(function(e){var sv=collections.indexOf(e.date)>=0;return'<div class="issue-card"><div class="issue-index"><div class="issue-vol">'+(e.vol||'?')+'</div><div class="issue-vol-l">Vol</div></div><div class="issue-body"><div class="issue-date">'+fmtDate(e.date)+'</div><div class="issue-title">'+(e.title||'Zeus Daily · '+e.date)+'</div><div class="issue-actions"><a class="ia-read" href="'+e.filename+'" target="_blank">阅读</a><button class="ia-save'+(sv?' saved':'')+'" onclick="toggleSave(event,\''+e.date+'\',this)">'+(sv?'★ 已收藏':'☆ 收藏')+'</button></div></div></div>';}).join('');
 }
-
-function renderOvEditions() {
-  var el = document.getElementById('ov-editions');
-  var latest = allEditions.slice(0, 5);
-  if (!latest.length) { el.innerHTML = '<div class="loading-text" style="font-size:14px;">暂无期数</div>'; return; }
-  el.innerHTML = latest.map(function(e) {
-    return '<a class="edition-row" href="' + e.filename + '" target="_blank">' +
-      '<span class="edition-vol-badge">Vol.' + (e.vol||'?') + '</span>' +
-      '<div class="edition-info">' +
-        '<div class="edition-date-text">' + formatDate(e.date) + '</div>' +
-        '<div class="edition-title-text">' + (e.title || 'Zeus Daily · ' + e.date) + '</div>' +
-      '</div>' +
-      '<span class="edition-arrow">→</span>' +
-    '</a>';
-  }).join('');
+function toggleSave(ev,date,btn){ev.stopPropagation();var i=collections.indexOf(date);if(i>=0){collections.splice(i,1);btn.classList.remove('saved');btn.textContent='☆ 收藏';toast('已取消收藏');}else{collections.push(date);btn.classList.add('saved');btn.textContent='★ 已收藏';toast('✦ 已加入收藏');}saveCollections();updateColStat();if(document.getElementById('p-collection').classList.contains('on'))renderCol();}
+function saveCollections(){if(user)localStorage.setItem('zc_'+user.id,JSON.stringify(collections));}
+function loadCollections(){if(!user)return;var r=localStorage.getItem('zc_'+user.id);if(r)try{collections=JSON.parse(r);}catch(e){}updateColStat();}
+function updateColStat(){document.getElementById('st-col').textContent=collections.length;document.getElementById('pg-col').textContent=collections.length;}
+function renderCol(){
+  var el=document.getElementById('col-list');
+  if(!collections.length){el.innerHTML='<div class="col-empty-wrap"><div class="col-empty-sym">◎</div><div class="col-empty-h">尚无收藏</div><div class="col-empty-p">在 Archive 中<br>收藏你想留存的期数</div></div>';return;}
+  var cols=editions.filter(function(e){return collections.indexOf(e.date)>=0;});
+  el.innerHTML=cols.map(function(e){return'<div class="issue-card"><div class="issue-index"><div class="issue-vol">'+(e.vol||'?')+'</div><div class="issue-vol-l">Vol</div></div><div class="issue-body"><div class="issue-date">'+fmtDate(e.date)+'</div><div class="issue-title">'+(e.title||'Zeus Daily · '+e.date)+'</div><div class="issue-actions"><a class="ia-read" href="'+e.filename+'" target="_blank">阅读</a><button class="ia-save saved" onclick="toggleSave(event,\''+e.date+'\',this)">★ 已收藏</button></div></div></div>';}).join('');
 }
-
-function renderArchive() {
-  renderYearFilters();
-  filterArchive();
+function readLatest(){if(editions.length)window.open(editions[0].filename,'_blank');}
+function loadUserData(){
+  if(!user)return;
+  var email=user.email||'';
+  document.getElementById('sb-email').textContent=email;
+  document.getElementById('pa-email').textContent=email;
+  fetch(SURL+'/rest/v1/profiles?id=eq.'+user.id+'&select=*',{headers:sbH()}).then(function(r){return r.json();}).then(function(d){
+    var joined=(d&&d[0]&&d[0].created_at)||user.created_at;
+    userDays=Math.floor((Date.now()-new Date(joined).getTime())/86400000);
+    document.getElementById('st-days').textContent=userDays;
+    document.getElementById('pb-days').textContent=userDays;
+    updateLevel();
+  }).catch(function(){});
+  fetch(SURL+'/rest/v1/checkins?user_id=eq.'+user.id+'&select=date&order=date.desc',{headers:sbH()}).then(function(r){return r.json();}).then(function(d){
+    if(!Array.isArray(d))return;
+    totalCk=d.length;
+    document.getElementById('st-checkins').textContent=totalCk;
+    document.getElementById('pg-checkins').textContent=totalCk;
+    var today=todayStr();
+    checkinDone=d.length>0&&d[0].date===today;
+    streak=0;if(d.length){var cur=new Date(today);for(var i=0;i<d.length;i++){if(d[i].date===cur.toISOString().slice(0,10)){streak++;cur.setDate(cur.getDate()-1);}else break;}}
+    document.getElementById('st-streak').textContent=streak;
+    document.getElementById('pg-streak').textContent=streak;
+    document.getElementById('ritual-streak').textContent=streak+' day streak';
+    updateCheckinUI();
+  }).catch(function(){});
 }
-
-var activeYear = 'all';
-function renderYearFilters() {
-  var years = {};
-  allEditions.forEach(function(e) { if (e.date) years[e.date.slice(0,4)] = 1; });
-  var ys = Object.keys(years).sort().reverse();
-  var html = '<button class="filter-tag active" onclick="setYear(\'all\',this)">全部</button>';
-  ys.forEach(function(y) {
-    html += '<button class="filter-tag" onclick="setYear(\'' + y + '\',this)">' + y + '</button>';
-  });
-  document.getElementById('year-filters').innerHTML = html;
+function updateCheckinUI(){
+  var body=document.getElementById('ritual-body'),txt=document.getElementById('ritual-text'),btn=document.getElementById('btn-checkin');
+  if(checkinDone){body.classList.add('done');txt.textContent='今日打卡完成。神之眼已记录你的到来。';btn.textContent='✓ 已打卡';btn.disabled=true;}
+  else{body.classList.remove('done');txt.innerHTML='今日尚未打卡<br>神之眼在等待你的到来';btn.textContent='⚡ 今日打卡';btn.disabled=false;}
 }
-
-function setYear(y, el) {
-  activeYear = y;
-  document.querySelectorAll('.filter-tag').forEach(function(b) { b.classList.remove('active'); });
-  el.classList.add('active');
-  filterArchive();
+function doCheckin(){
+  if(!user||checkinDone)return;
+  fetch(SURL+'/rest/v1/checkins',{method:'POST',headers:sbH(),body:JSON.stringify({user_id:user.id,date:todayStr()})}).then(function(r){
+    if(r.ok||r.status===201){checkinDone=true;totalCk++;streak++;document.getElementById('st-checkins').textContent=totalCk;document.getElementById('pg-checkins').textContent=totalCk;document.getElementById('st-streak').textContent=streak;document.getElementById('pg-streak').textContent=streak;document.getElementById('ritual-streak').textContent=streak+' day streak';updateCheckinUI();toast('✦ 打卡成功');}else{toast('打卡失败');}
+  }).catch(function(){toast('网络错误');});
 }
-
-function filterArchive() {
-  var q = (document.getElementById('arc-search').value || '').toLowerCase();
-  var filtered = allEditions.filter(function(e) {
-    var matchYear = activeYear === 'all' || (e.date && e.date.slice(0,4) === activeYear);
-    var matchQ = !q || (e.date||'').indexOf(q) >= 0 || (e.vol||'').indexOf(q) >= 0 || (e.title||'').toLowerCase().indexOf(q) >= 0;
-    return matchYear && matchQ;
-  });
-  var el = document.getElementById('arc-list');
-  if (!filtered.length) { el.innerHTML = '<div class="loading-text">无匹配期数</div>'; return; }
-  el.innerHTML = filtered.map(function(e, i) {
-    var colKey = 'col_' + e.date;
-    var isCol = myCollections.indexOf(e.date) >= 0;
-    return '<a class="arc-card" href="' + e.filename + '" target="_blank" style="padding-right:64px;">' +
-      '<div class="arc-card-top">' +
-        '<span class="arc-vol">Vol.' + (e.vol||'?') + '</span>' +
-        '<span class="arc-date">· ' + formatDate(e.date) + '</span>' +
-      '</div>' +
-      '<div class="arc-title">' + (e.title || 'Zeus Daily · ' + e.date) + '</div>' +
-    '</a>' +
-    '<button class="arc-collect-btn' + (isCol?' collected':'') + '" onclick="toggleCollect(event,\'' + e.date + '\',this)">' +
-      (isCol ? '★' : '☆') +
-    '</button>';
-  }).join('');
-
-  // Reposition collect buttons
-  var cards = el.querySelectorAll('.arc-card');
-  var btns = el.querySelectorAll('.arc-collect-btn');
-  btns.forEach(function(btn, i) {
-    var card = cards[i];
-    if (card) {
-      card.parentNode.style.position = 'relative';
-    }
-  });
+function updateLevel(){
+  var lv=LVS[0];for(var i=LVS.length-1;i>=0;i--){if(userDays>=LVS[i].req){lv=LVS[i];break;}}
+  var nxt=LVS[lv.n]||null;
+  document.getElementById('sb-lv').textContent='Lv.'+lv.n+' · '+lv.name;
+  document.getElementById('tb-lv').textContent='Lv.'+lv.n;
+  document.getElementById('pb-lvname').textContent=lv.name;
+  document.getElementById('pb-lvchi').textContent=lv.chi;
+  document.getElementById('pb-next').textContent=nxt?('再 '+(nxt.req-userDays)+' 天晋升为 '+nxt.name):'已达最高文明等级';
+  for(var j=1;j<=5;j++){var node=document.getElementById('ln'+j),step=document.getElementById('ls'+j),chk=document.getElementById('lk'+j);node.classList.remove('past','now');step.classList.remove('past','now');if(j<lv.n){node.classList.add('past');step.classList.add('past');chk.textContent='✓';}else if(j===lv.n){node.classList.add('now');step.classList.add('now');chk.textContent='';}else chk.textContent='';}
 }
-
-function toggleCollect(e, date, btn) {
-  e.preventDefault(); e.stopPropagation();
-  var idx = myCollections.indexOf(date);
-  if (idx >= 0) {
-    myCollections.splice(idx, 1);
-    btn.classList.remove('collected');
-    btn.textContent = '☆';
-    toast('已取消收藏');
-  } else {
-    myCollections.push(date);
-    btn.classList.add('collected');
-    btn.textContent = '★';
-    toast('已加入收藏');
-  }
-  saveCollections();
-  updateColCount();
-  renderCollection();
+var PAGE_NAMES={today:'Today',archive:'Archive',collection:'Collection',profile:'Profile'};
+function go(page){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('on');});
+  document.querySelectorAll('.bn-item').forEach(function(i){i.classList.remove('on');});
+  document.getElementById('p-'+page).classList.add('on');
+  document.getElementById('p-'+page).scrollTop=0;
+  document.getElementById('tb-name').textContent=PAGE_NAMES[page]||page;
+  document.querySelectorAll('.sb-item').forEach(function(i){if(i.getAttribute('onclick')&&i.getAttribute('onclick').indexOf("'"+page+"'")>=0)i.classList.add('on');});
+  var bn=document.getElementById('bn-'+page);if(bn)bn.classList.add('on');
+  if(page==='collection')renderCol();
 }
-
-function saveCollections() {
-  if (!currentUser) return;
-  localStorage.setItem('zc_' + currentUser.id, JSON.stringify(myCollections));
-}
-
-function loadCollections() {
-  if (!currentUser) return;
-  var raw = localStorage.getItem('zc_' + currentUser.id);
-  if (raw) { try { myCollections = JSON.parse(raw); } catch(e) {} }
-  updateColCount();
-}
-
-function updateColCount() {
-  document.getElementById('s-col').textContent = myCollections.length;
-  document.getElementById('ps-col').textContent = myCollections.length;
-  document.getElementById('col-count').textContent = myCollections.length + ' 期';
-}
-
-function renderCollection() {
-  var el = document.getElementById('col-list');
-  if (!myCollections.length) {
-    el.innerHTML = '<div class="col-empty"><div class="col-empty-icon">◎</div>' +
-      '<div class="col-empty-text">尚无收藏</div>' +
-      '<div class="col-empty-sub">在历期日报中点击 ☆ 收藏期数</div></div>';
-    return;
-  }
-  var cols = allEditions.filter(function(e) { return myCollections.indexOf(e.date) >= 0; });
-  el.innerHTML = cols.map(function(e) {
-    return '<a class="arc-card" href="' + e.filename + '" target="_blank">' +
-      '<div class="arc-card-top">' +
-        '<span class="arc-vol">Vol.' + (e.vol||'?') + '</span>' +
-        '<span class="arc-date">· ' + formatDate(e.date) + '</span>' +
-      '</div>' +
-      '<div class="arc-title">' + (e.title || 'Zeus Daily · ' + e.date) + '</div>' +
-    '</a>';
-  }).join('');
-}
-
-// ── USER DATA ─────────────────────────────────────────
-function loadUserData() {
-  if (!currentUser) return;
-  loadCollections();
-
-  // Profile
-  fetch(SURL + '/rest/v1/profiles?id=eq.' + currentUser.id + '&select=*', { headers: sbH() })
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      if (d && d[0]) {
-        userProfile = d[0];
-        var joined = userProfile.created_at || currentUser.created_at;
-        userDays = Math.floor((Date.now() - new Date(joined).getTime()) / 86400000);
-        document.getElementById('s-days').textContent = userDays;
-        document.getElementById('p-days').textContent = userDays;
-        updateLevel();
-      }
-    }).catch(function() {});
-
-  // Checkins
-  fetch(SURL + '/rest/v1/checkins?user_id=eq.' + currentUser.id + '&select=date&order=date.desc', { headers: sbH() })
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      if (!Array.isArray(d)) return;
-      totalCheckins = d.length;
-      document.getElementById('s-total').textContent = totalCheckins;
-      document.getElementById('ps-total').textContent = totalCheckins;
-
-      var today = todayStr();
-      checkinDone = d.length > 0 && d[0].date === today;
-
-      // Streak
-      var streak = 0;
-      if (d.length > 0) {
-        var cur = new Date(today);
-        for (var i = 0; i < d.length; i++) {
-          var dd = d[i].date;
-          var exp = cur.toISOString().slice(0,10);
-          if (dd === exp) { streak++; cur.setDate(cur.getDate()-1); }
-          else { break; }
-        }
-      }
-      streakDays = streak;
-      document.getElementById('s-streak').textContent = streakDays;
-      document.getElementById('ps-streak').textContent = streakDays;
-
-      updateCheckinUI();
-    }).catch(function() {});
-}
-
-function todayStr() {
-  var d = new Date();
-  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
-}
-
-function updateCheckinUI() {
-  var block = document.getElementById('checkin-block');
-  var msg = document.getElementById('checkin-msg');
-  var btn = document.getElementById('btn-checkin');
-  if (checkinDone) {
-    block.classList.add('done');
-    msg.textContent = '今日打卡完成，神之眼已记录你的到来。';
-    btn.textContent = '✓ 今日已打卡';
-    btn.disabled = true;
-  } else {
-    block.classList.remove('done');
-    msg.innerHTML = '今日尚未打卡<br>神之眼在等待你的到来';
-    btn.textContent = '⚡ 今日打卡';
-    btn.disabled = false;
-  }
-}
-
-function doCheckin() {
-  if (!currentUser || checkinDone) return;
-  var today = todayStr();
-  fetch(SURL + '/rest/v1/checkins', {
-    method: 'POST',
-    headers: sbH(),
-    body: JSON.stringify({ user_id: currentUser.id, date: today })
-  }).then(function(r) {
-    if (r.ok || r.status === 201) {
-      checkinDone = true;
-      totalCheckins++;
-      streakDays++;
-      document.getElementById('s-total').textContent = totalCheckins;
-      document.getElementById('ps-total').textContent = totalCheckins;
-      document.getElementById('s-streak').textContent = streakDays;
-      document.getElementById('ps-streak').textContent = streakDays;
-      updateCheckinUI();
-      toast('✦ 打卡成功，神之眼已记录');
-    } else {
-      toast('打卡失败，请重试');
-    }
-  }).catch(function() { toast('网络错误'); });
-}
-
-function readLatest() {
-  if (allEditions.length > 0) {
-    window.open(allEditions[0].filename, '_blank');
-  }
-}
-
-function updateLevel() {
-  var lv = LEVELS[0];
-  for (var i = LEVELS.length-1; i >= 0; i--) {
-    if (userDays >= LEVELS[i].req) { lv = LEVELS[i]; break; }
-  }
-  var next = LEVELS[lv.n] || null;
-  var sub = next ? ('再坚持 ' + (next.req - userDays) + ' 天成为 ' + next.name) : '已抵达最高文明等级';
-
-  document.getElementById('lv-name').textContent = lv.name;
-  document.getElementById('lv-num').textContent = 'Lv.' + lv.n;
-  document.getElementById('lv-sub').textContent = sub;
-  document.getElementById('h-level').textContent = 'LV.' + lv.n;
-  document.getElementById('p-lv-name').textContent = lv.name + ' · ' + ['观察者','学者','先知','贤者','造物主'][lv.n-1];
-
-  for (var j = 1; j <= 5; j++) {
-    var dot = document.getElementById('ldt' + j);
-    if (j < lv.n) dot.classList.add('filled');
-    else if (j === lv.n) dot.classList.add('active');
-    var circle = document.getElementById('lvc' + j);
-    var kmark = document.getElementById('lvk' + j);
-    if (j < lv.n) { circle.classList.add('reached'); kmark.textContent = '✓'; }
-    else if (j === lv.n) { circle.classList.add('current'); kmark.textContent = ''; }
-  }
-
-  // Desktop sidebar nav level
-  var ds = document.querySelectorAll('.ds-nav-item');
-}
-
-// ── NAVIGATION ───────────────────────────────────────
-function goto(page) {
-  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
-  document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
-  document.querySelectorAll('.ds-nav-item').forEach(function(t) { t.classList.remove('active'); });
-
-  document.getElementById('sec-' + page).classList.add('active');
-  var nt = document.getElementById('nt-' + page);
-  if (nt) nt.classList.add('active');
-
-  document.querySelectorAll('.ds-nav-item').forEach(function(t) {
-    if (t.getAttribute('onclick') && t.getAttribute('onclick').indexOf("'" + page + "'") >= 0) {
-      t.classList.add('active');
-    }
-  });
-
-  if (page === 'collection') renderCollection();
-}
-
-function formatDate(d) {
-  if (!d || d.length < 8) return d || '';
-  return d.slice(0,4) + ' · ' + d.slice(4,6) + ' · ' + d.slice(6,8);
-}
-
-// ── EYE ANIMATION ────────────────────────────────────
-var dsIris = document.getElementById('ds-iris');
-var dsPupil = document.getElementById('ds-pupil');
-var epEl = document.getElementById('ep');
-var hIris = document.getElementById('h-iris');
-var hPupil = document.getElementById('h-pupil');
-
-document.addEventListener('mousemove', function(e) {
-  var wx = window.innerWidth; var wy = window.innerHeight;
-  var dx = (e.clientX / wx - 0.5) * 2;
-  var dy = (e.clientY / wy - 0.5) * 2;
-  var mx = dx * 7; var my = dy * 4;
-  if (dsIris) { dsIris.setAttribute('cx', 60 + mx); dsIris.setAttribute('cy', 26 + my); }
-  if (dsPupil) { dsPupil.setAttribute('cx', 60 + mx*1.2); dsPupil.setAttribute('cy', 26 + my*1.2); }
-  if (hIris) { hIris.setAttribute('cx', 60 + mx); hIris.setAttribute('cy', 26 + my); }
-  if (hPupil) { hPupil.setAttribute('cx', 60 + mx*1.2); hPupil.setAttribute('cy', 26 + my*1.2); }
-});
-
-function blink() {
-  if (epEl) epEl.setAttribute('d', 'M10,26 Q60,22 110,26 Q60,30 10,26 Z');
-  if (dsIris) dsIris.setAttribute('ry','2');
-  if (dsPupil) dsPupil.setAttribute('ry','1');
-  if (hIris) hIris.setAttribute('ry','2');
-  if (hPupil) hPupil.setAttribute('ry','1');
-  setTimeout(function() {
-    if (epEl) epEl.setAttribute('d', 'M10,26 Q60,-10 110,26 Q60,62 10,26 Z');
-    if (dsIris) dsIris.setAttribute('ry','18');
-    if (dsPupil) dsPupil.setAttribute('ry','7');
-    if (hIris) hIris.setAttribute('ry','18');
-    if (hPupil) hPupil.setAttribute('ry','7');
-  }, 140);
-}
-setInterval(function() { if (Math.random() < 0.3) blink(); }, 3800);
+function toast(msg){var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show');},2500);}
+var iris=document.getElementById('iris'),pupil=document.getElementById('pupil'),ep=document.getElementById('ep'),ti=document.getElementById('t-iris'),tp=document.getElementById('t-pupil');
+document.addEventListener('mousemove',function(e){var dx=(e.clientX/window.innerWidth-0.5)*2,dy=(e.clientY/window.innerHeight-0.5)*2,mx=dx*7,my=dy*4;if(iris){iris.setAttribute('cx',60+mx);iris.setAttribute('cy',26+my);}if(pupil){pupil.setAttribute('cx',60+mx*1.3);pupil.setAttribute('cy',26+my*1.3);}if(ti){ti.setAttribute('cx',60+mx);ti.setAttribute('cy',26+my);}if(tp){tp.setAttribute('cx',60+mx*1.3);tp.setAttribute('cy',26+my*1.3);}});
+function blink(){if(ep)ep.setAttribute('d','M10,26 Q60,22 110,26 Q60,30 10,26 Z');[iris,ti].forEach(function(e){if(e)e.setAttribute('ry','2');});[pupil,tp].forEach(function(e){if(e)e.setAttribute('ry','1');});setTimeout(function(){if(ep)ep.setAttribute('d','M10,26 Q60,-10 110,26 Q60,62 10,26 Z');[iris,ti].forEach(function(e){if(e)e.setAttribute('ry','18');});[pupil,tp].forEach(function(e){if(e)e.setAttribute('ry','7');});},130);}
+function eyeLoop(){blink();setTimeout(eyeLoop,2500+Math.random()*4000);}
 </script>
 </body>
 </html>
