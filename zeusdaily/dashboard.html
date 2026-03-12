@@ -29,7 +29,6 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 .sb-item:hover{color:var(--cream2);background:rgba(201,168,76,.05);}
 .sb-item.on{color:var(--gold2);border-left-color:var(--gold);}
 .sb-icon{font-size:14px;width:16px;text-align:center;}
-/* Lang in sidebar */
 .sb-lang{padding:12px 26px;border-top:1px solid var(--line);}
 .lang-label{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
 .lang-pills{display:flex;gap:6px;flex-wrap:wrap;}
@@ -48,7 +47,6 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 .tb-left{display:flex;align-items:center;gap:12px;}
 .tb-name{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;}
 .tb-lv{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:2px;color:var(--gold3);border:1px solid rgba(201,168,76,.18);padding:3px 7px;text-transform:uppercase;}
-/* Mobile lang switcher in topbar */
 .tb-lang{position:relative;display:none;}
 .tb-lang-btn{background:none;border:1px solid var(--line);color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;padding:4px 10px;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:5px;}
 .tb-lang-btn:hover{border-color:var(--gold3);color:var(--gold3);}
@@ -78,85 +76,233 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 .ih-label{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:3px;color:var(--purple3);text-transform:uppercase;padding:10px 18px 0;opacity:.8;}
 .ih-inner{display:flex;align-items:center;gap:20px;padding:16px 18px 20px;}
 
-/* NEWSPAPER VISUAL */
-.newspaper-wrap{position:relative;flex-shrink:0;width:80px;height:96px;}
-.newspaper{
-  width:72px;height:90px;
-  background:linear-gradient(160deg,#f5eedc 0%,#e8d8b8 40%,#d4c090 100%);
-  border-radius:2px;
+/* ══ SCROLL VISUAL ══ */
+.scroll-wrap{
   position:relative;
-  box-shadow:2px 4px 20px rgba(0,0,0,.5),0 0 30px rgba(136,85,204,.2);
-  overflow:hidden;
+  flex-shrink:0;
+  width:80px;
+  height:96px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-.newspaper::before{
-  content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(180deg,transparent 0px,transparent 7px,rgba(100,70,20,.12) 7px,rgba(100,70,20,.12) 8px);
-}
-.newspaper::after{
-  content:'ZEUS DAILY';
-  position:absolute;top:8px;left:0;right:0;
-  text-align:center;
-  font-family:'Playfair Display',serif;
-  font-size:7px;font-weight:900;letter-spacing:2px;
-  color:rgba(60,30,0,.7);
-}
-.np-fold{position:absolute;bottom:0;right:0;width:18px;height:18px;background:linear-gradient(135deg,transparent 50%,rgba(180,140,60,.4) 50%);pointer-events:none;}
-/* Lightning band */
-.np-band{
-  position:absolute;top:0;left:0;right:0;bottom:0;
-  pointer-events:none;
-}
-.np-bolt{
+/* Ambient aura */
+.scroll-aura{
   position:absolute;
-  width:2px;border-radius:1px;
-  background:linear-gradient(180deg,var(--purple3),var(--purple));
-  filter:blur(.5px);
-  animation:bolt-flicker 1.8s infinite;
-  box-shadow:0 0 4px var(--purple3),0 0 8px var(--purple);
+  inset:-14px;
+  background:radial-gradient(ellipse 60% 70% at 50% 50%, rgba(136,68,255,.22) 0%, transparent 70%);
+  animation:sc-aura 2.2s ease-in-out infinite;
+  pointer-events:none;
+  z-index:0;
+  border-radius:50%;
 }
-.np-bolt:nth-child(1){height:40px;left:14px;top:-5px;animation-delay:0s;animation-duration:1.6s;}
-.np-bolt:nth-child(2){height:28px;left:22px;top:10px;animation-delay:.3s;animation-duration:2.1s;opacity:.7;}
-.np-bolt:nth-child(3){height:35px;right:16px;top:-3px;animation-delay:.6s;animation-duration:1.9s;}
-.np-bolt:nth-child(4){height:20px;right:24px;top:15px;animation-delay:1s;animation-duration:2.3s;opacity:.6;}
-.np-bolt:nth-child(5){height:50px;left:50%;top:-8px;margin-left:-1px;animation-delay:.2s;animation-duration:1.4s;opacity:.5;}
-/* Horizontal tie */
-.np-tie{
-  position:absolute;top:50%;left:-4px;right:-4px;height:2px;
-  background:linear-gradient(90deg,transparent,var(--purple3),var(--purple),var(--purple3),transparent);
-  transform:translateY(-50%);
-  animation:tie-pulse 2s infinite;
-  box-shadow:0 0 6px var(--purple),0 0 12px rgba(136,85,204,.5);
+@keyframes sc-aura{
+  0%,100%{opacity:.6;transform:scale(1);}
+  50%{opacity:1;transform:scale(1.07);}
 }
-.np-glow{
-  position:absolute;inset:-8px;
-  background:radial-gradient(ellipse,rgba(136,85,204,.18) 0%,transparent 65%);
-  animation:glow-pulse 2s infinite;
+/* Ground glow */
+.scroll-ground{
+  position:absolute;
+  bottom:-4px;
+  left:50%;
+  transform:translateX(-50%);
+  width:54px;
+  height:8px;
+  background:radial-gradient(ellipse, rgba(136,68,255,.35) 0%, transparent 70%);
+  animation:sc-aura 2.2s ease-in-out infinite;
+  z-index:0;
+}
+/* Scroll body */
+.scroll-body{
+  position:relative;
+  width:52px;
+  height:88px;
+  z-index:2;
+}
+/* Top & bottom caps – cylindrical ends */
+.scroll-cap{
+  width:52px;
+  height:11px;
+  position:relative;
+}
+.scroll-cap.top{
+  background:linear-gradient(180deg,#e0a830 0%,#c47818 55%,#9a5c10 100%);
+  border-radius:26px 26px 0 0;
+  box-shadow:0 -1px 6px rgba(180,120,20,.3), inset 0 2px 4px rgba(255,220,100,.2);
+}
+.scroll-cap.top::after{
+  content:'';
+  position:absolute;
+  top:3px;left:6px;right:6px;
+  height:3px;
+  background:rgba(255,230,130,.18);
+  border-radius:4px;
+}
+.scroll-cap.bot{
+  background:linear-gradient(180deg,#9a5c10 0%,#c47818 45%,#d4922a 100%);
+  border-radius:0 0 26px 26px;
+  box-shadow:0 4px 12px rgba(0,0,0,.55);
+}
+/* Main face */
+.scroll-face{
+  width:52px;
+  height:66px;
+  position:relative;
+  overflow:hidden;
+  /* Parchment gradient – amber/gold with darker sides for cylinder illusion */
+  background:linear-gradient(90deg,
+    #7a4808 0%,
+    #c07820 12%,
+    #d4952a 30%,
+    #bf8020 55%,
+    #a86418 75%,
+    #c07820 88%,
+    #7a4808 100%
+  );
+}
+/* Crack / vein texture */
+.scroll-face::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(42deg,transparent,transparent 7px,rgba(0,0,0,.045) 7px,rgba(0,0,0,.045) 8px),
+    repeating-linear-gradient(-61deg,transparent,transparent 10px,rgba(180,100,10,.06) 10px,rgba(180,100,10,.06) 11px),
+    repeating-linear-gradient(90deg,transparent,transparent 15px,rgba(0,0,0,.025) 15px,rgba(0,0,0,.025) 16px);
+}
+/* Edge darkening for depth */
+.scroll-face::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,
+    rgba(0,0,0,.38) 0%,
+    rgba(0,0,0,.06) 18%,
+    transparent 42%,
+    rgba(0,0,0,.04) 75%,
+    rgba(0,0,0,.32) 100%
+  );
+}
+/* ZEUS DAILY vertical text */
+.scroll-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:2;
   pointer-events:none;
 }
-@keyframes bolt-flicker{
-  0%,100%{opacity:1;transform:scaleX(1);}
-  25%{opacity:.3;transform:scaleX(1.5);}
-  50%{opacity:.9;transform:scaleX(.8);}
-  75%{opacity:.2;transform:scaleX(1.3);}
+.scroll-text span{
+  font-family:'Playfair Display',serif;
+  font-size:5.5px;
+  font-weight:900;
+  letter-spacing:2px;
+  color:rgba(40,18,0,.55);
+  text-transform:uppercase;
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  transform:rotate(180deg);
+  line-height:1;
+  text-shadow:0 1px 0 rgba(255,210,100,.12);
 }
-@keyframes tie-pulse{0%,100%{opacity:1;box-shadow:0 0 6px var(--purple),0 0 12px rgba(136,85,204,.5);}50%{opacity:.6;box-shadow:0 0 10px var(--purple3),0 0 20px rgba(187,136,255,.4);}}
-@keyframes glow-pulse{0%,100%{opacity:.8;}50%{opacity:1;}}
+/* Rope */
+.scroll-rope-wrap{
+  position:absolute;
+  left:-5px;right:-5px;
+  top:50%;
+  transform:translateY(-50%);
+  height:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:5;
+}
+.scroll-rope-line{
+  position:absolute;
+  left:0;right:0;
+  height:2.5px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    #5a3008 8%,
+    #8a5c20 30%,
+    #7a4c14 50%,
+    #8a5c20 70%,
+    #5a3008 92%,
+    transparent 100%
+  );
+  top:50%;
+  transform:translateY(-50%);
+}
+.scroll-rope-knot{
+  width:12px;
+  height:12px;
+  background:radial-gradient(circle at 38% 32%, #c07830, #5a2c08);
+  border-radius:50%;
+  box-shadow:0 1px 5px rgba(0,0,0,.6), inset 0 1px 2px rgba(255,180,80,.15);
+  position:relative;
+  z-index:1;
+  flex-shrink:0;
+}
+/* bow loops */
+.scroll-rope-knot::before,
+.scroll-rope-knot::after{
+  content:'';
+  position:absolute;
+  width:7px;height:7px;
+  background:none;
+  border:1.5px solid #7a4c14;
+  border-radius:50%;
+  top:-4px;
+}
+.scroll-rope-knot::before{left:-6px;transform:rotate(-30deg);}
+.scroll-rope-knot::after{right:-6px;transform:rotate(30deg);}
 
-.ih-content{flex:1;min-width:0;}
-.ih-vol{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2.5px;color:var(--purple3);text-transform:uppercase;margin-bottom:6px;opacity:.9;}
-.ih-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--cream);line-height:1.3;margin-bottom:10px;}
-.ih-date{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:14px;}
-.ih-read-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  background:linear-gradient(135deg,var(--purple2),var(--purple));
-  color:var(--cream);border:none;padding:9px 18px;
-  font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;
-  cursor:pointer;text-transform:uppercase;text-decoration:none;
-  transition:all .2s;
-  box-shadow:0 2px 12px rgba(136,85,204,.3);
+/* ── LIGHTNING SVGs ── */
+.scroll-lsvg{
+  position:absolute;
+  top:0;bottom:0;
+  width:24px;
+  z-index:1;
+  overflow:visible;
 }
-.ih-read-btn:hover{background:linear-gradient(135deg,var(--purple),var(--purple3));box-shadow:0 4px 20px rgba(136,85,204,.5);}
-.ih-read-btn span{font-size:14px;}
+.scroll-lsvg.L{left:-8px;}
+.scroll-lsvg.R{right:-8px;}
+
+.bp{fill:none;stroke-linecap:round;stroke-linejoin:round;}
+/* Main bolt – bright white-purple core */
+.bp.main{
+  stroke:#e8d0ff;
+  stroke-width:1.4;
+  filter:drop-shadow(0 0 2px #cc88ff) drop-shadow(0 0 5px rgba(160,80,255,.7));
+}
+/* Outer glow bolt */
+.bp.glow{
+  stroke:#9944ff;
+  stroke-width:3;
+  opacity:.35;
+  filter:blur(1px);
+}
+/* Branch sparks */
+.bp.branch{
+  stroke:#cc88ff;
+  stroke-width:.8;
+  filter:drop-shadow(0 0 2px rgba(200,130,255,.8));
+}
+
+/* 3 bolt variants per side, cycling */
+.bv1{animation:bv1a 1.6s steps(1) infinite;}
+.bv2{animation:bv2a 1.6s steps(1) infinite;}
+.bv3{animation:bv3a 1.6s steps(1) infinite;}
+@keyframes bv1a{
+  0%  {opacity:1;}  6%  {opacity:0;}  40% {opacity:0;}  46% {opacity:.9;} 54% {opacity:0;} 80% {opacity:0;} 84% {opacity:1;} 90% {opacity:0;} 100%{opacity:0;}
+}
+@keyframes bv2a{
+  0%  {opacity:0;}  8%  {opacity:1;}  16% {opacity:0;}  50% {opacity:0;} 55% {opacity:.8;} 62% {opacity:0;} 88% {opacity:0;} 92% {opacity:.7;} 100%{opacity:0;}
+}
+@keyframes bv3a{
+  0%  {opacity:0;}  20% {opacity:0;}  25% {opacity:1;}  33% {opacity:0;} 70% {opacity:0;} 74% {opacity:.9;} 80% {opacity:0;} 100%{opacity:0;}
+}
 
 /* CHECKIN STRIP */
 .checkin-strip{margin:0 24px;border:1px solid var(--line);border-top:none;background:var(--bg1);}
@@ -283,8 +429,10 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
   .th-eye{display:none;}
   .issue-hero{margin:14px;}
   .ih-inner{gap:14px;padding:14px 14px 16px;}
-  .newspaper-wrap{width:64px;height:78px;}
-  .newspaper{width:58px;height:72px;}
+  .scroll-wrap{width:64px;height:78px;}
+  .scroll-body{width:42px;height:70px;}
+  .scroll-cap{width:42px;height:9px;}
+  .scroll-face{width:42px;height:52px;}
   .ih-title{font-size:15px;}
   .checkin-strip{margin:0 14px;}
   .sr-n{font-size:22px;}
@@ -297,7 +445,6 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
   .ph-n{font-size:42px;}
   .lv-journey{padding:20px 16px;}
   .prof-foot{padding:18px 16px;}
-  .prof-grid{}
   .pg-n{font-size:28px;}
   .pg-c{padding:16px 16px;}
   #toast{bottom:calc(60px + 14px);}
@@ -399,18 +546,81 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
       <div class="issue-hero" id="issue-hero">
         <div class="ih-label" data-i18n="latest_issue">Latest Issue</div>
         <div class="ih-inner">
-          <div class="newspaper-wrap">
-            <div class="np-glow"></div>
-            <div class="newspaper"></div>
-            <div class="np-band">
-              <div class="np-bolt"></div>
-              <div class="np-bolt"></div>
-              <div class="np-bolt"></div>
-              <div class="np-bolt"></div>
-              <div class="np-bolt"></div>
-              <div class="np-tie"></div>
+
+          <!-- ═══ ANIMATED SCROLL ═══ -->
+          <div class="scroll-wrap">
+            <!-- ambient aura -->
+            <div class="scroll-aura"></div>
+            <div class="scroll-ground"></div>
+
+            <!-- LEFT lightning -->
+            <svg class="scroll-lsvg L" viewBox="0 0 24 96" preserveAspectRatio="none">
+              <!-- variant 1 -->
+              <g class="bv1">
+                <path class="bp glow" d="M18,0 L10,16 L16,16 L6,38 L13,38 L3,62 L11,62 L4,96"/>
+                <path class="bp main" d="M18,0 L10,16 L16,16 L6,38 L13,38 L3,62 L11,62 L4,96"/>
+                <path class="bp branch" d="M6,38 L0,50"/>
+                <path class="bp branch" d="M13,38 L20,52"/>
+              </g>
+              <!-- variant 2 -->
+              <g class="bv2">
+                <path class="bp glow" d="M16,2 L8,20 L15,20 L5,44 L12,44 L2,70 L9,70 L5,96"/>
+                <path class="bp main" d="M16,2 L8,20 L15,20 L5,44 L12,44 L2,70 L9,70 L5,96"/>
+                <path class="bp branch" d="M5,44 L1,58"/>
+                <path class="bp branch" d="M12,44 L19,56"/>
+              </g>
+              <!-- variant 3 -->
+              <g class="bv3">
+                <path class="bp glow" d="M20,4 L12,22 L18,22 L8,48 L15,48 L5,74 L12,74 L6,96"/>
+                <path class="bp main" d="M20,4 L12,22 L18,22 L8,48 L15,48 L5,74 L12,74 L6,96"/>
+                <path class="bp branch" d="M8,48 L2,60"/>
+                <path class="bp branch" d="M15,48 L22,62"/>
+              </g>
+              <!-- tiny sparks always visible -->
+              <circle cx="10" cy="30" r="1" fill="#dd99ff" opacity=".5" style="animation:bv1a 1.6s steps(1) infinite;"/>
+              <circle cx="6"  cy="60" r=".8" fill="#cc88ff" opacity=".4" style="animation:bv2a 1.6s steps(1) infinite;"/>
+            </svg>
+
+            <!-- SCROLL BODY -->
+            <div class="scroll-body">
+              <div class="scroll-cap top"></div>
+              <div class="scroll-face">
+                <div class="scroll-text"><span>Zeus Daily</span></div>
+              </div>
+              <!-- rope overlaid on top of face -->
+              <div class="scroll-rope-wrap">
+                <div class="scroll-rope-line"></div>
+                <div class="scroll-rope-knot"></div>
+              </div>
+              <div class="scroll-cap bot"></div>
             </div>
+
+            <!-- RIGHT lightning -->
+            <svg class="scroll-lsvg R" viewBox="0 0 24 96" preserveAspectRatio="none">
+              <g class="bv2">
+                <path class="bp glow" d="M6,0 L14,16 L8,16 L18,38 L11,38 L21,62 L13,62 L20,96"/>
+                <path class="bp main" d="M6,0 L14,16 L8,16 L18,38 L11,38 L21,62 L13,62 L20,96"/>
+                <path class="bp branch" d="M18,38 L24,50"/>
+                <path class="bp branch" d="M11,38 L4,52"/>
+              </g>
+              <g class="bv1">
+                <path class="bp glow" d="M8,2 L16,20 L9,20 L19,44 L12,44 L22,70 L15,70 L19,96"/>
+                <path class="bp main" d="M8,2 L16,20 L9,20 L19,44 L12,44 L22,70 L15,70 L19,96"/>
+                <path class="bp branch" d="M19,44 L23,58"/>
+                <path class="bp branch" d="M12,44 L5,56"/>
+              </g>
+              <g class="bv3">
+                <path class="bp glow" d="M4,4 L12,22 L6,22 L16,48 L9,48 L19,74 L12,74 L18,96"/>
+                <path class="bp main" d="M4,4 L12,22 L6,22 L16,48 L9,48 L19,74 L12,74 L18,96"/>
+                <path class="bp branch" d="M16,48 L22,60"/>
+                <path class="bp branch" d="M9,48 L2,62"/>
+              </g>
+              <circle cx="14" cy="30" r="1"  fill="#dd99ff" opacity=".5" style="animation:bv2a 1.6s steps(1) infinite;"/>
+              <circle cx="18" cy="60" r=".8" fill="#cc88ff" opacity=".4" style="animation:bv3a 1.6s steps(1) infinite;"/>
+            </svg>
           </div>
+          <!-- ═══ END SCROLL ═══ -->
+
           <div class="ih-content">
             <div class="ih-vol" id="ih-vol">Vol. —</div>
             <div class="ih-title" id="ih-title" data-i18n="no_issue">暂无最新期数</div>
