@@ -17,15 +17,13 @@
 html,body{height:100%;overflow:hidden;}
 body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,serif;font-size:16px;}
 #app{display:flex;height:100vh;height:100dvh;}
-
-/* ── SIDEBAR ── */
 #sidebar{width:250px;min-height:100vh;background:var(--bg1);border-right:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0;}
 .sb-top{padding:32px 26px 24px;border-bottom:1px solid var(--line);}
 .sb-wordmark{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;letter-spacing:5px;color:var(--gold);text-transform:uppercase;}
 .sb-tagline{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-top:3px;}
 .sb-eye-area{padding:24px 26px;border-bottom:1px solid var(--line);display:flex;justify-content:center;}
 .sb-nav{flex:1;padding:12px 0;}
-.sb-item{display:flex;align-items:center;gap:12px;padding:13px 26px;cursor:pointer;position:relative;font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:2.5px;color:var(--dim);text-transform:uppercase;font-weight:600;border-left:2px solid transparent;transition:all .2s;}
+.sb-item{display:flex;align-items:center;gap:12px;padding:13px 26px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:2.5px;color:var(--dim);text-transform:uppercase;font-weight:600;border-left:2px solid transparent;transition:all .2s;}
 .sb-item:hover{color:var(--cream2);background:rgba(201,168,76,.05);}
 .sb-item.on{color:var(--gold2);border-left-color:var(--gold);}
 .sb-icon{font-size:14px;width:16px;text-align:center;}
@@ -40,8 +38,6 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 .sb-lv-tag{display:inline-block;font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:2px;color:var(--gold3);background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);padding:3px 8px;text-transform:uppercase;margin-bottom:10px;}
 .sb-logout{background:none;border:none;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:2px;color:var(--dim2);text-transform:uppercase;padding:0;transition:color .2s;}
 .sb-logout:hover{color:var(--dim);}
-
-/* ── CONTENT ── */
 #content{flex:1;overflow:hidden;display:flex;flex-direction:column;min-width:0;}
 #topbar{height:50px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px;flex-shrink:0;background:var(--bg);}
 .tb-left{display:flex;align-items:center;gap:12px;}
@@ -49,262 +45,140 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 .tb-lv{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:2px;color:var(--gold3);border:1px solid rgba(201,168,76,.18);padding:3px 7px;text-transform:uppercase;}
 .tb-lang{position:relative;display:none;}
 .tb-lang-btn{background:none;border:1px solid var(--line);color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;padding:4px 10px;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:5px;}
-.tb-lang-btn:hover{border-color:var(--gold3);color:var(--gold3);}
 .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:var(--bg2);border:1px solid var(--line);min-width:110px;z-index:100;display:none;}
 .lang-dropdown.open{display:block;}
 .lang-option{padding:9px 14px;font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;cursor:pointer;border-bottom:1px solid var(--line2);transition:all .15s;}
 .lang-option:last-child{border-bottom:none;}
 .lang-option:hover{background:rgba(201,168,76,.06);color:var(--cream);}
 .lang-option.on{color:var(--gold);}
-
 #pages{flex:1;overflow:hidden;position:relative;}
 .page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transition:opacity .25s;-webkit-overflow-scrolling:touch;}
 .page.on{opacity:1;pointer-events:auto;}
 .page::-webkit-scrollbar{width:3px;}
 .page::-webkit-scrollbar-thumb{background:var(--dim2);}
-
-/* ══ TODAY ══ */
 .today-header{padding:32px 26px 26px;border-bottom:1px solid var(--line);position:relative;}
 .th-greeting{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
 .th-date{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,36px);font-weight:400;color:var(--cream);line-height:1.1;}
 .th-dow{font-family:'EB Garamond',serif;font-size:15px;font-style:italic;color:var(--dim);margin-top:4px;}
 .th-eye{position:absolute;right:26px;top:50%;transform:translateY(-50%);opacity:.55;}
-
-/* ══ ISSUE HERO ══ */
-.issue-hero{margin:24px;border:1px solid rgba(136,85,204,.3);background:linear-gradient(135deg,var(--bg2),#1a1030);overflow:hidden;position:relative;}
+.issue-hero{margin:24px;border:1px solid rgba(136,85,204,.3);background:linear-gradient(135deg,var(--bg2),#1a1030);overflow:visible;position:relative;}
 .issue-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(136,85,204,.12) 0%,transparent 65%);pointer-events:none;}
 .ih-label{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:3px;color:var(--purple3);text-transform:uppercase;padding:10px 18px 0;opacity:.8;}
 .ih-inner{display:flex;align-items:center;gap:20px;padding:16px 18px 20px;}
 
-/* ══ SCROLL VISUAL ══ */
-.scroll-wrap{
+/* ═══════════════════════════
+   SCROLL + CANVAS LIGHTNING
+═══════════════════════════ */
+.scroll-stage{
   position:relative;
   flex-shrink:0;
-  width:80px;
-  height:96px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:78px;
+  height:110px;
 }
-/* Ambient aura */
-.scroll-aura{
+/* the HTML scroll */
+.scroll-html{
   position:absolute;
-  inset:-14px;
-  background:radial-gradient(ellipse 60% 70% at 50% 50%, rgba(136,68,255,.22) 0%, transparent 70%);
-  animation:sc-aura 2.2s ease-in-out infinite;
-  pointer-events:none;
-  z-index:0;
-  border-radius:50%;
-}
-@keyframes sc-aura{
-  0%,100%{opacity:.6;transform:scale(1);}
-  50%{opacity:1;transform:scale(1.07);}
-}
-/* Ground glow */
-.scroll-ground{
-  position:absolute;
-  bottom:-4px;
-  left:50%;
-  transform:translateX(-50%);
-  width:54px;
-  height:8px;
-  background:radial-gradient(ellipse, rgba(136,68,255,.35) 0%, transparent 70%);
-  animation:sc-aura 2.2s ease-in-out infinite;
-  z-index:0;
-}
-/* Scroll body */
-.scroll-body{
-  position:relative;
-  width:52px;
-  height:88px;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:42px;
   z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
 }
-/* Top & bottom caps – cylindrical ends */
-.scroll-cap{
-  width:52px;
-  height:11px;
-  position:relative;
+/* top rod cap */
+.sc-cap-t{
+  height:10px;
+  background:linear-gradient(180deg,#e8b84a 0%,#c07a1c 60%,#8a5812 100%);
+  border-radius:21px 21px 0 0;
+  box-shadow:0 -2px 5px rgba(0,0,0,.35),inset 0 2px 3px rgba(255,220,110,.25);
 }
-.scroll-cap.top{
-  background:linear-gradient(180deg,#e0a830 0%,#c47818 55%,#9a5c10 100%);
-  border-radius:26px 26px 0 0;
-  box-shadow:0 -1px 6px rgba(180,120,20,.3), inset 0 2px 4px rgba(255,220,100,.2);
-}
-.scroll-cap.top::after{
-  content:'';
-  position:absolute;
-  top:3px;left:6px;right:6px;
-  height:3px;
-  background:rgba(255,230,130,.18);
-  border-radius:4px;
-}
-.scroll-cap.bot{
-  background:linear-gradient(180deg,#9a5c10 0%,#c47818 45%,#d4922a 100%);
-  border-radius:0 0 26px 26px;
-  box-shadow:0 4px 12px rgba(0,0,0,.55);
-}
-/* Main face */
-.scroll-face{
-  width:52px;
-  height:66px;
+/* paper body */
+.sc-body{
+  height:80px;
   position:relative;
   overflow:hidden;
-  /* Parchment gradient – amber/gold with darker sides for cylinder illusion */
   background:linear-gradient(90deg,
-    #7a4808 0%,
-    #c07820 12%,
-    #d4952a 30%,
-    #bf8020 55%,
-    #a86418 75%,
-    #c07820 88%,
-    #7a4808 100%
+    #4c2606 0%,#a86c1a 9%,#cc8e2a 27%,
+    #d49a32 48%,#c08626 66%,
+    #9c6218 82%,#a86c1a 92%,#4c2606 100%
   );
 }
-/* Crack / vein texture */
-.scroll-face::before{
-  content:'';
-  position:absolute;
-  inset:0;
+.sc-body::before{
+  content:'';position:absolute;inset:0;
   background:
-    repeating-linear-gradient(42deg,transparent,transparent 7px,rgba(0,0,0,.045) 7px,rgba(0,0,0,.045) 8px),
-    repeating-linear-gradient(-61deg,transparent,transparent 10px,rgba(180,100,10,.06) 10px,rgba(180,100,10,.06) 11px),
-    repeating-linear-gradient(90deg,transparent,transparent 15px,rgba(0,0,0,.025) 15px,rgba(0,0,0,.025) 16px);
+    repeating-linear-gradient(0deg,transparent,transparent 8px,rgba(0,0,0,.04) 8px,rgba(0,0,0,.04) 9px),
+    repeating-linear-gradient(40deg,transparent,transparent 16px,rgba(60,28,0,.05) 16px,rgba(60,28,0,.05) 17px);
 }
-/* Edge darkening for depth */
-.scroll-face::after{
-  content:'';
-  position:absolute;
-  inset:0;
+.sc-body::after{
+  content:'';position:absolute;inset:0;
   background:linear-gradient(90deg,
-    rgba(0,0,0,.38) 0%,
-    rgba(0,0,0,.06) 18%,
-    transparent 42%,
-    rgba(0,0,0,.04) 75%,
-    rgba(0,0,0,.32) 100%
+    rgba(0,0,0,.5) 0%,rgba(0,0,0,.1) 14%,
+    transparent 38%,rgba(0,0,0,.05) 70%,
+    rgba(0,0,0,.42) 100%
   );
 }
-/* ZEUS DAILY vertical text */
-.scroll-text{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:2;
+.sc-txt{
+  position:absolute;inset:0;z-index:3;
+  display:flex;align-items:center;justify-content:center;
   pointer-events:none;
 }
-.scroll-text span{
+.sc-txt span{
   font-family:'Playfair Display',serif;
-  font-size:5.5px;
-  font-weight:900;
-  letter-spacing:2px;
-  color:rgba(40,18,0,.55);
+  font-size:5px;font-weight:900;
+  letter-spacing:2.5px;
+  color:rgba(25,10,0,.45);
   text-transform:uppercase;
   writing-mode:vertical-rl;
-  text-orientation:mixed;
   transform:rotate(180deg);
-  line-height:1;
-  text-shadow:0 1px 0 rgba(255,210,100,.12);
+  text-shadow:0 1px 0 rgba(255,200,80,.12);
 }
-/* Rope */
-.scroll-rope-wrap{
+/* rope */
+.sc-rope{
   position:absolute;
-  left:-5px;right:-5px;
-  top:50%;
-  transform:translateY(-50%);
-  height:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:5;
+  left:-7px;right:-7px;
+  top:50%;transform:translateY(-50%);
+  height:13px;z-index:5;
+  display:flex;align-items:center;justify-content:center;
 }
-.scroll-rope-line{
-  position:absolute;
-  left:0;right:0;
-  height:2.5px;
-  background:linear-gradient(90deg,
-    transparent 0%,
-    #5a3008 8%,
-    #8a5c20 30%,
-    #7a4c14 50%,
-    #8a5c20 70%,
-    #5a3008 92%,
-    transparent 100%
-  );
-  top:50%;
-  transform:translateY(-50%);
+.sc-rope-h{
+  position:absolute;left:0;right:0;height:2px;top:50%;transform:translateY(-50%);
+  background:linear-gradient(90deg,transparent,#3e2006 8%,#6a3c14 32%,#583010 50%,#6a3c14 68%,#3e2006 92%,transparent);
 }
-.scroll-rope-knot{
-  width:12px;
-  height:12px;
-  background:radial-gradient(circle at 38% 32%, #c07830, #5a2c08);
+.sc-knot{
+  width:10px;height:10px;
+  background:radial-gradient(circle at 35% 30%,#a86828,#3e1806);
   border-radius:50%;
-  box-shadow:0 1px 5px rgba(0,0,0,.6), inset 0 1px 2px rgba(255,180,80,.15);
-  position:relative;
-  z-index:1;
-  flex-shrink:0;
+  box-shadow:0 1px 4px rgba(0,0,0,.65);
+  position:relative;z-index:1;flex-shrink:0;
 }
-/* bow loops */
-.scroll-rope-knot::before,
-.scroll-rope-knot::after{
-  content:'';
-  position:absolute;
-  width:7px;height:7px;
-  background:none;
-  border:1.5px solid #7a4c14;
-  border-radius:50%;
-  top:-4px;
+.sc-knot::before,.sc-knot::after{content:'';position:absolute;width:6px;height:6px;border:1.5px solid #5a3010;border-radius:50%;top:-4px;}
+.sc-knot::before{left:-5px;transform:rotate(-25deg);}
+.sc-knot::after{right:-5px;transform:rotate(25deg);}
+/* bottom rod cap */
+.sc-cap-b{
+  height:10px;
+  background:linear-gradient(180deg,#8a5812 0%,#b87820 40%,#d2922c 100%);
+  border-radius:0 0 21px 21px;
+  box-shadow:0 5px 16px rgba(0,0,0,.65);
 }
-.scroll-rope-knot::before{left:-6px;transform:rotate(-30deg);}
-.scroll-rope-knot::after{right:-6px;transform:rotate(30deg);}
 
-/* ── LIGHTNING SVGs ── */
-.scroll-lsvg{
+/* Lightning canvas – covers scroll-stage + overflow */
+#bolt-canvas{
   position:absolute;
-  top:0;bottom:0;
-  width:24px;
+  top:0;left:0;
+  width:100%;height:100%;
+  pointer-events:none;
   z-index:1;
   overflow:visible;
 }
-.scroll-lsvg.L{left:-8px;}
-.scroll-lsvg.R{right:-8px;}
 
-.bp{fill:none;stroke-linecap:round;stroke-linejoin:round;}
-/* Main bolt – bright white-purple core */
-.bp.main{
-  stroke:#e8d0ff;
-  stroke-width:1.4;
-  filter:drop-shadow(0 0 2px #cc88ff) drop-shadow(0 0 5px rgba(160,80,255,.7));
-}
-/* Outer glow bolt */
-.bp.glow{
-  stroke:#9944ff;
-  stroke-width:3;
-  opacity:.35;
-  filter:blur(1px);
-}
-/* Branch sparks */
-.bp.branch{
-  stroke:#cc88ff;
-  stroke-width:.8;
-  filter:drop-shadow(0 0 2px rgba(200,130,255,.8));
-}
-
-/* 3 bolt variants per side, cycling */
-.bv1{animation:bv1a 1.6s steps(1) infinite;}
-.bv2{animation:bv2a 1.6s steps(1) infinite;}
-.bv3{animation:bv3a 1.6s steps(1) infinite;}
-@keyframes bv1a{
-  0%  {opacity:1;}  6%  {opacity:0;}  40% {opacity:0;}  46% {opacity:.9;} 54% {opacity:0;} 80% {opacity:0;} 84% {opacity:1;} 90% {opacity:0;} 100%{opacity:0;}
-}
-@keyframes bv2a{
-  0%  {opacity:0;}  8%  {opacity:1;}  16% {opacity:0;}  50% {opacity:0;} 55% {opacity:.8;} 62% {opacity:0;} 88% {opacity:0;} 92% {opacity:.7;} 100%{opacity:0;}
-}
-@keyframes bv3a{
-  0%  {opacity:0;}  20% {opacity:0;}  25% {opacity:1;}  33% {opacity:0;} 70% {opacity:0;} 74% {opacity:.9;} 80% {opacity:0;} 100%{opacity:0;}
-}
-
-/* CHECKIN STRIP */
+.ih-content{flex:1;min-width:0;}
+.ih-vol{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2.5px;color:var(--purple3);text-transform:uppercase;margin-bottom:6px;opacity:.9;}
+.ih-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--cream);line-height:1.3;margin-bottom:10px;}
+.ih-date{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:14px;}
+.ih-read-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--purple2),var(--purple));color:var(--cream);border:none;padding:9px 18px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;cursor:pointer;text-transform:uppercase;text-decoration:none;transition:all .2s;box-shadow:0 2px 12px rgba(136,85,204,.3);}
+.ih-read-btn:hover{background:linear-gradient(135deg,var(--purple),var(--purple3));box-shadow:0 4px 20px rgba(136,85,204,.5);}
 .checkin-strip{margin:0 24px;border:1px solid var(--line);border-top:none;background:var(--bg1);}
 .cs-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;border-bottom:1px solid var(--line);}
 .cs-label{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:2.5px;color:var(--dim);text-transform:uppercase;}
@@ -316,15 +190,11 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 .btn-ck{background:var(--gold);color:var(--bg);border:none;padding:10px 20px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:background .15s;white-space:nowrap;flex-shrink:0;}
 .btn-ck:hover{background:var(--gold2);}
 .btn-ck:disabled{background:var(--bg3);color:var(--dim);cursor:default;}
-
-/* STATS ROW */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);}
 .sr-cell{padding:18px 12px;text-align:center;border-right:1px solid var(--line);}
 .sr-cell:last-child{border-right:none;}
 .sr-n{font-family:'Playfair Display',serif;font-size:26px;color:var(--gold);line-height:1;}
 .sr-l{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-top:4px;}
-
-/* LATEST */
 .section-head{padding:24px 24px 14px;display:flex;align-items:baseline;justify-content:space-between;}
 .sh-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);}
 .sh-more{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gold3);text-transform:uppercase;cursor:pointer;border:none;background:none;padding:0;transition:color .15s;}
@@ -338,8 +208,6 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 .ed-d{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:3px;}
 .ed-t{font-family:'Playfair Display',serif;font-size:14px;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ed-arr{padding:16px;color:var(--dim);font-size:11px;flex-shrink:0;}
-
-/* ══ ARCHIVE ══ */
 .arc-toolbar{display:flex;align-items:stretch;border-bottom:1px solid var(--line);}
 .arc-search-wrap{flex:1;display:flex;align-items:center;padding:0 18px;gap:8px;border-right:1px solid var(--line);}
 .arc-q{flex:1;background:none;border:none;outline:none;font-family:'EB Garamond',serif;font-size:15px;color:var(--cream);padding:13px 0;}
@@ -363,14 +231,10 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 .ia-s{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:600;letter-spacing:2px;color:var(--dim);background:none;border:1px solid var(--line);padding:6px 12px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
 .ia-s.saved{color:var(--gold);border-color:rgba(201,168,76,.35);}
 .ia-s:hover{border-color:var(--gold3);color:var(--gold3);}
-
-/* ══ COLLECTION ══ */
 .col-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;text-align:center;}
 .ce-sym{font-size:30px;color:var(--dim2);margin-bottom:16px;}
 .ce-h{font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--dim);margin-bottom:8px;}
 .ce-p{font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;color:var(--dim2);text-transform:uppercase;line-height:2.2;}
-
-/* ══ PROFILE ══ */
 .prof-hero{padding:36px 26px;border-bottom:1px solid var(--line);position:relative;overflow:hidden;background:linear-gradient(160deg,var(--bg1),#150f22);}
 .prof-hero::after{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(136,85,204,.18) 0%,transparent 65%);pointer-events:none;}
 .ph-label{font-family:'Rajdhani',sans-serif;font-size:8px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:12px;}
@@ -404,78 +268,28 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 .pf-email{font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:12px;}
 .btn-out{background:none;border:1px solid var(--line);color:var(--dim);padding:9px 18px;font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .15s;}
 .btn-out:hover{border-color:rgba(201,168,76,.35);color:var(--gold3);}
-
-/* ── BOTTOM NAV ── */
 #bottomnav{display:none;border-top:1px solid var(--line);background:var(--bg1);}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 0;cursor:pointer;background:none;border:none;border-top:2px solid transparent;transition:all .2s;}
 .bn-icon{font-size:16px;color:var(--dim);transition:color .2s;}
 .bn-l{font-family:'Rajdhani',sans-serif;font-size:7px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;transition:color .2s;}
 .bn-item.on{border-top-color:var(--gold);}
 .bn-item.on .bn-icon,.bn-item.on .bn-l{color:var(--gold);}
-
-/* ── TOAST ── */
 #toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--bg3);border:1px solid var(--line);border-bottom:2px solid var(--gold);color:var(--cream);font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:9px 20px;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:999;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-/* ── RESPONSIVE ── */
-@media(max-width:767px){
-  #sidebar{display:none;}
-  #app{flex-direction:column;}
-  #content{flex:1;min-height:0;}
-  #bottomnav{display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom);}
-  .tb-lang{display:block;}
-  #topbar{padding:0 14px;}
-  .today-header{padding:22px 16px 20px;}
-  .th-eye{display:none;}
-  .issue-hero{margin:14px;}
-  .ih-inner{gap:14px;padding:14px 14px 16px;}
-  .scroll-wrap{width:64px;height:78px;}
-  .scroll-body{width:42px;height:70px;}
-  .scroll-cap{width:42px;height:9px;}
-  .scroll-face{width:42px;height:52px;}
-  .ih-title{font-size:15px;}
-  .checkin-strip{margin:0 14px;}
-  .sr-n{font-size:22px;}
-  .section-head{padding:20px 16px 12px;}
-  .ic-idx{width:58px;padding:18px 10px;}
-  .ic-vol{font-size:22px;}
-  .ic-body{padding:16px 12px;}
-  .prof-hero{padding:26px 18px;}
-  .ph-lv{font-size:28px;}
-  .ph-n{font-size:42px;}
-  .lv-journey{padding:20px 16px;}
-  .prof-foot{padding:18px 16px;}
-  .pg-n{font-size:28px;}
-  .pg-c{padding:16px 16px;}
-  #toast{bottom:calc(60px + 14px);}
-}
-@media(min-width:768px){
-  .tb-lang{display:none;}
-}
+@media(max-width:767px){#sidebar{display:none;}#app{flex-direction:column;}#content{flex:1;min-height:0;}#bottomnav{display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom);}
+.tb-lang{display:block;}#topbar{padding:0 14px;}.today-header{padding:22px 16px 20px;}.th-eye{display:none;}.issue-hero{margin:14px;}.ih-inner{gap:14px;padding:14px 14px 16px;}.ih-title{font-size:15px;}.checkin-strip{margin:0 14px;}.sr-n{font-size:22px;}.section-head{padding:20px 16px 12px;}.ic-idx{width:58px;padding:18px 10px;}.ic-vol{font-size:22px;}.ic-body{padding:16px 12px;}.prof-hero{padding:26px 18px;}.ph-lv{font-size:28px;}.ph-n{font-size:42px;}.lv-journey{padding:20px 16px;}.prof-foot{padding:18px 16px;}.pg-n{font-size:28px;}.pg-c{padding:16px 16px;}#toast{bottom:calc(60px + 14px);}}
+@media(min-width:768px){.tb-lang{display:none;}}
 </style>
 </head>
 <body>
 <div id="app">
-
-<!-- SIDEBAR -->
 <div id="sidebar">
-  <div class="sb-top">
-    <div class="sb-wordmark">Zeus Daily</div>
-    <div class="sb-tagline">The God's Eye View</div>
-  </div>
+  <div class="sb-top"><div class="sb-wordmark">Zeus Daily</div><div class="sb-tagline">The God's Eye View</div></div>
   <div class="sb-eye-area">
     <svg id="eye-sb" width="130" height="55" viewBox="0 0 120 52">
-      <defs>
-        <radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient>
-        <filter id="gf"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="ec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath>
-      </defs>
+      <defs><radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><filter id="gf"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><clipPath id="ec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath></defs>
       <path id="ep" d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#c9a84c" stroke-width="1" filter="url(#gf)"/>
-      <g clip-path="url(#ec)">
-        <ellipse id="iris" cx="60" cy="26" rx="18" ry="18" fill="url(#ng)"/>
-        <ellipse id="pupil" cx="60" cy="26" rx="7" ry="7" fill="#16110a"/>
-        <ellipse cx="66" cy="21" rx="2.5" ry="1.8" fill="rgba(255,255,255,0.2)"/>
-      </g>
+      <g clip-path="url(#ec)"><ellipse id="iris" cx="60" cy="26" rx="18" ry="18" fill="url(#ng)"/><ellipse id="pupil" cx="60" cy="26" rx="7" ry="7" fill="#16110a"/><ellipse cx="66" cy="21" rx="2.5" ry="1.8" fill="rgba(255,255,255,0.2)"/></g>
     </svg>
   </div>
   <nav class="sb-nav">
@@ -484,143 +298,46 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
     <div class="sb-item" onclick="go('collection')"><span class="sb-icon">◎</span><span data-i18n="nav_collection">Collection</span></div>
     <div class="sb-item" onclick="go('profile')"><span class="sb-icon">◉</span><span data-i18n="nav_profile">Profile</span></div>
   </nav>
-  <div class="sb-lang">
-    <div class="lang-label">Language</div>
-    <div class="lang-pills">
-      <div class="lang-pill on" onclick="setLang('zh',this)">中文</div>
-      <div class="lang-pill" onclick="setLang('en',this)">EN</div>
-      <div class="lang-pill" onclick="setLang('ms',this)">BM</div>
-    </div>
-  </div>
-  <div class="sb-bottom">
-    <div class="sb-email" id="sb-email">—</div>
-    <div class="sb-lv-tag" id="sb-lv">Lv.1 · Observer</div><br>
-    <button class="sb-logout" onclick="logout()" data-i18n="signout">Sign out</button>
-  </div>
+  <div class="sb-lang"><div class="lang-label">Language</div><div class="lang-pills"><div class="lang-pill on" onclick="setLang('zh',this)">中文</div><div class="lang-pill" onclick="setLang('en',this)">EN</div><div class="lang-pill" onclick="setLang('ms',this)">BM</div></div></div>
+  <div class="sb-bottom"><div class="sb-email" id="sb-email">—</div><div class="sb-lv-tag" id="sb-lv">Lv.1 · Observer</div><br><button class="sb-logout" onclick="logout()" data-i18n="signout">Sign out</button></div>
 </div>
-
-<!-- CONTENT -->
 <div id="content">
   <div id="topbar">
     <div class="tb-left">
-      <svg width="34" height="15" viewBox="0 0 120 52">
-        <defs><radialGradient id="tg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="tc"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath></defs>
-        <path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
-        <g clip-path="url(#tc)"><ellipse id="t-iris" cx="60" cy="26" rx="18" ry="18" fill="url(#tg)"/><ellipse id="t-pupil" cx="60" cy="26" rx="7" ry="7" fill="#16110a"/></g>
-      </svg>
+      <svg width="34" height="15" viewBox="0 0 120 52"><defs><radialGradient id="tg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="tc"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath></defs><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#c9a84c" stroke-width="1.5"/><g clip-path="url(#tc)"><ellipse id="t-iris" cx="60" cy="26" rx="18" ry="18" fill="url(#tg)"/><ellipse id="t-pupil" cx="60" cy="26" rx="7" ry="7" fill="#16110a"/></g></svg>
       <span class="tb-name" id="tb-name">Today</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <div class="tb-lang">
-        <button class="tb-lang-btn" onclick="toggleLangDropdown()" id="lang-btn">
-          <span id="lang-current">中文</span> ▾
-        </button>
-        <div class="lang-dropdown" id="lang-dropdown">
-          <div class="lang-option on" onclick="setLangMobile('zh',this,'中文')">中文</div>
-          <div class="lang-option" onclick="setLangMobile('en',this,'EN')">English</div>
-          <div class="lang-option" onclick="setLangMobile('ms',this,'BM')">Bahasa Melayu</div>
-        </div>
-      </div>
+      <div class="tb-lang"><button class="tb-lang-btn" onclick="toggleLangDropdown()"><span id="lang-current">中文</span> ▾</button><div class="lang-dropdown" id="lang-dropdown"><div class="lang-option on" onclick="setLangMobile('zh',this,'中文')">中文</div><div class="lang-option" onclick="setLangMobile('en',this,'EN')">English</div><div class="lang-option" onclick="setLangMobile('ms',this,'BM')">Bahasa Melayu</div></div></div>
       <div class="tb-lv" id="tb-lv">Lv.1</div>
     </div>
   </div>
-
   <div id="pages">
-
-    <!-- TODAY -->
     <div class="page on" id="p-today">
       <div class="today-header">
         <div class="th-greeting" id="th-greeting">Zeus Daily</div>
         <div class="th-date" id="th-date">—</div>
         <div class="th-dow" id="th-dow">—</div>
         <div class="th-eye">
-          <svg width="80" height="34" viewBox="0 0 120 52" opacity=".45">
-            <defs><radialGradient id="meg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="mec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath></defs>
-            <path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#c9a84c" stroke-width="1"/>
-            <g clip-path="url(#mec)"><ellipse cx="60" cy="26" rx="18" ry="18" fill="url(#meg)"/><ellipse cx="60" cy="26" rx="7" ry="7" fill="#16110a"/></g>
-          </svg>
+          <svg width="80" height="34" viewBox="0 0 120 52" opacity=".45"><defs><radialGradient id="meg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="mec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath></defs><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#c9a84c" stroke-width="1"/><g clip-path="url(#mec)"><ellipse cx="60" cy="26" rx="18" ry="18" fill="url(#meg)"/><ellipse cx="60" cy="26" rx="7" ry="7" fill="#16110a"/></g></svg>
         </div>
       </div>
 
-      <!-- ISSUE HERO -->
       <div class="issue-hero" id="issue-hero">
         <div class="ih-label" data-i18n="latest_issue">Latest Issue</div>
         <div class="ih-inner">
-
-          <!-- ═══ ANIMATED SCROLL ═══ -->
-          <div class="scroll-wrap">
-            <!-- ambient aura -->
-            <div class="scroll-aura"></div>
-            <div class="scroll-ground"></div>
-
-            <!-- LEFT lightning -->
-            <svg class="scroll-lsvg L" viewBox="0 0 24 96" preserveAspectRatio="none">
-              <!-- variant 1 -->
-              <g class="bv1">
-                <path class="bp glow" d="M18,0 L10,16 L16,16 L6,38 L13,38 L3,62 L11,62 L4,96"/>
-                <path class="bp main" d="M18,0 L10,16 L16,16 L6,38 L13,38 L3,62 L11,62 L4,96"/>
-                <path class="bp branch" d="M6,38 L0,50"/>
-                <path class="bp branch" d="M13,38 L20,52"/>
-              </g>
-              <!-- variant 2 -->
-              <g class="bv2">
-                <path class="bp glow" d="M16,2 L8,20 L15,20 L5,44 L12,44 L2,70 L9,70 L5,96"/>
-                <path class="bp main" d="M16,2 L8,20 L15,20 L5,44 L12,44 L2,70 L9,70 L5,96"/>
-                <path class="bp branch" d="M5,44 L1,58"/>
-                <path class="bp branch" d="M12,44 L19,56"/>
-              </g>
-              <!-- variant 3 -->
-              <g class="bv3">
-                <path class="bp glow" d="M20,4 L12,22 L18,22 L8,48 L15,48 L5,74 L12,74 L6,96"/>
-                <path class="bp main" d="M20,4 L12,22 L18,22 L8,48 L15,48 L5,74 L12,74 L6,96"/>
-                <path class="bp branch" d="M8,48 L2,60"/>
-                <path class="bp branch" d="M15,48 L22,62"/>
-              </g>
-              <!-- tiny sparks always visible -->
-              <circle cx="10" cy="30" r="1" fill="#dd99ff" opacity=".5" style="animation:bv1a 1.6s steps(1) infinite;"/>
-              <circle cx="6"  cy="60" r=".8" fill="#cc88ff" opacity=".4" style="animation:bv2a 1.6s steps(1) infinite;"/>
-            </svg>
-
-            <!-- SCROLL BODY -->
-            <div class="scroll-body">
-              <div class="scroll-cap top"></div>
-              <div class="scroll-face">
-                <div class="scroll-text"><span>Zeus Daily</span></div>
+          <!-- SCROLL WITH CANVAS LIGHTNING -->
+          <div class="scroll-stage" id="scroll-stage">
+            <canvas id="bolt-canvas"></canvas>
+            <div class="scroll-html">
+              <div class="sc-cap-t"></div>
+              <div class="sc-body">
+                <div class="sc-txt"><span>Zeus Daily</span></div>
+                <div class="sc-rope"><div class="sc-rope-h"></div><div class="sc-knot"></div></div>
               </div>
-              <!-- rope overlaid on top of face -->
-              <div class="scroll-rope-wrap">
-                <div class="scroll-rope-line"></div>
-                <div class="scroll-rope-knot"></div>
-              </div>
-              <div class="scroll-cap bot"></div>
+              <div class="sc-cap-b"></div>
             </div>
-
-            <!-- RIGHT lightning -->
-            <svg class="scroll-lsvg R" viewBox="0 0 24 96" preserveAspectRatio="none">
-              <g class="bv2">
-                <path class="bp glow" d="M6,0 L14,16 L8,16 L18,38 L11,38 L21,62 L13,62 L20,96"/>
-                <path class="bp main" d="M6,0 L14,16 L8,16 L18,38 L11,38 L21,62 L13,62 L20,96"/>
-                <path class="bp branch" d="M18,38 L24,50"/>
-                <path class="bp branch" d="M11,38 L4,52"/>
-              </g>
-              <g class="bv1">
-                <path class="bp glow" d="M8,2 L16,20 L9,20 L19,44 L12,44 L22,70 L15,70 L19,96"/>
-                <path class="bp main" d="M8,2 L16,20 L9,20 L19,44 L12,44 L22,70 L15,70 L19,96"/>
-                <path class="bp branch" d="M19,44 L23,58"/>
-                <path class="bp branch" d="M12,44 L5,56"/>
-              </g>
-              <g class="bv3">
-                <path class="bp glow" d="M4,4 L12,22 L6,22 L16,48 L9,48 L19,74 L12,74 L18,96"/>
-                <path class="bp main" d="M4,4 L12,22 L6,22 L16,48 L9,48 L19,74 L12,74 L18,96"/>
-                <path class="bp branch" d="M16,48 L22,60"/>
-                <path class="bp branch" d="M9,48 L2,62"/>
-              </g>
-              <circle cx="14" cy="30" r="1"  fill="#dd99ff" opacity=".5" style="animation:bv2a 1.6s steps(1) infinite;"/>
-              <circle cx="18" cy="60" r=".8" fill="#cc88ff" opacity=".4" style="animation:bv3a 1.6s steps(1) infinite;"/>
-            </svg>
           </div>
-          <!-- ═══ END SCROLL ═══ -->
-
           <div class="ih-content">
             <div class="ih-vol" id="ih-vol">Vol. —</div>
             <div class="ih-title" id="ih-title" data-i18n="no_issue">暂无最新期数</div>
@@ -630,85 +347,43 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
         </div>
       </div>
 
-      <!-- CHECKIN -->
       <div class="checkin-strip">
-        <div class="cs-bar">
-          <span class="cs-label" data-i18n="daily_ritual">Daily Ritual</span>
-          <span class="cs-streak" id="cs-streak">0 day streak</span>
-        </div>
-        <div class="cs-body" id="cs-body">
-          <div class="cs-msg" id="cs-msg">今日尚未打卡，神之眼在等待你的到来</div>
-          <button class="btn-ck" id="btn-ck" onclick="doCheckin()">⚡ <span data-i18n="checkin">打卡</span></button>
-        </div>
+        <div class="cs-bar"><span class="cs-label" data-i18n="daily_ritual">Daily Ritual</span><span class="cs-streak" id="cs-streak">0 day streak</span></div>
+        <div class="cs-body" id="cs-body"><div class="cs-msg" id="cs-msg">今日尚未打卡，神之眼在等待你的到来</div><button class="btn-ck" id="btn-ck" onclick="doCheckin()">⚡ <span data-i18n="checkin">打卡</span></button></div>
       </div>
-
       <div class="stats-row">
         <div class="sr-cell"><div class="sr-n" id="st-days">0</div><div class="sr-l" data-i18n="sub_days">订阅天</div></div>
         <div class="sr-cell"><div class="sr-n" id="st-cks">0</div><div class="sr-l" data-i18n="total_ck">累计打卡</div></div>
         <div class="sr-cell"><div class="sr-n" id="st-str">0</div><div class="sr-l" data-i18n="streak">连续天</div></div>
         <div class="sr-cell"><div class="sr-n" id="st-col">0</div><div class="sr-l" data-i18n="saved">我的收藏</div></div>
       </div>
-
-      <div class="section-head">
-        <div class="sh-title" data-i18n="recent_issues">近期期数</div>
-        <button class="sh-more" onclick="go('archive')" data-i18n="view_all">全部 →</button>
-      </div>
+      <div class="section-head"><div class="sh-title" data-i18n="recent_issues">近期期数</div><button class="sh-more" onclick="go('archive')" data-i18n="view_all">全部 →</button></div>
       <div id="today-eds"></div>
       <div style="height:28px;"></div>
     </div>
 
-    <!-- ARCHIVE -->
     <div class="page" id="p-archive">
-      <div class="arc-toolbar">
-        <div class="arc-search-wrap">
-          <span style="color:var(--dim);font-size:13px;">⌕</span>
-          <input class="arc-q" id="arc-q" placeholder="搜索期数…" oninput="filterArc()">
-        </div>
-        <div class="arc-years" id="arc-years"></div>
-      </div>
-      <div id="arc-list"></div>
-      <div style="height:28px;"></div>
+      <div class="arc-toolbar"><div class="arc-search-wrap"><span style="color:var(--dim);font-size:13px;">⌕</span><input class="arc-q" id="arc-q" placeholder="搜索期数…" oninput="filterArc()"></div><div class="arc-years" id="arc-years"></div></div>
+      <div id="arc-list"></div><div style="height:28px;"></div>
     </div>
-
-    <!-- COLLECTION -->
     <div class="page" id="p-collection">
       <div class="section-head"><div class="sh-title" data-i18n="my_collection">我的收藏</div><span id="col-count" style="font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;"></span></div>
       <div id="col-list"></div>
     </div>
-
-    <!-- PROFILE -->
     <div class="page" id="p-profile">
-      <div class="prof-hero">
-        <div class="ph-label">文明等级 · The God's Eye Order</div>
-        <div class="ph-lv" id="ph-lv">Observer</div>
-        <div class="ph-chi" id="ph-chi">观察者</div>
-        <div class="ph-days"><div class="ph-n" id="ph-n">0</div><div class="ph-l" data-i18n="sub_days">订阅天数</div></div>
-        <div class="ph-next" id="ph-next">—</div>
-      </div>
-      <div class="prof-grid">
-        <div class="pg-c"><div class="pg-n" id="pg-ck">0</div><div class="pg-l" data-i18n="total_ck">累计打卡</div></div>
-        <div class="pg-c"><div class="pg-n" id="pg-str">0</div><div class="pg-l" data-i18n="streak">连续天数</div></div>
-        <div class="pg-c"><div class="pg-n" id="pg-col">0</div><div class="pg-l" data-i18n="saved">收藏期数</div></div>
-        <div class="pg-c"><div class="pg-n" id="pg-eds">0</div><div class="pg-l" data-i18n="published">已发期数</div></div>
-      </div>
-      <div class="lv-journey">
-        <div class="lj-hd" data-i18n="civilization_path">文明进阶之路</div>
+      <div class="prof-hero"><div class="ph-label">文明等级 · The God's Eye Order</div><div class="ph-lv" id="ph-lv">Observer</div><div class="ph-chi" id="ph-chi">观察者</div><div class="ph-days"><div class="ph-n" id="ph-n">0</div><div class="ph-l" data-i18n="sub_days">订阅天数</div></div><div class="ph-next" id="ph-next">—</div></div>
+      <div class="prof-grid"><div class="pg-c"><div class="pg-n" id="pg-ck">0</div><div class="pg-l" data-i18n="total_ck">累计打卡</div></div><div class="pg-c"><div class="pg-n" id="pg-str">0</div><div class="pg-l" data-i18n="streak">连续天数</div></div><div class="pg-c"><div class="pg-n" id="pg-col">0</div><div class="pg-l" data-i18n="saved">收藏期数</div></div><div class="pg-c"><div class="pg-n" id="pg-eds">0</div><div class="pg-l" data-i18n="published">已发期数</div></div></div>
+      <div class="lv-journey"><div class="lj-hd" data-i18n="civilization_path">文明进阶之路</div>
         <div class="lv-step"><div class="lv-node" id="ln1">I</div><div class="lv-info"><div class="lv-name" id="ls1">Observer · 观察者</div><div class="lv-req">Day 0+</div></div><span class="lv-ck" id="lk1"></span></div>
         <div class="lv-step"><div class="lv-node" id="ln2">II</div><div class="lv-info"><div class="lv-name" id="ls2">Scholar · 学者</div><div class="lv-req">Day 30+</div></div><span class="lv-ck" id="lk2"></span></div>
         <div class="lv-step"><div class="lv-node" id="ln3">III</div><div class="lv-info"><div class="lv-name" id="ls3">Prophet · 先知</div><div class="lv-req">Day 90+</div></div><span class="lv-ck" id="lk3"></span></div>
         <div class="lv-step"><div class="lv-node" id="ln4">IV</div><div class="lv-info"><div class="lv-name" id="ls4">Sage · 贤者</div><div class="lv-req">Day 180+</div></div><span class="lv-ck" id="lk4"></span></div>
         <div class="lv-step"><div class="lv-node" id="ln5">V</div><div class="lv-info"><div class="lv-name" id="ls5">Creator · 造物主</div><div class="lv-req">Day 365+</div></div><span class="lv-ck" id="lk5"></span></div>
       </div>
-      <div class="prof-foot">
-        <div class="pf-email" id="pf-email">—</div>
-        <button class="btn-out" onclick="logout()" data-i18n="signout">退出登录</button>
-      </div>
+      <div class="prof-foot"><div class="pf-email" id="pf-email">—</div><button class="btn-out" onclick="logout()" data-i18n="signout">退出登录</button></div>
     </div>
-
   </div>
 </div>
-
-<!-- BOTTOM NAV -->
 <div id="bottomnav">
   <button class="bn-item on" id="bn-today" onclick="go('today')"><span class="bn-icon">◈</span><span class="bn-l" data-i18n="nav_today">Today</span></button>
   <button class="bn-item" id="bn-archive" onclick="go('archive')"><span class="bn-icon">▦</span><span class="bn-l" data-i18n="nav_archive">Archive</span></button>
@@ -722,220 +397,147 @@ body{background:var(--bg);color:var(--cream);font-family:'EB Garamond',Georgia,s
 var SURL='https://ruuksrwlgsenkkkkapbu.supabase.co';
 var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
 
-// ── I18N ──
-var LANGS={
-  zh:{nav_today:'今日',nav_archive:'历期',nav_collection:'收藏',nav_profile:'档案',latest_issue:'最新期数',no_issue:'暂无期数',read_now:'阅读今日',daily_ritual:'每日打卡',checkin:'打卡',sub_days:'订阅天',total_ck:'累计打卡',streak:'连续天',saved:'我的收藏',recent_issues:'近期期数',view_all:'全部 →',my_collection:'我的收藏',published:'已发期数',civilization_path:'文明进阶之路',signout:'退出登录',greeting_night:'深夜好',greeting_morning:'早安',greeting_noon:'上午好',greeting_afternoon:'下午好',greeting_evening:'晚上好',checkin_done:'今日打卡完成，神之眼已记录你的到来',checkin_pending:'今日尚未打卡，神之眼在等待你的到来',toast_ck:'✦ 打卡成功',toast_saved:'✦ 已加入收藏',toast_unsaved:'已取消收藏',toast_ck_fail:'打卡失败，请重试',streak_label:'天连续',days_to:'再 {n} 天晋升为',max_lv:'已达最高文明等级'},
-  en:{nav_today:'Today',nav_archive:'Archive',nav_collection:'Collection',nav_profile:'Profile',latest_issue:'Latest Issue',no_issue:'No issues yet',read_now:'Read Now',daily_ritual:'Daily Ritual',checkin:'Check In',sub_days:'Days',total_ck:'Check-ins',streak:'Streak',saved:'Saved',recent_issues:'Recent Issues',view_all:'All →',my_collection:'My Collection',published:'Published',civilization_path:'Civilization Path',signout:'Sign Out',greeting_night:'Good night',greeting_morning:'Good morning',greeting_noon:'Good morning',greeting_afternoon:'Good afternoon',greeting_evening:'Good evening',checkin_done:"Today's ritual complete.",checkin_pending:"Haven't checked in yet. The God's Eye awaits.",toast_ck:'✦ Checked in',toast_saved:'✦ Saved',toast_unsaved:'Removed from collection',toast_ck_fail:'Check-in failed',streak_label:' day streak',days_to:'{n} days to ',max_lv:'Highest civilization reached'},
-  ms:{nav_today:'Hari Ini',nav_archive:'Arkib',nav_collection:'Koleksi',nav_profile:'Profil',latest_issue:'Keluaran Terkini',no_issue:'Tiada keluaran',read_now:'Baca Sekarang',daily_ritual:'Ritual Harian',checkin:'Daftar Masuk',sub_days:'Hari',total_ck:'Daftar Masuk',streak:'Berturutan',saved:'Disimpan',recent_issues:'Keluaran Terkini',view_all:'Semua →',my_collection:'Koleksi Saya',published:'Diterbitkan',civilization_path:'Laluan Tamadun',signout:'Log Keluar',greeting_night:'Selamat malam',greeting_morning:'Selamat pagi',greeting_noon:'Selamat pagi',greeting_afternoon:'Selamat tengah hari',greeting_evening:'Selamat petang',checkin_done:'Ritual hari ini selesai.',checkin_pending:'Belum daftar masuk hari ini.',toast_ck:'✦ Berjaya daftar masuk',toast_saved:'✦ Disimpan',toast_unsaved:'Dikeluarkan dari koleksi',toast_ck_fail:'Gagal daftar masuk',streak_label:' hari berturutan',days_to:'{n} hari lagi untuk ',max_lv:'Peringkat tertinggi dicapai'}
-};
+/* ══ LIGHTNING ENGINE (canvas-based, realistic flicker) ══ */
+(function initLightning(){
+  var stage = document.getElementById('scroll-stage');
+  var cvs   = document.getElementById('bolt-canvas');
+  var ctx   = cvs.getContext('2d');
+  var W, H;
+
+  function resize(){
+    var r = stage.getBoundingClientRect();
+    W = cvs.width  = Math.max(r.width,  78);
+    H = cvs.height = Math.max(r.height, 110);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* Midpoint-displacement bolt */
+  function genBolt(x1,y1,x2,y2,disp,depth){
+    if(depth === 0) return [{x:x1,y:y1},{x:x2,y:y2}];
+    var mx = (x1+x2)/2 + (Math.random()-0.5)*disp;
+    var my = (y1+y2)/2 + (Math.random()-0.5)*disp*0.5;
+    var a  = genBolt(x1,y1,mx,my,disp*0.55,depth-1);
+    var b  = genBolt(mx,my,x2,y2,disp*0.55,depth-1);
+    return a.concat(b.slice(1));
+  }
+
+  function strokeBolt(pts, lw, color, blur, alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = lw;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+    ctx.shadowColor = color;
+    ctx.shadowBlur  = blur;
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x,pts[i].y);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function flashBolt(x1,y1,x2,y2,alpha){
+    var pts = genBolt(x1,y1,x2,y2,20,6);
+    strokeBolt(pts, 4,   'rgba(120,50,240,0.5)',  16, alpha*0.45); // wide outer glow
+    strokeBolt(pts, 2,   'rgba(170,90,255,0.8)',   8, alpha*0.7);  // mid glow
+    strokeBolt(pts, 0.8, 'rgba(240,210,255,1)',     3, alpha);      // bright core
+    // optional branch
+    if(Math.random()<0.4){
+      var bi = 2 + Math.floor(Math.random()*(pts.length-4));
+      var bx = pts[bi].x + (Math.random()-0.5)*18;
+      var by = pts[bi].y + Math.random()*16 + 4;
+      var bp = genBolt(pts[bi].x,pts[bi].y,bx,by,9,4);
+      strokeBolt(bp, 1.4, 'rgba(200,150,255,0.9)', 5, alpha*0.65);
+      strokeBolt(bp, 0.5, 'rgba(240,220,255,1)',    2, alpha*0.8);
+    }
+  }
+
+  /* Strike scheduler */
+  var strikes = [];
+  var nextAt  = 0;
+
+  function schedule(){
+    nextAt = performance.now() + 400 + Math.random()*900;
+  }
+  schedule();
+
+  function fire(){
+    var cx = W/2;
+    // left side: from left edge toward scroll left
+    // right side: from scroll right toward right edge
+    var sides = Math.random()<0.5 ? ['L'] : Math.random()<0.3 ? ['L','R'] : ['R'];
+    sides.forEach(function(s){
+      var x1,x2,y1,y2;
+      if(s==='L'){
+        x1 = 1 + Math.random()*6;
+        x2 = cx - 22 + Math.random()*5;
+      } else {
+        x1 = cx + 22 + Math.random()*5;
+        x2 = W - 1 - Math.random()*6;
+      }
+      y1 = 2  + Math.random()*10;
+      y2 = H  - 2 - Math.random()*10;
+      // sometimes partial bolt
+      if(Math.random()<0.3) y2 = H*0.4 + Math.random()*H*0.25;
+      strikes.push({x1:x1,y1:y1,x2:x2,y2:y2,alpha:0.92+Math.random()*0.08,decay:0.055+Math.random()*0.04});
+    });
+    schedule();
+  }
+
+  function frame(now){
+    ctx.clearRect(0,0,W,H);
+    if(now >= nextAt) fire();
+    for(var i=strikes.length-1;i>=0;i--){
+      var s=strikes[i];
+      flashBolt(s.x1,s.y1,s.x2,s.y2,s.alpha);
+      s.alpha -= s.decay;
+      if(s.alpha <= 0) strikes.splice(i,1);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ══ I18N ══ */
+var LANGS={zh:{nav_today:'今日',nav_archive:'历期',nav_collection:'收藏',nav_profile:'档案',latest_issue:'最新期数',no_issue:'暂无期数',read_now:'阅读今日',daily_ritual:'每日打卡',checkin:'打卡',sub_days:'订阅天',total_ck:'累计打卡',streak:'连续天',saved:'我的收藏',recent_issues:'近期期数',view_all:'全部 →',my_collection:'我的收藏',published:'已发期数',civilization_path:'文明进阶之路',signout:'退出登录',greeting_night:'深夜好',greeting_morning:'早安',greeting_noon:'上午好',greeting_afternoon:'下午好',greeting_evening:'晚上好',checkin_done:'今日打卡完成，神之眼已记录你的到来',checkin_pending:'今日尚未打卡，神之眼在等待你的到来',toast_ck:'✦ 打卡成功',toast_saved:'✦ 已加入收藏',toast_unsaved:'已取消收藏',toast_ck_fail:'打卡失败，请重试',streak_label:'天连续',days_to:'再 {n} 天晋升为',max_lv:'已达最高文明等级'},en:{nav_today:'Today',nav_archive:'Archive',nav_collection:'Collection',nav_profile:'Profile',latest_issue:'Latest Issue',no_issue:'No issues yet',read_now:'Read Now',daily_ritual:'Daily Ritual',checkin:'Check In',sub_days:'Days',total_ck:'Check-ins',streak:'Streak',saved:'Saved',recent_issues:'Recent Issues',view_all:'All →',my_collection:'My Collection',published:'Published',civilization_path:'Civilization Path',signout:'Sign Out',greeting_night:'Good night',greeting_morning:'Good morning',greeting_noon:'Good morning',greeting_afternoon:'Good afternoon',greeting_evening:'Good evening',checkin_done:"Today's ritual complete.",checkin_pending:"Haven't checked in yet. The God's Eye awaits.",toast_ck:'✦ Checked in',toast_saved:'✦ Saved',toast_unsaved:'Removed from collection',toast_ck_fail:'Check-in failed',streak_label:' day streak',days_to:'{n} days to ',max_lv:'Highest civilization reached'},ms:{nav_today:'Hari Ini',nav_archive:'Arkib',nav_collection:'Koleksi',nav_profile:'Profil',latest_issue:'Keluaran Terkini',no_issue:'Tiada keluaran',read_now:'Baca Sekarang',daily_ritual:'Ritual Harian',checkin:'Daftar Masuk',sub_days:'Hari',total_ck:'Daftar Masuk',streak:'Berturutan',saved:'Disimpan',recent_issues:'Keluaran Terkini',view_all:'Semua →',my_collection:'Koleksi Saya',published:'Diterbitkan',civilization_path:'Laluan Tamadun',signout:'Log Keluar',greeting_night:'Selamat malam',greeting_morning:'Selamat pagi',greeting_noon:'Selamat pagi',greeting_afternoon:'Selamat tengah hari',greeting_evening:'Selamat petang',checkin_done:'Ritual hari ini selesai.',checkin_pending:'Belum daftar masuk hari ini.',toast_ck:'✦ Berjaya daftar masuk',toast_saved:'✦ Disimpan',toast_unsaved:'Dikeluarkan dari koleksi',toast_ck_fail:'Gagal daftar masuk',streak_label:' hari berturutan',days_to:'{n} hari lagi untuk ',max_lv:'Peringkat tertinggi dicapai'}};
 var currentLang='zh';
 function t(k){return(LANGS[currentLang]||LANGS.zh)[k]||k;}
-function applyI18n(){
-  document.querySelectorAll('[data-i18n]').forEach(function(el){
-    var k=el.getAttribute('data-i18n');el.textContent=t(k);
-  });
-}
+function applyI18n(){document.querySelectorAll('[data-i18n]').forEach(function(el){el.textContent=t(el.getAttribute('data-i18n'));});}
+function setLang(lang,el){currentLang=lang;document.querySelectorAll('.lang-pill').forEach(function(p){p.classList.remove('on');});el.classList.add('on');applyI18n();updateCheckinUI();updateGreeting();if(document.getElementById('p-collection').classList.contains('on'))renderCol();}
+function setLangMobile(lang,el,label){currentLang=lang;document.getElementById('lang-current').textContent=label;document.querySelectorAll('.lang-option').forEach(function(o){o.classList.remove('on');});el.classList.add('on');document.getElementById('lang-dropdown').classList.remove('open');applyI18n();updateCheckinUI();updateGreeting();}
+function toggleLangDropdown(){document.getElementById('lang-dropdown').classList.toggle('open');}
+document.addEventListener('click',function(e){if(!e.target.closest('.tb-lang'))document.getElementById('lang-dropdown').classList.remove('open');});
 
-function setLang(lang,el){
-  currentLang=lang;
-  document.querySelectorAll('.lang-pill').forEach(function(p){p.classList.remove('on');});
-  el.classList.add('on');
-  applyI18n();updateCheckinUI();updateGreeting();
-  if(document.getElementById('p-collection').classList.contains('on'))renderCol();
-}
-function setLangMobile(lang,el,label){
-  currentLang=lang;
-  document.getElementById('lang-current').textContent=label;
-  document.querySelectorAll('.lang-option').forEach(function(o){o.classList.remove('on');});
-  el.classList.add('on');
-  document.getElementById('lang-dropdown').classList.remove('open');
-  applyI18n();updateCheckinUI();updateGreeting();
-}
-function toggleLangDropdown(){
-  document.getElementById('lang-dropdown').classList.toggle('open');
-}
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.tb-lang'))document.getElementById('lang-dropdown').classList.remove('open');
-});
-
-// ── AUTH ──
 var user=null,editions=[],collections=[],checkinDone=false,userDays=0,totalCk=0,streak=0,activeYear='all';
 function sbH(){return{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json','Prefer':'return=representation'};}
 (function(){var k='sb-'+SURL.split('//')[1].split('.')[0]+'-auth-token';var raw=localStorage.getItem(k);if(!raw){location.href='index.html';return;}try{var s=JSON.parse(raw);user=s.user||(s.currentSession&&s.currentSession.user);if(!user){location.href='index.html';return;}boot();}catch(e){location.href='index.html';}})();
 function logout(){var k='sb-'+SURL.split('//')[1].split('.')[0]+'-auth-token';localStorage.removeItem(k);location.href='index.html';}
-
-// ── UTILS ──
 function pad(n){return n<10?'0'+n:String(n);}
 function todayStr(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
 function fmtDate(d){if(!d||d.length<8)return d||'';return d.slice(0,4)+'.'+d.slice(4,6)+'.'+d.slice(6,8);}
-
-function boot(){
-  applyI18n();
-  setMasthead();
-  loadEditions();
-  loadUserData();
-  loadCollections();
-  eyeLoop();
-}
-
-function setMasthead(){updateGreeting();}
-function updateGreeting(){
-  var d=new Date();
-  var months_zh=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
-  var months_en=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  var months_ms=['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
-  var dows_zh=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-  var dows_en=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  var dows_ms=['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
-  var months=currentLang==='en'?months_en:currentLang==='ms'?months_ms:months_zh;
-  var dows=currentLang==='en'?dows_en:currentLang==='ms'?dows_ms:dows_zh;
-  var h=d.getHours();
-  var gk=h<5?'greeting_night':h<9?'greeting_morning':h<12?'greeting_noon':h<18?'greeting_afternoon':'greeting_evening';
-  document.getElementById('th-greeting').textContent='Zeus Daily · '+t(gk);
-  if(currentLang==='zh'){
-    document.getElementById('th-date').textContent=d.getFullYear()+'年 '+months[d.getMonth()]+' '+pad(d.getDate())+'日';
-  }else{
-    document.getElementById('th-date').textContent=months[d.getMonth()]+' '+pad(d.getDate())+', '+d.getFullYear();
-  }
-  document.getElementById('th-dow').textContent=dows[d.getDay()];
-}
-
-// ── EDITIONS ──
-function loadEditions(){
-  fetch('editions.json').then(function(r){return r.json();}).then(function(d){
-    editions=(d.editions||[]).slice().reverse();
-    document.getElementById('pg-eds').textContent=editions.length;
-    renderIssueHero();
-    renderTodayEds();
-    buildArcYears();
-    filterArc();
-  }).catch(function(){});
-}
-
-function renderIssueHero(){
-  if(!editions.length)return;
-  var e=editions[0];
-  document.getElementById('ih-vol').textContent='Vol. '+(e.vol||'?');
-  document.getElementById('ih-title').textContent=e.title||'Zeus Daily · '+e.date;
-  document.getElementById('ih-date').textContent=fmtDate(e.date);
-  var readBtn=document.getElementById('ih-read');
-  readBtn.href=e.filename;
-  readBtn.querySelector('[data-i18n]').textContent=t('read_now');
-}
-
-function renderTodayEds(){
-  var el=document.getElementById('today-eds');
-  var list=editions.slice(0,5);
-  if(!list.length){el.innerHTML='<div style="padding:24px;font-family:EB Garamond,serif;font-style:italic;color:var(--dim);font-size:15px;">'+t('no_issue')+'</div>';return;}
-  el.innerHTML=list.map(function(e){return'<a class="ed-row" href="'+e.filename+'" target="_blank"><div class="ed-n"><div class="ed-nn">'+(e.vol||'?')+'</div><div class="ed-nl">Vol</div></div><div class="ed-info"><div class="ed-d">'+fmtDate(e.date)+'</div><div class="ed-t">'+(e.title||'Zeus Daily · '+e.date)+'</div></div><div class="ed-arr">→</div></a>';}).join('');
-}
-
-function buildArcYears(){
-  var ys={};editions.forEach(function(e){if(e.date)ys[e.date.slice(0,4)]=1;});
-  var years=Object.keys(ys).sort().reverse();
-  var html='<button class="yr-btn on" onclick="setYear(\'all\',this)">全部</button>';
-  years.forEach(function(y){html+='<button class="yr-btn" onclick="setYear(\''+y+'\',this)">'+y+'</button>';});
-  document.getElementById('arc-years').innerHTML=html;
-}
+function boot(){applyI18n();updateGreeting();loadEditions();loadUserData();loadCollections();eyeLoop();}
+function updateGreeting(){var d=new Date();var mz=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];var me=['January','February','March','April','May','June','July','August','September','October','November','December'];var mm=['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];var dz=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];var de=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];var dm=['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];var months=currentLang==='en'?me:currentLang==='ms'?mm:mz;var dows=currentLang==='en'?de:currentLang==='ms'?dm:dz;var h=d.getHours();var gk=h<5?'greeting_night':h<9?'greeting_morning':h<12?'greeting_noon':h<18?'greeting_afternoon':'greeting_evening';document.getElementById('th-greeting').textContent='Zeus Daily · '+t(gk);document.getElementById('th-date').textContent=currentLang==='zh'?d.getFullYear()+'年 '+months[d.getMonth()]+' '+pad(d.getDate())+'日':months[d.getMonth()]+' '+pad(d.getDate())+', '+d.getFullYear();document.getElementById('th-dow').textContent=dows[d.getDay()];}
+function loadEditions(){fetch('editions.json').then(function(r){return r.json();}).then(function(d){editions=(d.editions||[]).slice().reverse();document.getElementById('pg-eds').textContent=editions.length;renderIssueHero();renderTodayEds();buildArcYears();filterArc();}).catch(function(){});}
+function renderIssueHero(){if(!editions.length)return;var e=editions[0];document.getElementById('ih-vol').textContent='Vol. '+(e.vol||'?');document.getElementById('ih-title').textContent=e.title||'Zeus Daily · '+e.date;document.getElementById('ih-date').textContent=fmtDate(e.date);var btn=document.getElementById('ih-read');btn.href=e.filename;btn.querySelector('[data-i18n]').textContent=t('read_now');}
+function renderTodayEds(){var el=document.getElementById('today-eds'),list=editions.slice(0,5);if(!list.length){el.innerHTML='<div style="padding:24px;font-family:EB Garamond,serif;font-style:italic;color:var(--dim);font-size:15px;">'+t('no_issue')+'</div>';return;}el.innerHTML=list.map(function(e){return'<a class="ed-row" href="'+e.filename+'" target="_blank"><div class="ed-n"><div class="ed-nn">'+(e.vol||'?')+'</div><div class="ed-nl">Vol</div></div><div class="ed-info"><div class="ed-d">'+fmtDate(e.date)+'</div><div class="ed-t">'+(e.title||'Zeus Daily · '+e.date)+'</div></div><div class="ed-arr">→</div></a>';}).join('');}
+function buildArcYears(){var ys={};editions.forEach(function(e){if(e.date)ys[e.date.slice(0,4)]=1;});var years=Object.keys(ys).sort().reverse();var html='<button class="yr-btn on" onclick="setYear(\'all\',this)">全部</button>';years.forEach(function(y){html+='<button class="yr-btn" onclick="setYear(\''+y+'\',this)">'+y+'</button>';});document.getElementById('arc-years').innerHTML=html;}
 function setYear(y,el){activeYear=y;document.querySelectorAll('.yr-btn').forEach(function(b){b.classList.remove('on');});el.classList.add('on');filterArc();}
-function filterArc(){
-  var q=(document.getElementById('arc-q').value||'').toLowerCase();
-  var f=editions.filter(function(e){var ym=activeYear==='all'||((e.date||'').slice(0,4)===activeYear);var qm=!q||(e.date||'').indexOf(q)>=0||(e.vol||'').indexOf(q)>=0||(e.title||'').toLowerCase().indexOf(q)>=0;return ym&&qm;});
-  var el=document.getElementById('arc-list');
-  if(!f.length){el.innerHTML='<div style="padding:40px;text-align:center;font-family:EB Garamond,serif;font-style:italic;color:var(--dim);font-size:16px;">No results</div>';return;}
-  el.innerHTML=f.map(function(e){var sv=collections.indexOf(e.date)>=0;return'<div class="issue-card"><div class="ic-idx"><div class="ic-vol">'+(e.vol||'?')+'</div><div class="ic-vl">Vol</div></div><div class="ic-body"><div class="ic-date">'+fmtDate(e.date)+'</div><div class="ic-title">'+(e.title||'Zeus Daily · '+e.date)+'</div><div class="ic-actions"><a class="ia-r" href="'+e.filename+'" target="_blank">'+t('read_now')+'</a><button class="ia-s'+(sv?' saved':'')+'" onclick="toggleSave(event,\''+e.date+'\',this)">'+(sv?'★ '+t('saved'):'☆ '+t('saved'))+'</button></div></div></div>';}).join('');
-}
-
-function toggleSave(ev,date,btn){
-  ev.stopPropagation();
-  var i=collections.indexOf(date);
-  if(i>=0){collections.splice(i,1);btn.classList.remove('saved');btn.textContent='☆ '+t('saved');toast(t('toast_unsaved'));}
-  else{collections.push(date);btn.classList.add('saved');btn.textContent='★ '+t('saved');toast(t('toast_saved'));}
-  saveCollections();updateColStat();
-  if(document.getElementById('p-collection').classList.contains('on'))renderCol();
-}
+function filterArc(){var q=(document.getElementById('arc-q').value||'').toLowerCase();var f=editions.filter(function(e){var ym=activeYear==='all'||((e.date||'').slice(0,4)===activeYear);var qm=!q||(e.date||'').indexOf(q)>=0||(e.vol||'').indexOf(q)>=0||(e.title||'').toLowerCase().indexOf(q)>=0;return ym&&qm;});var el=document.getElementById('arc-list');if(!f.length){el.innerHTML='<div style="padding:40px;text-align:center;font-family:EB Garamond,serif;font-style:italic;color:var(--dim);font-size:16px;">No results</div>';return;}el.innerHTML=f.map(function(e){var sv=collections.indexOf(e.date)>=0;return'<div class="issue-card"><div class="ic-idx"><div class="ic-vol">'+(e.vol||'?')+'</div><div class="ic-vl">Vol</div></div><div class="ic-body"><div class="ic-date">'+fmtDate(e.date)+'</div><div class="ic-title">'+(e.title||'Zeus Daily · '+e.date)+'</div><div class="ic-actions"><a class="ia-r" href="'+e.filename+'" target="_blank">'+t('read_now')+'</a><button class="ia-s'+(sv?' saved':'')+'" onclick="toggleSave(event,\''+e.date+'\',this)">'+(sv?'★ '+t('saved'):'☆ '+t('saved'))+'</button></div></div></div>';}).join('');}
+function toggleSave(ev,date,btn){ev.stopPropagation();var i=collections.indexOf(date);if(i>=0){collections.splice(i,1);btn.classList.remove('saved');btn.textContent='☆ '+t('saved');toast(t('toast_unsaved'));}else{collections.push(date);btn.classList.add('saved');btn.textContent='★ '+t('saved');toast(t('toast_saved'));}saveCollections();updateColStat();if(document.getElementById('p-collection').classList.contains('on'))renderCol();}
 function saveCollections(){if(user)localStorage.setItem('zc_'+user.id,JSON.stringify(collections));}
 function loadCollections(){if(!user)return;var r=localStorage.getItem('zc_'+user.id);if(r)try{collections=JSON.parse(r);}catch(e){}updateColStat();}
 function updateColStat(){document.getElementById('st-col').textContent=collections.length;document.getElementById('pg-col').textContent=collections.length;document.getElementById('col-count').textContent=collections.length?' · '+collections.length:'';}
-function renderCol(){
-  var el=document.getElementById('col-list');
-  if(!collections.length){el.innerHTML='<div class="col-empty"><div class="ce-sym">◎</div><div class="ce-h">'+t('no_issue')+'</div><div class="ce-p">'+t('nav_archive')+' →<br>☆ '+t('saved')+'</div></div>';return;}
-  var cols=editions.filter(function(e){return collections.indexOf(e.date)>=0;});
-  el.innerHTML=cols.map(function(e){return'<div class="issue-card"><div class="ic-idx"><div class="ic-vol">'+(e.vol||'?')+'</div><div class="ic-vl">Vol</div></div><div class="ic-body"><div class="ic-date">'+fmtDate(e.date)+'</div><div class="ic-title">'+(e.title||'Zeus Daily · '+e.date)+'</div><div class="ic-actions"><a class="ia-r" href="'+e.filename+'" target="_blank">'+t('read_now')+'</a><button class="ia-s saved" onclick="toggleSave(event,\''+e.date+'\',this)">★ '+t('saved')+'</button></div></div></div>';}).join('');
-}
-
-// ── USER ──
-function loadUserData(){
-  if(!user)return;
-  var email=user.email||'';
-  document.getElementById('sb-email').textContent=email;
-  document.getElementById('pf-email').textContent=email;
-  fetch(SURL+'/rest/v1/profiles?id=eq.'+user.id+'&select=*',{headers:sbH()}).then(function(r){return r.json();}).then(function(d){
-    var joined=(d&&d[0]&&d[0].created_at)||user.created_at;
-    userDays=Math.floor((Date.now()-new Date(joined).getTime())/86400000);
-    document.getElementById('st-days').textContent=userDays;
-    document.getElementById('ph-n').textContent=userDays;
-    updateLevel();
-  }).catch(function(){});
-  fetch(SURL+'/rest/v1/checkins?user_id=eq.'+user.id+'&select=date&order=date.desc',{headers:sbH()}).then(function(r){return r.json();}).then(function(d){
-    if(!Array.isArray(d))return;
-    totalCk=d.length;
-    document.getElementById('st-cks').textContent=totalCk;
-    document.getElementById('pg-ck').textContent=totalCk;
-    var today=todayStr();
-    checkinDone=d.length>0&&d[0].date===today;
-    streak=0;if(d.length){var cur=new Date(today);for(var i=0;i<d.length;i++){if(d[i].date===cur.toISOString().slice(0,10)){streak++;cur.setDate(cur.getDate()-1);}else break;}}
-    document.getElementById('st-str').textContent=streak;
-    document.getElementById('pg-str').textContent=streak;
-    document.getElementById('cs-streak').textContent=streak+t('streak_label');
-    updateCheckinUI();
-  }).catch(function(){});
-}
-
-function updateCheckinUI(){
-  var body=document.getElementById('cs-body'),msg=document.getElementById('cs-msg'),btn=document.getElementById('btn-ck');
-  if(checkinDone){body.classList.add('done');msg.textContent=t('checkin_done');btn.textContent='✓';btn.disabled=true;}
-  else{body.classList.remove('done');msg.textContent=t('checkin_pending');btn.innerHTML='⚡ <span data-i18n="checkin">'+t('checkin')+'</span>';btn.disabled=false;}
-}
-
-function doCheckin(){
-  if(!user||checkinDone)return;
-  fetch(SURL+'/rest/v1/checkins',{method:'POST',headers:sbH(),body:JSON.stringify({user_id:user.id,date:todayStr()})}).then(function(r){
-    if(r.ok||r.status===201){checkinDone=true;totalCk++;streak++;document.getElementById('st-cks').textContent=totalCk;document.getElementById('pg-ck').textContent=totalCk;document.getElementById('st-str').textContent=streak;document.getElementById('pg-str').textContent=streak;document.getElementById('cs-streak').textContent=streak+t('streak_label');updateCheckinUI();toast(t('toast_ck'));}
-    else{toast(t('toast_ck_fail'));}
-  }).catch(function(){toast(t('toast_ck_fail'));});
-}
-
+function renderCol(){var el=document.getElementById('col-list');if(!collections.length){el.innerHTML='<div class="col-empty"><div class="ce-sym">◎</div><div class="ce-h">'+t('no_issue')+'</div><div class="ce-p">'+t('nav_archive')+' →<br>☆ '+t('saved')+'</div></div>';return;}var cols=editions.filter(function(e){return collections.indexOf(e.date)>=0;});el.innerHTML=cols.map(function(e){return'<div class="issue-card"><div class="ic-idx"><div class="ic-vol">'+(e.vol||'?')+'</div><div class="ic-vl">Vol</div></div><div class="ic-body"><div class="ic-date">'+fmtDate(e.date)+'</div><div class="ic-title">'+(e.title||'Zeus Daily · '+e.date)+'</div><div class="ic-actions"><a class="ia-r" href="'+e.filename+'" target="_blank">'+t('read_now')+'</a><button class="ia-s saved" onclick="toggleSave(event,\''+e.date+'\',this)">★ '+t('saved')+'</button></div></div></div>';}).join('');}
+function loadUserData(){if(!user)return;var email=user.email||'';document.getElementById('sb-email').textContent=email;document.getElementById('pf-email').textContent=email;fetch(SURL+'/rest/v1/profiles?id=eq.'+user.id+'&select=*',{headers:sbH()}).then(function(r){return r.json();}).then(function(d){var joined=(d&&d[0]&&d[0].created_at)||user.created_at;userDays=Math.floor((Date.now()-new Date(joined).getTime())/86400000);document.getElementById('st-days').textContent=userDays;document.getElementById('ph-n').textContent=userDays;updateLevel();}).catch(function(){});fetch(SURL+'/rest/v1/checkins?user_id=eq.'+user.id+'&select=date&order=date.desc',{headers:sbH()}).then(function(r){return r.json();}).then(function(d){if(!Array.isArray(d))return;totalCk=d.length;document.getElementById('st-cks').textContent=totalCk;document.getElementById('pg-ck').textContent=totalCk;var today=todayStr();checkinDone=d.length>0&&d[0].date===today;streak=0;if(d.length){var cur=new Date(today);for(var i=0;i<d.length;i++){if(d[i].date===cur.toISOString().slice(0,10)){streak++;cur.setDate(cur.getDate()-1);}else break;}}document.getElementById('st-str').textContent=streak;document.getElementById('pg-str').textContent=streak;document.getElementById('cs-streak').textContent=streak+t('streak_label');updateCheckinUI();}).catch(function(){});}
+function updateCheckinUI(){var body=document.getElementById('cs-body'),msg=document.getElementById('cs-msg'),btn=document.getElementById('btn-ck');if(checkinDone){body.classList.add('done');msg.textContent=t('checkin_done');btn.textContent='✓';btn.disabled=true;}else{body.classList.remove('done');msg.textContent=t('checkin_pending');btn.innerHTML='⚡ <span data-i18n="checkin">'+t('checkin')+'</span>';btn.disabled=false;}}
+function doCheckin(){if(!user||checkinDone)return;fetch(SURL+'/rest/v1/checkins',{method:'POST',headers:sbH(),body:JSON.stringify({user_id:user.id,date:todayStr()})}).then(function(r){if(r.ok||r.status===201){checkinDone=true;totalCk++;streak++;document.getElementById('st-cks').textContent=totalCk;document.getElementById('pg-ck').textContent=totalCk;document.getElementById('st-str').textContent=streak;document.getElementById('pg-str').textContent=streak;document.getElementById('cs-streak').textContent=streak+t('streak_label');updateCheckinUI();toast(t('toast_ck'));}else{toast(t('toast_ck_fail'));}}).catch(function(){toast(t('toast_ck_fail'));});}
 var LVS=[{n:1,name:'Observer',chi:'观察者',req:0},{n:2,name:'Scholar',chi:'学者',req:30},{n:3,name:'Prophet',chi:'先知',req:90},{n:4,name:'Sage',chi:'贤者',req:180},{n:5,name:'Creator',chi:'造物主',req:365}];
-function updateLevel(){
-  var lv=LVS[0];for(var i=LVS.length-1;i>=0;i--){if(userDays>=LVS[i].req){lv=LVS[i];break;}}
-  var nxt=LVS[lv.n]||null;
-  var nxtTxt=nxt?(t('days_to').replace('{n}',nxt.req-userDays)+nxt.name):t('max_lv');
-  document.getElementById('sb-lv').textContent='Lv.'+lv.n+' · '+lv.name;
-  document.getElementById('tb-lv').textContent='Lv.'+lv.n;
-  document.getElementById('ph-lv').textContent=lv.name;
-  document.getElementById('ph-chi').textContent=lv.chi;
-  document.getElementById('ph-next').textContent=nxtTxt;
-  for(var j=1;j<=5;j++){var node=document.getElementById('ln'+j),step=document.getElementById('ls'+j),chk=document.getElementById('lk'+j);node.classList.remove('past','now');step.classList.remove('past','now');if(j<lv.n){node.classList.add('past');step.classList.add('past');chk.textContent='✓';}else if(j===lv.n){node.classList.add('now');step.classList.add('now');chk.textContent='';}else chk.textContent='';}
-}
-
-// ── NAV ──
+function updateLevel(){var lv=LVS[0];for(var i=LVS.length-1;i>=0;i--){if(userDays>=LVS[i].req){lv=LVS[i];break;}}var nxt=LVS[lv.n]||null;var nxtTxt=nxt?(t('days_to').replace('{n}',nxt.req-userDays)+nxt.name):t('max_lv');document.getElementById('sb-lv').textContent='Lv.'+lv.n+' · '+lv.name;document.getElementById('tb-lv').textContent='Lv.'+lv.n;document.getElementById('ph-lv').textContent=lv.name;document.getElementById('ph-chi').textContent=lv.chi;document.getElementById('ph-next').textContent=nxtTxt;for(var j=1;j<=5;j++){var node=document.getElementById('ln'+j),step=document.getElementById('ls'+j),chk=document.getElementById('lk'+j);node.classList.remove('past','now');step.classList.remove('past','now');if(j<lv.n){node.classList.add('past');step.classList.add('past');chk.textContent='✓';}else if(j===lv.n){node.classList.add('now');step.classList.add('now');chk.textContent='';}else chk.textContent='';}}
 var PNAMES={today:'Today',archive:'Archive',collection:'Collection',profile:'Profile'};
-function go(page){
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
-  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('on');});
-  document.querySelectorAll('.bn-item').forEach(function(i){i.classList.remove('on');});
-  document.getElementById('p-'+page).classList.add('on');
-  document.getElementById('p-'+page).scrollTop=0;
-  document.getElementById('tb-name').textContent=t('nav_'+page)||PNAMES[page];
-  document.querySelectorAll('.sb-item').forEach(function(i){if(i.getAttribute('onclick')&&i.getAttribute('onclick').indexOf("'"+page+"'")>=0)i.classList.add('on');});
-  var bn=document.getElementById('bn-'+page);if(bn)bn.classList.add('on');
-  if(page==='collection')renderCol();
-}
-
+function go(page){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('on');});document.querySelectorAll('.bn-item').forEach(function(i){i.classList.remove('on');});document.getElementById('p-'+page).classList.add('on');document.getElementById('p-'+page).scrollTop=0;document.getElementById('tb-name').textContent=t('nav_'+page)||PNAMES[page];document.querySelectorAll('.sb-item').forEach(function(i){if(i.getAttribute('onclick')&&i.getAttribute('onclick').indexOf("'"+page+"'")>=0)i.classList.add('on');});var bn=document.getElementById('bn-'+page);if(bn)bn.classList.add('on');if(page==='collection')renderCol();}
 function toast(msg){var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show');},2500);}
-
-// ── EYE ──
 var iris=document.getElementById('iris'),pupil=document.getElementById('pupil'),ep=document.getElementById('ep'),ti=document.getElementById('t-iris'),tp=document.getElementById('t-pupil');
 document.addEventListener('mousemove',function(e){var dx=(e.clientX/window.innerWidth-0.5)*2,dy=(e.clientY/window.innerHeight-0.5)*2,mx=dx*7,my=dy*4;if(iris){iris.setAttribute('cx',60+mx);iris.setAttribute('cy',26+my);}if(pupil){pupil.setAttribute('cx',60+mx*1.3);pupil.setAttribute('cy',26+my*1.3);}if(ti){ti.setAttribute('cx',60+mx);ti.setAttribute('cy',26+my);}if(tp){tp.setAttribute('cx',60+mx*1.3);tp.setAttribute('cy',26+my*1.3);}});
 function blink(){if(ep)ep.setAttribute('d','M10,26 Q60,22 110,26 Q60,30 10,26 Z');[iris,ti].forEach(function(e){if(e)e.setAttribute('ry','2');});[pupil,tp].forEach(function(e){if(e)e.setAttribute('ry','1');});setTimeout(function(){if(ep)ep.setAttribute('d','M10,26 Q60,-10 110,26 Q60,62 10,26 Z');[iris,ti].forEach(function(e){if(e)e.setAttribute('ry','18');});[pupil,tp].forEach(function(e){if(e)e.setAttribute('ry','7');});},130);}
