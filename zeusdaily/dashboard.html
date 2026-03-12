@@ -2,595 +2,1194 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zeus Daily · The God's Eye View</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Zeus Daily · 神之视界</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --cream: #faf8f4; --cream2: #f2ead8;
-  --gold: #b8964a; --gold-light: #d4aa60; --gold-dark: #8a6d2f; --gold-pale: rgba(184,150,74,0.12);
-  --purple: #5c3d8f; --purple-deep: #2d1b4e; --purple-light: #8b5cf6;
-  --dark: #1a1208; --dark2: #251c0e; --ink: #2c2016; --muted: #9a8060;
-  --border: rgba(184,150,74,0.2); --border-strong: rgba(184,150,74,0.4);
+  --cream: #faf8f4;
+  --cream2: #f0e8d6;
+  --cream3: #e4d5bc;
+  --ink: #1a0f00;
+  --ink2: #3d2a10;
+  --ink3: #6b4e28;
+  --gold: #b8964a;
+  --gold2: #8a6d2f;
+  --gold3: #d4af6a;
+  --purple: #5c3d8f;
+  --purple2: #3d2060;
+  --border: rgba(139,105,58,0.2);
+  --border2: rgba(139,105,58,0.08);
+  --shadow: 0 2px 20px rgba(26,15,0,0.08);
+  --shadow2: 0 8px 40px rgba(26,15,0,0.14);
+  --nav-h: 64px;
+  --header-h: 56px;
 }
-html, body { height: 100%; overflow: hidden; }
-body { background: var(--cream); font-family: 'Cormorant Garamond', serif; color: var(--ink); display: flex; }
 
-/* SIDEBAR */
-.sidebar { width: 220px; min-width: 220px; height: 100vh; background: var(--dark); border-right: 1px solid rgba(184,150,74,0.25); display: flex; flex-direction: column; z-index: 10; }
-.sidebar-brand { padding: 26px 20px 18px; border-bottom: 1px solid rgba(184,150,74,0.15); }
-.sidebar-eye { display: block; margin-bottom: 10px; }
-.sidebar-title { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.05rem; color: var(--gold); letter-spacing: 0.18em; }
-.sidebar-sub { font-family: 'Rajdhani', sans-serif; font-size: 0.52rem; letter-spacing: 0.38em; text-transform: uppercase; color: rgba(184,150,74,0.45); margin-top: 3px; }
-.sidebar-nav { flex: 1; padding: 14px 0; overflow-y: auto; }
-.nav-label { font-family: 'Rajdhani', sans-serif; font-size: 0.5rem; letter-spacing: 0.42em; text-transform: uppercase; color: rgba(184,150,74,0.28); padding: 14px 20px 5px; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(184,150,74,0.45); cursor: pointer; transition: all 0.2s; border-left: 2px solid transparent; }
-.nav-item:hover { color: var(--gold); background: rgba(184,150,74,0.05); }
-.nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(184,150,74,0.07); }
-.nav-item svg { flex-shrink: 0; opacity: 0.7; }
-.nav-item.active svg { opacity: 1; }
-.nav-badge { margin-left: auto; background: rgba(92,61,143,0.35); color: #a78bfa; font-size: 0.52rem; padding: 1px 6px; border-radius: 10px; }
-.sidebar-footer { padding: 14px 18px; border-top: 1px solid rgba(184,150,74,0.12); }
-.side-email { font-family: 'Rajdhani', sans-serif; font-size: 0.58rem; letter-spacing: 0.06em; color: rgba(184,150,74,0.35); margin-bottom: 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.side-lv { display: inline-flex; align-items: center; gap: 4px; font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; letter-spacing: 0.12em; padding: 3px 8px; border-radius: 10px; margin-bottom: 9px; }
-.lvl-1 { background: rgba(74,120,184,0.12); color: #6a9fd8; border: 1px solid rgba(74,120,184,0.28); }
-.lvl-2 { background: rgba(92,61,143,0.12); color: #a78bfa; border: 1px solid rgba(92,61,143,0.3); }
-.lvl-3 { background: linear-gradient(135deg,rgba(92,61,143,0.12),rgba(184,150,74,0.12)); color: #b08de0; border: 1px solid rgba(140,100,180,0.28); }
-.lvl-4 { background: rgba(184,150,74,0.12); color: var(--gold); border: 1px solid rgba(184,150,74,0.35); }
-.lvl-5 { background: linear-gradient(135deg,rgba(184,150,74,0.15),rgba(200,160,240,0.15)); color: #d4a0ff; border: 1px solid rgba(200,160,240,0.35); }
-.logout-btn { display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%; font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(184,150,74,0.28); background: none; border: 1px solid rgba(184,150,74,0.12); padding: 6px; border-radius: 2px; cursor: pointer; transition: all 0.2s; }
-.logout-btn:hover { color: var(--gold); border-color: rgba(184,150,74,0.35); }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior: smooth; }
 
-/* MAIN */
-.main-area { flex: 1; height: 100vh; overflow-y: auto; background: var(--cream); }
-.main-area::-webkit-scrollbar { width: 3px; }
-.main-area::-webkit-scrollbar-thumb { background: rgba(184,150,74,0.15); }
-.page { display: none; min-height: 100vh; }
-.page.active { display: block; animation: pgIn 0.3s ease both; }
-@keyframes pgIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-
-/* PAGE HEADER */
-.ph { padding: 32px 44px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-end; justify-content: space-between; }
-.ph-title { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 900; color: var(--gold-dark); line-height: 1; }
-.ph-sub { font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); margin-top: 5px; }
-.pc { padding: 32px 44px 72px; }
-
-/* STATS */
-.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 28px; }
-.stat-card { background: white; border: 1px solid var(--border); border-radius: 3px; padding: 20px 18px; position: relative; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
-.stat-card:hover { border-color: var(--border-strong); box-shadow: 0 3px 16px rgba(26,18,8,0.05); }
-.stat-card::before { content:''; position:absolute; top:0;left:0;right:0;height:2px; background:linear-gradient(90deg,var(--gold-dark),var(--gold)); }
-.stat-ico { width:28px;height:28px;background:var(--gold-pale);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:10px; }
-.stat-val { font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold-dark);line-height:1; }
-.stat-lbl { font-family:'Rajdhani',sans-serif;font-size:0.58rem;letter-spacing:0.26em;text-transform:uppercase;color:var(--muted);margin-top:4px; }
-.stat-note { font-family:'Rajdhani',sans-serif;font-size:0.58rem;color:#5a9060;margin-top:3px; }
-
-/* TODAY PANEL */
-.today-panel { background:var(--dark);border-radius:5px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid rgba(184,150,74,0.18);position:relative;overflow:hidden; }
-.today-panel::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 100% 50%,rgba(92,61,143,0.12) 0%,transparent 60%);pointer-events:none; }
-.today-left h2 { font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--gold);letter-spacing:0.04em; }
-.today-left p { font-size:0.88rem;color:rgba(184,150,74,0.45);margin-top:3px;font-style:italic; }
-.today-acts { display:flex;gap:10px;align-items:center;flex-shrink:0; }
-
-.btn-gold { padding:11px 24px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;border-radius:2px;font-family:'Playfair Display',serif;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;color:var(--dark);cursor:pointer;transition:opacity 0.2s,transform 0.15s;white-space:nowrap; }
-.btn-gold:hover { opacity:0.86;transform:translateY(-1px); }
-.btn-gold:disabled { background:#5a4820;color:rgba(26,18,8,0.4);cursor:not-allowed;transform:none; }
-.btn-gold.done { background:linear-gradient(135deg,#4a7a50,#2e5535);color:#b0e0b5; }
-.btn-outline { padding:10px 18px;background:transparent;border:1px solid rgba(184,150,74,0.28);border-radius:2px;font-family:'Rajdhani',sans-serif;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;text-decoration:none; }
-.btn-outline:hover { background:rgba(184,150,74,0.07);border-color:var(--gold); }
-
-/* SECTION */
-.sec-head { display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px; }
-.sec-h { font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--gold-dark); }
-.sec-more { font-family:'Rajdhani',sans-serif;font-size:0.58rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--purple);cursor:pointer;transition:color 0.2s; }
-.sec-more:hover { color:var(--purple-light); }
-
-/* EDITION CARDS */
-.ed-row { display:grid;grid-template-columns:repeat(3,1fr);gap:14px; }
-.ed-card { background:white;border:1px solid var(--border);border-radius:3px;padding:20px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:all 0.2s;position:relative;overflow:hidden;text-decoration:none;color:inherit; }
-.ed-card::after { content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform 0.3s; }
-.ed-card:hover { border-color:var(--border-strong);box-shadow:0 5px 20px rgba(26,18,8,0.07);transform:translateY(-2px); }
-.ed-card:hover::after { transform:scaleX(1); }
-.ed-card.feat { background:var(--dark);border-color:rgba(184,150,74,0.28); }
-.ed-vol { font-family:'Rajdhani',sans-serif;font-size:0.56rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--purple);display:flex;justify-content:space-between;align-items:center; }
-.ed-card.feat .ed-vol { color:rgba(139,92,246,0.65); }
-.ed-arr { color:var(--gold); }
-.ed-date { font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--gold-dark); }
-.ed-card.feat .ed-date { color:var(--gold); }
-.ed-sum { font-size:0.8rem;color:var(--muted);font-style:italic;line-height:1.45;flex:1; }
-.ed-card.feat .ed-sum { color:rgba(184,150,74,0.45); }
-.ed-tag { display:inline-flex;align-items:center;gap:3px;font-family:'Rajdhani',sans-serif;font-size:0.53rem;letter-spacing:0.18em;text-transform:uppercase;padding:2px 7px;border-radius:10px;background:rgba(92,61,143,0.07);color:var(--purple);border:1px solid rgba(92,61,143,0.13);align-self:flex-start; }
-.ed-card.feat .ed-tag { background:rgba(139,92,246,0.1);color:#a78bfa;border-color:rgba(139,92,246,0.18); }
-
-/* ARCHIVE */
-.toolbar { display:flex;align-items:center;gap:10px;margin-bottom:24px;flex-wrap:wrap; }
-.fb { font-family:'Rajdhani',sans-serif;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;padding:5px 12px;border-radius:2px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all 0.2s; }
-.fb:hover,.fb.on { background:var(--gold-pale);border-color:var(--border-strong);color:var(--gold-dark); }
-.sbox { margin-left:auto;display:flex;align-items:center;gap:7px;background:white;border:1px solid var(--border);border-radius:2px;padding:5px 10px; }
-.sbox input { border:none;outline:none;font-family:'Cormorant Garamond',serif;font-size:0.85rem;color:var(--ink);background:none;width:148px; }
-.sbox input::placeholder { color:rgba(154,128,96,0.45);font-style:italic; }
-.ag { display:grid;grid-template-columns:repeat(4,1fr);gap:14px; }
-.ac { background:white;border:1px solid var(--border);border-radius:3px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:all 0.2s; }
-.ac:hover { border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 24px rgba(26,18,8,0.08); }
-.ac-top { background:var(--dark);padding:15px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(184,150,74,0.12); }
-.ac-vol { font-family:'Rajdhani',sans-serif;font-size:0.56rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(139,92,246,0.65); }
-.ac-body { padding:14px;flex:1;display:flex;flex-direction:column;gap:7px; }
-.ac-date { font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--gold-dark); }
-.ac-sum { font-size:0.78rem;color:var(--muted);font-style:italic;line-height:1.4;flex:1; }
-.ac-foot { padding:9px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
-.ac-read { font-family:'Rajdhani',sans-serif;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold); }
-.ac:hover .ac-read { color:var(--gold-light); }
-.cdot { width:8px;height:8px;border-radius:50%;border:1.5px solid var(--border-strong);cursor:pointer;transition:all 0.2s;flex-shrink:0; }
-.cdot.on { background:var(--gold);border-color:var(--gold);box-shadow:0 0 5px rgba(184,150,74,0.45); }
-
-/* COLLECTION HERO */
-.coll-hero { background:var(--dark);border-radius:5px;padding:28px;margin-bottom:28px;border:1px solid rgba(184,150,74,0.18);display:flex;align-items:center;gap:24px;position:relative;overflow:hidden; }
-.coll-hero::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse 35% 80% at 90% 50%,rgba(92,61,143,0.18) 0%,transparent 60%);pointer-events:none; }
-.coll-num { font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--gold);line-height:1;flex-shrink:0; }
-.coll-txt h2 { font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--gold);margin-bottom:5px; }
-.coll-txt p { font-size:0.86rem;color:rgba(184,150,74,0.45);font-style:italic;line-height:1.5; }
-.empty-coll { grid-column:1/-1;text-align:center;padding:72px 40px;color:var(--muted); }
-.empty-coll p { font-size:0.95rem;font-style:italic;margin-top:10px; }
-.empty-hint { font-family:'Rajdhani',sans-serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;margin-top:6px;color:rgba(154,128,96,0.4); }
-
-/* PROFILE */
-.prof-grid { display:grid;grid-template-columns:260px 1fr;gap:20px; }
-.prof-card { background:white;border:1px solid var(--border);border-radius:3px;overflow:hidden; }
-.prof-head { background:var(--dark);padding:26px 22px;text-align:center;border-bottom:1px solid rgba(184,150,74,0.15); }
-.prof-av { width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--purple-deep),var(--purple));border:2px solid rgba(184,150,74,0.35);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--gold); }
-.prof-em { font-family:'Rajdhani',sans-serif;font-size:0.7rem;letter-spacing:0.06em;color:rgba(184,150,74,0.5);word-break:break-all; }
-.prof-body { padding:18px; }
-.prof-row { display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border); }
-.prof-row:last-child { border-bottom:none; }
-.pr-lbl { font-family:'Rajdhani',sans-serif;font-size:0.57rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted); }
-.pr-val { font-family:'Playfair Display',serif;font-size:0.92rem;font-weight:700;color:var(--gold-dark); }
-.prog-sec { background:white;border:1px solid var(--border);border-radius:3px;padding:26px; }
-.prog-sec h3 { font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold-dark);margin-bottom:22px; }
-.lv-track { display:flex;flex-direction:column;gap:14px; }
-.lv-row { display:flex;align-items:center;gap:12px; }
-.lv-ico { width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-family:'Rajdhani',sans-serif;font-weight:600;flex-shrink:0;border:1.5px solid; }
-.lv-info { flex:1; }
-.lv-nm { font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;color:var(--ink);margin-bottom:3px; }
-.lv-req { font-family:'Rajdhani',sans-serif;font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted); }
-.lv-bar-w { width:100%;height:3px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden; }
-.lv-bar { height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width 0.8s ease; }
-.lv-row.cur .lv-nm { color:var(--gold-dark); }
-.lv-row.cur .lv-ico { border-color:var(--gold);color:var(--gold);background:var(--gold-pale); }
-.lv-row.done .lv-ico { border-color:rgba(80,144,90,0.45);color:#5a9060;background:rgba(80,144,90,0.08); }
-.lv-row.lock .lv-ico { border-color:var(--border);color:rgba(154,128,96,0.35);background:none; }
-.lv-row.lock .lv-nm { color:rgba(154,128,96,0.45); }
-
-/* TOAST */
-.toast { position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(56px);background:var(--dark);color:var(--gold);padding:11px 22px;border-radius:2px;font-family:'Rajdhani',sans-serif;font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;border:1px solid rgba(184,150,74,0.28);z-index:999;transition:transform 0.3s;white-space:nowrap; }
-.toast.show { transform:translateX(-50%) translateY(0); }
-
-@media(max-width:860px){
-  .sidebar{width:56px;min-width:56px;}
-  .sidebar-title,.sidebar-sub,.nav-label,.nav-item span,.nav-badge,.side-email,.side-lv,.logout-btn span{display:none;}
-  .sidebar-brand{padding:14px 10px;}
-  .nav-item{padding:11px;justify-content:center;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .ed-row{grid-template-columns:1fr;}
-  .ag{grid-template-columns:repeat(2,1fr);}
-  .prof-grid{grid-template-columns:1fr;}
-  .pc{padding:22px 18px 56px;}
-  .ph{padding:22px 18px 18px;}
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 16px;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
+
+/* ── GRAIN OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── HEADER ── */
+#header {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  z-index: 200;
+}
+.header-brand {
+  display: flex; align-items: center; gap: 10px;
+}
+.header-eye {
+  cursor: pointer;
+}
+.brand-text .title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 900;
+  letter-spacing: 3px; color: var(--ink);
+  line-height: 1;
+}
+.brand-text .sub {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 9px; letter-spacing: 2.5px;
+  color: var(--ink3); text-transform: uppercase;
+  margin-top: 1px;
+}
+.header-right {
+  display: flex; align-items: center; gap: 12px;
+}
+.level-pill {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  color: var(--ink3);
+  background: transparent;
+  text-transform: uppercase;
+}
+.logout-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px; color: var(--ink3);
+  letter-spacing: 1px; padding: 4px;
+}
+
+/* ── MAIN ── */
+#main {
+  padding-top: var(--header-h);
+  padding-bottom: calc(var(--nav-h) + 16px);
+  min-height: 100vh;
+}
+
+/* ── SECTIONS ── */
+.section { display: none; animation: fadeUp 0.35s ease; }
+.section.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+
+/* ── BOTTOM NAV ── */
+#bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  background: var(--cream);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: stretch;
+  z-index: 200;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-tab {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+  cursor: pointer; border: none; background: none;
+  transition: all 0.2s; padding: 8px 0;
+}
+.nav-tab .nav-icon {
+  font-size: 18px; line-height: 1;
+  color: var(--ink3); transition: all 0.2s;
+}
+.nav-tab .nav-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 9px; letter-spacing: 1.5px;
+  color: var(--ink3); transition: all 0.2s;
+  text-transform: uppercase;
+}
+.nav-tab.active .nav-icon,
+.nav-tab.active .nav-label { color: var(--gold2); }
+.nav-tab.active { border-top: 2px solid var(--gold); }
+
+/* ── OVERVIEW ── */
+.ov-hero {
+  padding: 28px 20px 0;
+}
+.ov-greeting {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px; font-style: italic;
+  color: var(--ink3); letter-spacing: 0.5px;
+}
+.ov-date {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px; letter-spacing: 3px;
+  color: var(--gold2); text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* CHECKIN RITUAL */
+.checkin-block {
+  margin: 20px;
+  border: 1px solid var(--border);
+  background: var(--ink);
+  padding: 24px 22px;
+  position: relative; overflow: hidden;
+}
+.checkin-block::before {
+  content: '';
+  position: absolute; top: -30px; right: -30px;
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(184,150,74,0.12) 0%, transparent 70%);
+}
+.checkin-block.done { background: var(--cream2); border-color: var(--border2); }
+.checkin-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px; letter-spacing: 3px;
+  color: rgba(250,248,244,0.5); text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.checkin-block.done .checkin-label { color: var(--ink3); }
+.checkin-msg {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; color: var(--cream);
+  line-height: 1.3;
+}
+.checkin-block.done .checkin-msg { color: var(--ink); font-size: 16px; }
+.checkin-actions { display: flex; gap: 10px; margin-top: 18px; align-items: center; }
+.btn-checkin {
+  background: var(--gold); color: var(--ink);
+  border: none; padding: 11px 22px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px; font-weight: 700; letter-spacing: 2px;
+  cursor: pointer; text-transform: uppercase;
+  transition: background 0.2s; flex: 1;
+}
+.btn-checkin:hover { background: var(--gold3); }
+.btn-checkin:disabled { opacity: 0.5; cursor: default; }
+.btn-read {
+  background: transparent;
+  border: 1px solid rgba(250,248,244,0.25);
+  color: rgba(250,248,244,0.7);
+  padding: 11px 18px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: 2px;
+  cursor: pointer; text-transform: uppercase;
+  transition: all 0.2s; white-space: nowrap;
+}
+.checkin-block.done .btn-read {
+  border-color: var(--border);
+  color: var(--ink3);
+}
+.btn-read:hover { border-color: var(--gold); color: var(--gold2); }
+
+/* STATS ROW */
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  margin: 0 20px; border: 1px solid var(--border);
+}
+.stat-item {
+  background: var(--cream); padding: 16px 12px; text-align: center;
+}
+.stat-n {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; color: var(--ink); line-height: 1;
+}
+.stat-l {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 9px; letter-spacing: 1.5px;
+  color: var(--ink3); text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* LEVEL PROGRESS */
+.level-section {
+  margin: 20px;
+  border: 1px solid var(--border);
+  padding: 20px;
+  background: var(--cream2);
+}
+.level-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 14px;
+}
+.level-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; color: var(--purple);
+}
+.level-num {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px; letter-spacing: 2px; color: var(--ink3);
+}
+.level-track {
+  display: flex; gap: 3px; align-items: center;
+  margin-bottom: 8px;
+}
+.level-dot {
+  flex: 1; height: 3px; background: var(--border);
+  border-radius: 2px; transition: background 0.4s;
+}
+.level-dot.filled { background: var(--gold); }
+.level-dot.active { background: var(--purple); }
+.level-subtext {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; font-style: italic; color: var(--ink3);
+}
+
+/* LATEST EDITIONS */
+.section-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 20px 20px 12px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; color: var(--ink);
+}
+.section-link {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px; letter-spacing: 1.5px;
+  color: var(--gold2); text-transform: uppercase;
+  cursor: pointer; border: none; background: none;
+  padding: 0;
+}
+
+.edition-row {
+  display: flex; align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border2);
+  gap: 14px; cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none; color: inherit;
+}
+.edition-row:hover { background: var(--cream2); }
+.edition-vol-badge {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  color: var(--cream); background: var(--gold2);
+  padding: 3px 8px; white-space: nowrap; text-transform: uppercase;
+  min-width: 52px; text-align: center;
+}
+.edition-info { flex: 1; min-width: 0; }
+.edition-date-text {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px; letter-spacing: 1px; color: var(--ink3);
+}
+.edition-title-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-top: 2px;
+}
+.edition-arrow { color: var(--gold); font-size: 14px; }
+
+/* ── ARCHIVE ── */
+.archive-filters {
+  padding: 16px 20px 0;
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-tag {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+  padding: 6px 14px; border: 1px solid var(--border);
+  background: transparent; color: var(--ink3);
+  cursor: pointer; text-transform: uppercase; transition: all 0.2s;
+}
+.filter-tag.active {
+  background: var(--ink); color: var(--cream);
+  border-color: var(--ink);
+}
+.archive-search {
+  margin: 14px 20px 0;
+  display: flex; align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+.archive-search input {
+  flex: 1; background: none; border: none; outline: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; color: var(--ink);
+  padding: 4px 0;
+}
+.archive-search input::placeholder { color: var(--ink3); font-style: italic; }
+.archive-list { margin-top: 8px; }
+
+/* Big edition card for archive */
+.arc-card {
+  display: block; padding: 20px;
+  border-bottom: 1px solid var(--border2);
+  text-decoration: none; color: inherit;
+  transition: background 0.15s; position: relative;
+}
+.arc-card:hover { background: var(--cream2); }
+.arc-card-top {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+}
+.arc-vol {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  color: var(--gold2); text-transform: uppercase;
+}
+.arc-date {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px; letter-spacing: 1px; color: var(--ink3);
+}
+.arc-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; color: var(--ink); line-height: 1.3;
+  margin-bottom: 6px;
+}
+.arc-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; font-style: italic; color: var(--ink3);
+}
+.arc-collect-btn {
+  position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+  background: none; border: 1px solid var(--border);
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink3); font-size: 14px;
+  transition: all 0.2s;
+}
+.arc-collect-btn.collected { background: var(--gold); color: var(--cream); border-color: var(--gold); }
+.arc-collect-btn:hover { border-color: var(--gold); color: var(--gold2); }
+
+/* ── COLLECTION ── */
+.col-empty {
+  padding: 60px 20px; text-align: center;
+}
+.col-empty-icon { font-size: 36px; margin-bottom: 14px; opacity: 0.3; }
+.col-empty-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; font-style: italic; color: var(--ink3);
+}
+.col-empty-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; color: var(--ink3); margin-top: 8px;
+}
+
+/* ── PROFILE ── */
+.profile-hero {
+  margin: 20px; background: var(--ink);
+  padding: 28px 22px; position: relative; overflow: hidden;
+}
+.profile-hero::after {
+  content: ''; position: absolute;
+  right: -20px; bottom: -20px; width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(92,61,143,0.3) 0%, transparent 70%);
+}
+.profile-email {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px; letter-spacing: 2px; color: rgba(250,248,244,0.5);
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.profile-lv-display {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; color: var(--cream); font-style: italic;
+  line-height: 1.1;
+}
+.profile-lv-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; color: rgba(250,248,244,0.5);
+  margin-top: 4px; font-style: italic;
+}
+.profile-days-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px; color: var(--gold);
+  margin-top: 16px; line-height: 1;
+}
+.profile-days-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px; letter-spacing: 3px;
+  color: rgba(250,248,244,0.4); text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.levels-track {
+  margin: 20px;
+}
+.lv-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 0; border-bottom: 1px solid var(--border2);
+}
+.lv-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px; font-weight: 700; color: var(--ink3);
+  flex-shrink: 0;
+}
+.lv-circle.reached { border-color: var(--gold); color: var(--gold); background: rgba(184,150,74,0.08); }
+.lv-circle.current { border-color: var(--purple); color: var(--purple); background: rgba(92,61,143,0.08); box-shadow: 0 0 0 3px rgba(92,61,143,0.12); }
+.lv-info { flex: 1; }
+.lv-name { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--ink); }
+.lv-req { font-family: 'Rajdhani', sans-serif; font-size: 11px; letter-spacing: 1px; color: var(--ink3); margin-top: 2px; }
+.lv-check { color: var(--gold); font-size: 16px; }
+
+.profile-stats-grid {
+  margin: 0 20px 20px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.ps-card {
+  border: 1px solid var(--border);
+  padding: 18px 16px;
+  background: var(--cream2);
+}
+.ps-n {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; color: var(--ink); line-height: 1;
+}
+.ps-l {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px; letter-spacing: 2px; color: var(--ink3);
+  text-transform: uppercase; margin-top: 6px;
+}
+
+/* ── DESKTOP SIDEBAR ── */
+@media (min-width: 768px) {
+  #header { left: 240px; }
+  #sidebar-desktop {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 240px;
+    background: var(--ink);
+    display: flex; flex-direction: column;
+    z-index: 300; border-right: 1px solid rgba(184,150,74,0.15);
+  }
+  #main { margin-left: 240px; max-width: 720px; }
+  #bottom-nav { display: none; }
+
+  .ds-logo {
+    padding: 32px 24px 24px;
+    border-bottom: 1px solid rgba(184,150,74,0.12);
+  }
+  .ds-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 900; letter-spacing: 3px;
+    color: var(--cream); line-height: 1;
+  }
+  .ds-sub {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 9px; letter-spacing: 3px; color: rgba(250,248,244,0.35);
+    text-transform: uppercase; margin-top: 4px;
+  }
+  .ds-eye-wrap { padding: 24px; display: flex; justify-content: center; border-bottom: 1px solid rgba(184,150,74,0.12); }
+  .ds-nav { flex: 1; padding: 20px 0; }
+  .ds-nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 24px; cursor: pointer;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
+    color: rgba(250,248,244,0.4); text-transform: uppercase;
+    border-left: 3px solid transparent; transition: all 0.2s;
+  }
+  .ds-nav-item:hover { color: rgba(250,248,244,0.7); background: rgba(184,150,74,0.05); }
+  .ds-nav-item.active { color: var(--gold3); border-left-color: var(--gold); background: rgba(184,150,74,0.08); }
+  .ds-nav-icon { font-size: 16px; width: 20px; text-align: center; }
+  .ds-footer {
+    padding: 20px 24px;
+    border-top: 1px solid rgba(184,150,74,0.12);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 10px; letter-spacing: 1.5px; color: rgba(250,248,244,0.25);
+  }
+  .logout-ds {
+    background: none; border: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 10px; letter-spacing: 1.5px; color: rgba(250,248,244,0.25);
+    cursor: pointer; text-transform: uppercase;
+    display: block; margin-top: 6px; padding: 0;
+  }
+  .logout-ds:hover { color: rgba(250,248,244,0.5); }
+}
+@media (max-width: 767px) {
+  #sidebar-desktop { display: none; }
+}
+
+/* ── LOADING / EMPTY ── */
+.loading-text {
+  padding: 40px 20px; text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-style: italic; color: var(--ink3);
+}
+.section-rule {
+  height: 1px; background: var(--border2);
+  margin: 0 20px;
+}
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: calc(var(--nav-h) + 12px); left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: var(--cream);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px; letter-spacing: 1.5px;
+  padding: 10px 20px; opacity: 0;
+  transition: all 0.3s; pointer-events: none;
+  white-space: nowrap; z-index: 9999;
+  border-bottom: 2px solid var(--gold);
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (min-width: 768px) { #toast { bottom: 20px; } }
 </style>
 </head>
 <body>
 
-<aside class="sidebar">
-  <div class="sidebar-brand">
-    <svg id="sideEye" class="sidebar-eye" width="46" height="20" viewBox="0 0 120 52" xmlns="http://www.w3.org/2000/svg" style="cursor:none">
-      <defs><radialGradient id="sg1" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-      <path id="sLid" d="M10,26 Q60,4 110,26 Q60,48 10,26 Z" fill="none" stroke="#b8964a" stroke-width="1.5"/>
-      <circle cx="60" cy="26" r="14" fill="url(#sg1)"/>
-      <circle id="sPupil" cx="60" cy="26" r="6" fill="#0d0618"/>
-      <circle cx="54" cy="22" r="2.5" fill="rgba(255,255,255,0.5)"/>
+<!-- DESKTOP SIDEBAR -->
+<div id="sidebar-desktop">
+  <div class="ds-logo">
+    <div class="ds-brand">ZEUS DAILY</div>
+    <div class="ds-sub">The God's Eye View</div>
+  </div>
+  <div class="ds-eye-wrap">
+    <svg id="ds-eye" width="120" height="52" viewBox="0 0 120 52">
+      <defs>
+        <radialGradient id="iris-g" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#b088f9"/>
+          <stop offset="45%" stop-color="#6b4c9a"/>
+          <stop offset="100%" stop-color="#2d1b4e"/>
+        </radialGradient>
+        <filter id="gg">
+          <feGaussianBlur stdDeviation="1.5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <clipPath id="ec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath>
+      </defs>
+      <path id="ep" d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#b8964a" stroke-width="1" filter="url(#gg)"/>
+      <g clip-path="url(#ec)">
+        <ellipse id="ds-iris" cx="60" cy="26" rx="18" ry="18" fill="url(#iris-g)"/>
+        <ellipse id="ds-pupil" cx="60" cy="26" rx="7" ry="7" fill="#0a0806"/>
+        <ellipse cx="66" cy="21" rx="3" ry="2" fill="rgba(255,255,255,0.2)"/>
+      </g>
     </svg>
-    <div class="sidebar-title">ZEUS DAILY</div>
-    <div class="sidebar-sub">God's Eye View</div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-label">主菜单</div>
-    <div class="nav-item active" onclick="showPage('overview')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      <span>总览</span>
-    </div>
-    <div class="nav-item" onclick="showPage('archive')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      <span>历期日报</span>
-      <span class="nav-badge" id="archBadge">0</span>
-    </div>
-    <div class="nav-item" onclick="showPage('collection')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <span>我的收藏</span>
-      <span class="nav-badge" id="collBadge">0</span>
-    </div>
-    <div class="nav-label">账户</div>
-    <div class="nav-item" onclick="showPage('profile')">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span>我的档案</span>
-    </div>
-  </nav>
-  <div class="sidebar-footer">
-    <div class="side-email" id="sideEmail">—</div>
-    <div class="side-lv lvl-1" id="sideLv">· Lv.1 Observer</div>
-    <button class="logout-btn" onclick="doLogout()">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      <span>登出</span>
-    </button>
+  <div class="ds-nav">
+    <div class="ds-nav-item active" onclick="goto('overview')"><span class="ds-nav-icon">◈</span>总览</div>
+    <div class="ds-nav-item" onclick="goto('archive')"><span class="ds-nav-icon">▣</span>历期日报</div>
+    <div class="ds-nav-item" onclick="goto('collection')"><span class="ds-nav-icon">◎</span>我的收藏</div>
+    <div class="ds-nav-item" onclick="goto('profile')"><span class="ds-nav-icon">◉</span>我的档案</div>
   </div>
-</aside>
+  <div class="ds-footer">
+    <div id="ds-email">–</div>
+    <button class="logout-ds" onclick="doLogout()">退出登录</button>
+  </div>
+</div>
 
-<div class="main-area">
+<!-- MOBILE HEADER -->
+<div id="header">
+  <div class="header-brand">
+    <svg class="header-eye" id="h-eye" width="44" height="20" viewBox="0 0 120 52">
+      <defs>
+        <radialGradient id="hig" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#b088f9"/>
+          <stop offset="45%" stop-color="#6b4c9a"/>
+          <stop offset="100%" stop-color="#2d1b4e"/>
+        </radialGradient>
+        <clipPath id="hec"><path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z"/></clipPath>
+      </defs>
+      <path d="M10,26 Q60,-10 110,26 Q60,62 10,26 Z" fill="none" stroke="#b8964a" stroke-width="1.5"/>
+      <g clip-path="url(#hec)">
+        <ellipse id="h-iris" cx="60" cy="26" rx="18" ry="18" fill="url(#hig)"/>
+        <ellipse id="h-pupil" cx="60" cy="26" rx="7" ry="7" fill="#1a0f00"/>
+        <ellipse cx="66" cy="21" rx="3" ry="2" fill="rgba(255,255,255,0.2)"/>
+      </g>
+    </svg>
+    <div class="brand-text">
+      <div class="title">ZEUS DAILY</div>
+      <div class="sub">The God's Eye View</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="level-pill" id="h-level">LV.1</div>
+    <button class="logout-btn" onclick="doLogout()">退出</button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
 
   <!-- OVERVIEW -->
-  <div class="page active" id="pg-overview">
-    <div class="ph">
-      <div><div class="ph-title">神之视界</div><div class="ph-sub">Observer Dashboard · The God's Eye View</div></div>
-      <div style="font-family:'Rajdhani',sans-serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;" id="todayStr"></div>
+  <div class="section active" id="sec-overview">
+    <div class="ov-hero">
+      <div class="ov-greeting" id="greeting">欢迎归来</div>
+      <div class="ov-date" id="today-str">–</div>
     </div>
-    <div class="pc">
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="stat-val" id="sDays">—</div><div class="stat-lbl">订阅天数</div></div>
-        <div class="stat-card"><div class="stat-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="stat-val" id="sCheckins">—</div><div class="stat-lbl">累计打卡</div></div>
-        <div class="stat-card"><div class="stat-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="stat-val" id="sStreak">—</div><div class="stat-lbl">连续打卡</div><div class="stat-note" id="sStreakNote"></div></div>
-        <div class="stat-card"><div class="stat-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="stat-val" id="sColl">0</div><div class="stat-lbl">收藏期数</div></div>
+
+    <div class="checkin-block" id="checkin-block">
+      <div class="checkin-label">每日打卡</div>
+      <div class="checkin-msg" id="checkin-msg">今日尚未打卡<br>神之眼在等待你的到来</div>
+      <div class="checkin-actions">
+        <button class="btn-checkin" id="btn-checkin" onclick="doCheckin()">⚡ 今日打卡</button>
+        <button class="btn-read" id="btn-read-today" onclick="readLatest()">阅读今日</button>
       </div>
-      <div class="today-panel">
-        <div class="today-left"><h2>⚡ 每日打卡</h2><p id="checkinStatus">加载中...</p></div>
-        <div class="today-acts">
-          <button class="btn-outline" onclick="showPage('archive')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>阅读日报</button>
-          <button class="btn-gold" id="checkinBtn" onclick="doCheckin()" disabled>打卡中...</button>
-        </div>
-      </div>
-      <div class="sec-head"><div class="sec-h">最新期数</div><div class="sec-more" onclick="showPage('archive')">查看全部 →</div></div>
-      <div class="ed-row" id="latestEd"><div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--muted);font-style:italic;font-size:0.9rem;">加载中...</div></div>
     </div>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-n" id="s-days">0</div>
+        <div class="stat-l">订阅天数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-n" id="s-total">0</div>
+        <div class="stat-l">累计打卡</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-n" id="s-streak">0</div>
+        <div class="stat-l">连续天数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-n" id="s-col">0</div>
+        <div class="stat-l">收藏期数</div>
+      </div>
+    </div>
+
+    <div class="level-section">
+      <div class="level-header">
+        <div class="level-name" id="lv-name">Observer</div>
+        <div class="level-num" id="lv-num">Lv.1</div>
+      </div>
+      <div class="level-track">
+        <div class="level-dot" id="ldt1"></div>
+        <div class="level-dot" id="ldt2"></div>
+        <div class="level-dot" id="ldt3"></div>
+        <div class="level-dot" id="ldt4"></div>
+        <div class="level-dot" id="ldt5"></div>
+      </div>
+      <div class="level-subtext" id="lv-sub">再坚持 30 天成为 Scholar</div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">最新期数</div>
+      <button class="section-link" onclick="goto('archive')">全部期数 →</button>
+    </div>
+    <div id="ov-editions"></div>
   </div>
 
   <!-- ARCHIVE -->
-  <div class="page" id="pg-archive">
-    <div class="ph"><div><div class="ph-title">历期日报</div><div class="ph-sub" id="archSub">Complete Archive · All Editions</div></div></div>
-    <div class="pc">
-      <div class="toolbar">
-        <button class="fb on" onclick="filterA('all',this)">全部</button>
-        <button class="fb" onclick="filterA('2026',this)">2026</button>
-        <div class="sbox"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9a8060" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="搜索期数..." oninput="searchA(this.value)" id="archSearch"/></div>
-      </div>
-      <div class="ag" id="archGrid"><div style="grid-column:1/-1;text-align:center;padding:56px;color:var(--muted);font-style:italic;">加载中...</div></div>
+  <div class="section" id="sec-archive">
+    <div class="archive-filters" id="year-filters"></div>
+    <div class="archive-search">
+      <input id="arc-search" placeholder="搜索期数..." oninput="filterArchive()">
+    </div>
+    <div class="archive-list" id="arc-list">
+      <div class="loading-text">加载期数中…</div>
     </div>
   </div>
 
   <!-- COLLECTION -->
-  <div class="page" id="pg-collection">
-    <div class="ph"><div><div class="ph-title">我的收藏</div><div class="ph-sub">Personal Collection · Curated Editions</div></div></div>
-    <div class="pc">
-      <div class="coll-hero">
-        <div class="coll-num" id="collNum">0</div>
-        <div class="coll-txt"><h2>收藏册</h2><p>点击日报卡片右下角的 ◯ 符号，将任意期数永久收入你的个人收藏册。每一期都是时间的封印，神之眼见证的历史片段。</p></div>
-      </div>
-      <div class="ag" id="collGrid"><div class="empty-coll"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="rgba(154,128,96,0.25)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><p>尚无收藏</p><div class="empty-hint">前往历期日报，点击 ◯ 开始收藏</div></div></div>
+  <div class="section" id="sec-collection">
+    <div class="section-header">
+      <div class="section-title">我的收藏</div>
+      <div id="col-count" style="font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:2px;color:var(--ink3);"></div>
     </div>
+    <div id="col-list"></div>
   </div>
 
   <!-- PROFILE -->
-  <div class="page" id="pg-profile">
-    <div class="ph"><div><div class="ph-title">我的档案</div><div class="ph-sub">Observer Profile · Civilization Level</div></div></div>
-    <div class="pc">
-      <div class="prof-grid">
-        <div>
-          <div class="prof-card">
-            <div class="prof-head">
-              <div class="prof-av" id="profAv">Z</div>
-              <div class="prof-em" id="profEm">—</div>
-              <div id="profLvBadge" style="margin-top:8px;"></div>
-            </div>
-            <div class="prof-body">
-              <div class="prof-row"><span class="pr-lbl">订阅天数</span><span class="pr-val" id="profDays">—</span></div>
-              <div class="prof-row"><span class="pr-lbl">累计打卡</span><span class="pr-val" id="profChk">—</span></div>
-              <div class="prof-row"><span class="pr-lbl">最长连续</span><span class="pr-val" id="profStr">—</span></div>
-              <div class="prof-row"><span class="pr-lbl">收藏期数</span><span class="pr-val" id="profColl">—</span></div>
-              <div class="prof-row"><span class="pr-lbl">加入时间</span><span class="pr-val" id="profJoin">—</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="prog-sec">
-          <h3>文明等级进化路径</h3>
-          <div class="lv-track" id="lvTrack"></div>
-        </div>
+  <div class="section" id="sec-profile">
+    <div class="profile-hero">
+      <div class="profile-email" id="p-email">–</div>
+      <div class="profile-lv-display" id="p-lv-name">Observer</div>
+      <div class="profile-lv-sub">文明等级 · 第一阶</div>
+      <div class="profile-days-big" id="p-days">0</div>
+      <div class="profile-days-label">订阅天数</div>
+    </div>
+
+    <div class="profile-stats-grid">
+      <div class="ps-card">
+        <div class="ps-n" id="ps-total">0</div>
+        <div class="ps-l">累计打卡</div>
+      </div>
+      <div class="ps-card">
+        <div class="ps-n" id="ps-streak">0</div>
+        <div class="ps-l">连续天数</div>
+      </div>
+      <div class="ps-card">
+        <div class="ps-n" id="ps-col">0</div>
+        <div class="ps-l">收藏期数</div>
+      </div>
+      <div class="ps-card">
+        <div class="ps-n" id="ps-editions">0</div>
+        <div class="ps-l">已发期数</div>
+      </div>
+    </div>
+
+    <div class="section-header"><div class="section-title">文明进阶</div></div>
+    <div class="levels-track">
+      <div class="lv-row" id="lvr1">
+        <div class="lv-circle lv-c" id="lvc1">Lv.1</div>
+        <div class="lv-info"><div class="lv-name">Observer · 观察者</div><div class="lv-req">第 0 天起</div></div>
+        <div class="lv-check" id="lvk1"></div>
+      </div>
+      <div class="lv-row">
+        <div class="lv-circle lv-c" id="lvc2">Lv.2</div>
+        <div class="lv-info"><div class="lv-name">Scholar · 学者</div><div class="lv-req">第 30 天起</div></div>
+        <div class="lv-check" id="lvk2"></div>
+      </div>
+      <div class="lv-row">
+        <div class="lv-circle lv-c" id="lvc3">Lv.3</div>
+        <div class="lv-info"><div class="lv-name">Prophet · 先知</div><div class="lv-req">第 90 天起</div></div>
+        <div class="lv-check" id="lvk3"></div>
+      </div>
+      <div class="lv-row">
+        <div class="lv-circle lv-c" id="lvc4">Lv.4</div>
+        <div class="lv-info"><div class="lv-name">Sage · 贤者</div><div class="lv-req">第 180 天起</div></div>
+        <div class="lv-check" id="lvk4"></div>
+      </div>
+      <div class="lv-row">
+        <div class="lv-circle lv-c" id="lvc5">Lv.5</div>
+        <div class="lv-info"><div class="lv-name">Creator · 造物主</div><div class="lv-req">第 365 天起</div></div>
+        <div class="lv-check" id="lvk5"></div>
       </div>
     </div>
   </div>
 
-</div>
+</div><!-- /main -->
 
-<div class="toast" id="toast"></div>
+<!-- MOBILE BOTTOM NAV -->
+<nav id="bottom-nav">
+  <button class="nav-tab active" id="nt-overview" onclick="goto('overview')">
+    <span class="nav-icon">◈</span>
+    <span class="nav-label">总览</span>
+  </button>
+  <button class="nav-tab" id="nt-archive" onclick="goto('archive')">
+    <span class="nav-icon">▣</span>
+    <span class="nav-label">日报</span>
+  </button>
+  <button class="nav-tab" id="nt-collection" onclick="goto('collection')">
+    <span class="nav-icon">◎</span>
+    <span class="nav-label">收藏</span>
+  </button>
+  <button class="nav-tab" id="nt-profile" onclick="goto('profile')">
+    <span class="nav-icon">◉</span>
+    <span class="nav-label">档案</span>
+  </button>
+</nav>
+
+<div id="toast"></div>
 
 <script>
-var SUPABASE_URL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
-var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
-var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-var CU = null, allEd = [], collected = {}, uDays = 0, totalChk = 0, streakN = 0, todayDone = false;
+var SURL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
+var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
+var LEVELS = [
+  {n:1, name:'Observer', req:0, sub:'再坚持 {n} 天成为 Scholar'},
+  {n:2, name:'Scholar', req:30, sub:'再坚持 {n} 天成为 Prophet'},
+  {n:3, name:'Prophet', req:90, sub:'再坚持 {n} 天成为 Sage'},
+  {n:4, name:'Sage', req:180, sub:'再坚持 {n} 天成为 Creator'},
+  {n:5, name:'Creator', req:365, sub:'已抵达最高文明等级'}
+];
 
-sb.auth.getSession().then(function(r) {
-  if (!r.data || !r.data.session) { window.location.href = 'index.html'; return; }
-  CU = r.data.session.user;
-  boot();
-});
+var currentUser = null;
+var userProfile = null;
+var allEditions = [];
+var myCollections = [];
+var checkinDone = false;
+var userDays = 0;
+var totalCheckins = 0;
+var streakDays = 0;
 
-function boot() {
-  var em = CU.email;
-  document.getElementById('sideEmail').textContent = em;
-  document.getElementById('profEm').textContent = em;
-  document.getElementById('profAv').textContent = em[0].toUpperCase();
+function sbH() {
+  return { 'apikey': SKEY, 'Authorization': 'Bearer ' + SKEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+}
+
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(function() { el.classList.remove('show'); }, 2800);
+}
+
+// ── AUTH CHECK ───────────────────────────────────────
+(function checkAuth() {
+  var raw = localStorage.getItem('sb-' + SURL.split('//')[1].split('.')[0] + '-auth-token');
+  if (!raw) { location.href = 'index.html'; return; }
+  try {
+    var sess = JSON.parse(raw);
+    var u = sess.user || (sess.currentSession && sess.currentSession.user);
+    if (!u) { location.href = 'index.html'; return; }
+    currentUser = u;
+    init();
+  } catch(e) { location.href = 'index.html'; }
+})();
+
+function doLogout() {
+  var key = 'sb-' + SURL.split('//')[1].split('.')[0] + '-auth-token';
+  localStorage.removeItem(key);
+  location.href = 'index.html';
+}
+
+// ── INIT ─────────────────────────────────────────────
+function init() {
+  var email = currentUser.email || '';
+  document.getElementById('ds-email').textContent = email;
+  document.getElementById('p-email').textContent = email;
+
   var now = new Date();
-  document.getElementById('todayStr').textContent = now.toISOString().slice(0,10);
-  var created = new Date(CU.created_at);
-  uDays = Math.floor((now - created) / 86400000);
-  document.getElementById('sDays').textContent = uDays;
-  document.getElementById('profDays').textContent = uDays + ' 天';
-  document.getElementById('profJoin').textContent = created.toISOString().slice(0,10);
-  setLvUI(uDays);
-  loadCollLocal();
+  var days = ['日','一','二','三','四','五','六'];
+  document.getElementById('today-str').textContent =
+    now.getFullYear() + ' · ' + pad(now.getMonth()+1) + '月' + pad(now.getDate()) + '日 · 星期' + days[now.getDay()];
+
+  var h = now.getHours();
+  var greet = h < 6 ? '夜深了，神之眼依然守望' : h < 12 ? '早安，视界清明' : h < 18 ? '午后，洞察依旧' : '晚上好，神之眼常亮';
+  document.getElementById('greeting').textContent = greet;
+
   loadEditions();
-  loadStats();
-  checkToday();
-  buildLvTrack();
-  eyeInit();
+  loadUserData();
 }
 
-function getLv(d) {
-  if (d>=365) return {n:5,name:'Creator',cls:'lvl-5',icon:'✦',next:-1};
-  if (d>=180) return {n:4,name:'Sage',cls:'lvl-4',icon:'◈',next:365};
-  if (d>=90)  return {n:3,name:'Prophet',cls:'lvl-3',icon:'◇',next:180};
-  if (d>=30)  return {n:2,name:'Scholar',cls:'lvl-2',icon:'○',next:90};
-  return {n:1,name:'Observer',cls:'lvl-1',icon:'·',next:30};
+function pad(n) { return String(n).length < 2 ? '0' + n : String(n); }
+
+// ── EDITIONS ─────────────────────────────────────────
+function loadEditions() {
+  fetch('editions.json').then(function(r) { return r.json(); })
+    .then(function(d) {
+      allEditions = (d.editions || []).slice().reverse();
+      document.getElementById('ps-editions').textContent = allEditions.length;
+      renderOvEditions();
+      renderArchive();
+    }).catch(function() {});
 }
 
-function setLvUI(d) {
-  var lv = getLv(d);
-  var sl = document.getElementById('sideLv');
-  sl.className = 'side-lv ' + lv.cls;
-  sl.textContent = lv.icon + ' Lv.' + lv.n + ' ' + lv.name;
-  document.getElementById('profLvBadge').innerHTML = '<span class="side-lv ' + lv.cls + '" style="display:inline-flex;">' + lv.icon + ' Lv.' + lv.n + ' ' + lv.name + '</span>';
+function renderOvEditions() {
+  var el = document.getElementById('ov-editions');
+  var latest = allEditions.slice(0, 5);
+  if (!latest.length) { el.innerHTML = '<div class="loading-text" style="font-size:14px;">暂无期数</div>'; return; }
+  el.innerHTML = latest.map(function(e) {
+    return '<a class="edition-row" href="' + e.filename + '" target="_blank">' +
+      '<span class="edition-vol-badge">Vol.' + (e.vol||'?') + '</span>' +
+      '<div class="edition-info">' +
+        '<div class="edition-date-text">' + formatDate(e.date) + '</div>' +
+        '<div class="edition-title-text">' + (e.title || 'Zeus Daily · ' + e.date) + '</div>' +
+      '</div>' +
+      '<span class="edition-arrow">→</span>' +
+    '</a>';
+  }).join('');
 }
 
-function loadStats() {
-  sb.from('checkins').select('*',{count:'exact',head:true}).eq('user_id',CU.id).then(function(r) {
-    totalChk = r.count || 0;
-    document.getElementById('sCheckins').textContent = totalChk;
-    document.getElementById('profChk').textContent = totalChk + ' 次';
+function renderArchive() {
+  renderYearFilters();
+  filterArchive();
+}
+
+var activeYear = 'all';
+function renderYearFilters() {
+  var years = {};
+  allEditions.forEach(function(e) { if (e.date) years[e.date.slice(0,4)] = 1; });
+  var ys = Object.keys(years).sort().reverse();
+  var html = '<button class="filter-tag active" onclick="setYear(\'all\',this)">全部</button>';
+  ys.forEach(function(y) {
+    html += '<button class="filter-tag" onclick="setYear(\'' + y + '\',this)">' + y + '</button>';
   });
-  sb.from('checkins').select('checked_at').eq('user_id',CU.id).order('checked_at',{ascending:false}).limit(60).then(function(r) {
-    var streak = 0;
-    if (r.data && r.data.length) {
-      var chk = new Date(); chk.setHours(0,0,0,0);
-      for (var i=0;i<r.data.length;i++) {
-        var d = new Date(r.data[i].checked_at); d.setHours(0,0,0,0);
-        if (d.getTime()===chk.getTime()) { streak++; chk.setDate(chk.getDate()-1); } else break;
+  document.getElementById('year-filters').innerHTML = html;
+}
+
+function setYear(y, el) {
+  activeYear = y;
+  document.querySelectorAll('.filter-tag').forEach(function(b) { b.classList.remove('active'); });
+  el.classList.add('active');
+  filterArchive();
+}
+
+function filterArchive() {
+  var q = (document.getElementById('arc-search').value || '').toLowerCase();
+  var filtered = allEditions.filter(function(e) {
+    var matchYear = activeYear === 'all' || (e.date && e.date.slice(0,4) === activeYear);
+    var matchQ = !q || (e.date||'').indexOf(q) >= 0 || (e.vol||'').indexOf(q) >= 0 || (e.title||'').toLowerCase().indexOf(q) >= 0;
+    return matchYear && matchQ;
+  });
+  var el = document.getElementById('arc-list');
+  if (!filtered.length) { el.innerHTML = '<div class="loading-text">无匹配期数</div>'; return; }
+  el.innerHTML = filtered.map(function(e, i) {
+    var colKey = 'col_' + e.date;
+    var isCol = myCollections.indexOf(e.date) >= 0;
+    return '<a class="arc-card" href="' + e.filename + '" target="_blank" style="padding-right:64px;">' +
+      '<div class="arc-card-top">' +
+        '<span class="arc-vol">Vol.' + (e.vol||'?') + '</span>' +
+        '<span class="arc-date">· ' + formatDate(e.date) + '</span>' +
+      '</div>' +
+      '<div class="arc-title">' + (e.title || 'Zeus Daily · ' + e.date) + '</div>' +
+    '</a>' +
+    '<button class="arc-collect-btn' + (isCol?' collected':'') + '" onclick="toggleCollect(event,\'' + e.date + '\',this)">' +
+      (isCol ? '★' : '☆') +
+    '</button>';
+  }).join('');
+
+  // Reposition collect buttons
+  var cards = el.querySelectorAll('.arc-card');
+  var btns = el.querySelectorAll('.arc-collect-btn');
+  btns.forEach(function(btn, i) {
+    var card = cards[i];
+    if (card) {
+      card.parentNode.style.position = 'relative';
+    }
+  });
+}
+
+function toggleCollect(e, date, btn) {
+  e.preventDefault(); e.stopPropagation();
+  var idx = myCollections.indexOf(date);
+  if (idx >= 0) {
+    myCollections.splice(idx, 1);
+    btn.classList.remove('collected');
+    btn.textContent = '☆';
+    toast('已取消收藏');
+  } else {
+    myCollections.push(date);
+    btn.classList.add('collected');
+    btn.textContent = '★';
+    toast('已加入收藏');
+  }
+  saveCollections();
+  updateColCount();
+  renderCollection();
+}
+
+function saveCollections() {
+  if (!currentUser) return;
+  localStorage.setItem('zc_' + currentUser.id, JSON.stringify(myCollections));
+}
+
+function loadCollections() {
+  if (!currentUser) return;
+  var raw = localStorage.getItem('zc_' + currentUser.id);
+  if (raw) { try { myCollections = JSON.parse(raw); } catch(e) {} }
+  updateColCount();
+}
+
+function updateColCount() {
+  document.getElementById('s-col').textContent = myCollections.length;
+  document.getElementById('ps-col').textContent = myCollections.length;
+  document.getElementById('col-count').textContent = myCollections.length + ' 期';
+}
+
+function renderCollection() {
+  var el = document.getElementById('col-list');
+  if (!myCollections.length) {
+    el.innerHTML = '<div class="col-empty"><div class="col-empty-icon">◎</div>' +
+      '<div class="col-empty-text">尚无收藏</div>' +
+      '<div class="col-empty-sub">在历期日报中点击 ☆ 收藏期数</div></div>';
+    return;
+  }
+  var cols = allEditions.filter(function(e) { return myCollections.indexOf(e.date) >= 0; });
+  el.innerHTML = cols.map(function(e) {
+    return '<a class="arc-card" href="' + e.filename + '" target="_blank">' +
+      '<div class="arc-card-top">' +
+        '<span class="arc-vol">Vol.' + (e.vol||'?') + '</span>' +
+        '<span class="arc-date">· ' + formatDate(e.date) + '</span>' +
+      '</div>' +
+      '<div class="arc-title">' + (e.title || 'Zeus Daily · ' + e.date) + '</div>' +
+    '</a>';
+  }).join('');
+}
+
+// ── USER DATA ─────────────────────────────────────────
+function loadUserData() {
+  if (!currentUser) return;
+  loadCollections();
+
+  // Profile
+  fetch(SURL + '/rest/v1/profiles?id=eq.' + currentUser.id + '&select=*', { headers: sbH() })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && d[0]) {
+        userProfile = d[0];
+        var joined = userProfile.created_at || currentUser.created_at;
+        userDays = Math.floor((Date.now() - new Date(joined).getTime()) / 86400000);
+        document.getElementById('s-days').textContent = userDays;
+        document.getElementById('p-days').textContent = userDays;
+        updateLevel();
       }
-    }
-    streakN = streak;
-    document.getElementById('sStreak').textContent = streak;
-    document.getElementById('profStr').textContent = streak + ' 天';
-    if (streak >= 7) document.getElementById('sStreakNote').textContent = '🔥 连续 ' + streak + ' 天';
-  });
+    }).catch(function() {});
+
+  // Checkins
+  fetch(SURL + '/rest/v1/checkins?user_id=eq.' + currentUser.id + '&select=date&order=date.desc', { headers: sbH() })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!Array.isArray(d)) return;
+      totalCheckins = d.length;
+      document.getElementById('s-total').textContent = totalCheckins;
+      document.getElementById('ps-total').textContent = totalCheckins;
+
+      var today = todayStr();
+      checkinDone = d.length > 0 && d[0].date === today;
+
+      // Streak
+      var streak = 0;
+      if (d.length > 0) {
+        var cur = new Date(today);
+        for (var i = 0; i < d.length; i++) {
+          var dd = d[i].date;
+          var exp = cur.toISOString().slice(0,10);
+          if (dd === exp) { streak++; cur.setDate(cur.getDate()-1); }
+          else { break; }
+        }
+      }
+      streakDays = streak;
+      document.getElementById('s-streak').textContent = streakDays;
+      document.getElementById('ps-streak').textContent = streakDays;
+
+      updateCheckinUI();
+    }).catch(function() {});
 }
 
-function checkToday() {
-  var today = new Date().toISOString().slice(0,10);
-  sb.from('checkins').select('id').eq('user_id',CU.id).gte('checked_at',today+'T00:00:00').lt('checked_at',today+'T23:59:59').then(function(r) {
-    if (r.data && r.data.length) { todayDone = true; setChkDone(); }
-    else {
-      var btn = document.getElementById('checkinBtn');
-      btn.disabled = false; btn.textContent = '今日打卡 ⚡';
-      document.getElementById('checkinStatus').textContent = '今日尚未打卡，点击留下你的神之足迹';
-    }
-  });
+function todayStr() {
+  var d = new Date();
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
 }
 
-function setChkDone() {
-  var btn = document.getElementById('checkinBtn');
-  btn.disabled = true; btn.classList.add('done'); btn.textContent = '✓ 今日已打卡';
-  document.getElementById('checkinStatus').textContent = '今日打卡完成。神之眼已记录你的到来。';
+function updateCheckinUI() {
+  var block = document.getElementById('checkin-block');
+  var msg = document.getElementById('checkin-msg');
+  var btn = document.getElementById('btn-checkin');
+  if (checkinDone) {
+    block.classList.add('done');
+    msg.textContent = '今日打卡完成，神之眼已记录你的到来。';
+    btn.textContent = '✓ 今日已打卡';
+    btn.disabled = true;
+  } else {
+    block.classList.remove('done');
+    msg.innerHTML = '今日尚未打卡<br>神之眼在等待你的到来';
+    btn.textContent = '⚡ 今日打卡';
+    btn.disabled = false;
+  }
 }
 
 function doCheckin() {
-  if (todayDone) return;
-  var btn = document.getElementById('checkinBtn');
-  btn.disabled = true; btn.textContent = '记录中...';
-  sb.from('checkins').insert({user_id:CU.id,checked_at:new Date().toISOString()}).then(function(r) {
-    if (r.error) { showToast('打卡失败'); btn.disabled=false; btn.textContent='今日打卡 ⚡'; }
-    else { todayDone=true; setChkDone(); loadStats(); showToast('⚡ 打卡成功！神之视界已记录'); }
+  if (!currentUser || checkinDone) return;
+  var today = todayStr();
+  fetch(SURL + '/rest/v1/checkins', {
+    method: 'POST',
+    headers: sbH(),
+    body: JSON.stringify({ user_id: currentUser.id, date: today })
+  }).then(function(r) {
+    if (r.ok || r.status === 201) {
+      checkinDone = true;
+      totalCheckins++;
+      streakDays++;
+      document.getElementById('s-total').textContent = totalCheckins;
+      document.getElementById('ps-total').textContent = totalCheckins;
+      document.getElementById('s-streak').textContent = streakDays;
+      document.getElementById('ps-streak').textContent = streakDays;
+      updateCheckinUI();
+      toast('✦ 打卡成功，神之眼已记录');
+    } else {
+      toast('打卡失败，请重试');
+    }
+  }).catch(function() { toast('网络错误'); });
+}
+
+function readLatest() {
+  if (allEditions.length > 0) {
+    window.open(allEditions[0].filename, '_blank');
+  }
+}
+
+function updateLevel() {
+  var lv = LEVELS[0];
+  for (var i = LEVELS.length-1; i >= 0; i--) {
+    if (userDays >= LEVELS[i].req) { lv = LEVELS[i]; break; }
+  }
+  var next = LEVELS[lv.n] || null;
+  var sub = next ? ('再坚持 ' + (next.req - userDays) + ' 天成为 ' + next.name) : '已抵达最高文明等级';
+
+  document.getElementById('lv-name').textContent = lv.name;
+  document.getElementById('lv-num').textContent = 'Lv.' + lv.n;
+  document.getElementById('lv-sub').textContent = sub;
+  document.getElementById('h-level').textContent = 'LV.' + lv.n;
+  document.getElementById('p-lv-name').textContent = lv.name + ' · ' + ['观察者','学者','先知','贤者','造物主'][lv.n-1];
+
+  for (var j = 1; j <= 5; j++) {
+    var dot = document.getElementById('ldt' + j);
+    if (j < lv.n) dot.classList.add('filled');
+    else if (j === lv.n) dot.classList.add('active');
+    var circle = document.getElementById('lvc' + j);
+    var kmark = document.getElementById('lvk' + j);
+    if (j < lv.n) { circle.classList.add('reached'); kmark.textContent = '✓'; }
+    else if (j === lv.n) { circle.classList.add('current'); kmark.textContent = ''; }
+  }
+
+  // Desktop sidebar nav level
+  var ds = document.querySelectorAll('.ds-nav-item');
+}
+
+// ── NAVIGATION ───────────────────────────────────────
+function goto(page) {
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.ds-nav-item').forEach(function(t) { t.classList.remove('active'); });
+
+  document.getElementById('sec-' + page).classList.add('active');
+  var nt = document.getElementById('nt-' + page);
+  if (nt) nt.classList.add('active');
+
+  document.querySelectorAll('.ds-nav-item').forEach(function(t) {
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').indexOf("'" + page + "'") >= 0) {
+      t.classList.add('active');
+    }
   });
+
+  if (page === 'collection') renderCollection();
 }
 
-function loadEditions() {
-  fetch('editions.json').then(function(r){return r.json();}).then(function(data) {
-    allEd = data.editions || data;
-    if (!Array.isArray(allEd)) allEd = [];
-    allEd.sort(function(a,b){return b.date>a.date?1:-1;});
-    document.getElementById('archBadge').textContent = allEd.length;
-    document.getElementById('archSub').textContent = 'Complete Archive · ' + allEd.length + ' Editions';
-    renderLatest(); renderArch(allEd);
-  }).catch(function(){
-    allEd = [{vol:'003',date:'2026-03-12',file:'zeus-daily-20260312.html',summary:'Vol.003 · Mar 12, 2026'},{vol:'002',date:'2026-03-11',file:'zeus-daily-20260311.html',summary:'Vol.002 · Mar 11, 2026'}];
-    renderLatest(); renderArch(allEd);
-  });
+function formatDate(d) {
+  if (!d || d.length < 8) return d || '';
+  return d.slice(0,4) + ' · ' + d.slice(4,6) + ' · ' + d.slice(6,8);
 }
 
-function vStr(e,i) { var v=e.vol||String(i+1); while(v.length<3) v='0'+v; return 'Vol.'+v; }
-function fStr(e) { return e.file||('zeus-daily-'+e.date.replace(/-/g,'')+'.html'); }
+// ── EYE ANIMATION ────────────────────────────────────
+var dsIris = document.getElementById('ds-iris');
+var dsPupil = document.getElementById('ds-pupil');
+var epEl = document.getElementById('ep');
+var hIris = document.getElementById('h-iris');
+var hPupil = document.getElementById('h-pupil');
 
-function renderLatest() {
-  var c = document.getElementById('latestEd');
-  if (!allEd.length) { c.innerHTML='<div style="color:var(--muted);font-style:italic;padding:36px;text-align:center;">暂无期数</div>'; return; }
-  var html='', show=allEd.slice(0,3);
-  for (var i=0;i<show.length;i++) {
-    var e=show[i], vol=vStr(e,i), file=fStr(e), feat=i===0;
-    html += '<div class="ed-card'+(feat?' feat':'')+'" onclick="window.location.href=\''+file+'\'">';
-    html += '<div class="ed-vol">'+vol+'<span class="ed-arr">→</span></div>';
-    html += '<div class="ed-date">'+e.date+'</div>';
-    if (e.summary) html += '<div class="ed-sum">'+e.summary+'</div>';
-    html += '<div class="ed-tag">'+(feat?'◉ 最新':'◌ 往期')+'</div></div>';
-  }
-  c.innerHTML = html;
+document.addEventListener('mousemove', function(e) {
+  var wx = window.innerWidth; var wy = window.innerHeight;
+  var dx = (e.clientX / wx - 0.5) * 2;
+  var dy = (e.clientY / wy - 0.5) * 2;
+  var mx = dx * 7; var my = dy * 4;
+  if (dsIris) { dsIris.setAttribute('cx', 60 + mx); dsIris.setAttribute('cy', 26 + my); }
+  if (dsPupil) { dsPupil.setAttribute('cx', 60 + mx*1.2); dsPupil.setAttribute('cy', 26 + my*1.2); }
+  if (hIris) { hIris.setAttribute('cx', 60 + mx); hIris.setAttribute('cy', 26 + my); }
+  if (hPupil) { hPupil.setAttribute('cx', 60 + mx*1.2); hPupil.setAttribute('cy', 26 + my*1.2); }
+});
+
+function blink() {
+  if (epEl) epEl.setAttribute('d', 'M10,26 Q60,22 110,26 Q60,30 10,26 Z');
+  if (dsIris) dsIris.setAttribute('ry','2');
+  if (dsPupil) dsPupil.setAttribute('ry','1');
+  if (hIris) hIris.setAttribute('ry','2');
+  if (hPupil) hPupil.setAttribute('ry','1');
+  setTimeout(function() {
+    if (epEl) epEl.setAttribute('d', 'M10,26 Q60,-10 110,26 Q60,62 10,26 Z');
+    if (dsIris) dsIris.setAttribute('ry','18');
+    if (dsPupil) dsPupil.setAttribute('ry','7');
+    if (hIris) hIris.setAttribute('ry','18');
+    if (hPupil) hPupil.setAttribute('ry','7');
+  }, 140);
 }
-
-function renderArch(eds) {
-  var g = document.getElementById('archGrid');
-  if (!eds.length) { g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:56px;color:var(--muted);font-style:italic;">没有找到符合条件的期数</div>'; return; }
-  var html='';
-  for (var i=0;i<eds.length;i++) {
-    var e=eds[i], vol=vStr(e,allEd.indexOf(e)), file=fStr(e), isc=!!collected[e.date];
-    html += '<div class="ac" id="ac-'+e.date+'">';
-    html += '<div class="ac-top"><span class="ac-vol">'+vol+'</span>';
-    html += '<svg width="26" height="11" viewBox="0 0 120 52"><path d="M10,26 Q60,4 110,26 Q60,48 10,26 Z" fill="none" stroke="#b8964a" stroke-width="2"/><circle cx="60" cy="26" r="12" fill="#6b4c9a"/><circle cx="60" cy="26" r="5" fill="#0d0618"/></svg></div>';
-    html += '<div class="ac-body"><div class="ac-date">'+e.date+'</div>';
-    if (e.summary) html += '<div class="ac-sum">'+e.summary+'</div>';
-    html += '</div><div class="ac-foot">';
-    html += '<span class="ac-read" onclick="window.location.href=\''+file+'\'">阅读全文 →</span>';
-    html += '<div class="cdot'+(isc?' on':'')+'" title="'+(isc?'移除收藏':'加入收藏')+'" onclick="toggleColl(event,\''+e.date+'\')"></div>';
-    html += '</div></div>';
-  }
-  g.innerHTML = html;
-}
-
-function filterA(yr, btn) {
-  document.querySelectorAll('.fb').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');
-  document.getElementById('archSearch').value='';
-  renderArch(yr==='all'?allEd:allEd.filter(function(e){return e.date.startsWith(yr);}));
-}
-
-function searchA(q) {
-  document.querySelectorAll('.fb').forEach(function(b){b.classList.remove('on');});
-  document.querySelector('.fb').classList.add('on');
-  if (!q) { renderArch(allEd); return; }
-  renderArch(allEd.filter(function(e){ return e.date.indexOf(q)>=0||(e.summary&&e.summary.toLowerCase().indexOf(q.toLowerCase())>=0); }));
-}
-
-function loadCollLocal() {
-  try { var r=localStorage.getItem('zc_'+CU.id); collected=r?JSON.parse(r):{}; } catch(e){collected={};}
-  updateCollCount(); renderColl();
-}
-
-function saveColl() { try{localStorage.setItem('zc_'+CU.id,JSON.stringify(collected));}catch(e){} }
-
-function toggleColl(evt, date) {
-  evt.stopPropagation();
-  if (collected[date]) { delete collected[date]; showToast('已从收藏移除'); }
-  else { collected[date]=true; showToast('⭐ 已加入收藏册'); }
-  saveColl(); updateCollCount();
-  document.querySelectorAll('.ac').forEach(function(c){
-    var id=c.id?c.id.replace('ac-',''):'';
-    var dot=c.querySelector('.cdot');
-    if (dot) dot.className='cdot'+(collected[id]?' on':'');
-  });
-  renderColl();
-}
-
-function updateCollCount() {
-  var n=Object.keys(collected).length;
-  document.getElementById('collBadge').textContent=n;
-  document.getElementById('sColl').textContent=n;
-  document.getElementById('collNum').textContent=n;
-  document.getElementById('profColl').textContent=n+' 期';
-}
-
-function renderColl() {
-  var g=document.getElementById('collGrid');
-  var dates=Object.keys(collected);
-  if (!dates.length) { g.innerHTML='<div class="empty-coll"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="rgba(154,128,96,0.25)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><p>尚无收藏</p><div class="empty-hint">前往历期日报，点击 ◯ 开始收藏</div></div>'; return; }
-  var items=allEd.filter(function(e){return collected[e.date];});
-  if (!items.length) { g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:56px;color:var(--muted);font-style:italic;">加载中...</div>'; return; }
-  var html='';
-  for (var i=0;i<items.length;i++) {
-    var e=items[i], vol=vStr(e,allEd.indexOf(e)), file=fStr(e);
-    html+='<div class="ac"><div class="ac-top"><span class="ac-vol">'+vol+'</span>';
-    html+='<svg width="26" height="11" viewBox="0 0 120 52"><path d="M10,26 Q60,4 110,26 Q60,48 10,26 Z" fill="none" stroke="#b8964a" stroke-width="2"/><circle cx="60" cy="26" r="12" fill="#6b4c9a"/><circle cx="60" cy="26" r="5" fill="#0d0618"/></svg></div>';
-    html+='<div class="ac-body"><div class="ac-date">'+e.date+'</div>';
-    if(e.summary) html+='<div class="ac-sum">'+e.summary+'</div>';
-    html+='</div><div class="ac-foot"><span class="ac-read" onclick="window.location.href=\''+file+'\'">阅读全文 →</span>';
-    html+='<div class="cdot on" title="移除收藏" onclick="toggleColl(event,\''+e.date+'\')"></div></div></div>';
-  }
-  g.innerHTML=html;
-}
-
-function buildLvTrack() {
-  var lvs=[
-    {n:1,name:'Observer · 观察者',cls:'lvl-1',icon:'·',min:0,max:30,desc:'0 天起'},
-    {n:2,name:'Scholar · 学者',cls:'lvl-2',icon:'○',min:30,max:90,desc:'30 天解锁'},
-    {n:3,name:'Prophet · 先知',cls:'lvl-3',icon:'◇',min:90,max:180,desc:'90 天解锁'},
-    {n:4,name:'Sage · 贤者',cls:'lvl-4',icon:'◈',min:180,max:365,desc:'180 天解锁'},
-    {n:5,name:'Creator · 造物主',cls:'lvl-5',icon:'✦',min:365,max:365,desc:'365 天解锁'}
-  ];
-  var html='';
-  for (var i=0;i<lvs.length;i++) {
-    var lv=lvs[i];
-    var st = uDays>=lv.min ? (i<4&&uDays<lv.max?'cur':'done') : 'lock';
-    if (i===4&&uDays>=365) st='done';
-    var prog=0;
-    if (st==='cur') { var rng=lv.max-lv.min; prog=rng>0?Math.min(100,Math.round((uDays-lv.min)/rng*100)):100; }
-    else if (st==='done') prog=100;
-    html+='<div class="lv-row '+st+'">';
-    html+='<div class="lv-ico">'+lv.icon+'</div>';
-    html+='<div class="lv-info"><div class="lv-nm">Lv.'+lv.n+' '+lv.name+'</div>';
-    html+='<div class="lv-req">'+lv.desc;
-    if(st==='cur') html+=' · 进度 '+prog+'%';
-    else if(st==='done') html+=' · ✓ 已解锁';
-    else html+=' · 尚未解锁';
-    html+='</div>';
-    if(st==='cur') html+='<div class="lv-bar-w"><div class="lv-bar" style="width:'+prog+'%"></div></div>';
-    html+='</div></div>';
-  }
-  document.getElementById('lvTrack').innerHTML=html;
-}
-
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
-  document.getElementById('pg-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
-  var map={overview:0,archive:1,collection:2,profile:3};
-  var items=document.querySelectorAll('.nav-item');
-  if(items[map[id]]) items[map[id]].classList.add('active');
-  document.querySelector('.main-area').scrollTop=0;
-}
-
-function doLogout() { sb.auth.signOut().then(function(){window.location.href='index.html';}); }
-
-function showToast(msg) {
-  var t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show');},2800);
-}
-
-function eyeInit() {
-  var lid=document.getElementById('sLid'), pupil=document.getElementById('sPupil');
-  var open='M10,26 Q60,4 110,26 Q60,48 10,26 Z', close='M10,26 Q60,22 110,26 Q60,30 10,26 Z';
-  function blink(){
-    if(!lid) return;
-    lid.setAttribute('d',close);
-    setTimeout(function(){lid.setAttribute('d',open);},150);
-    setTimeout(blink,3500+Math.random()*2000);
-  }
-  setTimeout(blink,1800);
-  document.addEventListener('mousemove',function(e){
-    var eye=document.getElementById('sideEye');
-    if(!eye||!pupil) return;
-    var rect=eye.getBoundingClientRect();
-    var cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
-    var dx=(e.clientX-cx)/window.innerWidth*8;
-    var dy=(e.clientY-cy)/window.innerHeight*4;
-    pupil.setAttribute('cx',String(Math.min(66,Math.max(54,60+dx))));
-    pupil.setAttribute('cy',String(Math.min(30,Math.max(22,26+dy))));
-  });
-}
+setInterval(function() { if (Math.random() < 0.3) blink(); }, 3800);
 </script>
 </body>
 </html>
