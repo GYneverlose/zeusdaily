@@ -440,7 +440,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-var SUPABASE_URL = 'https://ruuksrwlgsenkkkkaapbu.supabase.co';
+var SUPABASE_URL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
 var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
 var client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 var currentUser = null;
@@ -449,7 +449,7 @@ var todayChecked = false;
 // Auth guard
 client.auth.getSession().then(function(result) {
   if (!result.data || !result.data.session) {
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
     return;
   }
   currentUser = result.data.session.user;
@@ -553,15 +553,12 @@ function doCheckin() {
 }
 
 function loadEditions() {
-  // Load from editions.json in same folder
   fetch('editions.json').then(function(r) { return r.json(); }).then(function(data) {
-    var editions = data;
+    var editions = data.editions || data;
     if (!Array.isArray(editions)) editions = [];
-    // Sort by date desc
     editions.sort(function(a, b) { return b.date > a.date ? 1 : -1; });
     renderEditions(editions);
   }).catch(function() {
-    // Fallback: scan known files
     var fallback = [
       { vol: 'Vol.003', date: '2026-03-12', file: 'zeus-daily-20260312.html' },
       { vol: 'Vol.002', date: '2026-03-11', file: 'zeus-daily-20260311.html' }
@@ -580,12 +577,12 @@ function renderEditions(editions) {
   var html = '';
   for (var i = 0; i < editions.length; i++) {
     var e = editions[i];
-    var vol = e.vol || ('Vol.' + String(i + 1).padStart(3, '0'));
+    var vol = e.vol || ('Vol.' + String(i + 1));
     var file = e.file || ('zeus-daily-' + e.date.replace(/-/g, '') + '.html');
     html += '<a class="edition-card" href="' + file + '">';
     html += '<div class="edition-vol">' + vol + '<span class="edition-arrow">→</span></div>';
     html += '<div class="edition-date">' + e.date + '</div>';
-    if (e.preview) html += '<div class="edition-preview">' + e.preview + '</div>';
+    if (e.summary) html += '<div class="edition-preview">' + e.summary + '</div>';
     html += '</a>';
   }
   grid.innerHTML = html;
@@ -593,7 +590,7 @@ function renderEditions(editions) {
 
 function doLogout() {
   client.auth.signOut().then(function() {
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
   });
 }
 
