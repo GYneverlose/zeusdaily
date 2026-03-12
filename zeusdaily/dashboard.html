@@ -3,614 +3,593 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zeus Daily · Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Zeus Daily · The God's Eye View</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #faf8f4; --cream2: #f2ead8;
+  --gold: #b8964a; --gold-light: #d4aa60; --gold-dark: #8a6d2f; --gold-pale: rgba(184,150,74,0.12);
+  --purple: #5c3d8f; --purple-deep: #2d1b4e; --purple-light: #8b5cf6;
+  --dark: #1a1208; --dark2: #251c0e; --ink: #2c2016; --muted: #9a8060;
+  --border: rgba(184,150,74,0.2); --border-strong: rgba(184,150,74,0.4);
+}
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--cream); font-family: 'Cormorant Garamond', serif; color: var(--ink); display: flex; }
 
-  :root {
-    --cream: #faf8f4;
-    --gold: #b8964a;
-    --gold-dark: #8a6d2f;
-    --purple: #5c3d8f;
-    --dark: #1a1408;
-    --card: #f5f1e8;
-    --border: rgba(184,150,74,0.22);
-  }
+/* SIDEBAR */
+.sidebar { width: 220px; min-width: 220px; height: 100vh; background: var(--dark); border-right: 1px solid rgba(184,150,74,0.25); display: flex; flex-direction: column; z-index: 10; }
+.sidebar-brand { padding: 26px 20px 18px; border-bottom: 1px solid rgba(184,150,74,0.15); }
+.sidebar-eye { display: block; margin-bottom: 10px; }
+.sidebar-title { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.05rem; color: var(--gold); letter-spacing: 0.18em; }
+.sidebar-sub { font-family: 'Rajdhani', sans-serif; font-size: 0.52rem; letter-spacing: 0.38em; text-transform: uppercase; color: rgba(184,150,74,0.45); margin-top: 3px; }
+.sidebar-nav { flex: 1; padding: 14px 0; overflow-y: auto; }
+.nav-label { font-family: 'Rajdhani', sans-serif; font-size: 0.5rem; letter-spacing: 0.42em; text-transform: uppercase; color: rgba(184,150,74,0.28); padding: 14px 20px 5px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(184,150,74,0.45); cursor: pointer; transition: all 0.2s; border-left: 2px solid transparent; }
+.nav-item:hover { color: var(--gold); background: rgba(184,150,74,0.05); }
+.nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(184,150,74,0.07); }
+.nav-item svg { flex-shrink: 0; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; }
+.nav-badge { margin-left: auto; background: rgba(92,61,143,0.35); color: #a78bfa; font-size: 0.52rem; padding: 1px 6px; border-radius: 10px; }
+.sidebar-footer { padding: 14px 18px; border-top: 1px solid rgba(184,150,74,0.12); }
+.side-email { font-family: 'Rajdhani', sans-serif; font-size: 0.58rem; letter-spacing: 0.06em; color: rgba(184,150,74,0.35); margin-bottom: 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-lv { display: inline-flex; align-items: center; gap: 4px; font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; letter-spacing: 0.12em; padding: 3px 8px; border-radius: 10px; margin-bottom: 9px; }
+.lvl-1 { background: rgba(74,120,184,0.12); color: #6a9fd8; border: 1px solid rgba(74,120,184,0.28); }
+.lvl-2 { background: rgba(92,61,143,0.12); color: #a78bfa; border: 1px solid rgba(92,61,143,0.3); }
+.lvl-3 { background: linear-gradient(135deg,rgba(92,61,143,0.12),rgba(184,150,74,0.12)); color: #b08de0; border: 1px solid rgba(140,100,180,0.28); }
+.lvl-4 { background: rgba(184,150,74,0.12); color: var(--gold); border: 1px solid rgba(184,150,74,0.35); }
+.lvl-5 { background: linear-gradient(135deg,rgba(184,150,74,0.15),rgba(200,160,240,0.15)); color: #d4a0ff; border: 1px solid rgba(200,160,240,0.35); }
+.logout-btn { display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%; font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(184,150,74,0.28); background: none; border: 1px solid rgba(184,150,74,0.12); padding: 6px; border-radius: 2px; cursor: pointer; transition: all 0.2s; }
+.logout-btn:hover { color: var(--gold); border-color: rgba(184,150,74,0.35); }
 
-  body {
-    background: var(--cream);
-    min-height: 100vh;
-    font-family: 'Cormorant Garamond', serif;
-    color: var(--dark);
-  }
+/* MAIN */
+.main-area { flex: 1; height: 100vh; overflow-y: auto; background: var(--cream); }
+.main-area::-webkit-scrollbar { width: 3px; }
+.main-area::-webkit-scrollbar-thumb { background: rgba(184,150,74,0.15); }
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; animation: pgIn 0.3s ease both; }
+@keyframes pgIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-  /* Top bar */
-  .topbar {
-    background: var(--dark);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    height: 52px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    border-bottom: 1px solid rgba(184,150,74,0.3);
-  }
+/* PAGE HEADER */
+.ph { padding: 32px 44px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-end; justify-content: space-between; }
+.ph-title { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 900; color: var(--gold-dark); line-height: 1; }
+.ph-sub { font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); margin-top: 5px; }
+.pc { padding: 32px 44px 72px; }
 
-  .topbar-brand {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    font-size: 1.1rem;
-    color: var(--gold);
-    letter-spacing: 0.15em;
-  }
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 28px; }
+.stat-card { background: white; border: 1px solid var(--border); border-radius: 3px; padding: 20px 18px; position: relative; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
+.stat-card:hover { border-color: var(--border-strong); box-shadow: 0 3px 16px rgba(26,18,8,0.05); }
+.stat-card::before { content:''; position:absolute; top:0;left:0;right:0;height:2px; background:linear-gradient(90deg,var(--gold-dark),var(--gold)); }
+.stat-ico { width:28px;height:28px;background:var(--gold-pale);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:10px; }
+.stat-val { font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold-dark);line-height:1; }
+.stat-lbl { font-family:'Rajdhani',sans-serif;font-size:0.58rem;letter-spacing:0.26em;text-transform:uppercase;color:var(--muted);margin-top:4px; }
+.stat-note { font-family:'Rajdhani',sans-serif;font-size:0.58rem;color:#5a9060;margin-top:3px; }
 
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
+/* TODAY PANEL */
+.today-panel { background:var(--dark);border-radius:5px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid rgba(184,150,74,0.18);position:relative;overflow:hidden; }
+.today-panel::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 100% 50%,rgba(92,61,143,0.12) 0%,transparent 60%);pointer-events:none; }
+.today-left h2 { font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--gold);letter-spacing:0.04em; }
+.today-left p { font-size:0.88rem;color:rgba(184,150,74,0.45);margin-top:3px;font-style:italic; }
+.today-acts { display:flex;gap:10px;align-items:center;flex-shrink:0; }
 
-  .topbar-email {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    color: #9a8060;
-  }
+.btn-gold { padding:11px 24px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;border-radius:2px;font-family:'Playfair Display',serif;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;color:var(--dark);cursor:pointer;transition:opacity 0.2s,transform 0.15s;white-space:nowrap; }
+.btn-gold:hover { opacity:0.86;transform:translateY(-1px); }
+.btn-gold:disabled { background:#5a4820;color:rgba(26,18,8,0.4);cursor:not-allowed;transform:none; }
+.btn-gold.done { background:linear-gradient(135deg,#4a7a50,#2e5535);color:#b0e0b5; }
+.btn-outline { padding:10px 18px;background:transparent;border:1px solid rgba(184,150,74,0.28);border-radius:2px;font-family:'Rajdhani',sans-serif;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;text-decoration:none; }
+.btn-outline:hover { background:rgba(184,150,74,0.07);border-color:var(--gold); }
 
-  .logout-btn {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #8a7050;
-    background: none;
-    border: 1px solid rgba(184,150,74,0.3);
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 1px;
-  }
-  .logout-btn:hover { color: var(--gold); border-color: var(--gold); }
+/* SECTION */
+.sec-head { display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px; }
+.sec-h { font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--gold-dark); }
+.sec-more { font-family:'Rajdhani',sans-serif;font-size:0.58rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--purple);cursor:pointer;transition:color 0.2s; }
+.sec-more:hover { color:var(--purple-light); }
 
-  /* Main layout */
-  .main {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
+/* EDITION CARDS */
+.ed-row { display:grid;grid-template-columns:repeat(3,1fr);gap:14px; }
+.ed-card { background:white;border:1px solid var(--border);border-radius:3px;padding:20px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:all 0.2s;position:relative;overflow:hidden;text-decoration:none;color:inherit; }
+.ed-card::after { content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform 0.3s; }
+.ed-card:hover { border-color:var(--border-strong);box-shadow:0 5px 20px rgba(26,18,8,0.07);transform:translateY(-2px); }
+.ed-card:hover::after { transform:scaleX(1); }
+.ed-card.feat { background:var(--dark);border-color:rgba(184,150,74,0.28); }
+.ed-vol { font-family:'Rajdhani',sans-serif;font-size:0.56rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--purple);display:flex;justify-content:space-between;align-items:center; }
+.ed-card.feat .ed-vol { color:rgba(139,92,246,0.65); }
+.ed-arr { color:var(--gold); }
+.ed-date { font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--gold-dark); }
+.ed-card.feat .ed-date { color:var(--gold); }
+.ed-sum { font-size:0.8rem;color:var(--muted);font-style:italic;line-height:1.45;flex:1; }
+.ed-card.feat .ed-sum { color:rgba(184,150,74,0.45); }
+.ed-tag { display:inline-flex;align-items:center;gap:3px;font-family:'Rajdhani',sans-serif;font-size:0.53rem;letter-spacing:0.18em;text-transform:uppercase;padding:2px 7px;border-radius:10px;background:rgba(92,61,143,0.07);color:var(--purple);border:1px solid rgba(92,61,143,0.13);align-self:flex-start; }
+.ed-card.feat .ed-tag { background:rgba(139,92,246,0.1);color:#a78bfa;border-color:rgba(139,92,246,0.18); }
 
-  /* Welcome header */
-  .welcome-section {
-    text-align: center;
-    margin-bottom: 40px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--border);
-    animation: fadeUp 0.6s ease both;
-  }
+/* ARCHIVE */
+.toolbar { display:flex;align-items:center;gap:10px;margin-bottom:24px;flex-wrap:wrap; }
+.fb { font-family:'Rajdhani',sans-serif;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;padding:5px 12px;border-radius:2px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all 0.2s; }
+.fb:hover,.fb.on { background:var(--gold-pale);border-color:var(--border-strong);color:var(--gold-dark); }
+.sbox { margin-left:auto;display:flex;align-items:center;gap:7px;background:white;border:1px solid var(--border);border-radius:2px;padding:5px 10px; }
+.sbox input { border:none;outline:none;font-family:'Cormorant Garamond',serif;font-size:0.85rem;color:var(--ink);background:none;width:148px; }
+.sbox input::placeholder { color:rgba(154,128,96,0.45);font-style:italic; }
+.ag { display:grid;grid-template-columns:repeat(4,1fr);gap:14px; }
+.ac { background:white;border:1px solid var(--border);border-radius:3px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:all 0.2s; }
+.ac:hover { border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 24px rgba(26,18,8,0.08); }
+.ac-top { background:var(--dark);padding:15px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(184,150,74,0.12); }
+.ac-vol { font-family:'Rajdhani',sans-serif;font-size:0.56rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(139,92,246,0.65); }
+.ac-body { padding:14px;flex:1;display:flex;flex-direction:column;gap:7px; }
+.ac-date { font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--gold-dark); }
+.ac-sum { font-size:0.78rem;color:var(--muted);font-style:italic;line-height:1.4;flex:1; }
+.ac-foot { padding:9px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
+.ac-read { font-family:'Rajdhani',sans-serif;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold); }
+.ac:hover .ac-read { color:var(--gold-light); }
+.cdot { width:8px;height:8px;border-radius:50%;border:1.5px solid var(--border-strong);cursor:pointer;transition:all 0.2s;flex-shrink:0; }
+.cdot.on { background:var(--gold);border-color:var(--gold);box-shadow:0 0 5px rgba(184,150,74,0.45); }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* COLLECTION HERO */
+.coll-hero { background:var(--dark);border-radius:5px;padding:28px;margin-bottom:28px;border:1px solid rgba(184,150,74,0.18);display:flex;align-items:center;gap:24px;position:relative;overflow:hidden; }
+.coll-hero::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse 35% 80% at 90% 50%,rgba(92,61,143,0.18) 0%,transparent 60%);pointer-events:none; }
+.coll-num { font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--gold);line-height:1;flex-shrink:0; }
+.coll-txt h2 { font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--gold);margin-bottom:5px; }
+.coll-txt p { font-size:0.86rem;color:rgba(184,150,74,0.45);font-style:italic;line-height:1.5; }
+.empty-coll { grid-column:1/-1;text-align:center;padding:72px 40px;color:var(--muted); }
+.empty-coll p { font-size:0.95rem;font-style:italic;margin-top:10px; }
+.empty-hint { font-family:'Rajdhani',sans-serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;margin-top:6px;color:rgba(154,128,96,0.4); }
 
-  .welcome-eye {
-    margin-bottom: 16px;
-  }
+/* PROFILE */
+.prof-grid { display:grid;grid-template-columns:260px 1fr;gap:20px; }
+.prof-card { background:white;border:1px solid var(--border);border-radius:3px;overflow:hidden; }
+.prof-head { background:var(--dark);padding:26px 22px;text-align:center;border-bottom:1px solid rgba(184,150,74,0.15); }
+.prof-av { width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--purple-deep),var(--purple));border:2px solid rgba(184,150,74,0.35);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--gold); }
+.prof-em { font-family:'Rajdhani',sans-serif;font-size:0.7rem;letter-spacing:0.06em;color:rgba(184,150,74,0.5);word-break:break-all; }
+.prof-body { padding:18px; }
+.prof-row { display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border); }
+.prof-row:last-child { border-bottom:none; }
+.pr-lbl { font-family:'Rajdhani',sans-serif;font-size:0.57rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted); }
+.pr-val { font-family:'Playfair Display',serif;font-size:0.92rem;font-weight:700;color:var(--gold-dark); }
+.prog-sec { background:white;border:1px solid var(--border);border-radius:3px;padding:26px; }
+.prog-sec h3 { font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold-dark);margin-bottom:22px; }
+.lv-track { display:flex;flex-direction:column;gap:14px; }
+.lv-row { display:flex;align-items:center;gap:12px; }
+.lv-ico { width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-family:'Rajdhani',sans-serif;font-weight:600;flex-shrink:0;border:1.5px solid; }
+.lv-info { flex:1; }
+.lv-nm { font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;color:var(--ink);margin-bottom:3px; }
+.lv-req { font-family:'Rajdhani',sans-serif;font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted); }
+.lv-bar-w { width:100%;height:3px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden; }
+.lv-bar { height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width 0.8s ease; }
+.lv-row.cur .lv-nm { color:var(--gold-dark); }
+.lv-row.cur .lv-ico { border-color:var(--gold);color:var(--gold);background:var(--gold-pale); }
+.lv-row.done .lv-ico { border-color:rgba(80,144,90,0.45);color:#5a9060;background:rgba(80,144,90,0.08); }
+.lv-row.lock .lv-ico { border-color:var(--border);color:rgba(154,128,96,0.35);background:none; }
+.lv-row.lock .lv-nm { color:rgba(154,128,96,0.45); }
 
-  .welcome-title {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    font-size: 2rem;
-    color: var(--gold-dark);
-    letter-spacing: 0.05em;
-  }
+/* TOAST */
+.toast { position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(56px);background:var(--dark);color:var(--gold);padding:11px 22px;border-radius:2px;font-family:'Rajdhani',sans-serif;font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;border:1px solid rgba(184,150,74,0.28);z-index:999;transition:transform 0.3s;white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
 
-  .welcome-sub {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.68rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: #9a8060;
-    margin-top: 6px;
-  }
-
-  /* Stats row */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 40px;
-    animation: fadeUp 0.6s ease 0.1s both;
-  }
-
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 20px;
-    text-align: center;
-  }
-
-  .stat-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--gold-dark);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.62rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #9a8060;
-    margin-top: 6px;
-  }
-
-  /* Level badge */
-  .level-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.68rem;
-    letter-spacing: 0.15em;
-    font-weight: 500;
-    margin-top: 8px;
-  }
-
-  .level-1 { background: rgba(80,120,180,0.12); color: #4a78b8; border: 1px solid rgba(80,120,180,0.3); }
-  .level-2 { background: rgba(92,61,143,0.12); color: var(--purple); border: 1px solid rgba(92,61,143,0.3); }
-  .level-3 { background: linear-gradient(135deg,rgba(92,61,143,0.12),rgba(184,150,74,0.12)); color: #7a5aaf; border: 1px solid rgba(140,100,160,0.3); }
-  .level-4 { background: rgba(184,150,74,0.12); color: var(--gold-dark); border: 1px solid rgba(184,150,74,0.35); }
-  .level-5 { background: linear-gradient(135deg,rgba(184,150,74,0.15),rgba(200,160,220,0.15)); color: #9060c0; border: 1px solid rgba(180,140,200,0.4); }
-
-  /* Check-in section */
-  .checkin-section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 28px;
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    animation: fadeUp 0.6s ease 0.2s both;
-  }
-
-  .checkin-info h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    color: var(--gold-dark);
-    font-weight: 700;
-  }
-
-  .checkin-info p {
-    font-size: 0.85rem;
-    color: #8a7050;
-    margin-top: 4px;
-    font-style: italic;
-  }
-
-  .checkin-btn {
-    flex-shrink: 0;
-    padding: 12px 28px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-    border: none;
-    border-radius: 1px;
-    font-family: 'Playfair Display', serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--cream);
-    cursor: pointer;
-    transition: opacity 0.2s;
-    position: relative;
-  }
-  .checkin-btn:hover { opacity: 0.88; }
-  .checkin-btn:disabled { background: #c8b890; cursor: not-allowed; }
-  .checkin-btn.done { background: linear-gradient(135deg, #5a9060, #3d6b44); }
-
-  /* Editions list */
-  .section-header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    animation: fadeUp 0.6s ease 0.3s both;
-  }
-
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--gold-dark);
-    letter-spacing: 0.05em;
-  }
-
-  .section-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.62rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: #aaa090;
-  }
-
-  .editions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-    animation: fadeUp 0.6s ease 0.35s both;
-  }
-
-  .edition-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 20px;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-    cursor: pointer;
-  }
-
-  .edition-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(26,20,8,0.1);
-  }
-
-  .edition-vol {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.62rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--purple);
-    margin-bottom: 8px;
-  }
-
-  .edition-date {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--gold-dark);
-  }
-
-  .edition-arrow {
-    float: right;
-    color: var(--gold);
-    font-size: 1.1rem;
-    margin-top: -2px;
-  }
-
-  .edition-preview {
-    font-size: 0.82rem;
-    color: #8a7050;
-    margin-top: 8px;
-    font-style: italic;
-    line-height: 1.4;
-  }
-
-  /* Empty state */
-  .empty {
-    text-align: center;
-    padding: 60px 20px;
-    color: #b0a080;
-    font-style: italic;
-  }
-
-  /* Loading */
-  .loading-text {
-    text-align: center;
-    padding: 40px;
-    color: #b0a080;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  /* Gold top line */
-  .top-line {
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-dark), var(--gold), transparent);
-  }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--dark);
-    color: var(--gold);
-    padding: 12px 28px;
-    border-radius: 2px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    border: 1px solid rgba(184,150,74,0.3);
-    transition: transform 0.3s ease;
-    z-index: 999;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  @media (max-width: 600px) {
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .checkin-section { flex-direction: column; text-align: center; }
-    .topbar { padding: 0 16px; }
-    .main { padding: 24px 16px 60px; }
-  }
+@media(max-width:860px){
+  .sidebar{width:56px;min-width:56px;}
+  .sidebar-title,.sidebar-sub,.nav-label,.nav-item span,.nav-badge,.side-email,.side-lv,.logout-btn span{display:none;}
+  .sidebar-brand{padding:14px 10px;}
+  .nav-item{padding:11px;justify-content:center;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .ed-row{grid-template-columns:1fr;}
+  .ag{grid-template-columns:repeat(2,1fr);}
+  .prof-grid{grid-template-columns:1fr;}
+  .pc{padding:22px 18px 56px;}
+  .ph{padding:22px 18px 18px;}
+}
 </style>
 </head>
 <body>
 
-<div class="top-line"></div>
-
-<!-- Top Bar -->
-<div class="topbar">
-  <div class="topbar-brand">⚡ ZEUS DAILY</div>
-  <div class="topbar-right">
-    <div class="topbar-email" id="userEmail">—</div>
-    <button class="logout-btn" onclick="doLogout()">登出</button>
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <svg id="sideEye" class="sidebar-eye" width="46" height="20" viewBox="0 0 120 52" xmlns="http://www.w3.org/2000/svg" style="cursor:none">
+      <defs><radialGradient id="sg1" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="45%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
+      <path id="sLid" d="M10,26 Q60,4 110,26 Q60,48 10,26 Z" fill="none" stroke="#b8964a" stroke-width="1.5"/>
+      <circle cx="60" cy="26" r="14" fill="url(#sg1)"/>
+      <circle id="sPupil" cx="60" cy="26" r="6" fill="#0d0618"/>
+      <circle cx="54" cy="22" r="2.5" fill="rgba(255,255,255,0.5)"/>
+    </svg>
+    <div class="sidebar-title">ZEUS DAILY</div>
+    <div class="sidebar-sub">God's Eye View</div>
   </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">主菜单</div>
+    <div class="nav-item active" onclick="showPage('overview')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>总览</span>
+    </div>
+    <div class="nav-item" onclick="showPage('archive')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>历期日报</span>
+      <span class="nav-badge" id="archBadge">0</span>
+    </div>
+    <div class="nav-item" onclick="showPage('collection')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>我的收藏</span>
+      <span class="nav-badge" id="collBadge">0</span>
+    </div>
+    <div class="nav-label">账户</div>
+    <div class="nav-item" onclick="showPage('profile')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>我的档案</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="side-email" id="sideEmail">—</div>
+    <div class="side-lv lvl-1" id="sideLv">· Lv.1 Observer</div>
+    <button class="logout-btn" onclick="doLogout()">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span>登出</span>
+    </button>
+  </div>
+</aside>
+
+<div class="main-area">
+
+  <!-- OVERVIEW -->
+  <div class="page active" id="pg-overview">
+    <div class="ph">
+      <div><div class="ph-title">神之视界</div><div class="ph-sub">Observer Dashboard · The God's Eye View</div></div>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;" id="todayStr"></div>
+    </div>
+    <div class="pc">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="stat-val" id="sDays">—</div><div class="stat-lbl">订阅天数</div></div>
+        <div class="stat-card"><div class="stat-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="stat-val" id="sCheckins">—</div><div class="stat-lbl">累计打卡</div></div>
+        <div class="stat-card"><div class="stat-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="stat-val" id="sStreak">—</div><div class="stat-lbl">连续打卡</div><div class="stat-note" id="sStreakNote"></div></div>
+        <div class="stat-card"><div class="stat-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8964a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="stat-val" id="sColl">0</div><div class="stat-lbl">收藏期数</div></div>
+      </div>
+      <div class="today-panel">
+        <div class="today-left"><h2>⚡ 每日打卡</h2><p id="checkinStatus">加载中...</p></div>
+        <div class="today-acts">
+          <button class="btn-outline" onclick="showPage('archive')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>阅读日报</button>
+          <button class="btn-gold" id="checkinBtn" onclick="doCheckin()" disabled>打卡中...</button>
+        </div>
+      </div>
+      <div class="sec-head"><div class="sec-h">最新期数</div><div class="sec-more" onclick="showPage('archive')">查看全部 →</div></div>
+      <div class="ed-row" id="latestEd"><div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--muted);font-style:italic;font-size:0.9rem;">加载中...</div></div>
+    </div>
+  </div>
+
+  <!-- ARCHIVE -->
+  <div class="page" id="pg-archive">
+    <div class="ph"><div><div class="ph-title">历期日报</div><div class="ph-sub" id="archSub">Complete Archive · All Editions</div></div></div>
+    <div class="pc">
+      <div class="toolbar">
+        <button class="fb on" onclick="filterA('all',this)">全部</button>
+        <button class="fb" onclick="filterA('2026',this)">2026</button>
+        <div class="sbox"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9a8060" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="搜索期数..." oninput="searchA(this.value)" id="archSearch"/></div>
+      </div>
+      <div class="ag" id="archGrid"><div style="grid-column:1/-1;text-align:center;padding:56px;color:var(--muted);font-style:italic;">加载中...</div></div>
+    </div>
+  </div>
+
+  <!-- COLLECTION -->
+  <div class="page" id="pg-collection">
+    <div class="ph"><div><div class="ph-title">我的收藏</div><div class="ph-sub">Personal Collection · Curated Editions</div></div></div>
+    <div class="pc">
+      <div class="coll-hero">
+        <div class="coll-num" id="collNum">0</div>
+        <div class="coll-txt"><h2>收藏册</h2><p>点击日报卡片右下角的 ◯ 符号，将任意期数永久收入你的个人收藏册。每一期都是时间的封印，神之眼见证的历史片段。</p></div>
+      </div>
+      <div class="ag" id="collGrid"><div class="empty-coll"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="rgba(154,128,96,0.25)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><p>尚无收藏</p><div class="empty-hint">前往历期日报，点击 ◯ 开始收藏</div></div></div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="pg-profile">
+    <div class="ph"><div><div class="ph-title">我的档案</div><div class="ph-sub">Observer Profile · Civilization Level</div></div></div>
+    <div class="pc">
+      <div class="prof-grid">
+        <div>
+          <div class="prof-card">
+            <div class="prof-head">
+              <div class="prof-av" id="profAv">Z</div>
+              <div class="prof-em" id="profEm">—</div>
+              <div id="profLvBadge" style="margin-top:8px;"></div>
+            </div>
+            <div class="prof-body">
+              <div class="prof-row"><span class="pr-lbl">订阅天数</span><span class="pr-val" id="profDays">—</span></div>
+              <div class="prof-row"><span class="pr-lbl">累计打卡</span><span class="pr-val" id="profChk">—</span></div>
+              <div class="prof-row"><span class="pr-lbl">最长连续</span><span class="pr-val" id="profStr">—</span></div>
+              <div class="prof-row"><span class="pr-lbl">收藏期数</span><span class="pr-val" id="profColl">—</span></div>
+              <div class="prof-row"><span class="pr-lbl">加入时间</span><span class="pr-val" id="profJoin">—</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="prog-sec">
+          <h3>文明等级进化路径</h3>
+          <div class="lv-track" id="lvTrack"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- Main Content -->
-<div class="main">
-
-  <!-- Welcome -->
-  <div class="welcome-section">
-    <div class="welcome-eye">
-      <svg id="dashEye" width="90" height="39" viewBox="0 0 120 52" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="iris2" cx="50%" cy="45%" r="50%">
-            <stop offset="0%" stop-color="#b088f9"/>
-            <stop offset="45%" stop-color="#6b4c9a"/>
-            <stop offset="100%" stop-color="#2d1b4e"/>
-          </radialGradient>
-          <radialGradient id="pupil2" cx="50%" cy="45%" r="50%">
-            <stop offset="0%" stop-color="#1a0a30"/>
-            <stop offset="100%" stop-color="#0d0618"/>
-          </radialGradient>
-          <filter id="glow2">
-            <feGaussianBlur stdDeviation="2" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <path id="dashEyeOutline" d="M 10 26 Q 60 4 110 26 Q 60 48 10 26 Z" fill="none" stroke="#b8964a" stroke-width="1.2" filter="url(#glow2)"/>
-        <circle cx="60" cy="26" r="14" fill="url(#iris2)"/>
-        <circle cx="60" cy="26" r="7" fill="url(#pupil2)"/>
-        <circle cx="64" cy="22" r="2.5" fill="rgba(255,255,255,0.55)"/>
-        <circle cx="57" cy="28" r="1" fill="rgba(255,255,255,0.25)"/>
-      </svg>
-    </div>
-    <div class="welcome-title">欢迎回来，观察者</div>
-    <div class="welcome-sub">The God's Eye View · Member Dashboard</div>
-    <div id="levelBadge" style="margin-top:10px;"></div>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-value" id="statDays">—</div>
-      <div class="stat-label">订阅天数</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="statCheckins">—</div>
-      <div class="stat-label">累计打卡</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="statStreak">—</div>
-      <div class="stat-label">连续打卡</div>
-    </div>
-  </div>
-
-  <!-- Check-in -->
-  <div class="checkin-section">
-    <div class="checkin-info">
-      <h3>⚡ 每日打卡</h3>
-      <p id="checkinStatus">加载中...</p>
-    </div>
-    <button class="checkin-btn" id="checkinBtn" onclick="doCheckin()" disabled>打卡中...</button>
-  </div>
-
-  <!-- Editions -->
-  <div class="section-header">
-    <div class="section-title">历期日报</div>
-    <div class="section-label" id="editionCount">加载中</div>
-  </div>
-  <div class="editions-grid" id="editionsGrid">
-    <div class="loading-text">正在加载期数...</div>
-  </div>
-
-</div>
-
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
 var SUPABASE_URL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
 var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
-var client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-var currentUser = null;
-var todayChecked = false;
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+var CU = null, allEd = [], collected = {}, uDays = 0, totalChk = 0, streakN = 0, todayDone = false;
 
-// Auth guard
-client.auth.getSession().then(function(result) {
-  if (!result.data || !result.data.session) {
-    window.location.href = 'index.html';
-    return;
-  }
-  currentUser = result.data.session.user;
-  document.getElementById('userEmail').textContent = currentUser.email;
-  initDashboard();
+sb.auth.getSession().then(function(r) {
+  if (!r.data || !r.data.session) { window.location.href = 'index.html'; return; }
+  CU = r.data.session.user;
+  boot();
 });
 
-function initDashboard() {
-  loadEditions();
-  loadUserStats();
-  checkTodayCheckin();
-  startEyeBlink();
-}
-
-// Level system
-function getLevel(days) {
-  if (days >= 365) return { num: 5, name: 'Creator', cls: 'level-5', icon: '✦' };
-  if (days >= 180) return { num: 4, name: 'Sage', cls: 'level-4', icon: '◈' };
-  if (days >= 90)  return { num: 3, name: 'Prophet', cls: 'level-3', icon: '◇' };
-  if (days >= 30)  return { num: 2, name: 'Scholar', cls: 'level-2', icon: '○' };
-  return { num: 1, name: 'Observer', cls: 'level-1', icon: '·' };
-}
-
-function loadUserStats() {
-  var created = new Date(currentUser.created_at);
+function boot() {
+  var em = CU.email;
+  document.getElementById('sideEmail').textContent = em;
+  document.getElementById('profEm').textContent = em;
+  document.getElementById('profAv').textContent = em[0].toUpperCase();
   var now = new Date();
-  var days = Math.floor((now - created) / (1000 * 60 * 60 * 24));
-  document.getElementById('statDays').textContent = days;
+  document.getElementById('todayStr').textContent = now.toISOString().slice(0,10);
+  var created = new Date(CU.created_at);
+  uDays = Math.floor((now - created) / 86400000);
+  document.getElementById('sDays').textContent = uDays;
+  document.getElementById('profDays').textContent = uDays + ' 天';
+  document.getElementById('profJoin').textContent = created.toISOString().slice(0,10);
+  setLvUI(uDays);
+  loadCollLocal();
+  loadEditions();
+  loadStats();
+  checkToday();
+  buildLvTrack();
+  eyeInit();
+}
 
-  var level = getLevel(days);
-  var badge = document.getElementById('levelBadge');
-  badge.innerHTML = '<span class="level-badge ' + level.cls + '">' + level.icon + ' Lv.' + level.num + ' ' + level.name + '</span>';
+function getLv(d) {
+  if (d>=365) return {n:5,name:'Creator',cls:'lvl-5',icon:'✦',next:-1};
+  if (d>=180) return {n:4,name:'Sage',cls:'lvl-4',icon:'◈',next:365};
+  if (d>=90)  return {n:3,name:'Prophet',cls:'lvl-3',icon:'◇',next:180};
+  if (d>=30)  return {n:2,name:'Scholar',cls:'lvl-2',icon:'○',next:90};
+  return {n:1,name:'Observer',cls:'lvl-1',icon:'·',next:30};
+}
 
-  // Load checkin count from Supabase
-  client.from('checkins').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id).then(function(res) {
-    var total = res.count || 0;
-    document.getElementById('statCheckins').textContent = total;
+function setLvUI(d) {
+  var lv = getLv(d);
+  var sl = document.getElementById('sideLv');
+  sl.className = 'side-lv ' + lv.cls;
+  sl.textContent = lv.icon + ' Lv.' + lv.n + ' ' + lv.name;
+  document.getElementById('profLvBadge').innerHTML = '<span class="side-lv ' + lv.cls + '" style="display:inline-flex;">' + lv.icon + ' Lv.' + lv.n + ' ' + lv.name + '</span>';
+}
+
+function loadStats() {
+  sb.from('checkins').select('*',{count:'exact',head:true}).eq('user_id',CU.id).then(function(r) {
+    totalChk = r.count || 0;
+    document.getElementById('sCheckins').textContent = totalChk;
+    document.getElementById('profChk').textContent = totalChk + ' 次';
   });
-
-  // Streak (simple: load recent checkins)
-  client.from('checkins').select('checked_at').eq('user_id', currentUser.id).order('checked_at', { ascending: false }).limit(60).then(function(res) {
+  sb.from('checkins').select('checked_at').eq('user_id',CU.id).order('checked_at',{ascending:false}).limit(60).then(function(r) {
     var streak = 0;
-    if (res.data && res.data.length > 0) {
-      var check = new Date();
-      check.setHours(0,0,0,0);
-      for (var i = 0; i < res.data.length; i++) {
-        var d = new Date(res.data[i].checked_at);
-        d.setHours(0,0,0,0);
-        if (d.getTime() === check.getTime()) {
-          streak++;
-          check.setDate(check.getDate() - 1);
-        } else {
-          break;
-        }
+    if (r.data && r.data.length) {
+      var chk = new Date(); chk.setHours(0,0,0,0);
+      for (var i=0;i<r.data.length;i++) {
+        var d = new Date(r.data[i].checked_at); d.setHours(0,0,0,0);
+        if (d.getTime()===chk.getTime()) { streak++; chk.setDate(chk.getDate()-1); } else break;
       }
     }
-    document.getElementById('statStreak').textContent = streak;
+    streakN = streak;
+    document.getElementById('sStreak').textContent = streak;
+    document.getElementById('profStr').textContent = streak + ' 天';
+    if (streak >= 7) document.getElementById('sStreakNote').textContent = '🔥 连续 ' + streak + ' 天';
   });
 }
 
-function checkTodayCheckin() {
-  var today = new Date().toISOString().slice(0, 10);
-  client.from('checkins').select('id').eq('user_id', currentUser.id).gte('checked_at', today + 'T00:00:00').lt('checked_at', today + 'T23:59:59').then(function(res) {
-    if (res.data && res.data.length > 0) {
-      todayChecked = true;
-      setCheckinDone();
-    } else {
+function checkToday() {
+  var today = new Date().toISOString().slice(0,10);
+  sb.from('checkins').select('id').eq('user_id',CU.id).gte('checked_at',today+'T00:00:00').lt('checked_at',today+'T23:59:59').then(function(r) {
+    if (r.data && r.data.length) { todayDone = true; setChkDone(); }
+    else {
       var btn = document.getElementById('checkinBtn');
-      btn.disabled = false;
-      btn.textContent = '今日打卡 ⚡';
-      document.getElementById('checkinStatus').textContent = '今日尚未打卡，点击记录你的神之视界';
+      btn.disabled = false; btn.textContent = '今日打卡 ⚡';
+      document.getElementById('checkinStatus').textContent = '今日尚未打卡，点击留下你的神之足迹';
     }
   });
 }
 
-function setCheckinDone() {
+function setChkDone() {
   var btn = document.getElementById('checkinBtn');
-  btn.disabled = true;
-  btn.classList.add('done');
-  btn.textContent = '✓ 今日已打卡';
-  document.getElementById('checkinStatus').textContent = '今日打卡完成。明日再见，观察者。';
+  btn.disabled = true; btn.classList.add('done'); btn.textContent = '✓ 今日已打卡';
+  document.getElementById('checkinStatus').textContent = '今日打卡完成。神之眼已记录你的到来。';
 }
 
 function doCheckin() {
-  if (todayChecked) return;
+  if (todayDone) return;
   var btn = document.getElementById('checkinBtn');
-  btn.disabled = true;
-  btn.textContent = '记录中...';
-  client.from('checkins').insert({ user_id: currentUser.id, checked_at: new Date().toISOString() }).then(function(res) {
-    if (res.error) {
-      showToast('打卡失败：' + res.error.message);
-      btn.disabled = false;
-      btn.textContent = '今日打卡 ⚡';
-    } else {
-      todayChecked = true;
-      setCheckinDone();
-      loadUserStats();
-      showToast('⚡ 打卡成功！神之视界已记录');
-    }
+  btn.disabled = true; btn.textContent = '记录中...';
+  sb.from('checkins').insert({user_id:CU.id,checked_at:new Date().toISOString()}).then(function(r) {
+    if (r.error) { showToast('打卡失败'); btn.disabled=false; btn.textContent='今日打卡 ⚡'; }
+    else { todayDone=true; setChkDone(); loadStats(); showToast('⚡ 打卡成功！神之视界已记录'); }
   });
 }
 
 function loadEditions() {
-  fetch('editions.json').then(function(r) { return r.json(); }).then(function(data) {
-    var editions = data.editions || data;
-    if (!Array.isArray(editions)) editions = [];
-    editions.sort(function(a, b) { return b.date > a.date ? 1 : -1; });
-    renderEditions(editions);
-  }).catch(function() {
-    var fallback = [
-      { vol: 'Vol.003', date: '2026-03-12', file: 'zeus-daily-20260312.html' },
-      { vol: 'Vol.002', date: '2026-03-11', file: 'zeus-daily-20260311.html' }
-    ];
-    renderEditions(fallback);
+  fetch('editions.json').then(function(r){return r.json();}).then(function(data) {
+    allEd = data.editions || data;
+    if (!Array.isArray(allEd)) allEd = [];
+    allEd.sort(function(a,b){return b.date>a.date?1:-1;});
+    document.getElementById('archBadge').textContent = allEd.length;
+    document.getElementById('archSub').textContent = 'Complete Archive · ' + allEd.length + ' Editions';
+    renderLatest(); renderArch(allEd);
+  }).catch(function(){
+    allEd = [{vol:'003',date:'2026-03-12',file:'zeus-daily-20260312.html',summary:'Vol.003 · Mar 12, 2026'},{vol:'002',date:'2026-03-11',file:'zeus-daily-20260311.html',summary:'Vol.002 · Mar 11, 2026'}];
+    renderLatest(); renderArch(allEd);
   });
 }
 
-function renderEditions(editions) {
-  var grid = document.getElementById('editionsGrid');
-  document.getElementById('editionCount').textContent = editions.length + ' 期';
-  if (editions.length === 0) {
-    grid.innerHTML = '<div class="empty">尚无已发布期数</div>';
-    return;
+function vStr(e,i) { var v=e.vol||String(i+1); while(v.length<3) v='0'+v; return 'Vol.'+v; }
+function fStr(e) { return e.file||('zeus-daily-'+e.date.replace(/-/g,'')+'.html'); }
+
+function renderLatest() {
+  var c = document.getElementById('latestEd');
+  if (!allEd.length) { c.innerHTML='<div style="color:var(--muted);font-style:italic;padding:36px;text-align:center;">暂无期数</div>'; return; }
+  var html='', show=allEd.slice(0,3);
+  for (var i=0;i<show.length;i++) {
+    var e=show[i], vol=vStr(e,i), file=fStr(e), feat=i===0;
+    html += '<div class="ed-card'+(feat?' feat':'')+'" onclick="window.location.href=\''+file+'\'">';
+    html += '<div class="ed-vol">'+vol+'<span class="ed-arr">→</span></div>';
+    html += '<div class="ed-date">'+e.date+'</div>';
+    if (e.summary) html += '<div class="ed-sum">'+e.summary+'</div>';
+    html += '<div class="ed-tag">'+(feat?'◉ 最新':'◌ 往期')+'</div></div>';
   }
-  var html = '';
-  for (var i = 0; i < editions.length; i++) {
-    var e = editions[i];
-    var vol = e.vol || ('Vol.' + String(i + 1));
-    var file = e.file || ('zeus-daily-' + e.date.replace(/-/g, '') + '.html');
-    html += '<a class="edition-card" href="' + file + '">';
-    html += '<div class="edition-vol">' + vol + '<span class="edition-arrow">→</span></div>';
-    html += '<div class="edition-date">' + e.date + '</div>';
-    if (e.summary) html += '<div class="edition-preview">' + e.summary + '</div>';
-    html += '</a>';
-  }
-  grid.innerHTML = html;
+  c.innerHTML = html;
 }
 
-function doLogout() {
-  client.auth.signOut().then(function() {
-    window.location.href = 'index.html';
-  });
+function renderArch(eds) {
+  var g = document.getElementById('archGrid');
+  if (!eds.length) { g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:56px;color:var(--muted);font-style:italic;">没有找到符合条件的期数</div>'; return; }
+  var html='';
+  for (var i=0;i<eds.length;i++) {
+    var e=eds[i], vol=vStr(e,allEd.indexOf(e)), file=fStr(e), isc=!!collected[e.date];
+    html += '<div class="ac" id="ac-'+e.date+'">';
+    html += '<div class="ac-top"><span class="ac-vol">'+vol+'</span>';
+    html += '<svg width="26" height="11" viewBox="0 0 120 52"><path d="M10,26 Q60,4 110,26 Q60,48 10,26 Z" fill="none" stroke="#b8964a" stroke-width="2"/><circle cx="60" cy="26" r="12" fill="#6b4c9a"/><circle cx="60" cy="26" r="5" fill="#0d0618"/></svg></div>';
+    html += '<div class="ac-body"><div class="ac-date">'+e.date+'</div>';
+    if (e.summary) html += '<div class="ac-sum">'+e.summary+'</div>';
+    html += '</div><div class="ac-foot">';
+    html += '<span class="ac-read" onclick="window.location.href=\''+file+'\'">阅读全文 →</span>';
+    html += '<div class="cdot'+(isc?' on':'')+'" title="'+(isc?'移除收藏':'加入收藏')+'" onclick="toggleColl(event,\''+e.date+'\')"></div>';
+    html += '</div></div>';
+  }
+  g.innerHTML = html;
 }
+
+function filterA(yr, btn) {
+  document.querySelectorAll('.fb').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  document.getElementById('archSearch').value='';
+  renderArch(yr==='all'?allEd:allEd.filter(function(e){return e.date.startsWith(yr);}));
+}
+
+function searchA(q) {
+  document.querySelectorAll('.fb').forEach(function(b){b.classList.remove('on');});
+  document.querySelector('.fb').classList.add('on');
+  if (!q) { renderArch(allEd); return; }
+  renderArch(allEd.filter(function(e){ return e.date.indexOf(q)>=0||(e.summary&&e.summary.toLowerCase().indexOf(q.toLowerCase())>=0); }));
+}
+
+function loadCollLocal() {
+  try { var r=localStorage.getItem('zc_'+CU.id); collected=r?JSON.parse(r):{}; } catch(e){collected={};}
+  updateCollCount(); renderColl();
+}
+
+function saveColl() { try{localStorage.setItem('zc_'+CU.id,JSON.stringify(collected));}catch(e){} }
+
+function toggleColl(evt, date) {
+  evt.stopPropagation();
+  if (collected[date]) { delete collected[date]; showToast('已从收藏移除'); }
+  else { collected[date]=true; showToast('⭐ 已加入收藏册'); }
+  saveColl(); updateCollCount();
+  document.querySelectorAll('.ac').forEach(function(c){
+    var id=c.id?c.id.replace('ac-',''):'';
+    var dot=c.querySelector('.cdot');
+    if (dot) dot.className='cdot'+(collected[id]?' on':'');
+  });
+  renderColl();
+}
+
+function updateCollCount() {
+  var n=Object.keys(collected).length;
+  document.getElementById('collBadge').textContent=n;
+  document.getElementById('sColl').textContent=n;
+  document.getElementById('collNum').textContent=n;
+  document.getElementById('profColl').textContent=n+' 期';
+}
+
+function renderColl() {
+  var g=document.getElementById('collGrid');
+  var dates=Object.keys(collected);
+  if (!dates.length) { g.innerHTML='<div class="empty-coll"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="rgba(154,128,96,0.25)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><p>尚无收藏</p><div class="empty-hint">前往历期日报，点击 ◯ 开始收藏</div></div>'; return; }
+  var items=allEd.filter(function(e){return collected[e.date];});
+  if (!items.length) { g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:56px;color:var(--muted);font-style:italic;">加载中...</div>'; return; }
+  var html='';
+  for (var i=0;i<items.length;i++) {
+    var e=items[i], vol=vStr(e,allEd.indexOf(e)), file=fStr(e);
+    html+='<div class="ac"><div class="ac-top"><span class="ac-vol">'+vol+'</span>';
+    html+='<svg width="26" height="11" viewBox="0 0 120 52"><path d="M10,26 Q60,4 110,26 Q60,48 10,26 Z" fill="none" stroke="#b8964a" stroke-width="2"/><circle cx="60" cy="26" r="12" fill="#6b4c9a"/><circle cx="60" cy="26" r="5" fill="#0d0618"/></svg></div>';
+    html+='<div class="ac-body"><div class="ac-date">'+e.date+'</div>';
+    if(e.summary) html+='<div class="ac-sum">'+e.summary+'</div>';
+    html+='</div><div class="ac-foot"><span class="ac-read" onclick="window.location.href=\''+file+'\'">阅读全文 →</span>';
+    html+='<div class="cdot on" title="移除收藏" onclick="toggleColl(event,\''+e.date+'\')"></div></div></div>';
+  }
+  g.innerHTML=html;
+}
+
+function buildLvTrack() {
+  var lvs=[
+    {n:1,name:'Observer · 观察者',cls:'lvl-1',icon:'·',min:0,max:30,desc:'0 天起'},
+    {n:2,name:'Scholar · 学者',cls:'lvl-2',icon:'○',min:30,max:90,desc:'30 天解锁'},
+    {n:3,name:'Prophet · 先知',cls:'lvl-3',icon:'◇',min:90,max:180,desc:'90 天解锁'},
+    {n:4,name:'Sage · 贤者',cls:'lvl-4',icon:'◈',min:180,max:365,desc:'180 天解锁'},
+    {n:5,name:'Creator · 造物主',cls:'lvl-5',icon:'✦',min:365,max:365,desc:'365 天解锁'}
+  ];
+  var html='';
+  for (var i=0;i<lvs.length;i++) {
+    var lv=lvs[i];
+    var st = uDays>=lv.min ? (i<4&&uDays<lv.max?'cur':'done') : 'lock';
+    if (i===4&&uDays>=365) st='done';
+    var prog=0;
+    if (st==='cur') { var rng=lv.max-lv.min; prog=rng>0?Math.min(100,Math.round((uDays-lv.min)/rng*100)):100; }
+    else if (st==='done') prog=100;
+    html+='<div class="lv-row '+st+'">';
+    html+='<div class="lv-ico">'+lv.icon+'</div>';
+    html+='<div class="lv-info"><div class="lv-nm">Lv.'+lv.n+' '+lv.name+'</div>';
+    html+='<div class="lv-req">'+lv.desc;
+    if(st==='cur') html+=' · 进度 '+prog+'%';
+    else if(st==='done') html+=' · ✓ 已解锁';
+    else html+=' · 尚未解锁';
+    html+='</div>';
+    if(st==='cur') html+='<div class="lv-bar-w"><div class="lv-bar" style="width:'+prog+'%"></div></div>';
+    html+='</div></div>';
+  }
+  document.getElementById('lvTrack').innerHTML=html;
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('pg-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  var map={overview:0,archive:1,collection:2,profile:3};
+  var items=document.querySelectorAll('.nav-item');
+  if(items[map[id]]) items[map[id]].classList.add('active');
+  document.querySelector('.main-area').scrollTop=0;
+}
+
+function doLogout() { sb.auth.signOut().then(function(){window.location.href='index.html';}); }
 
 function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 3000);
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2800);
 }
 
-function startEyeBlink() {
-  function blink() {
-    var outline = document.getElementById('dashEyeOutline');
-    if (!outline) return;
-    outline.setAttribute('d', 'M 10 26 Q 60 22 110 26 Q 60 30 10 26 Z');
-    setTimeout(function() {
-      outline.setAttribute('d', 'M 10 26 Q 60 4 110 26 Q 60 48 10 26 Z');
-    }, 120);
+function eyeInit() {
+  var lid=document.getElementById('sLid'), pupil=document.getElementById('sPupil');
+  var open='M10,26 Q60,4 110,26 Q60,48 10,26 Z', close='M10,26 Q60,22 110,26 Q60,30 10,26 Z';
+  function blink(){
+    if(!lid) return;
+    lid.setAttribute('d',close);
+    setTimeout(function(){lid.setAttribute('d',open);},150);
+    setTimeout(blink,3500+Math.random()*2000);
   }
-  setInterval(blink, 3500);
+  setTimeout(blink,1800);
+  document.addEventListener('mousemove',function(e){
+    var eye=document.getElementById('sideEye');
+    if(!eye||!pupil) return;
+    var rect=eye.getBoundingClientRect();
+    var cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+    var dx=(e.clientX-cx)/window.innerWidth*8;
+    var dy=(e.clientY-cy)/window.innerHeight*4;
+    pupil.setAttribute('cx',String(Math.min(66,Math.max(54,60+dx))));
+    pupil.setAttribute('cy',String(Math.min(30,Math.max(22,26+dy))));
+  });
 }
 </script>
 </body>
