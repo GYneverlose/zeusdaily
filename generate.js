@@ -26,16 +26,11 @@ function sleep(ms) {
   return new Promise(function(resolve) { setTimeout(resolve, ms); });
 }
 
-// ============================================================
-// HARDCODED UI TEMPLATES — injected verbatim into every issue
-// ============================================================
-
 var BOLT_CSS = [
   ".zeus-bolt { display:inline-block; vertical-align:middle; animation: boltFlash 2.5s ease-in-out infinite; filter: drop-shadow(0 0 6px #ffe066); }",
   "@keyframes boltFlash { 0%,100%{opacity:1;filter:drop-shadow(0 0 6px #ffe066);} 50%{opacity:0.6;filter:drop-shadow(0 0 14px #fff5c0);} }"
 ].join("\n");
 
-// Each bolt gets a unique gradient ID via a counter to avoid SVG gradient conflicts
 var BOLT_SVG_TEMPLATE = [
   "<svg width='20' height='30' viewBox='0 0 24 36' class='zeus-bolt' aria-hidden='true'>",
   "  <defs><linearGradient id='boltGrad_UNIQUE' x1='0%' y1='0%' x2='100%' y2='100%'>",
@@ -149,8 +144,6 @@ var STAMP_SVG_HTML = [
   "  </svg>",
   "</div>"
 ].join("\n");
-
-// ============================================================
 
 async function generate() {
   console.log("Searching for latest news (Haiku)...");
@@ -289,12 +282,9 @@ async function generate() {
 
   console.log("HTML generated: " + html.length + " chars");
 
+  // Save dated file only — do NOT overwrite index.html (login page)
   fs.writeFileSync(filePath, html, "utf8");
   console.log("Saved: " + fileName);
-
-  fs.writeFileSync(path.join("zeusdaily", "index.html"), html, "utf8");
-  fs.writeFileSync("index.html", html, "utf8");
-  console.log("Updated index.html (zeusdaily + root)");
 
   var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   var d = new Date(dateStr + "T00:00:00");
