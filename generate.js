@@ -293,7 +293,8 @@ async function generate() {
   console.log("Saved: " + fileName);
 
   fs.writeFileSync(path.join("zeusdaily", "index.html"), html, "utf8");
-  console.log("Updated index.html");
+  fs.writeFileSync("index.html", html, "utf8");
+  console.log("Updated index.html (zeusdaily + root)");
 
   var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   var d = new Date(dateStr + "T00:00:00");
