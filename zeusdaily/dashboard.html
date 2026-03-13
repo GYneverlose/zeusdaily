@@ -120,7 +120,7 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .hero-sub{font-size:12px;color:var(--text2);line-height:1.7;}
 .hero-btn{margin-top:18px;display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:6px;background:linear-gradient(135deg,var(--purple),var(--violet));border:none;color:white;font-size:11px;letter-spacing:1.5px;cursor:pointer;transition:all 0.2s;font-family:'DM Mono',monospace;box-shadow:0 4px 16px rgba(92,61,143,0.25);}
 .hero-btn:hover{box-shadow:0 6px 24px rgba(92,61,143,0.4);transform:translateY(-1px);}
-.hero-eye-wrap{flex-shrink:0;}
+.hero-eye-wrap{flex-shrink:0;overflow:hidden;border-radius:4px;}
 .checkin-btn{width:100%;display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:8px;margin-top:14px;background:linear-gradient(135deg,var(--gold-bg2),rgba(92,61,143,0.08));border:1px solid var(--border2);cursor:pointer;transition:all 0.2s;}
 .checkin-btn:hover{box-shadow:0 4px 16px rgba(184,150,74,0.15);}
 .checkin-btn.done{background:rgba(123,86,184,0.07);border-color:rgba(123,86,184,0.28);cursor:default;}
@@ -322,9 +322,11 @@ function applyProfileToUI(p){
   var lvEl = document.querySelectorAll('.user-level');
   lvEl.forEach(function(el){ el.textContent = 'Lv.' + lv + ' · ' + lvName; });
 
-  // Streak stat card (use ID)
+  // Streak stat card
   var streakVal = document.getElementById('stat-streak');
   if(streakVal) streakVal.innerHTML = streak + '<span class="unit" style="margin-left:6px;vertical-align:middle;"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-top:-3px;"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.9" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg></span>';
+  var streakNote = document.getElementById('stat-streak-note');
+  if(streakNote) streakNote.textContent = streak > 0 ? (getLang()==='zh' ? '连续 '+streak+' 天' : streak+' day streak') : '—';
 
   // EXP stat card
   var expStatEl = document.getElementById('stat-exp');
@@ -345,9 +347,11 @@ function applyProfileToUI(p){
   // Days to next level
   var nextLvEl = document.getElementById('next-lv-text');
   if(nextLvEl && lv < 5){
-    var daysLeft = (LEVEL_DATA[lv+1].days - streak);
+    var expNeeded = getLvExpNeeded(lv);
+    var expLeft = Math.max(0, expNeeded - exp);
+    var daysLeft = expLeft; // unit is EXP, not days
     if(daysLeft < 0) daysLeft = 0;
-    nextLvEl.innerHTML = '<span class="zh-only">距 Lv.'+(lv+1)+' '+getLvName(lv+1,'zh')+' · 还需 '+daysLeft+' 天</span><span class="en-only">'+daysLeft+' days to Lv.'+(lv+1)+' · '+getLvName(lv+1,'en')+'</span>';
+    nextLvEl.innerHTML = '<span class="zh-only">距 Lv.'+(lv+1)+' '+getLvName(lv+1,'zh')+' · 还需 '+expLeft+' EXP</span><span class="en-only">'+expLeft+' EXP to Lv.'+(lv+1)+' · '+getLvName(lv+1,'en')+'</span>';
     if(window.applyLang) applyLang(getLang());
   }
 
@@ -491,12 +495,10 @@ window.doLogout = function(){
             <defs>
               <filter id="hg" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
               <filter id="hi" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-              <filter id="hglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
               <radialGradient id="hNeb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient>
               <radialGradient id="hPup" cx="40%" cy="38%" r="60%"><stop offset="0%" stop-color="#1a0a2e"/><stop offset="100%" stop-color="#0a0515"/></radialGradient>
               <clipPath id="hClip"><path id="hClipPath" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath>
             </defs>
-            <ellipse cx="60" cy="32" rx="54" ry="8" fill="rgba(92,61,143,0.1)" filter="url(#hglow)"/>
             <path id="hOutline" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4" filter="url(#hg)"/>
             <g clip-path="url(#hClip)">
               <circle id="hIris" cx="60" cy="26" r="14" fill="url(#hNeb)" filter="url(#hi)"/>
@@ -512,7 +514,7 @@ window.doLogout = function(){
       </div>
 
       <div class="grid-4">
-        <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label zh-only">连续签到</div><div class="stat-label en-only">STREAK</div><div class="stat-value">12<span class="unit" style="margin-left:6px;vertical-align:middle;"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle;margin-top:-3px;"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.9" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg></span></div><div class="stat-note up zh-only">今日 +1</div><div class="stat-note up en-only">+1 today</div></div>
+        <div class="stat-card" style="--accent:var(--gold);"><div class="stat-label zh-only">连续签到</div><div class="stat-label en-only">STREAK</div><div class="stat-value" id="stat-streak">0<span class="unit" style="margin-left:6px;vertical-align:middle;"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle;margin-top:-3px;"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.9" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg></span></div><div class="stat-note" id="stat-streak-note" style="color:var(--text4);font-size:10px;letter-spacing:0.5px;font-family:'DM Mono',monospace;">—</div></div>
         <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label">EXP</div><div class="stat-value" id="stat-exp">—</div><div class="prog-bar"><div class="prog-fill" id="stat-exp-bar" style="width:0%"></div></div></div>
         <div class="stat-card" style="--accent:var(--green);"><div class="stat-label zh-only">已读期数</div><div class="stat-label en-only">ISSUES READ</div><div class="stat-value" id="issues-read-count">—</div><div class="stat-note" id="issues-read-note" style="color:var(--text4)"></div></div>
         <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label zh-only">收藏数</div><div class="stat-label en-only">COLLECTED</div><div class="stat-value" id="stat-collected">—</div><div class="stat-note" id="stat-collected-note" style="color:var(--text4);"></div></div>
@@ -551,7 +553,7 @@ window.doLogout = function(){
               <div id="lv-num" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-bottom:10px;">LV.2</div>
               <div id="exp-display" style="font-size:11px;color:var(--text4);margin-bottom:6px;font-family:'DM Mono',monospace;">— / — EXP</div>
               <div class="prog-bar" style="height:5px;"><div id="exp-bar" class="prog-fill" style="width:46%"></div></div>
-              <div id="next-lv-text" style="font-size:10px;color:var(--text3);margin-top:6px;"><span class="zh-only">距 Lv.3 先知 · 还需 27 天</span><span class="en-only">27 days to Lv.3 · Prophet</span></div>
+              <div id="next-lv-text" style="font-size:10px;color:var(--text3);margin-top:6px;">—</div>
             </div>
           </div>
           <div class="checkin-btn" id="checkin-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.9" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg><span class="checkin-label" id="checkin-label"><span class="zh-only">今日签到</span><span class="en-only">Check In Today</span></span><span class="checkin-time" id="checkin-time"></span></div>
@@ -644,7 +646,7 @@ window.doLogout = function(){
           <!-- Lv3 -->
           <div class="lv-row locked">
             <svg viewBox="0 0 110 120" width="36" height="40" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pb3bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fff8e8"/><stop offset="100%" stop-color="#f0dea8"/></radialGradient><clipPath id="pb3cl"><path d="M 10,55 C 32,30 78,30 100,55 C 78,80 32,80 10,55 Z"/></clipPath></defs><polygon points="55,4 90,18 106,52 90,86 55,100 20,86 4,52 20,18" fill="url(#pb3bg)" stroke="#b8964a" stroke-width="2"/><g style="transform-origin:55px 55px;animation:badge-orbit 5s linear infinite;"><circle cx="97" cy="55" r="3" fill="#d4ac5c" opacity="0.9"/></g><path d="M 10,55 C 32,30 78,30 100,55 C 78,80 32,80 10,55 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.5"/><g clip-path="url(#pb3cl)"><circle cx="55" cy="55" r="15" fill="#6b4c9a"/><circle cx="55" cy="55" r="7" fill="#0a0515"/><circle cx="58" cy="52" r="2.2" fill="white" opacity="0.45"/></g></svg>
-            <div><div style="font-size:12px;font-weight:500;color:#8a6d2f;">Lv.3 · <span class="zh-only">先知</span><span class="en-only">Prophet</span></div><div style="font-size:9px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:1px;"><span class="zh-only">还需 27 天</span><span class="en-only">27 days away</span></div></div>
+            <div><div style="font-size:12px;font-weight:500;color:#8a6d2f;">Lv.3 · <span class="zh-only">先知</span><span class="en-only">Prophet</span></div><div id="road-lv3-note" style="font-size:9px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:1px;">—</div></div>
             <span class="lv-range">91–180d</span>
           </div>
 
@@ -1398,6 +1400,9 @@ window.loadProfilePage = function(){
   if(el('prof-pill-text')) el('prof-pill-text').textContent = 'Lv.'+lv+' · '+(getLang()==='zh'?LV_ZH[lv]:LV_EN[lv]);
   if(el('prof-streak')) el('prof-streak').textContent = p.streak || 0;
   if(el('prof-exp2')) el('prof-exp2').textContent = exp;
+  // Update roadmap EXP note
+  var r3 = document.getElementById('road-lv3-note');
+  if(r3) r3.textContent = lv < 2 ? (Math.max(0, 300 - exp) + ' EXP') : (lv < 3 ? (Math.max(0, 500 - exp) + ' EXP') : '✓');
 };
 
 // Init language on load — must be last
