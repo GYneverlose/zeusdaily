@@ -486,12 +486,12 @@ window.doLogout = function(){
     <div class="page active" id="page-home">
       <div class="hero-banner">
         <div class="hero-content">
-          <div class="hero-vol zh-only">VOL.003 · 今日新刊</div>
-          <div class="hero-vol en-only">VOL.003 · LATEST ISSUE</div>
+          <div class="hero-vol zh-only" id="hero-vol-zh">— · 今日新刊</div>
+          <div class="hero-vol en-only" id="hero-vol-en">— · LATEST ISSUE</div>
           <div class="hero-title zh-only" id="hero-title-zh">今日新刊</div>
-          <div class="hero-title en-only">The Weight of Empires<br>&amp; the Silence of Gold</div>
-          <div class="hero-sub zh-only">特朗普关税风暴席卷全球市场，黄金突破历史高位，马来西亚林吉特持续承压。</div>
-          <div class="hero-sub en-only">Trump tariff storms sweep global markets. Gold breaks historical highs. The Ringgit under sustained pressure.</div>
+          <div class="hero-title en-only" id="hero-title-en">—</div>
+          <div class="hero-sub zh-only" id="hero-sub-zh"></div>
+          <div class="hero-sub en-only" id="hero-sub-en"></div>
           <button class="hero-btn" data-page="issues"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="zh-only">阅读今期</span><span class="en-only">READ NOW</span></button>
         </div>
         <div class="hero-eye-wrap">
@@ -633,40 +633,8 @@ window.doLogout = function(){
         <div class="card">
           <div class="section-head" style="margin-bottom:16px;"><div class="section-title" style="font-size:15px;"><span class="zh-only">等级路线</span><span class="en-only">Level Path</span></div></div>
 
-          <!-- Lv1 -->
-          <div class="lv-row locked">
-            <svg viewBox="0 0 100 110" width="36" height="40" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pb1bg" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#ddeeff"/><stop offset="100%" stop-color="#b8d4f0"/></radialGradient><clipPath id="pb1cl"><path d="M 12,50 C 30,28 70,28 88,50 C 70,72 30,72 12,50 Z"/></clipPath></defs><polygon points="50,4 92,27 92,73 50,96 8,73 8,27" fill="url(#pb1bg)" stroke="#78b4e0" stroke-width="1.5"/><path d="M 12,50 C 30,28 70,28 88,50 C 70,72 30,72 12,50 Z" fill="#0e1a2e" stroke="#78b4e0" stroke-width="1.2"/><g clip-path="url(#pb1cl)"><circle cx="50" cy="50" r="13" fill="#4a8ab8"/><circle cx="50" cy="50" r="6" fill="#0d1a2e"/><circle cx="53" cy="47" r="2" fill="white" opacity="0.5"/></g></svg>
-            <div><div style="font-size:12px;font-weight:500;color:#4a8ab8;">Lv.1 · <span class="zh-only">观察者</span><span class="en-only">Observer</span></div></div>
-            <span class="lv-range">0–30d</span>
-          </div>
+          <div id="lv-roadmap-list"></div>
 
-          <!-- Lv2 current -->
-          <div class="lv-row current">
-            <svg viewBox="0 0 100 110" width="36" height="40" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pb2bg" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#ede0ff"/><stop offset="100%" stop-color="#c8a8ee"/></radialGradient><radialGradient id="pb2iris" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><filter id="pb2g" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><clipPath id="pb2cl"><path d="M 12,50 C 30,28 70,28 88,50 C 70,72 30,72 12,50 Z"/></clipPath></defs><polygon points="50,4 94,33 78,83 22,83 6,33" fill="url(#pb2bg)" stroke="#9b72d4" stroke-width="1.5"/><circle cx="50" cy="50" r="28" fill="none" stroke="#7b56b8" stroke-width="0.7" stroke-dasharray="3 9" opacity="0.5" style="transform-origin:50px 50px;animation:spin-rev 12s linear infinite;"/><path d="M 12,50 C 30,28 70,28 88,50 C 70,72 30,72 12,50 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.3" filter="url(#pb2g)"/><g clip-path="url(#pb2cl)"><circle cx="50" cy="50" r="13" fill="url(#pb2iris)"/><circle cx="50" cy="50" r="6" fill="#0a0515"/><circle cx="53" cy="47" r="2" fill="white" opacity="0.45"/></g></svg>
-            <div><div style="font-size:12px;font-weight:600;color:#7b56b8;">Lv.<span id="prof-lv">—</span> · <span id="prof-lv-name">—</span></div><div style="font-size:9px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:1px;"><span id="prof-exp">—</span> EXP</div></div>
-            <span class="lv-range">31–90d</span>
-          </div>
-
-          <!-- Lv3 -->
-          <div class="lv-row locked">
-            <svg viewBox="0 0 110 120" width="36" height="40" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pb3bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fff8e8"/><stop offset="100%" stop-color="#f0dea8"/></radialGradient><clipPath id="pb3cl"><path d="M 10,55 C 32,30 78,30 100,55 C 78,80 32,80 10,55 Z"/></clipPath></defs><polygon points="55,4 90,18 106,52 90,86 55,100 20,86 4,52 20,18" fill="url(#pb3bg)" stroke="#b8964a" stroke-width="2"/><g style="transform-origin:55px 55px;animation:badge-orbit 5s linear infinite;"><circle cx="97" cy="55" r="3" fill="#d4ac5c" opacity="0.9"/></g><path d="M 10,55 C 32,30 78,30 100,55 C 78,80 32,80 10,55 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.5"/><g clip-path="url(#pb3cl)"><circle cx="55" cy="55" r="15" fill="#6b4c9a"/><circle cx="55" cy="55" r="7" fill="#0a0515"/><circle cx="58" cy="52" r="2.2" fill="white" opacity="0.45"/></g></svg>
-            <div><div style="font-size:12px;font-weight:500;color:#8a6d2f;">Lv.3 · <span class="zh-only">先知</span><span class="en-only">Prophet</span></div><div id="road-lv3-note" style="font-size:9px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:1px;">—</div></div>
-            <span class="lv-range">91–180d</span>
-          </div>
-
-          <!-- Lv4 -->
-          <div class="lv-row locked">
-            <svg viewBox="0 0 110 120" width="36" height="40" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pb4bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fffaee"/><stop offset="100%" stop-color="#e8d090"/></radialGradient><clipPath id="pb4cl"><path d="M 8,55 C 32,28 78,28 102,55 C 78,82 32,82 8,55 Z"/></clipPath></defs><polygon points="55,2 61,22 74,8 72,28 88,18 80,36 100,32 88,48 110,50 94,62 106,74 88,72 96,90 78,82 78,104 64,92 55,112 46,92 32,104 32,82 14,90 22,72 4,74 16,62 0,50 22,48 10,32 32,36 24,18 40,28 38,8 51,22" fill="url(#pb4bg)" stroke="#d4ac5c" stroke-width="1.5" stroke-linejoin="round"/><path d="M 8,55 C 32,28 78,28 102,55 C 78,82 32,82 8,55 Z" fill="#0e0818" stroke="#d4ac5c" stroke-width="1.8"/><g clip-path="url(#pb4cl)"><circle cx="55" cy="55" r="16" fill="#8a6d2f"/><circle cx="55" cy="55" r="7.5" fill="#0a0515"/><circle cx="59" cy="51" r="2.5" fill="white" opacity="0.5"/></g></svg>
-            <div><div style="font-size:12px;font-weight:500;color:#8a6d2f;">Lv.4 · <span class="zh-only">圣人</span><span class="en-only">Sage</span></div></div>
-            <span class="lv-range">181–364d</span>
-          </div>
-
-          <!-- Lv5 -->
-          <div class="lv-row locked">
-            <svg viewBox="0 0 110 120" width="36" height="40" xmlns="http://www.w3.org/2000/svg" style="animation:badge-hue 6s ease-in-out infinite;"><defs><radialGradient id="pb5bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fff0ff"/><stop offset="100%" stop-color="#a878e0"/></radialGradient><linearGradient id="pb5b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0c8ff"/><stop offset="50%" stop-color="#9b72d4"/><stop offset="100%" stop-color="#d4ac5c"/></linearGradient><clipPath id="pb5cl"><path d="M 6,55 C 30,26 80,26 104,55 C 80,84 30,84 6,55 Z"/></clipPath></defs><polygon points="55,4 58,24 64,8 62,28 72,14 66,32 80,22 70,38 88,32 74,44 94,42 78,50 96,54 80,58 96,62 78,66 94,72 78,70 88,84 72,78 80,94 66,84 62,96 58,82 55,100 52,82 48,96 44,84 30,94 38,78 22,84 32,70 16,72 32,66 14,62 30,58 14,54 30,50 16,42 36,44 22,32 40,38 30,22 44,32 38,14 48,28 44,8 52,24" fill="url(#pb5bg)" stroke="url(#pb5b)" stroke-width="0.8" stroke-linejoin="round"/><path d="M 6,55 C 30,26 80,26 104,55 C 80,84 30,84 6,55 Z" fill="#0e0818" stroke="url(#pb5b)" stroke-width="1.8"/><g clip-path="url(#pb5cl)"><circle cx="55" cy="55" r="17" fill="#6030a8"/><circle cx="55" cy="55" r="8" fill="#0a0515"/><circle cx="59" cy="51" r="2.5" fill="white" opacity="0.6"/></g></svg>
-            <div><div style="font-size:12px;font-weight:500;color:#7b56b8;">Lv.5 · <span class="zh-only">造物主</span><span class="en-only">Creator</span></div></div>
-            <span class="lv-range">365d+</span>
-          </div>
         </div>
       </div>
     </div>
@@ -1098,7 +1066,7 @@ document.addEventListener('click', function(ev){
 
   var FRIENDS = [];
 
-  function loadFriends(){
+  window.loadFriends = function loadFriends(){
     var user = window._currentUser;
     var profile = window._profile;
     if(!user || !profile) { setTimeout(loadFriends, 500); return; }
@@ -1126,7 +1094,7 @@ document.addEventListener('click', function(ev){
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function fmtJoined(s){ var d=new Date(s); return MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear(); }
 
-  function renderFriends(){
+  window.renderFriends = function renderFriends(){
     var list = document.getElementById('friends-list');
     if(!list) return;
     var lang = getLang();
@@ -1336,10 +1304,19 @@ window.loadHomePage = function(){
   _sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(1).single().then(function(r){
     if(!r.data) return;
     var e = r.data;
+    var volStr = 'VOL.'+String(e.vol_number).padStart(3,'0');
+    var vzh = document.getElementById('hero-vol-zh');
+    var ven = document.getElementById('hero-vol-en');
+    if(vzh) vzh.textContent = volStr + ' · 今日新刊';
+    if(ven) ven.textContent = volStr + ' · LATEST ISSUE';
     var zh = document.getElementById('hero-title-zh');
     var en = document.getElementById('hero-title-en');
     if(zh) zh.textContent = e.title;
-    if(en) en.textContent = 'Vol.'+String(e.vol_number).padStart(3,'0')+' · '+fmtD(e.date);
+    if(en) en.textContent = e.title;
+    var subzh = document.getElementById('hero-sub-zh');
+    var suben = document.getElementById('hero-sub-en');
+    if(subzh) subzh.textContent = fmtD(e.date);
+    if(suben) suben.textContent = fmtD(e.date);
   });
   // Recent 3 issues preview
   _sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(3).then(function(r){
@@ -1382,16 +1359,35 @@ window.loadProfilePage = function(){
   var lv = calcLevel(exp);  // always from EXP
   var nextExp = [0,300,500,1000,2000,9999][lv];
   var el = function(id){ return document.getElementById(id); };
-  if(el('prof-lv')) el('prof-lv').textContent = lv;
-  if(el('prof-lv-name')) el('prof-lv-name').textContent = getLang()==='zh'?LV_ZH[lv]:LV_EN[lv];
-  if(el('prof-exp')) el('prof-exp').textContent = exp+' / '+nextExp;
   if(el('prof-pill')) el('prof-pill').className = 'level-pill lv'+lv;
   if(el('prof-pill-text')) el('prof-pill-text').textContent = 'Lv.'+lv+' · '+(getLang()==='zh'?LV_ZH[lv]:LV_EN[lv]);
   if(el('prof-streak')) el('prof-streak').textContent = p.streak || 0;
   if(el('prof-exp2')) el('prof-exp2').textContent = exp;
-  // Update roadmap EXP note
-  var r3 = document.getElementById('road-lv3-note');
-  if(r3) r3.textContent = lv < 2 ? (Math.max(0, 300 - exp) + ' EXP') : (lv < 3 ? (Math.max(0, 500 - exp) + ' EXP') : '✓');
+
+  // ── Dynamic level roadmap ──
+  var roadEl = document.getElementById('lv-roadmap-list');
+  if(roadEl){
+    var lvColors = ['','#4a9fd4','#7b56b8','#b8964a','#d4ac5c','#9b72d4'];
+    var lvRanges = ['','0–300 EXP','300–500 EXP','500–1000 EXP','1000–2000 EXP','2000+ EXP'];
+    var lvDays   = ['','0–30d','31–90d','91–180d','181–364d','365d+'];
+    var html = '';
+    for(var i=1;i<=5;i++){
+      var isCurrent = (i===lv);
+      var isPast = (i<lv);
+      var isLocked = (i>lv);
+      var nameZh = LV_ZH[i], nameEn = LV_EN[i];
+      var color = lvColors[i];
+      var badge = window._badgeSVG ? window._badgeSVG(i,36) : '';
+      var rowClass = isCurrent?'lv-row current':(isPast?'lv-row':'lv-row locked');
+      var nameHtml = '<div style="font-size:12px;font-weight:'+(isCurrent?'600':'500')+';color:'+color+';">Lv.'+i+' · <span class="zh-only">'+nameZh+'</span><span class="en-only">'+nameEn+'</span></div>';
+      var subHtml = '';
+      if(isCurrent) subHtml = '<div style="font-size:9px;color:var(--text4);font-family:\'DM Mono\',monospace;margin-top:1px;">'+exp+' / '+nextExp+' EXP</div>';
+      else if(isPast) subHtml = '<div style="font-size:9px;color:var(--green);font-family:\'DM Mono\',monospace;margin-top:1px;">✓ 已达成</div>';
+      html += '<div class="'+rowClass+'">'+badge+'<div>'+nameHtml+subHtml+'</div><span class="lv-range">'+lvDays[i]+'</span></div>';
+    }
+    roadEl.innerHTML = html;
+    if(window.applyLang) applyLang(getLang());
+  }
 };
 
 // Init language on load — must be last
