@@ -183,6 +183,8 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .pg-btn.active{background:var(--gold-bg2);border-color:var(--gold);color:var(--gold2);font-weight:500;}
 .pg-btn:disabled{opacity:0.3;cursor:default;}
 .pg-dots{font-family:'DM Mono',monospace;font-size:12px;color:var(--text4);padding:0 2px;}
+.logout-btn{margin-left:auto;padding:5px;border-radius:5px;color:var(--text4);cursor:pointer;transition:all 0.15s;flex-shrink:0;}
+.logout-btn:hover{color:var(--text2);background:var(--bg2);}
 /* Friend cards */
 .friend-card{display:flex;align-items:center;gap:16px;padding:14px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);margin-bottom:10px;transition:box-shadow 0.2s;}
 .friend-card:hover{box-shadow:0 4px 16px rgba(123,86,184,0.1);border-color:rgba(123,86,184,0.2);}
@@ -194,6 +196,198 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .friend-active{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:#4caf7d;background:rgba(76,175,125,0.1);padding:2px 7px;border-radius:10px;border:1px solid rgba(76,175,125,0.25);}
 .friend-inactive{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--text4);background:var(--bg2);padding:2px 7px;border-radius:10px;border:1px solid var(--border);}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// ── ZEUS DAILY · SUPABASE DATA ENGINE ──
+var _sb = supabase.createClient(
+  'https://ruuksrwlgsenkkkapbu.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw'
+);
+
+var LEVEL_DATA = [
+  null,
+  {name:'观察者', nameEn:'Observer', days:30,  expNeeded:300},
+  {name:'学者',   nameEn:'Scholar',  days:90,  expNeeded:500},
+  {name:'先知',   nameEn:'Prophet',  days:180, expNeeded:1000},
+  {name:'圣人',   nameEn:'Sage',     days:364, expNeeded:2000},
+  {name:'造物主', nameEn:'Creator',  days:9999,expNeeded:9999}
+];
+
+function getLvName(lv, lang){ return lang==='zh'?(LEVEL_DATA[lv]||LEVEL_DATA[1]).name:(LEVEL_DATA[lv]||LEVEL_DATA[1]).nameEn; }
+function getLvExpNeeded(lv){ return (LEVEL_DATA[lv]||LEVEL_DATA[1]).expNeeded; }
+
+function calcLevel(exp){
+  if(exp >= 2000) return 5;
+  if(exp >= 1000) return 4;
+  if(exp >= 500)  return 3;
+  if(exp >= 300)  return 2;
+  return 1;
+}
+
+// ── AUTH GUARD + DATA LOAD ──
+_sb.auth.getSession().then(function(res){
+  if(!res.data || !res.data.session){
+    window.location.href = 'index.html';
+    return;
+  }
+  var user = res.data.session.user;
+  window._currentUser = user;
+  loadProfile(user.id);
+});
+
+_sb.auth.onAuthStateChange(function(event, session){
+  if(event === 'SIGNED_OUT') window.location.href = 'index.html';
+});
+
+function loadProfile(userId){
+  _sb.from('profiles').select('*').eq('id', userId).single().then(function(res){
+    if(res.error || !res.data){
+      // Profile missing — create it
+      var user = window._currentUser;
+      var name = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || user.email.split('@')[0];
+      var refCode = 'ZD-' + Math.random().toString(36).slice(2,6).toUpperCase();
+      _sb.from('profiles').upsert({
+        id: userId, display_name: name, exp: 0, level: 1, streak: 0, ref_code: refCode
+      }).then(function(){ loadProfile(userId); });
+      return;
+    }
+    var profile = res.data;
+    // Recalculate level from exp
+    profile.level = calcLevel(profile.exp || 0);
+    window._profile = profile;
+    applyProfileToUI(profile);
+    checkTodayCheckin(userId, profile);
+  });
+}
+
+function applyProfileToUI(p){
+  var lang = getLang ? getLang() : 'zh';
+  var name = p.display_name || 'Reader';
+  var avatar = name.charAt(0).toUpperCase();
+  var lv = p.level || 1;
+  var exp = p.exp || 0;
+  var streak = p.streak || 0;
+  var nextExp = getLvExpNeeded(lv);
+  var lvName = getLvName(lv, lang);
+
+  // Sidebar user card
+  var nameEl = document.querySelector('.user-name');
+  var avatarEl = document.querySelector('.user-avatar');
+  if(nameEl) nameEl.textContent = name;
+  if(avatarEl) avatarEl.textContent = avatar;
+
+  var lvEl = document.querySelectorAll('.user-level');
+  lvEl.forEach(function(el){
+    el.textContent = 'Lv.' + lv + ' · ' + lvName;
+  });
+
+  // Streak stat card
+  var streakVal = document.querySelector('.stat-card .stat-value');
+  if(streakVal) streakVal.innerHTML = streak + '<span class="unit" style="margin-left:6px;vertical-align:middle;"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-top:-3px;"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.9" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg></span>';
+
+  // EXP bar
+  var expEl = document.querySelectorAll('.stat-value');
+  expEl.forEach(function(el){
+    var card = el.closest('.stat-card');
+    if(card && card.querySelector('.stat-label') && card.querySelector('.stat-label').textContent.indexOf('EXP') >= 0){
+      el.textContent = exp;
+    }
+  });
+
+  // Level card EXP display
+  var expText = document.getElementById('exp-display');
+  if(expText) expText.textContent = exp + ' / ' + nextExp + ' EXP';
+  var expBar = document.getElementById('exp-bar');
+  if(expBar) expBar.style.width = Math.min(100, Math.round(exp/nextExp*100)) + '%';
+  var lvLabel = document.getElementById('lv-label');
+  if(lvLabel) lvLabel.innerHTML = '<span class="zh-only">' + lvName + '</span><span class="en-only">' + getLvName(lv,'en') + '</span>';
+  var lvNum = document.getElementById('lv-num');
+  if(lvNum) lvNum.textContent = 'LV.' + lv;
+
+  // Days to next level
+  var nextLvEl = document.getElementById('next-lv-text');
+  if(nextLvEl && lv < 5){
+    var daysLeft = (LEVEL_DATA[lv+1].days - streak);
+    if(daysLeft < 0) daysLeft = 0;
+    nextLvEl.innerHTML = '<span class="zh-only">距 Lv.'+(lv+1)+' '+getLvName(lv+1,'zh')+' · 还需 '+daysLeft+' 天</span><span class="en-only">'+daysLeft+' days to Lv.'+(lv+1)+' · '+getLvName(lv+1,'en')+'</span>';
+    if(window.applyLang) applyLang(getLang());
+  }
+
+  // Ref link
+  var refBox = document.getElementById('ref-link-box');
+  if(refBox && p.ref_code) refBox.textContent = 'zeusdaily.blog?ref=' + p.ref_code;
+}
+
+function checkTodayCheckin(userId, profile){
+  var today = new Date().toISOString().slice(0,10);
+  _sb.from('checkins').select('id').eq('user_id', userId).eq('checked_in_at', today).single()
+    .then(function(res){
+      if(res.data){
+        // Already checked in today
+        var btn = document.getElementById('checkin-btn');
+        if(btn && !btn.classList.contains('done')){
+          btn.classList.add('done');
+          var lbl = document.getElementById('checkin-label');
+          if(lbl) lbl.innerHTML = '<span class="zh-only">&#10003; 今日已签到</span><span class="en-only">&#10003; Checked In</span>';
+          var timeEl = document.getElementById('checkin-time');
+          if(timeEl) timeEl.textContent = '今日 ✓';
+          if(window.applyLang) applyLang(getLang());
+        }
+      }
+    });
+}
+
+// ── REAL CHECKIN (overrides the localStorage version) ──
+window.doCheckin = function(){
+  var btn = document.getElementById('checkin-btn');
+  if(!btn || btn.classList.contains('done')) return;
+  var user = window._currentUser;
+  var profile = window._profile;
+  if(!user || !profile) return;
+
+  var today = new Date().toISOString().slice(0,10);
+
+  // Insert checkin
+  _sb.from('checkins').insert({ user_id: user.id, checked_in_at: today }).then(function(res){
+    if(res.error && res.error.code !== '23505') return; // 23505 = duplicate, already done
+
+    // Calculate new streak
+    var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+    var wasYesterday = profile.last_checkin === yesterday || profile.last_checkin === today;
+    var newStreak = wasYesterday ? (profile.streak || 0) + 1 : 1;
+    var newExp = (profile.exp || 0) + 10;
+    var newLevel = calcLevel(newExp);
+
+    // Update profile
+    _sb.from('profiles').update({
+      streak: newStreak,
+      exp: newExp,
+      level: newLevel,
+      last_checkin: today
+    }).eq('id', user.id).then(function(){
+      profile.streak = newStreak;
+      profile.exp = newExp;
+      profile.level = newLevel;
+      profile.last_checkin = today;
+      applyProfileToUI(profile);
+    });
+
+    // Update UI immediately
+    btn.classList.add('done');
+    var d = new Date();
+    var ts = (d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes()+' MYT';
+    var timeEl = document.getElementById('checkin-time');
+    if(timeEl) timeEl.textContent = ts;
+    var lbl = document.getElementById('checkin-label');
+    if(lbl) lbl.innerHTML = '<span class="zh-only">&#10003; 今日已签到</span><span class="en-only">&#10003; Checked In</span>';
+    if(window.applyLang) applyLang(getLang());
+  });
+};
+
+window.doLogout = function(){
+  _sb.auth.signOut().then(function(){ window.location.href = 'index.html'; });
+};
+</script>
 </head>
 <body>
 <div id="app">
@@ -218,7 +412,7 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
     </div>
   </nav>
   <div class="sidebar-bottom">
-    <div class="user-card"><div class="user-avatar">Z</div><div class="user-info"><div class="user-name">Zeus Reader</div><div class="user-level zh-only">Lv.2 · 学者</div><div class="user-level en-only">Lv.2 · Scholar</div></div></div>
+    <div class="user-card"><div class="user-avatar">Z</div><div class="user-info"><div class="user-name">Zeus Reader</div><div class="user-level zh-only">Lv.2 · 学者</div><div class="user-level en-only">Lv.2 · Scholar</div></div><div class="logout-btn" data-action="logout" title="登出"><svg fill="none" viewBox="0 0 16 16" width="14" height="14"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M10 11l3-3-3-3M13 8H6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
   </div>
 </div>
 
@@ -305,11 +499,11 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
               </svg>
             </div>
             <div style="flex:1;">
-              <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#7b56b8;margin-bottom:2px;"><span class="zh-only">学者</span><span class="en-only">Scholar</span></div>
-              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-bottom:10px;">LV.2</div>
-              <div style="font-size:11px;color:var(--text4);margin-bottom:6px;font-family:'DM Mono',monospace;">230 / 500 EXP</div>
-              <div class="prog-bar" style="height:5px;"><div class="prog-fill" style="width:46%"></div></div>
-              <div style="font-size:10px;color:var(--text3);margin-top:6px;"><span class="zh-only">距 Lv.3 先知 · 还需 27 天</span><span class="en-only">27 days to Lv.3 · Prophet</span></div>
+              <div id="lv-label" style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#7b56b8;margin-bottom:2px;"><span class="zh-only">学者</span><span class="en-only">Scholar</span></div>
+              <div id="lv-num" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-bottom:10px;">LV.2</div>
+              <div id="exp-display" style="font-size:11px;color:var(--text4);margin-bottom:6px;font-family:'DM Mono',monospace;">230 / 500 EXP</div>
+              <div class="prog-bar" style="height:5px;"><div id="exp-bar" class="prog-fill" style="width:46%"></div></div>
+              <div id="next-lv-text" style="font-size:10px;color:var(--text3);margin-top:6px;"><span class="zh-only">距 Lv.3 先知 · 还需 27 天</span><span class="en-only">27 days to Lv.3 · Prophet</span></div>
             </div>
           </div>
           <div class="checkin-btn" id="checkin-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.9" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg><span class="checkin-label" id="checkin-label"><span class="zh-only">今日签到</span><span class="en-only">Check In Today</span></span><span class="checkin-time" id="checkin-time"></span></div>
@@ -650,6 +844,7 @@ document.addEventListener('click', function(ev){
     if(el.dataset && el.dataset.page){ window.goPage(el.dataset.page); return; }
     if(el.dataset && el.dataset.lang){ window.setLang(el.dataset.lang); return; }
     if(el.id === 'checkin-btn'){ window.doCheckin(); return; }
+    if(el.dataset && el.dataset.action === 'logout'){ if(window.doLogout) window.doLogout(); return; }
     el = el.parentElement;
   }
 });
