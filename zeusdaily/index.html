@@ -939,11 +939,19 @@ function setLang(lang){
         return;
       }
       setLoading(btnReg, true);
+      // Read referral code from URL ?ref=XXXX
+      var urlRef = (new URLSearchParams(window.location.search)).get('ref') || '';
       client.auth.signUp({ email: email, password: pass }).then(function(res){
         setLoading(btnReg, false);
         if(res.error){
           showError('reg-error', res.error.message);
         } else {
+          // If referred, update invited_by in profiles after a short delay
+          if(urlRef && res.data && res.data.user){
+            setTimeout(function(){
+              client.from('profiles').update({ invited_by: urlRef }).eq('id', res.data.user.id).then(function(){});
+            }, 2000);
+          }
           showError('reg-success', lang()==='zh' ? '✓ 注册成功！请检查邮箱验证链接' : '✓ Account created! Check your email to verify.');
         }
       });
