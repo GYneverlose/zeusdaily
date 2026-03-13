@@ -43,19 +43,10 @@ html,body{
 }
 
 /* ── STAR FIELD ── */
-#stars{
-  position:fixed;inset:0;
-  pointer-events:none;
-  z-index:0;
-}
+
 
 /* ── LIGHTNING CANVAS ── */
-#lightning{
-  position:fixed;inset:0;
-  pointer-events:none;
-  z-index:1;
-  opacity:0.55;
-}
+
 
 /* ── SCENE ── */
 #scene{
@@ -156,7 +147,7 @@ html,body{
 .parchment::after{
   content:'';
   position:absolute;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  
   opacity:0.5;
   pointer-events:none;
 }
@@ -375,9 +366,7 @@ html,body{
 
 /* ── BOTTOM ROD (same as top) ── */
 
-@media (hover:none) and (pointer:coarse){
-  /* Mobile: disable GPU-heavy SVG filters to prevent eye disappearing */
-  #mainEye path, #mainEye circle { filter: none !important; }
+
   #mainEye #iris { filter: none !important; }
 }
 </style>
@@ -386,9 +375,7 @@ html,body{
 <body>
 
 <!-- Stars -->
-<canvas id="stars"></canvas>
 <!-- Lightning -->
-<canvas id="lightning"></canvas>
 
 <div id="scene">
   <div class="scroll-wrap">
@@ -417,16 +404,6 @@ html,body{
         <div class="eye-wrap">
           <svg id="mainEye" viewBox="0 0 120 52" width="140" height="61" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
             <defs>
-              <!-- Gold glow -->
-              <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="1.5" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-              <!-- Iris glow -->
-              <filter id="irisGlow" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="2" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
               <!-- Nebula gradient -->
               <radialGradient id="nebulaGrad" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="#b088f9"/>
@@ -450,14 +427,14 @@ html,body{
               fill="#0e0818"
               stroke="#b8964a"
               stroke-width="1.4"
-              filter="url(#goldGlow)"/>
+             />
 
             <!-- Clipped content -->
             <g clip-path="url(#eyeClip)">
               <!-- Iris -->
               <circle id="iris" cx="60" cy="26" r="14"
                 fill="url(#nebulaGrad)"
-                filter="url(#irisGlow)"/>
+               />
               <!-- Pupil -->
               <circle id="pupil" cx="60" cy="26" r="6.5"
                 fill="url(#pupilGrad)"/>
@@ -550,287 +527,8 @@ html,body{
 </div><!-- /scene -->
 
 <script>
-// ── STARS ──
-(function(){
-  // Skip heavy animations on mobile/touch to prevent lag
-  if('ontouchstart' in window){ var c = document.getElementById('stars'); if(c) c.style.display='none'; var lc=document.getElementById('lightning'); if(lc) lc.style.display='none'; return; }
-  var c = document.getElementById('stars');
-  var ctx = c.getContext('2d');
-  var stars = [];
-  function resize(){
-    c.width = window.innerWidth;
-    c.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-  for(var i=0;i<200;i++){
-    stars.push({
-      x: Math.random(),
-      y: Math.random(),
-      r: Math.random()*1.2+0.2,
-      o: Math.random()*0.6+0.1,
-      s: Math.random()*0.003+0.001,
-      p: Math.random()*Math.PI*2
-    });
-  }
-  function drawStars(){
-    ctx.clearRect(0,0,c.width,c.height);
-    var t = Date.now()*0.001;
-    for(var i=0;i<stars.length;i++){
-      var s = stars[i];
-      var a = s.o*(0.6+0.4*Math.sin(t*s.s*10+s.p));
-      ctx.beginPath();
-      ctx.arc(s.x*c.width, s.y*c.height, s.r, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(220,200,255,'+a+')';
-      ctx.fill();
-    }
-    requestAnimationFrame(drawStars);
-  }
-  drawStars();
-})();
 
-// ── REALISTIC LIGHTNING ──
-(function(){
-  if('ontouchstart' in window) return; // skip on mobile
-  var c = document.getElementById('lightning');
-  var ctx = c.getContext('2d');
-  var bg = document.createElement('canvas'); // sky flash layer
-  var bgCtx = bg.getContext('2d');
 
-  function resize(){
-    c.width = bg.width = window.innerWidth;
-    c.height = bg.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Build a jagged channel using stepped-leader physics
-  // Returns array of {x,y} points
-  function buildChannel(x0, y0, targetX, targetY, roughness, isBranch){
-    var pts = [{x:x0, y:y0}];
-    var steps = isBranch ? Math.floor(8+Math.random()*10) : Math.floor(18+Math.random()*14);
-    var dx = (targetX - x0) / steps;
-    var dy = (targetY - y0) / steps;
-    for(var i=1; i<=steps; i++){
-      var prev = pts[pts.length-1];
-      // Perpendicular jitter, stronger near middle, tapers at ends
-      var t = i/steps;
-      var jitterScale = roughness * Math.sin(Math.PI * t) * (0.7 + Math.random()*0.6);
-      var px = prev.x + dx + (Math.random()-0.5)*jitterScale;
-      var py = prev.y + dy + (Math.random()-0.48)*jitterScale*0.5; // bias downward
-      pts.push({x:px, y:py});
-    }
-    return pts;
-  }
-
-  // Draw one segment set with glow layers
-  function drawChannel(pts, baseAlpha, isBranch){
-    if(pts.length < 2) return;
-
-    // Layer 1: wide outer glow (purple)
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-    ctx.strokeStyle = 'rgba(100,40,200,'+(baseAlpha*0.18)+')';
-    ctx.lineWidth = isBranch ? 6 : 14;
-    ctx.shadowBlur = 0;
-    ctx.stroke();
-
-    // Layer 2: mid glow (blue-violet)
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-    ctx.strokeStyle = 'rgba(140,80,255,'+(baseAlpha*0.35)+')';
-    ctx.lineWidth = isBranch ? 3 : 7;
-    ctx.stroke();
-
-    // Layer 3: inner channel (white-blue)
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-    ctx.strokeStyle = 'rgba(200,180,255,'+(baseAlpha*0.75)+')';
-    ctx.lineWidth = isBranch ? 1 : 2.5;
-    ctx.stroke();
-
-    // Layer 4: bright core (near-white)
-    if(!isBranch){
-      ctx.beginPath();
-      ctx.moveTo(pts[0].x, pts[0].y);
-      for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-      ctx.strokeStyle = 'rgba(240,235,255,'+(baseAlpha*0.9)+')';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-  }
-
-  // Sky ambient flash
-  function skyFlash(intensity){
-    bgCtx.clearRect(0,0,bg.width,bg.height);
-    bgCtx.fillStyle = 'rgba(80,40,160,'+intensity+')';
-    bgCtx.fillRect(0,0,bg.width,bg.height);
-    c.getContext('2d'); // noop, just using bg canvas separately
-    // Draw directly onto main canvas as a rect behind bolts
-    ctx.save();
-    ctx.globalCompositeOperation = 'screen';
-    ctx.fillStyle = 'rgba(60,20,120,'+intensity+')';
-    ctx.fillRect(0,0,c.width,c.height);
-    ctx.restore();
-  }
-
-  var boltAlpha = 0;
-  var boltData = null;
-  var fadeTimer = null;
-  var animFrame = null;
-
-  function renderBolts(alpha){
-    ctx.clearRect(0,0,c.width,c.height);
-    if(alpha <= 0 || !boltData) return;
-
-    ctx.save();
-    ctx.globalAlpha = alpha;
-
-    // Sky flash flicker
-    skyFlash(alpha * 0.12);
-
-    // Draw all channels
-    for(var b=0; b<boltData.length; b++){
-      var bolt = boltData[b];
-      drawChannel(bolt.pts, bolt.isBranch ? alpha*0.6 : alpha, bolt.isBranch);
-    }
-
-    // Ground impact glow at bottom of main bolt
-    var main = boltData[0];
-    var tip = main.pts[main.pts.length-1];
-    var grd = ctx.createRadialGradient(tip.x,tip.y,0, tip.x,tip.y,60);
-    grd.addColorStop(0, 'rgba(180,140,255,'+(alpha*0.5)+')');
-    grd.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.arc(tip.x, tip.y, 60, 0, Math.PI*2);
-    ctx.fill();
-
-    ctx.restore();
-  }
-
-  function triggerBolt(){
-    // Origin: random x near top
-    var W = c.width, H = c.height;
-    var startX = W*0.1 + Math.random()*(W*0.8);
-    var startY = -10;
-    // Target: somewhere in upper 55% of screen
-    var endX = startX + (Math.random()-0.5)*W*0.35;
-    var endY = H * (0.25 + Math.random()*0.30);
-
-    // Build main channel
-    var mainPts = buildChannel(startX, startY, endX, endY, 55, false);
-
-    // Build 2–4 branches off random segments
-    var branches = [];
-    var branchCount = Math.floor(2 + Math.random()*3);
-    for(var b=0; b<branchCount; b++){
-      var segIdx = Math.floor(mainPts.length*0.2 + Math.random()*mainPts.length*0.6);
-      var origin = mainPts[segIdx];
-      var branchLen = 0.15 + Math.random()*0.25; // fraction of remaining distance
-      var bEndX = origin.x + (Math.random()-0.5)*W*0.2;
-      var bEndY = origin.y + (endY - origin.y)*branchLen;
-      branches.push({ pts: buildChannel(origin.x, origin.y, bEndX, bEndY, 35, true), isBranch:true });
-    }
-
-    boltData = [{pts: mainPts, isBranch:false}].concat(branches);
-
-    // Return stroke: multiple flickers
-    var strokes = Math.floor(1 + Math.random()*3); // 1-3 return strokes
-    var delay = 0;
-
-    function doStroke(n){
-      // Flash on
-      boltAlpha = 0.85 + Math.random()*0.15;
-      renderBolts(boltAlpha);
-
-      // Hold briefly then dim between strokes
-      setTimeout(function(){
-        var flickerOut = setInterval(function(){
-          boltAlpha -= 0.12;
-          if(boltAlpha <= 0){
-            boltAlpha = 0;
-            ctx.clearRect(0,0,c.width,c.height);
-            clearInterval(flickerOut);
-            if(n > 1){
-              // brief dark pause then next stroke (re-illuminate same channel)
-              setTimeout(function(){ doStroke(n-1); }, 40+Math.random()*60);
-            } else {
-              // final fade done, schedule next bolt
-              setTimeout(triggerBolt, 2500 + Math.random()*5000);
-            }
-          } else {
-            renderBolts(boltAlpha);
-          }
-        }, 25);
-      }, 60 + Math.random()*80);
-    }
-
-    doStroke(strokes);
-  }
-
-  // Start after short delay
-  setTimeout(triggerBolt, 800 + Math.random()*1500);
-})();
-
-// ── EYE BLINK + TRACKING ──
-(function(){
-  var OPEN  = 'M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z';
-  var CLOSE = 'M 5,26 C 25,26 95,26 115,26 C 95,26 25,26 5,26 Z';
-  var outline  = document.getElementById('eyeOutline');
-  var clipPath = document.getElementById('eyeClipPath');
-  var iris     = document.getElementById('iris');
-  var pupil    = document.getElementById('pupil');
-  var maxMove  = 4;
-
-  // Blink
-  // Skip blink animation on mobile to reduce CPU usage
-  if('ontouchstart' in window){
-    // Static eye on mobile - no blink, no tracking
-    return;
-  }
-  function blink(){
-    outline.setAttribute('d', CLOSE);
-    clipPath.setAttribute('d', CLOSE);
-    setTimeout(function(){
-      outline.setAttribute('d', OPEN);
-      clipPath.setAttribute('d', OPEN);
-    }, 180);
-    var next = 2000 + Math.random()*3000;
-    setTimeout(blink, next);
-  }
-  setTimeout(blink, 2000 + Math.random()*3000);
-
-  // Tracking
-  // Throttle tracking with RAF - fixes input lag on mobile
-  var _ticking = false;
-  var _lastMX = 0, _lastMY = 0;
-  document.addEventListener('mousemove', function(e){
-    _lastMX = e.clientX; _lastMY = e.clientY;
-    if(_ticking) return;
-    _ticking = true;
-    requestAnimationFrame(function(){
-      var eyeEl = document.getElementById('mainEye');
-      if(!eyeEl){ _ticking=false; return; }
-      var rect = eyeEl.getBoundingClientRect();
-      var cx = rect.left + rect.width/2;
-      var cy = rect.top  + rect.height/2;
-      var dx = _lastMX - cx, dy = _lastMY - cy;
-      var dist = Math.sqrt(dx*dx+dy*dy);
-      var angle = Math.atan2(dy,dx);
-      var move = Math.min(dist/60,1)*maxMove;
-      var nx = Math.cos(angle)*move, ny = Math.sin(angle)*move;
-      iris.setAttribute('cx',  60 + nx);
-      iris.setAttribute('cy',  26 + ny);
-      pupil.setAttribute('cx', 60 + nx*1.2);
-      pupil.setAttribute('cy', 26 + ny*1.2);
-      _ticking = false;
-    });
-  });
-})();
 
 // ── TABS ──
 function switchTab(tab){
