@@ -1355,7 +1355,7 @@ window.loadHomePage = function(){
     var html = r.data.map(function(e,i){
       var numStr = String(e.vol_number).padStart(3,'0');
       var badge = i===0?'<div class="badge badge-new">NEW</div>':e.vol_number===1?'<div class="badge badge-special"><span>GENESIS</span></div>':'<div class="badge badge-read"><span class="zh-only">已读</span><span class="en-only">READ</span></div>';
-      var click = e.html_url?' onclick="window.open(\''+e.html_url+'')" style="cursor:pointer;"':'';
+      var click = e.html_url?' onclick="window.open(\''+e.html_url+'\')" style="cursor:pointer;"':'';
       return '<div class="issue-row"'+click+'><div class="issue-num">'+numStr+'</div><div class="issue-meta"><div class="issue-title">'+e.title+'</div><div class="issue-date">'+fmtD(e.date)+'</div></div>'+badge+'</div>';
     }).join('');
     prev.innerHTML = html || '<div style="color:var(--text4);font-size:12px;padding:16px;">暂无期刊</div>';
@@ -1367,7 +1367,7 @@ window.loadHomePage = function(){
     if(!prev || !r.data) return;
     var eyeSvg = '<svg viewBox="0 0 120 52" width="80" height="35" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="hNeb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="hClip"><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath></defs><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/><g clip-path="url(#hClip)"><circle cx="60" cy="26" r="14" fill="url(#hNeb)"/><circle cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g></svg>';
     var html = r.data.map(function(e){
-      var click = e.html_url?' onclick="window.open(\''+e.html_url+'')" style="cursor:pointer;"':'';
+      var click = e.html_url?' onclick="window.open(\''+e.html_url+'\')" style="cursor:pointer;"':'';
       return '<div class="col-card"'+click+'><div class="vol">VOL.'+String(e.vol_number).padStart(3,'0')+'</div>'+eyeSvg+'<div class="col-title">'+e.title+'</div><div class="col-date">'+MONTHS[new Date(e.date).getMonth()]+' '+new Date(e.date).getDate()+', '+new Date(e.date).getFullYear()+'</div></div>';
     }).join('');
     prev.innerHTML = html;
