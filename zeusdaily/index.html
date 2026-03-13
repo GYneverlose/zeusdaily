@@ -374,6 +374,12 @@ html,body{
 }
 
 /* ── BOTTOM ROD (same as top) ── */
+
+@media (hover:none) and (pointer:coarse){
+  /* Mobile: disable GPU-heavy SVG filters to prevent eye disappearing */
+  #mainEye path, #mainEye circle { filter: none !important; }
+  #mainEye #iris { filter: none !important; }
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -409,7 +415,7 @@ html,body{
 
         <!-- Eye SVG Vol.004 -->
         <div class="eye-wrap">
-          <svg id="mainEye" viewBox="0 0 120 52" width="140" height="61" xmlns="http://www.w3.org/2000/svg">
+          <svg id="mainEye" viewBox="0 0 120 52" width="140" height="61" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
             <defs>
               <!-- Gold glow -->
               <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
@@ -546,6 +552,8 @@ html,body{
 <script>
 // ── STARS ──
 (function(){
+  // Skip heavy animations on mobile/touch to prevent lag
+  if('ontouchstart' in window){ var c = document.getElementById('stars'); if(c) c.style.display='none'; var lc=document.getElementById('lightning'); if(lc) lc.style.display='none'; return; }
   var c = document.getElementById('stars');
   var ctx = c.getContext('2d');
   var stars = [];
@@ -791,21 +799,30 @@ html,body{
   setTimeout(blink, 2000 + Math.random()*3000);
 
   // Tracking
+  // Throttle tracking with RAF - fixes input lag on mobile
+  var _ticking = false;
+  var _lastMX = 0, _lastMY = 0;
   document.addEventListener('mousemove', function(e){
-    var rect = document.getElementById('mainEye').getBoundingClientRect();
-    var cx = rect.left + rect.width/2;
-    var cy = rect.top  + rect.height/2;
-    var dx = e.clientX - cx;
-    var dy = e.clientY - cy;
-    var dist = Math.sqrt(dx*dx+dy*dy);
-    var angle = Math.atan2(dy,dx);
-    var move = Math.min(dist/60,1)*maxMove;
-    var nx = Math.cos(angle)*move;
-    var ny = Math.sin(angle)*move;
-    iris.setAttribute('cx',  60 + nx);
-    iris.setAttribute('cy',  26 + ny);
-    pupil.setAttribute('cx', 60 + nx*1.2);
-    pupil.setAttribute('cy', 26 + ny*1.2);
+    _lastMX = e.clientX; _lastMY = e.clientY;
+    if(_ticking) return;
+    _ticking = true;
+    requestAnimationFrame(function(){
+      var eyeEl = document.getElementById('mainEye');
+      if(!eyeEl){ _ticking=false; return; }
+      var rect = eyeEl.getBoundingClientRect();
+      var cx = rect.left + rect.width/2;
+      var cy = rect.top  + rect.height/2;
+      var dx = _lastMX - cx, dy = _lastMY - cy;
+      var dist = Math.sqrt(dx*dx+dy*dy);
+      var angle = Math.atan2(dy,dx);
+      var move = Math.min(dist/60,1)*maxMove;
+      var nx = Math.cos(angle)*move, ny = Math.sin(angle)*move;
+      iris.setAttribute('cx',  60 + nx);
+      iris.setAttribute('cy',  26 + ny);
+      pupil.setAttribute('cx', 60 + nx*1.2);
+      pupil.setAttribute('cy', 26 + ny*1.2);
+      _ticking = false;
+    });
   });
 })();
 
