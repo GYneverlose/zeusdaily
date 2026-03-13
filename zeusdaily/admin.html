@@ -221,6 +221,8 @@ textarea{resize:vertical;min-height:60px;}
 
         <div style="margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
           <button class="btn btn-primary" id="publish-btn" onclick="publishToGithub()">⚡ 发布到 GitHub</button>
+          <span id="token-status" style="font-size:11px;color:var(--text3);margin-left:8px;"></span>
+          <button onclick="localStorage.removeItem(\'gh_token\');GITHUB_TOKEN=\'\';document.getElementById(\'token-status\').textContent=\'Token 已清除\'" style="font-size:10px;padding:3px 8px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--text3);cursor:pointer;margin-left:4px;">重置 Token</button>
         </div>
 
         <!-- Progress log -->
@@ -289,7 +291,7 @@ textarea{resize:vertical;min-height:60px;}
 var SUPABASE_URL  = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
 var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
 
-var GITHUB_TOKEN = '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';
+var GITHUB_TOKEN = localStorage.getItem('gh_token') || '';
 var GITHUB_REPO  = 'GYneverlose/zeusdaily';
 var GITHUB_PATH  = 'zeusdaily'; // folder in repo
 var ADMIN_EMAIL   = 'thunderchic055@gmail.com'; // Only this email can access
@@ -313,6 +315,9 @@ function showAuthErr(){
 }
 
 function bootAdmin(user){
+  GITHUB_TOKEN = localStorage.getItem('gh_token') || '';
+  var ts = document.getElementById('token-status');
+  if(ts) ts.textContent = GITHUB_TOKEN ? '✓ Token 已配置' : '⚠ 未配置 Token';
   document.getElementById('auth-wall').style.display='none';
   document.getElementById('app').style.display='flex';
   document.getElementById('admin-name').textContent = user.email.split('@')[0] + ' · ';
@@ -571,6 +576,14 @@ function log(msg, ok){
 }
 
 async function publishToGithub(){
+  // Ensure token exists
+  GITHUB_TOKEN = localStorage.getItem('gh_token') || '';
+  if(!GITHUB_TOKEN){
+    var t = prompt('请输入 GitHub Personal Access Token（只需输入一次）：');
+    if(!t) return;
+    localStorage.setItem('gh_token', t.trim());
+    GITHUB_TOKEN = t.trim();
+  }
   var vol = parseInt(document.getElementById('f-vol').value);
   var dateStr = document.getElementById('f-date').value.trim();
   var title = document.getElementById('f-title').value.trim();
