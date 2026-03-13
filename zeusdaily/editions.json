@@ -1,3 +1,10 @@
 {
-  "editions": []
+  "editions": [
+    {
+      "vol": "001",
+      "date": "20260313",
+      "filename": "zeus-daily-20260313.html",
+      "title": "Zeus Daily Vol.001"
+    }
+  ]
 }
