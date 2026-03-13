@@ -452,7 +452,7 @@ function showUserDetail(id){
     '<div>邮箱：<span style="color:var(--text);">'+(u.email||'—')+'</span></div>'
     +'<div>注册：<span style="color:var(--text);">'+joined+'</span></div>'
     +'<div>注册天数：<span style="color:var(--text);">'+daysSince+' 天</span></div>'
-    +'<div>累计打卡：<span style="color:var(--gold);">'+(u.total_checkins||0)+' 次</span></div>'
+    +'<div>累计打卡：<span style="color:var(--gold);">—</span></div>'
     +'<div>连续签到：<span style="color:var(--text);">'+(u.streak||0)+' 天</span></div>'
     +'<div>EXP：<span style="color:var(--gold);">'+(u.exp||0)+'</span></div>'
     +'<div>等级：<span style="color:var(--violet);">Lv.'+lv+' '+LVN[lv]+'</span></div>'
@@ -461,8 +461,9 @@ function showUserDetail(id){
   document.getElementById('user-modal').style.display='flex';
 }
 function loadUsers(){
-  _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,total_checkins,joined_at').order('joined_at',{ascending:false}).then(function(r){
+  _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,joined_at').order('joined_at',{ascending:false}).then(function(r){
     _allUsers = r.data || [];
+    _userMap = {}; (_allUsers).forEach(function(u){_userMap[u.id]=u;});
     renderUsers(_allUsers);
   });
 }
@@ -474,7 +475,7 @@ function renderUsers(users){
     return '<tr>'
       +'<td style="font-size:12px;font-family:\'DM Mono\',monospace;">'+(u.email||u.display_name||'—')+'<span style="margin-left:6px;padding:2px 6px;border-radius:10px;font-size:10px;background:rgba(74,222,128,0.15);color:#4ade80;">正常</span></td>'
       +'<td style="color:var(--text3);font-size:12px;">'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</td>'
-      +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+(u.total_checkins||0)+'</td>'
+      +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">—</td>'
       +'<td>'+(u.streak||0)+' 天</td>'
       +'<td><span class="badge badge-violet">Lv.'+lv+' · '+(LV[lv]||'')+'</span></td>'
       +'<td style="white-space:nowrap;">'
@@ -484,7 +485,6 @@ function renderUsers(users){
       +'</td>'
       +'</tr>';
   }).join('');
-  _userMap={}; (r.data||[]).forEach(function(u){_userMap[u.id]=u;});
   document.getElementById('users-list').innerHTML = html || '<tr><td colspan="6" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
 }
 
