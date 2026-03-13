@@ -121,7 +121,7 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .hero-sub{font-size:12px;color:var(--text2);line-height:1.7;}
 .hero-btn{margin-top:18px;display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:6px;background:linear-gradient(135deg,var(--purple),var(--violet));border:none;color:white;font-size:11px;letter-spacing:1.5px;cursor:pointer;transition:all 0.2s;font-family:'DM Mono',monospace;box-shadow:0 4px 16px rgba(92,61,143,0.25);}
 .hero-btn:hover{box-shadow:0 6px 24px rgba(92,61,143,0.4);transform:translateY(-1px);}
-.hero-eye-wrap{flex-shrink:0;overflow:hidden;border-radius:4px;}
+.hero-eye-wrap{flex-shrink:0;overflow:visible;border-radius:4px;display:flex;align-items:center;justify-content:center;}
 .checkin-btn{width:100%;display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:8px;margin-top:14px;background:linear-gradient(135deg,var(--gold-bg2),rgba(92,61,143,0.08));border:1px solid var(--border2);cursor:pointer;transition:all 0.2s;}
 .checkin-btn:hover{box-shadow:0 4px 16px rgba(184,150,74,0.15);}
 .checkin-btn.done{background:rgba(123,86,184,0.07);border-color:rgba(123,86,184,0.28);cursor:default;}
@@ -192,11 +192,12 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
   #content{padding:14px;}
   #mobile-brand{display:block !important;}
   #page-title{display:none;}
-  .hero-banner{flex-direction:column;gap:12px;padding:16px;}
-  .hero-eye-wrap{display:none;}
-  .hero-content{max-width:100%;}
+  .hero-banner{flex-direction:column;gap:14px;padding:16px 14px;align-items:flex-start;}
+  .hero-eye-wrap{width:100%;display:flex;justify-content:center;order:1;}
+  .hero-content{max-width:100%;order:2;}
   .grid-4{grid-template-columns:1fr 1fr;}
   .hero-title{font-size:18px;}
+  #heroEye{width:120px !important;height:52px !important;}
   .stat-card{padding:14px 12px;}
   .stat-value{font-size:22px;}
   .checkin-btn{padding:10px 14px;}
@@ -557,7 +558,7 @@ window.doLogout = function(){
           <button class="hero-btn" data-page="issues"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="zh-only">阅读今期</span><span class="en-only">READ NOW</span></button>
         </div>
         <div class="hero-eye-wrap">
-          <svg id="heroEye" viewBox="0 0 120 52" width="170" height="74" xmlns="http://www.w3.org/2000/svg">
+          <svg id="heroEye" viewBox="0 0 120 52" width="170" height="74" style="max-width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <filter id="hg" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
               <filter id="hi" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
