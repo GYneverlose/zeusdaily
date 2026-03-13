@@ -675,7 +675,7 @@ function buildYears(){
   var ys={};
   editions.forEach(function(e){if(e.date)ys[e.date.slice(0,4)]=1;});
   var years=Object.keys(ys).sort().reverse();
-  var h='<button class="yr-btn on" onclick="setYear('all',this)">全部</button>';
+  var h='<button class="yr-btn on" onclick="setYear(\'all\',this)">全部</button>';
   years.forEach(function(y){h+='<button class="yr-btn" onclick="setYear(''+y+'',this)">'+y+'</button>';});
   document.getElementById('arc-years').innerHTML=h;
 }
