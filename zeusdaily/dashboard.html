@@ -694,7 +694,7 @@ window.doLogout = function(){
               <div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:2px;font-family:'DM Mono',monospace;"><span class="zh-only">已邀请</span><span class="en-only">INVITED</span></div>
             </div>
             <div style="text-align:center;padding:14px 18px;background:white;border:1px solid var(--border);border-radius:10px;">
-              <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--gold2);" id="ref-active">2</div>
+              <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--gold2);" id="ref-active">0</div>
               <div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:2px;font-family:'DM Mono',monospace;"><span class="zh-only">活跃中</span><span class="en-only">ACTIVE</span></div>
             </div>
           </div>
@@ -724,7 +724,7 @@ window.doLogout = function(){
       <div class="section-head" style="margin-bottom:16px;">
         <div class="section-title" style="font-size:16px;"><span class="zh-only">好友列表</span><span class="en-only">Friend List</span></div>
         <div class="section-line"></div>
-        <div class="section-sub" id="friends-count">3 <span class="zh-only">位好友</span><span class="en-only">friends</span></div>
+        <div class="section-sub" id="friends-count">0 <span class="zh-only">位好友</span><span class="en-only">friends</span></div>
       </div>
 
       <div id="friends-list"></div>
@@ -1151,6 +1151,10 @@ document.addEventListener('click', function(ev){
     // Update count
     var cnt = document.getElementById('friends-count');
     if(cnt) cnt.innerHTML = FRIENDS.length + (lang==='zh' ? ' 位好友' : ' friend'+(FRIENDS.length!==1?'s':''));
+    var rc = document.getElementById('ref-count');
+    if(rc) rc.textContent = FRIENDS.length;
+    var ra = document.getElementById('ref-active');
+    if(ra) ra.textContent = FRIENDS.filter(function(f){return f.active;}).length;
   }
 
   // ── Copy + Share ──
