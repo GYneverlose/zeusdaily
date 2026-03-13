@@ -195,6 +195,47 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .friend-badge-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;}
 .friend-active{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:#4caf7d;background:rgba(76,175,125,0.1);padding:2px 7px;border-radius:10px;border:1px solid rgba(76,175,125,0.25);}
 .friend-inactive{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--text4);background:var(--bg2);padding:2px 7px;border-radius:10px;border:1px solid var(--border);}
+
+/* ── LIGHTNING COLLECT BTN ── */
+.collect-btn{
+  position:relative;
+  width:32px;height:32px;
+  border:none;background:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  transition:background 0.2s;
+  flex-shrink:0;
+  margin-left:6px;
+}
+.collect-btn:hover{ background:rgba(155,114,212,0.12); }
+.collect-btn svg{ transition:all 0.2s; }
+.collect-btn.collected svg .bolt-fill{ fill:#9b72d4; filter:drop-shadow(0 0 4px #9b72d4); }
+.collect-btn.collected svg .bolt-stroke{ stroke:#7b56b8; }
+.collect-btn:not(.collected) svg .bolt-fill{ fill:none; }
+.collect-btn:not(.collected) svg .bolt-stroke{ stroke:#9b72d4; opacity:0.5; }
+.collect-btn.collected{ animation:none; }
+
+/* spark particles */
+@keyframes spark-out{
+  0%{ transform:translate(-50%,-50%) scale(1); opacity:1; }
+  100%{ transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(0); opacity:0; }
+}
+.spark{
+  position:absolute;
+  width:5px;height:5px;
+  border-radius:50%;
+  background:#b088f9;
+  pointer-events:none;
+  left:50%;top:50%;
+  animation:spark-out 0.45s ease-out forwards;
+}
+@keyframes bolt-pop{
+  0%{ transform:scale(1); }
+  40%{ transform:scale(1.5); }
+  70%{ transform:scale(0.9); }
+  100%{ transform:scale(1); }
+}
+.collect-btn.pop{ animation:bolt-pop 0.3s ease; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -257,6 +298,8 @@ function loadProfile(userId){
     window._profile = profile;
     applyProfileToUI(profile);
     checkTodayCheckin(userId, profile);
+    loadIssuesReadStat(userId);
+    loadUserCollections();
   });
 }
 
@@ -316,6 +359,16 @@ function applyProfileToUI(p){
   // Ref link
   var refBox = document.getElementById('ref-link-box');
   if(refBox && p.ref_code) refBox.textContent = 'zeusdaily.blog?ref=' + p.ref_code;
+}
+
+function loadIssuesReadStat(userId){
+  _sb.from('editions').select('*',{count:'exact',head:true}).then(function(r){
+    var cnt = r.count || 0;
+    var el = document.getElementById('issues-read-count');
+    if(el) el.textContent = cnt;
+    var note = document.getElementById('issues-read-note');
+    if(note && cnt > 0) note.textContent = 'Vol.001–'+String(cnt).padStart(3,'0');
+  });
 }
 
 function checkTodayCheckin(userId, profile){
@@ -432,7 +485,7 @@ window.doLogout = function(){
         <div class="hero-content">
           <div class="hero-vol zh-only">VOL.003 · 今日新刊</div>
           <div class="hero-vol en-only">VOL.003 · LATEST ISSUE</div>
-          <div class="hero-title zh-only">帝国的重量<br>与黄金的沉默</div>
+          <div class="hero-title zh-only" id="hero-title-zh">今日新刊</div>
           <div class="hero-title en-only">The Weight of Empires<br>&amp; the Silence of Gold</div>
           <div class="hero-sub zh-only">特朗普关税风暴席卷全球市场，黄金突破历史高位，马来西亚林吉特持续承压。</div>
           <div class="hero-sub en-only">Trump tariff storms sweep global markets. Gold breaks historical highs. The Ringgit under sustained pressure.</div>
@@ -466,7 +519,7 @@ window.doLogout = function(){
       <div class="grid-4">
         <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label zh-only">连续签到</div><div class="stat-label en-only">STREAK</div><div class="stat-value">12<span class="unit" style="margin-left:6px;vertical-align:middle;"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle;margin-top:-3px;"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.9" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg></span></div><div class="stat-note up zh-only">今日 +1</div><div class="stat-note up en-only">+1 today</div></div>
         <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label">EXP</div><div class="stat-value">230</div><div class="prog-bar"><div class="prog-fill" style="width:46%"></div></div></div>
-        <div class="stat-card" style="--accent:var(--green);"><div class="stat-label zh-only">已读期数</div><div class="stat-label en-only">ISSUES READ</div><div class="stat-value">3</div><div class="stat-note" style="color:var(--text4)">Vol.001–003</div></div>
+        <div class="stat-card" style="--accent:var(--green);"><div class="stat-label zh-only">已读期数</div><div class="stat-label en-only">ISSUES READ</div><div class="stat-value" id="issues-read-count">—</div><div class="stat-note" id="issues-read-note" style="color:var(--text4)"></div></div>
         <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label zh-only">收藏数</div><div class="stat-label en-only">COLLECTED</div><div class="stat-value">2</div><div class="stat-note" style="color:var(--text4);"><span class="zh-only">创刊号 ×1</span><span class="en-only">Genesis ×1</span></div></div>
       </div>
 
@@ -501,7 +554,7 @@ window.doLogout = function(){
             <div style="flex:1;">
               <div id="lv-label" style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#7b56b8;margin-bottom:2px;"><span class="zh-only">学者</span><span class="en-only">Scholar</span></div>
               <div id="lv-num" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-bottom:10px;">LV.2</div>
-              <div id="exp-display" style="font-size:11px;color:var(--text4);margin-bottom:6px;font-family:'DM Mono',monospace;">230 / 500 EXP</div>
+              <div id="exp-display" style="font-size:11px;color:var(--text4);margin-bottom:6px;font-family:'DM Mono',monospace;">— / — EXP</div>
               <div class="prog-bar" style="height:5px;"><div id="exp-bar" class="prog-fill" style="width:46%"></div></div>
               <div id="next-lv-text" style="font-size:10px;color:var(--text3);margin-top:6px;"><span class="zh-only">距 Lv.3 先知 · 还需 27 天</span><span class="en-only">27 days to Lv.3 · Prophet</span></div>
             </div>
@@ -510,9 +563,7 @@ window.doLogout = function(){
         </div>
         <div class="card">
           <div class="section-head" style="margin-bottom:14px;"><div class="section-title" style="font-size:15px;"><span class="zh-only">最近阅读</span><span class="en-only">Recent Issues</span></div></div>
-          <div class="issue-row"><div class="issue-num">003</div><div class="issue-meta"><div class="issue-title zh-only">帝国的重量</div><div class="issue-title en-only">The Weight of Empires</div><div class="issue-date">Mar 13, 2026</div></div><div class="badge badge-new">NEW</div></div>
-          <div class="issue-row"><div class="issue-num">002</div><div class="issue-meta"><div class="issue-title zh-only">数字帝国的边界</div><div class="issue-title en-only">Digital Empire Limits</div><div class="issue-date">Mar 12, 2026</div></div><div class="badge badge-read"><span class="zh-only">已读</span><span class="en-only">READ</span></div></div>
-          <div class="issue-row"><div class="issue-num">001</div><div class="issue-meta"><div class="issue-title zh-only">创世之眼</div><div class="issue-title en-only">The Genesis Eye</div><div class="issue-date">Mar 11, 2026</div></div><div class="badge badge-special"><span class="zh-only">创刊号</span><span class="en-only">GENESIS</span></div></div>
+          <div id="home-issues-preview"><div style="color:var(--text4);font-size:12px;padding:16px;">加载中…</div></div>
         </div>
       </div>
     </div>
@@ -552,19 +603,9 @@ window.doLogout = function(){
 
     <!-- COLLECTION -->
     <div class="page" id="page-collection">
-      <div class="section-head"><div class="section-title zh-only">我的收藏</div><div class="section-title en-only">My Collection</div><div class="section-line"></div><div class="section-sub zh-only">2 件藏品</div><div class="section-sub en-only">2 items</div></div>
+      <div class="section-head"><div class="section-title zh-only">我的收藏</div><div class="section-title en-only">My Collection</div><div class="section-line"></div><div class="section-sub" id="col-count-text"><span class="zh-only">加载中</span></div></div>
       <div class="col-grid">
-        <div class="col-card" style="border-color:rgba(123,86,184,0.3);background:linear-gradient(160deg,#faf8ff,#f0eaf8);">
-          <div class="vol">VOL.001</div>
-          <svg viewBox="0 0 120 52" width="80" height="35" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="ccNeb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="ccClip"><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath></defs><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/><g clip-path="url(#ccClip)"><circle cx="60" cy="26" r="14" fill="url(#ccNeb)"/><circle cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g></svg>
-          <div class="col-title zh-only">创世之眼</div><div class="col-title en-only">Genesis Eye</div>
-          <div class="col-date">Mar 11, 2026</div>
-          <div class="badge badge-special" style="font-size:8px;"><span class="zh-only">创刊号</span><span class="en-only">GENESIS</span></div>
-        </div>
-        <div class="col-card">
-          <div class="vol">VOL.002</div>
-          <svg viewBox="0 0 120 52" width="80" height="35" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="cc2Neb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="cc2Clip"><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath></defs><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/><g clip-path="url(#cc2Clip)"><circle cx="60" cy="26" r="14" fill="url(#cc2Neb)"/><circle cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g></svg>
-          <div class="col-title zh-only">数字帝国</div><div class="col-title en-only">Digital Empire</div>
+        <div id="home-col-preview" style="display:contents;"><div style="color:var(--text4);font-size:12px;padding:16px;grid-column:1/-1;">加载中…</div></div>
           <div class="col-date">Mar 12, 2026</div>
           <div class="badge badge-read" style="font-size:8px;"><span class="zh-only">已读</span><span class="en-only">READ</span></div>
         </div>
@@ -581,7 +622,7 @@ window.doLogout = function(){
             <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--violet));border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:white;flex-shrink:0;">Z</div>
             <div><div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;">Zeus Reader</div><div style="font-size:11px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:2px;"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a100f1f192a0f070b030644090507">[email&#160;protected]</a></div></div>
           </div>
-          <div class="level-pill lv2" style="margin-bottom:16px;"><span class="zh-only">Lv.2 · 学者</span><span class="en-only">Lv.2 · Scholar</span></div>
+          <div class="level-pill lv2" id="prof-pill" style="margin-bottom:16px;"><span id="prof-pill-text">—</span></div>
           <div class="divider"></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
             <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--border);"><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold2);">12</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:3px;font-family:'DM Mono',monospace;"><span class="zh-only">连续天数</span><span class="en-only">STREAK</span></div></div>
@@ -601,7 +642,7 @@ window.doLogout = function(){
           <!-- Lv2 current -->
           <div class="lv-row current">
             <svg viewBox="0 0 100 110" width="36" height="40" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pb2bg" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#ede0ff"/><stop offset="100%" stop-color="#c8a8ee"/></radialGradient><radialGradient id="pb2iris" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><filter id="pb2g" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><clipPath id="pb2cl"><path d="M 12,50 C 30,28 70,28 88,50 C 70,72 30,72 12,50 Z"/></clipPath></defs><polygon points="50,4 94,33 78,83 22,83 6,33" fill="url(#pb2bg)" stroke="#9b72d4" stroke-width="1.5"/><circle cx="50" cy="50" r="28" fill="none" stroke="#7b56b8" stroke-width="0.7" stroke-dasharray="3 9" opacity="0.5" style="transform-origin:50px 50px;animation:spin-rev 12s linear infinite;"/><path d="M 12,50 C 30,28 70,28 88,50 C 70,72 30,72 12,50 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.3" filter="url(#pb2g)"/><g clip-path="url(#pb2cl)"><circle cx="50" cy="50" r="13" fill="url(#pb2iris)"/><circle cx="50" cy="50" r="6" fill="#0a0515"/><circle cx="53" cy="47" r="2" fill="white" opacity="0.45"/></g></svg>
-            <div><div style="font-size:12px;font-weight:600;color:#7b56b8;">Lv.2 · <span class="zh-only">学者 ✓</span><span class="en-only">Scholar ✓</span></div><div style="font-size:9px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:1px;">230 / 500 EXP</div></div>
+            <div><div style="font-size:12px;font-weight:600;color:#7b56b8;">Lv.<span id="prof-lv">—</span> · <span id="prof-lv-name">—</span></div><div style="font-size:9px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:1px;"><span id="prof-exp">—</span> EXP</div></div>
             <span class="lv-range">31–90d</span>
           </div>
 
@@ -655,10 +696,8 @@ window.doLogout = function(){
     <div class="page" id="page-notifications">
       <div class="section-head"><div class="section-title zh-only">通知</div><div class="section-title en-only">Notifications</div><div class="section-line"></div></div>
       <div class="card">
-        <div class="notif"><div class="notif-dot"></div><div class="notif-body"><div class="notif-text zh-only">🗞️ <strong>Vol.003</strong> 已发布 — 帝国的重量与黄金的沉默</div><div class="notif-text en-only">🗞️ <strong>Vol.003</strong> is live — The Weight of Empires</div><div class="notif-time">Mar 13, 2026 · 08:00 MYT</div></div></div>
         <div class="notif"><div class="notif-dot"></div><div class="notif-body"><div class="notif-text zh-only">⚡ <strong>12天连续签到</strong>！再坚持 18 天解锁 Lv.3 先知</div><div class="notif-text en-only">⚡ <strong>12-day streak!</strong> 18 more days to unlock Lv.3 · Prophet</div><div class="notif-time">Mar 13, 2026 · 00:00 MYT</div></div></div>
-        <div class="notif"><div class="notif-dot read"></div><div class="notif-body"><div class="notif-text zh-only">🗞️ <strong>Vol.002</strong> 已发布</div><div class="notif-text en-only">🗞️ <strong>Vol.002</strong> published</div><div class="notif-time">Mar 12, 2026 · 08:00 MYT</div></div></div>
-        <div class="notif"><div class="notif-dot read"></div><div class="notif-body"><div class="notif-text zh-only">🎉 欢迎加入 <strong>Zeus Daily</strong> — 创刊号 Vol.001 现已发布</div><div class="notif-text en-only">🎉 Welcome to <strong>Zeus Daily</strong> — Genesis Issue Vol.001 is live</div><div class="notif-time">Mar 11, 2026 · 08:00 MYT</div></div></div>
+
       </div>
     </div>
 
@@ -676,7 +715,7 @@ window.doLogout = function(){
           <!-- Stats pills -->
           <div style="display:flex;gap:10px;flex-shrink:0;">
             <div style="text-align:center;padding:14px 18px;background:white;border:1px solid var(--border);border-radius:10px;">
-              <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--violet);" id="ref-count">3</div>
+              <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--violet);" id="ref-count">—</div>
               <div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:2px;font-family:'DM Mono',monospace;"><span class="zh-only">已邀请</span><span class="en-only">INVITED</span></div>
             </div>
             <div style="text-align:center;padding:14px 18px;background:white;border:1px solid var(--border);border-radius:10px;">
@@ -857,12 +896,20 @@ document.addEventListener('click', function(ev){
   var currentPage = 1;
   var filtered = [];
 
-  // Seed data — real issues at top, rest are placeholders for demo
-  var ISSUES = [
-    {num:3, title:'帝国的重量与黄金的沉默', titleEn:'The Weight of Empires & the Silence of Gold', date:'2026-03-13', status:'new', special:''},
-    {num:2, title:'数字帝国的边界', titleEn:'Digital Empire Limits', date:'2026-03-12', status:'read', special:''},
-    {num:1, title:'创世之眼', titleEn:'The Genesis Eye', date:'2026-03-11', status:'read', special:'genesis'}
-  ];
+  var ISSUES = [];
+
+  // Load real editions from Supabase
+  function loadIssues(){
+    var list = document.getElementById('issues-list');
+    if(list) list.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;">加载中…</div>';
+    _sb.from('editions').select('*').order('vol_number',{ascending:false}).then(function(r){
+      if(r.error || !r.data){ ISSUES=[]; applyFilter(); return; }
+      ISSUES = r.data.map(function(e){
+        return { num:e.vol_number, title:e.title, titleEn:e.title, date:e.date, url:e.html_url, rarity:e.rarity||'standard', special:e.vol_number===1?'genesis':'', eid:e.id };
+      });
+      applyFilter();
+    });
+  }
 
   function fmtDate(s){
     var d = new Date(s);
@@ -900,13 +947,19 @@ document.addEventListener('click', function(ev){
     for(var i=0; i<slice.length; i++){
       var iss = slice[i];
       var t = lang==='zh' ? iss.title : (iss.titleEn||iss.title);
-      html += '<div class="issue-row">'
+      var isCol = iss.eid && _collectedSet.has(iss.eid);
+      var openLink = iss.url ? ' onclick="if(event.target.closest(\'.collect-btn\')){return;} window.open(\''+iss.url+'\')" style="cursor:pointer;"' : '';
+      var boltBtn = iss.eid
+        ? '<button class="collect-btn'+(isCol?' collected':'')+'" data-eid="'+iss.eid+'" onclick="event.stopPropagation();toggleCollect(this,'+iss.eid+')" title="收藏">'+boltSvg()+'</button>'
+        : '';
+      html += '<div class="issue-row"'+openLink+'>'
         + '<div class="issue-num">'+numPad(iss.num)+'</div>'
         + '<div class="issue-meta">'
         + '<div class="issue-title">'+t+'</div>'
         + '<div class="issue-date">'+fmtDate(iss.date)+'</div>'
         + '</div>'
         + badgeHtml(iss)
+        + boltBtn
         + '</div>';
     }
     if(!html) html = '<div style="padding:40px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;">'+(lang==='zh'?'暂无结果':'No results')+'</div>';
@@ -964,7 +1017,7 @@ document.addEventListener('click', function(ev){
     var y = document.getElementById('issue-year');
     if(s && !s._bound){ s.addEventListener('input', applyFilter); s._bound=true; }
     if(y && !y._bound){ y.addEventListener('change', applyFilter); y._bound=true; }
-    applyFilter();
+    loadIssues();
   }
 
   // Hook into goPage
@@ -972,12 +1025,19 @@ document.addEventListener('click', function(ev){
   window.goPage = function(id){
     _origGoPage(id);
     if(id==='issues') setTimeout(initIssues, 0);
+    if(id==='home') setTimeout(loadHomePage, 0);
+    if(id==='profile') setTimeout(loadProfilePage, 0);
+    if(id==='collection') setTimeout(loadCollection, 0);
+    if(id==='notifications') setTimeout(loadNotifications, 0);
+    if(id==='friends') setTimeout(loadFriends, 0);
   };
 
   // Also init if issues is the active page on load
   window.addEventListener('load', function(){
     var ap = document.querySelector('.page.active');
     if(ap && ap.id==='page-issues') initIssues();
+    setTimeout(loadNotifications, 1000);
+    setTimeout(loadHomePage, 500);
   });
 
   // Expose so applyLang re-render works
@@ -1046,12 +1106,32 @@ document.addEventListener('click', function(ev){
       + '</svg>';
   }
 
-  // ── Mock friend data (replace with Supabase query later) ──
-  var FRIENDS = [
-    { id:'u1', name:'Aria Chen',    avatar:'A', level:3, days:94,  joined:'2025-12-10', active:true  },
-    { id:'u2', name:'Marcus Lim',   avatar:'M', level:2, days:44,  joined:'2026-01-28', active:true  },
-    { id:'u3', name:'Yuki Tanaka',  avatar:'Y', level:1, days:12,  joined:'2026-03-01', active:false }
-  ];
+  var FRIENDS = [];
+
+  function loadFriends(){
+    var user = window._currentUser;
+    var profile = window._profile;
+    if(!user || !profile) { setTimeout(loadFriends, 500); return; }
+    // Update ref link
+    var refBox = document.getElementById('ref-link-box');
+    if(refBox && profile.ref_code) refBox.textContent = 'zeusdaily.blog?ref='+profile.ref_code;
+    // Load users who used this ref code (via profiles.ref_code field match)
+    // For now show empty if no referrals table — graceful degradation
+    _sb.from('profiles').select('display_name,level,streak,joined_at').neq('id', user.id).limit(20).then(function(r){
+      if(r.error || !r.data){ renderFriends(); return; }
+      FRIENDS = r.data.map(function(p){
+        return {
+          name: p.display_name || 'Reader',
+          avatar: (p.display_name||'R').charAt(0).toUpperCase(),
+          level: p.level || 1,
+          days: p.streak || 0,
+          joined: p.joined_at ? p.joined_at.slice(0,10) : '2026-01-01',
+          active: p.streak > 0
+        };
+      });
+      renderFriends();
+    });
+  }
 
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function fmtJoined(s){ var d=new Date(s); return MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear(); }
@@ -1134,7 +1214,7 @@ document.addEventListener('click', function(ev){
   var _orig2 = window.goPage;
   window.goPage = function(id){
     _orig2(id);
-    if(id==='friends') setTimeout(renderFriends, 0);
+
   };
 
   window.addEventListener('load', function(){
@@ -1143,6 +1223,180 @@ document.addEventListener('click', function(ev){
   });
 
 })();
+
+// ── COLLECTION LOADER ──
+window.loadCollection = function(){
+  var user = window._currentUser;
+  if(!user) return;
+  var grid = document.getElementById('collection-grid');
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  // Load all editions as "collected" (every reader collects all published issues)
+  _sb.from('editions').select('*').order('vol_number',{ascending:false}).then(function(r){
+    if(!r.data || !r.data.length){
+      if(grid) grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;">暂无藏品</div>';
+      return;
+    }
+    var eyeSvg = '<svg viewBox="0 0 120 52" width="80" height="35" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="cNeb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="cClip"><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath></defs><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/><g clip-path="url(#cClip)"><circle cx="60" cy="26" r="14" fill="url(#cNeb)"/><circle cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g></svg>';
+    var html = r.data.map(function(e){
+      var d = new Date(e.date);
+      var dateStr = MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+      var isGenesis = e.vol_number === 1;
+      var volStr = 'VOL.'+String(e.vol_number).padStart(3,'0');
+      var badge = isGenesis ? '<div class="badge badge-special" style="font-size:8px;"><span>GENESIS</span></div>' : '<div class="badge badge-read" style="font-size:8px;"><span>READ</span></div>';
+      var clickAttr = e.html_url ? ' onclick="window.open(\''+e.html_url+'\')" style="cursor:pointer;"' : '';
+      return '<div class="col-card"'+clickAttr+'><div class="vol">'+volStr+'</div>'+eyeSvg+'<div class="col-title">'+e.title+'</div><div class="col-date">'+dateStr+'</div>'+badge+'</div>';
+    }).join('');
+    if(grid) grid.innerHTML = html;
+    var cnt = document.getElementById('col-count-text');
+    if(cnt) cnt.innerHTML = '<span class="zh-only">'+r.data.length+' 件藏品</span><span class="en-only">'+r.data.length+' items</span>';
+    if(window.applyLang) applyLang(getLang());
+  });
+};
+
+// ── NOTIFICATIONS LOADER ──
+window.loadNotifications = function(){
+  var list = document.getElementById('notif-list');
+  if(!list) return;
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  _sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(10).then(function(r){
+    if(!r.data || !r.data.length){
+      list.innerHTML = '<div style="color:var(--text4);font-size:12px;padding:16px;">暂无通知</div>';
+      return;
+    }
+    var html = r.data.map(function(e, i){
+      var d = new Date(e.date);
+      var dateStr = MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear()+' · 08:00 MYT';
+      var isNew = i === 0;
+      var volLabel = 'Vol.'+String(e.vol_number).padStart(3,'0');
+      return '<div class="notif"><div class="notif-dot'+(isNew?'':' read')+'"></div><div class="notif-body"><div class="notif-text">🗞️ <strong>'+volLabel+'</strong> 已发布 — '+e.title+'</div><div class="notif-time">'+dateStr+'</div></div></div>';
+    }).join('');
+    list.innerHTML = html;
+  });
+};
+
+// ── COLLECT ENGINE ──
+var _collectedSet = new Set(); // edition ids user has collected
+
+function loadUserCollections(){
+  var user = window._currentUser;
+  if(!user) return;
+  _sb.from('collections').select('edition_id').eq('user_id', user.id).then(function(r){
+    if(r.data) r.data.forEach(function(c){ _collectedSet.add(c.edition_id); });
+    // Update any visible buttons
+    document.querySelectorAll('.collect-btn[data-eid]').forEach(function(btn){
+      var eid = parseInt(btn.dataset.eid);
+      if(_collectedSet.has(eid)) btn.classList.add('collected');
+    });
+  });
+}
+
+function toggleCollect(btn, editionId){
+  var user = window._currentUser;
+  if(!user) return;
+  var isCollected = _collectedSet.has(editionId);
+
+  if(isCollected){
+    // Un-collect
+    _sb.from('collections').delete().eq('user_id',user.id).eq('edition_id',editionId).then(function(r){
+      if(!r.error){
+        _collectedSet.delete(editionId);
+        btn.classList.remove('collected');
+      }
+    });
+  } else {
+    // Collect — add spark effect
+    _collectedSet.add(editionId);
+    btn.classList.add('collected');
+    btn.classList.add('pop');
+    setTimeout(function(){ btn.classList.remove('pop'); }, 300);
+
+    // Spawn sparks
+    for(var i=0;i<8;i++){
+      (function(i){
+        var spark = document.createElement('div');
+        spark.className = 'spark';
+        var angle = (i/8)*360;
+        var dist = 18 + Math.random()*10;
+        spark.style.setProperty('--dx', Math.cos(angle*Math.PI/180)*dist+'px');
+        spark.style.setProperty('--dy', Math.sin(angle*Math.PI/180)*dist+'px');
+        spark.style.background = i%2===0?'#b088f9':'#d4a8ff';
+        btn.appendChild(spark);
+        setTimeout(function(){ spark.remove(); }, 500);
+      })(i);
+    }
+
+    _sb.from('collections').insert({user_id:user.id, edition_id:editionId, collected_at:new Date().toISOString()}).then(function(r){
+      if(r.error){ _collectedSet.delete(editionId); btn.classList.remove('collected'); }
+    });
+  }
+}
+
+// Lightning bolt SVG helper
+function boltSvg(){
+  return '<svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">'
+    +'<path class="bolt-fill bolt-stroke" d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" stroke-width="1" stroke-linejoin="round"/>'
+    +'</svg>';
+}
+
+// ── HOME PAGE REAL DATA ──
+window.loadHomePage = function(){
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtD(s){ var d=new Date(s); return MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear(); }
+  // Latest issue hero
+  _sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(1).single().then(function(r){
+    if(!r.data) return;
+    var e = r.data;
+    var zh = document.getElementById('hero-title-zh');
+    var en = document.getElementById('hero-title-en');
+    if(zh) zh.textContent = e.title;
+    if(en) en.textContent = 'Vol.'+String(e.vol_number).padStart(3,'0')+' · '+fmtD(e.date);
+  });
+  // Recent 3 issues preview
+  _sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(3).then(function(r){
+    var prev = document.getElementById('home-issues-preview');
+    if(!prev || !r.data) return;
+    var html = r.data.map(function(e,i){
+      var numStr = String(e.vol_number).padStart(3,'0');
+      var badge = i===0?'<div class="badge badge-new">NEW</div>':e.vol_number===1?'<div class="badge badge-special"><span>GENESIS</span></div>':'<div class="badge badge-read"><span class="zh-only">已读</span><span class="en-only">READ</span></div>';
+      var click = e.html_url?' onclick="window.open(\''+e.html_url+'')" style="cursor:pointer;"':'';
+      return '<div class="issue-row"'+click+'><div class="issue-num">'+numStr+'</div><div class="issue-meta"><div class="issue-title">'+e.title+'</div><div class="issue-date">'+fmtD(e.date)+'</div></div>'+badge+'</div>';
+    }).join('');
+    prev.innerHTML = html || '<div style="color:var(--text4);font-size:12px;padding:16px;">暂无期刊</div>';
+  });
+  // Home collection preview
+  _sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(2).then(function(r){
+    var prev = document.getElementById('home-col-preview');
+    if(!prev || !r.data) return;
+    var eyeSvg = '<svg viewBox="0 0 120 52" width="80" height="35" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="hNeb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="hClip"><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath></defs><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/><g clip-path="url(#hClip)"><circle cx="60" cy="26" r="14" fill="url(#hNeb)"/><circle cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g></svg>';
+    var html = r.data.map(function(e){
+      var click = e.html_url?' onclick="window.open(\''+e.html_url+'')" style="cursor:pointer;"':'';
+      return '<div class="col-card"'+click+'><div class="vol">VOL.'+String(e.vol_number).padStart(3,'0')+'</div>'+eyeSvg+'<div class="col-title">'+e.title+'</div><div class="col-date">'+MONTHS[new Date(e.date).getMonth()]+' '+new Date(e.date).getDate()+', '+new Date(e.date).getFullYear()+'</div></div>';
+    }).join('');
+    prev.innerHTML = html;
+  });
+  // Ref count = other users count
+  _sb.from('profiles').select('*',{count:'exact',head:true}).then(function(r){
+    var el = document.getElementById('ref-count');
+    if(el) el.textContent = Math.max(0,(r.count||1)-1);
+  });
+};
+
+// ── PROFILE PAGE REAL DATA ──
+window.loadProfilePage = function(){
+  var p = window._profile;
+  if(!p) return;
+  var LV_ZH = ['','观察者','学者','先知','圣人','造物主'];
+  var LV_EN = ['','Observer','Scholar','Prophet','Sage','Creator'];
+  var lv = p.level || 1;
+  var exp = p.exp || 0;
+  var nextExp = [0,300,500,1000,2000,9999][lv];
+  var el = function(id){ return document.getElementById(id); };
+  if(el('prof-lv')) el('prof-lv').textContent = lv;
+  if(el('prof-lv-name')) el('prof-lv-name').textContent = getLang()==='zh'?LV_ZH[lv]:LV_EN[lv];
+  if(el('prof-exp')) el('prof-exp').textContent = exp+' / '+nextExp;
+  if(el('prof-pill')) el('prof-pill').className = 'level-pill lv'+lv;
+  if(el('prof-pill-text')) el('prof-pill-text').textContent = 'Lv.'+lv+' · '+(getLang()==='zh'?LV_ZH[lv]:LV_EN[lv]);
+};
 
 // Init language on load — must be last
 applyLang(getLang());
