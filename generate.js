@@ -86,15 +86,34 @@ var EYE_JS = [
   "});"
 ].join("\n");
 
-var STAMP_JS = [
+var STAMP_SVG_HTML = [
+  "<div id='stampSvg' style='display:none;margin:16px auto;text-align:center;'>",
+  "  <svg viewBox='0 0 120 52' width='200' height='87' xmlns='http://www.w3.org/2000/svg' style='opacity:0.35;filter:drop-shadow(0 0 16px rgba(184,150,74,0.9));'>",
+  "    <defs>",
+  "      <radialGradient id='stampIrisGrad' cx='50%' cy='50%' r='50%'>",
+  "        <stop offset='0%' stop-color='#b088f9'/>",
+  "        <stop offset='45%' stop-color='#6b4c9a'/>",
+  "        <stop offset='100%' stop-color='#2d1b4e'/>",
+  "      </radialGradient>",
+  "      <clipPath id='stampEyeClip'><path d='M10,26 Q60,-10 110,26 Q60,62 10,26 Z'/></clipPath>",
+  "    </defs>",
+  "    <path d='M10,26 Q60,-10 110,26 Q60,62 10,26 Z' fill='none' stroke='#b8964a' stroke-width='2'/>",
+  "    <g clip-path='url(#stampEyeClip)'>",
+  "      <ellipse cx='60' cy='26' rx='18' ry='18' fill='url(#stampIrisGrad)'/>",
+  "      <ellipse cx='60' cy='26' rx='7' ry='7' fill='#1a0d2e'/>",
+  "      <ellipse cx='66' cy='21' rx='2.5' ry='1.8' fill='rgba(255,255,255,0.25)'/>",
+  "    </g>",
+  "  </svg>",
+  "</div>"
+].join("\n");
+
+var STAMP_JS_TEMPLATE = [
+  "var ISSUE_KEY = 'zd_checkin_DATECOMPACT';",
   "function doStamp() {",
   "  var btn = document.getElementById('stampBtn');",
   "  var stampEl = document.getElementById('stampSvg');",
   "  var timeEl = document.getElementById('stampTime');",
   "  if (!btn || btn.disabled) return;",
-  "  btn.disabled = true;",
-  "  btn.style.opacity = '0.5';",
-  "  btn.style.cursor = 'not-allowed';",
   "  var n = new Date();",
   "  var yr = String(n.getFullYear());",
   "  var mo = ('0' + (n.getMonth() + 1)).slice(-2);",
@@ -103,17 +122,27 @@ var STAMP_JS = [
   "  var mi = ('0' + n.getMinutes()).slice(-2);",
   "  var sc = ('0' + n.getSeconds()).slice(-2);",
   "  var timeStr = yr + '-' + mo + '-' + dy + ' ' + hr + ':' + mi + ':' + sc;",
-  "  if (stampEl) {",
-  "    stampEl.style.display = 'block';",
-  "    stampEl.style.transform = 'rotate(-15deg)';",
-  "    stampEl.style.transition = 'transform 0.4s ease';",
-  "    setTimeout(function() { stampEl.style.transform = 'rotate(0deg)'; }, 50);",
-  "  }",
+  "  localStorage.setItem(ISSUE_KEY, timeStr);",
+  "  applyStamp(timeStr);",
+  "}",
+  "function applyStamp(timeStr) {",
+  "  var btn = document.getElementById('stampBtn');",
+  "  var stampEl = document.getElementById('stampSvg');",
+  "  var timeEl = document.getElementById('stampTime');",
+  "  if (!btn) return;",
+  "  btn.disabled = true;",
+  "  btn.style.opacity = '0.5';",
+  "  btn.style.cursor = 'not-allowed';",
+  "  if (stampEl) { stampEl.style.display = 'block'; }",
   "  if (timeEl) {",
   "    timeEl.style.display = 'block';",
   "    timeEl.textContent = '已阅时间：' + timeStr;",
   "  }",
-  "}"
+  "}",
+  "(function() {",
+  "  var saved = localStorage.getItem(ISSUE_KEY);",
+  "  if (saved) { applyStamp(saved); }",
+  "})();"
 ].join("\n");
 
 var HOME_BUTTON_HTML = [
@@ -124,26 +153,6 @@ var HOME_BUTTON_HTML = [
   "border:1.5px solid #8a6d2f;' title='返回主站'>",
   "&#8962; 首页</a>"
 ].join("");
-
-var STAMP_SVG_HTML = [
-  "<div id='stampSvg' style='display:none;margin:16px auto;width:160px;'>",
-  "  <svg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'>",
-  "    <circle cx='80' cy='80' r='72' stroke='#5c3d8f' stroke-width='4' fill='none'/>",
-  "    <circle cx='80' cy='80' r='64' stroke='#cc2200' stroke-width='2' fill='rgba(204,34,0,0.04)'/>",
-  "    <path id='topArc' d='M 26,80 A 54,54 0 0,1 134,80' fill='none'/>",
-  "    <text font-family='Playfair Display,serif' font-size='15' font-weight='700' fill='#cc2200' letter-spacing='4'>",
-  "      <textPath href='#topArc' startOffset='15%'>已　阅</textPath>",
-  "    </text>",
-  "    <path id='botArc' d='M 26,80 A 54,54 0 0,0 134,80' fill='none'/>",
-  "    <text font-family='Playfair Display,serif' font-size='15' font-weight='700' fill='#cc2200' letter-spacing='4'>",
-  "      <textPath href='#botArc' startOffset='15%'>打　卡</textPath>",
-  "    </text>",
-  "    <text x='80' y='72' text-anchor='middle' font-family='Space Mono,monospace' font-size='11' fill='#cc2200'>" + dateStr.slice(0,7) + "</text>",
-  "    <text x='80' y='90' text-anchor='middle' font-family='Space Mono,monospace' font-size='11' fill='#cc2200'>" + dateStr.slice(8,10) + "</text>",
-  "    <text x='80' y='108' text-anchor='middle' font-family='Playfair Display,serif' font-size='13' font-weight='700' fill='#5c3d8f'>ZEUS DAILY</text>",
-  "  </svg>",
-  "</div>"
-].join("\n");
 
 async function generate() {
   console.log("Searching for latest news (Haiku)...");
@@ -177,6 +186,8 @@ async function generate() {
 
   console.log("Search context length: " + searchContext.length + " chars");
   console.log("Generating HTML edition (Opus)...");
+
+  var STAMP_JS = STAMP_JS_TEMPLATE.replace(/DATECOMPACT/g, dateCompact);
 
   var prompt = [
     "You are Zeus Daily — THE GOD'S EYE VIEW. Today is " + dateStr + ". Generate Vol." + volNumber + " as a single complete self-contained HTML file.",
@@ -282,7 +293,6 @@ async function generate() {
 
   console.log("HTML generated: " + html.length + " chars");
 
-  // Save dated file only — do NOT overwrite index.html (login page)
   fs.writeFileSync(filePath, html, "utf8");
   console.log("Saved: " + fileName);
 
