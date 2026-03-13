@@ -169,7 +169,42 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .lv-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .lv-range{margin-left:auto;font-size:10px;color:var(--text4);font-family:'DM Mono',monospace;}
 @media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:680px){:root{--sidebar-w:60px;}.logo-text,.nav-text,.nav-label,.nav-badge,.user-info{display:none;}.sidebar-logo{padding:20px;justify-content:center;}.nav-item{justify-content:center;}.user-card{justify-content:center;padding:8px;}.grid-4{grid-template-columns:1fr 1fr;}#topbar{padding:0 16px;}#content{padding:16px;}}
+@media(max-width:680px){
+  :root{--sidebar-w:0px;}
+  #sidebar{display:none;}
+  #bottom-nav{display:flex;}
+  #app{flex-direction:column;}
+  #main{padding-bottom:70px;}
+  #topbar{padding:0 14px;}
+  #content{padding:14px;}
+  .hero-banner{flex-direction:column;gap:12px;padding:18px;}
+  .hero-eye-wrap{display:none;}
+  .hero-content{max-width:100%;}
+  .grid-4{grid-template-columns:1fr 1fr;}
+  .hero-title{font-size:18px;}
+}
+/* Bottom Nav Bar */
+#bottom-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  height:62px;z-index:100;
+  background:rgba(250,248,244,0.96);
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+  padding:0 4px;
+  align-items:stretch;
+  justify-content:space-around;
+}
+.bn-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;flex:1;cursor:pointer;padding:6px 4px 10px;
+  color:var(--text4);transition:color 0.15s;position:relative;
+  border:none;background:none;outline:none;
+}
+.bn-item.active{color:var(--purple);}
+.bn-item.active::before{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--gold);border-radius:1px;}
+.bn-item svg{width:20px;height:20px;}
+.bn-label{font-size:9.5px;letter-spacing:0.3px;font-family:'DM Sans',sans-serif;font-weight:500;}
 /* BADGE ANIMATIONS */
 @keyframes spin-slow{to{transform:rotate(360deg);}}
 @keyframes spin-rev{to{transform:rotate(-360deg);}}
@@ -767,6 +802,9 @@ window.goPage=function(id){
   var pg=document.getElementById('page-'+id); if(pg) pg.classList.add('active');
   document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
   var ni=document.querySelector('.nav-item[data-page="'+id+'"]'); if(ni) ni.classList.add('active');
+  // Sync bottom nav
+  document.querySelectorAll('.bn-item').forEach(function(n){n.classList.remove('active');});
+  var bi=document.querySelector('.bn-item[data-page="'+id+'"]'); if(bi) bi.classList.add('active');
   var lang=getLang();
   var t=document.getElementById('page-title');
   if(t) t.textContent=lang==='zh'?(pageTitlesZh[id]||id):(pageTitlesEn[id]||id);
@@ -849,6 +887,13 @@ window.setLang=function(lang){
 document.addEventListener('click', function(ev){
   // debug: uncomment to test → // console.log('click', ev.target.tagName, ev.target.className);
   var el = ev.target;
+  // Bottom nav clicks
+  document.querySelectorAll('.bn-item').forEach(function(bn){
+    bn.addEventListener('click', function(){
+      var pg = bn.getAttribute('data-page');
+      if(pg) goPage(pg);
+    });
+  });
   // Walk up to find a data-page or data-lang element
   while(el && el !== document.body){
     if(el.dataset && el.dataset.page){ window.goPage(el.dataset.page); return; }
@@ -1414,5 +1459,29 @@ window.loadProfilePage = function(){
 // Init language on load — must be last
 applyLang(getLang());
 </script>
+
+<!-- MOBILE BOTTOM NAV -->
+<div id="bottom-nav">
+  <div class="bn-item active" data-page="home">
+    <svg fill="none" viewBox="0 0 16 16"><path d="M2 6.5L8 2l6 4.5V14H10V9.5H6V14H2V6.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+    <span class="bn-label zh-only">首页</span><span class="bn-label en-only">Home</span>
+  </div>
+  <div class="bn-item" data-page="issues">
+    <svg fill="none" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <span class="bn-label zh-only">日报</span><span class="bn-label en-only">Issues</span>
+  </div>
+  <div class="bn-item" data-page="collection">
+    <svg fill="none" viewBox="0 0 16 16"><path d="M3 3h10v9.5l-5-2.5-5 2.5V3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+    <span class="bn-label zh-only">收藏</span><span class="bn-label en-only">Collect</span>
+  </div>
+  <div class="bn-item" data-page="friends">
+    <svg fill="none" viewBox="0 0 16 16"><circle cx="5.5" cy="5" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M1 13c0-2.5 2-3.5 4.5-3.5S10 10.5 10 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="11.5" cy="5" r="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M11 7.5c1 0 2.5.5 2.5 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <span class="bn-label zh-only">好友</span><span class="bn-label en-only">Friends</span>
+  </div>
+  <div class="bn-item" data-page="profile">
+    <svg fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 13.5c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <span class="bn-label zh-only">我的</span><span class="bn-label en-only">Me</span>
+  </div>
+</div>
 </body>
 </html>
