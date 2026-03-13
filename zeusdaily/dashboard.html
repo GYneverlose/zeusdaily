@@ -1080,22 +1080,27 @@ document.addEventListener('click', function(ev){
     // Update ref link
     var refBox = document.getElementById('ref-link-box');
     if(refBox && profile.ref_code) refBox.textContent = 'zeusdaily.blog?ref='+profile.ref_code;
-    // Load users who used this ref code (via profiles.ref_code field match)
-    // For now show empty if no referrals table — graceful degradation
-    _sb.from('profiles').select('display_name,level,streak,joined_at').neq('id', user.id).limit(20).then(function(r){
-      if(r.error || !r.data){ renderFriends(); return; }
-      FRIENDS = r.data.map(function(p){
-        return {
-          name: p.display_name || 'Reader',
-          avatar: (p.display_name||'R').charAt(0).toUpperCase(),
-          level: calcLevel(p.exp || 0),
-          days: p.streak || 0,
-          joined: p.joined_at ? p.joined_at.slice(0,10) : '2026-01-01',
-          active: p.streak > 0
-        };
+    // Only load users who registered via this user's referral link
+    if(!profile.ref_code){ FRIENDS = []; renderFriends(); return; }
+    _sb.from('profiles')
+      .select('display_name,exp,streak,joined_at,email')
+      .eq('invited_by', profile.ref_code)
+      .order('joined_at', {ascending:false})
+      .limit(50)
+      .then(function(r){
+        if(r.error || !r.data){ FRIENDS = []; renderFriends(); return; }
+        FRIENDS = r.data.map(function(p){
+          return {
+            name: p.display_name || p.email || 'Reader',
+            avatar: (p.display_name || p.email || 'R').charAt(0).toUpperCase(),
+            level: calcLevel(p.exp || 0),
+            days: p.streak || 0,
+            joined: p.joined_at ? p.joined_at.slice(0,10) : '',
+            active: p.streak > 0
+          };
+        });
+        renderFriends();
       });
-      renderFriends();
-    });
   }
 
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1145,7 +1150,7 @@ document.addEventListener('click', function(ev){
 
     // Update count
     var cnt = document.getElementById('friends-count');
-    if(cnt) cnt.innerHTML = FRIENDS.length + (lang==='zh' ? ' 位好友' : ' friends');
+    if(cnt) cnt.innerHTML = FRIENDS.length + (lang==='zh' ? ' 位好友' : ' friend'+(FRIENDS.length!==1?'s':''));
   }
 
   // ── Copy + Share ──
