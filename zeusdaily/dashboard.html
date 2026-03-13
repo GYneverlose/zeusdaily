@@ -388,7 +388,7 @@ function loadIssuesReadStat(userId){
 
 function checkTodayCheckin(userId, profile){
   var today = new Date().toISOString().slice(0,10);
-  _sb.from('checkins').select('id').eq('user_id', userId).eq('checked_in_at', today).single()
+  _sb.from('checkins').select('id').eq('user_id', userId).eq('checked_at', today).single()
     .then(function(res){
       if(res.data){
         // Already checked in today
@@ -416,7 +416,7 @@ window.doCheckin = function(){
   var today = new Date().toISOString().slice(0,10);
 
   // Insert checkin
-  _sb.from('checkins').insert({ user_id: user.id, checked_in_at: today }).then(function(res){
+  _sb.from('checkins').insert({ user_id: user.id, checked_at: today }).then(function(res){
     if(res.error && res.error.code !== '23505') return; // 23505 = duplicate, already done
 
     // Calculate new streak
