@@ -339,8 +339,12 @@ function applyProfileToUI(p){
   if(expText) expText.textContent = exp + ' / ' + nextExp + ' EXP';
   var expBar = document.getElementById('exp-bar');
   if(expBar) expBar.style.width = Math.min(100, Math.round(exp/nextExp*100)) + '%';
+  // Dynamic badge
+  var badgeWrap = document.getElementById('home-badge-wrap');
+  if(badgeWrap && window._badgeSVG) badgeWrap.innerHTML = window._badgeSVG(lv, 72);
+  var lvColors=['','#4a9fd4','#7b56b8','#b8964a','#d4ac5c','#9b72d4'];
   var lvLabel = document.getElementById('lv-label');
-  if(lvLabel) lvLabel.innerHTML = '<span class="zh-only">' + lvName + '</span><span class="en-only">' + getLvName(lv,'en') + '</span>';
+  if(lvLabel){ lvLabel.innerHTML = '<span class="zh-only">' + lvName + '</span><span class="en-only">' + getLvName(lv,'en') + '</span>'; lvLabel.style.color = lvColors[lv]||'var(--violet)'; }
   var lvNum = document.getElementById('lv-num');
   if(lvNum) lvNum.textContent = 'LV.' + lv;
 
@@ -523,9 +527,9 @@ window.doLogout = function(){
       <div class="grid-2">
         <div class="card">
           <div class="section-head" style="margin-bottom:14px;"><div class="section-title" style="font-size:15px;"><span class="zh-only">文明等级</span><span class="en-only">Civilization Level</span></div></div>
-          <!-- Lv.2 Scholar Badge -->
+          <!-- Dynamic Badge -->
           <div style="display:flex;align-items:center;gap:18px;margin-bottom:14px;">
-            <div class="badge-item" style="--bdg-glow:rgba(123,86,184,0.4);">
+            <div class="badge-item" id="home-badge-wrap" style="--bdg-glow:rgba(123,86,184,0.4);">
               <svg viewBox="0 0 100 110" width="72" height="79" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <radialGradient id="hb2bg" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#ede0ff"/><stop offset="100%" stop-color="#c8a8ee"/></radialGradient>
@@ -794,18 +798,7 @@ window.setLang=function(lang){
 
   var CHECKIN_DONE_HTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.7" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg>';
 
-window.doCheckin=function(){
-  var btn=document.getElementById('checkin-btn'); if(!btn||btn.classList.contains('done')) return;
-  btn.classList.add('done');
-  // swap lightning icon to dimmed version (already in HTML, btn.done CSS handles it)
-  var d=new Date(), h=d.getHours(), m=d.getMinutes();
-  var ts=(h<10?'0':'')+h+':'+(m<10?'0':'')+m+' MYT';
-  var timeEl=document.getElementById('checkin-time'); if(timeEl) timeEl.textContent=ts;
-  var lbl=document.getElementById('checkin-label');
-  if(lbl) lbl.innerHTML='<span class="zh-only">&#10003; 今日已签到</span><span class="en-only">&#10003; Checked In</span>';
-  applyLang(getLang());
-  try{localStorage.setItem('zeus-checkin-'+new Date().toDateString(),ts);}catch(e){}
-};
+// doCheckin handled by Supabase engine above
 
 // Date display
 (function(){
@@ -1071,7 +1064,7 @@ document.addEventListener('click', function(ev){
       +'</g>';
   }
 
-  function badgeSVG(level, size){
+  window._badgeSVG = function badgeSVG(level, size){
     var lv = LEVELS[level] || LEVELS[1];
     var s = size || 52;
     var cx = s/2, cy = s/2, uid = 'fb'+level+(Math.random()*1000|0);
