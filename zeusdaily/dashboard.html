@@ -78,7 +78,7 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 #content{flex:1;overflow-y:auto;padding:28px 30px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
 #content::-webkit-scrollbar{width:4px;}
 #content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-.page{display:none;}.page.active{display:block;}
+.page{display:none;}.page.active{display:block;}.en-only{display:none;}
 /* COMPONENTS */
 .section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;}
 .section-title{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--text);}
@@ -320,22 +320,17 @@ function applyProfileToUI(p){
   if(avatarEl) avatarEl.textContent = avatar;
 
   var lvEl = document.querySelectorAll('.user-level');
-  lvEl.forEach(function(el){
-    el.textContent = 'Lv.' + lv + ' · ' + lvName;
-  });
+  lvEl.forEach(function(el){ el.textContent = 'Lv.' + lv + ' · ' + lvName; });
 
-  // Streak stat card
-  var streakVal = document.querySelector('.stat-card .stat-value');
+  // Streak stat card (use ID)
+  var streakVal = document.getElementById('stat-streak');
   if(streakVal) streakVal.innerHTML = streak + '<span class="unit" style="margin-left:6px;vertical-align:middle;"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-top:-3px;"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.9" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg></span>';
 
-  // EXP bar
-  var expEl = document.querySelectorAll('.stat-value');
-  expEl.forEach(function(el){
-    var card = el.closest('.stat-card');
-    if(card && card.querySelector('.stat-label') && card.querySelector('.stat-label').textContent.indexOf('EXP') >= 0){
-      el.textContent = exp;
-    }
-  });
+  // EXP stat card
+  var expStatEl = document.getElementById('stat-exp');
+  if(expStatEl) expStatEl.textContent = exp;
+  var expStatBar = document.getElementById('stat-exp-bar');
+  if(expStatBar) expStatBar.style.width = Math.min(100, Math.round(exp/getLvExpNeeded(lv)*100))+'%';
 
   // Level card EXP display
   var expText = document.getElementById('exp-display');
@@ -454,7 +449,7 @@ window.doLogout = function(){
     <div class="nav-section">
       <div class="nav-label zh-only">主菜单</div><div class="nav-label en-only">MAIN</div>
       <div class="nav-item active" data-page="home"><div class="nav-icon"><svg fill="none" viewBox="0 0 16 16"><path d="M2 6.5L8 2l6 4.5V14H10V9.5H6V14H2V6.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div><span class="nav-text zh-only">首页</span><span class="nav-text en-only">Home</span></div>
-      <div class="nav-item" data-page="issues"><div class="nav-icon"><svg fill="none" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div><span class="nav-text zh-only">日报</span><span class="nav-text en-only">Issues</span><span class="nav-badge">003</span></div>
+      <div class="nav-item" data-page="issues"><div class="nav-icon"><svg fill="none" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div><span class="nav-text zh-only">日报</span><span class="nav-text en-only">Issues</span><span class="nav-badge" id="nav-issues-badge" style="display:none;"></span></div>
       <div class="nav-item" data-page="collection"><div class="nav-icon"><svg fill="none" viewBox="0 0 16 16"><path d="M3 3h10v9.5l-5-2.5-5 2.5V3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div><span class="nav-text zh-only">收藏</span><span class="nav-text en-only">Collection</span></div>
       <div class="nav-item" data-page="friends"><div class="nav-icon"><svg fill="none" viewBox="0 0 16 16"><circle cx="5.5" cy="5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 13c0-2.5 2-3.5 4.5-3.5S10 10.5 10 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M11 7.5c1 0 2.5.5 2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="11.5" cy="5" r="1.5" stroke="currentColor" stroke-width="1.3"/></svg></div><span class="nav-text zh-only">好友</span><span class="nav-text en-only">Friends</span></div>
     </div>
@@ -518,9 +513,9 @@ window.doLogout = function(){
 
       <div class="grid-4">
         <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label zh-only">连续签到</div><div class="stat-label en-only">STREAK</div><div class="stat-value">12<span class="unit" style="margin-left:6px;vertical-align:middle;"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle;margin-top:-3px;"><path d="M9.5 1.5L4 9h5l-2.5 5.5L14 6.5H9L11.5 1.5Z" fill="#9b72d4" fill-opacity="0.9" stroke="#7b56b8" stroke-width="0.8" stroke-linejoin="round"/></svg></span></div><div class="stat-note up zh-only">今日 +1</div><div class="stat-note up en-only">+1 today</div></div>
-        <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label">EXP</div><div class="stat-value">230</div><div class="prog-bar"><div class="prog-fill" style="width:46%"></div></div></div>
+        <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label">EXP</div><div class="stat-value" id="stat-exp">—</div><div class="prog-bar"><div class="prog-fill" id="stat-exp-bar" style="width:0%"></div></div></div>
         <div class="stat-card" style="--accent:var(--green);"><div class="stat-label zh-only">已读期数</div><div class="stat-label en-only">ISSUES READ</div><div class="stat-value" id="issues-read-count">—</div><div class="stat-note" id="issues-read-note" style="color:var(--text4)"></div></div>
-        <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label zh-only">收藏数</div><div class="stat-label en-only">COLLECTED</div><div class="stat-value">2</div><div class="stat-note" style="color:var(--text4);"><span class="zh-only">创刊号 ×1</span><span class="en-only">Genesis ×1</span></div></div>
+        <div class="stat-card" style="--accent:var(--violet);"><div class="stat-label zh-only">收藏数</div><div class="stat-label en-only">COLLECTED</div><div class="stat-value" id="stat-collected">—</div><div class="stat-note" id="stat-collected-note" style="color:var(--text4);"></div></div>
       </div>
 
       <div class="grid-2">
@@ -625,8 +620,8 @@ window.doLogout = function(){
           <div class="level-pill lv2" id="prof-pill" style="margin-bottom:16px;"><span id="prof-pill-text">—</span></div>
           <div class="divider"></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--border);"><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold2);">12</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:3px;font-family:'DM Mono',monospace;"><span class="zh-only">连续天数</span><span class="en-only">STREAK</span></div></div>
-            <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--border);"><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--violet);">230</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:3px;font-family:'DM Mono',monospace;">EXP</div></div>
+            <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--border);"><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold2);" id="prof-streak">—</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:3px;font-family:'DM Mono',monospace;"><span class="zh-only">连续天数</span><span class="en-only">STREAK</span></div></div>
+            <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--border);"><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--violet);" id="prof-exp2">—</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:3px;font-family:'DM Mono',monospace;">EXP</div></div>
           </div>
         </div>
         <div class="card">
@@ -696,7 +691,6 @@ window.doLogout = function(){
     <div class="page" id="page-notifications">
       <div class="section-head"><div class="section-title zh-only">通知</div><div class="section-title en-only">Notifications</div><div class="section-line"></div></div>
       <div class="card">
-        <div class="notif"><div class="notif-dot"></div><div class="notif-body"><div class="notif-text zh-only">⚡ <strong>12天连续签到</strong>！再坚持 18 天解锁 Lv.3 先知</div><div class="notif-text en-only">⚡ <strong>12-day streak!</strong> 18 more days to unlock Lv.3 · Prophet</div><div class="notif-time">Mar 13, 2026 · 00:00 MYT</div></div></div>
 
       </div>
     </div>
@@ -1282,6 +1276,9 @@ function loadUserCollections(){
   if(!user) return;
   _sb.from('collections').select('edition_id').eq('user_id', user.id).then(function(r){
     if(r.data) r.data.forEach(function(c){ _collectedSet.add(c.edition_id); });
+    // Update stat card
+    var cnt = document.getElementById('stat-collected');
+    if(cnt) cnt.textContent = _collectedSet.size;
     // Update any visible buttons
     document.querySelectorAll('.collect-btn[data-eid]').forEach(function(btn){
       var eid = parseInt(btn.dataset.eid);
@@ -1306,6 +1303,8 @@ function toggleCollect(btn, editionId){
   } else {
     // Collect — add spark effect
     _collectedSet.add(editionId);
+    var cnt = document.getElementById('stat-collected');
+    if(cnt) cnt.textContent = _collectedSet.size;
     btn.classList.add('collected');
     btn.classList.add('pop');
     setTimeout(function(){ btn.classList.remove('pop'); }, 300);
@@ -1362,6 +1361,7 @@ window.loadHomePage = function(){
       return '<div class="issue-row"'+click+'><div class="issue-num">'+numStr+'</div><div class="issue-meta"><div class="issue-title">'+e.title+'</div><div class="issue-date">'+fmtD(e.date)+'</div></div>'+badge+'</div>';
     }).join('');
     prev.innerHTML = html || '<div style="color:var(--text4);font-size:12px;padding:16px;">暂无期刊</div>';
+    if(window.applyLang) applyLang(getLang());
   });
   // Home collection preview
   _sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(2).then(function(r){
@@ -1396,6 +1396,8 @@ window.loadProfilePage = function(){
   if(el('prof-exp')) el('prof-exp').textContent = exp+' / '+nextExp;
   if(el('prof-pill')) el('prof-pill').className = 'level-pill lv'+lv;
   if(el('prof-pill-text')) el('prof-pill-text').textContent = 'Lv.'+lv+' · '+(getLang()==='zh'?LV_ZH[lv]:LV_EN[lv]);
+  if(el('prof-streak')) el('prof-streak').textContent = p.streak || 0;
+  if(el('prof-exp2')) el('prof-exp2').textContent = exp;
 };
 
 // Init language on load — must be last
