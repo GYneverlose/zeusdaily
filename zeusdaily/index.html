@@ -591,6 +591,7 @@ html,body{
 
 // ── REALISTIC LIGHTNING ──
 (function(){
+  if('ontouchstart' in window) return; // skip on mobile
   var c = document.getElementById('lightning');
   var ctx = c.getContext('2d');
   var bg = document.createElement('canvas'); // sky flash layer
@@ -786,6 +787,11 @@ html,body{
   var maxMove  = 4;
 
   // Blink
+  // Skip blink animation on mobile to reduce CPU usage
+  if('ontouchstart' in window){
+    // Static eye on mobile - no blink, no tracking
+    return;
+  }
   function blink(){
     outline.setAttribute('d', CLOSE);
     clipPath.setAttribute('d', CLOSE);
