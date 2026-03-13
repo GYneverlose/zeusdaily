@@ -182,23 +182,32 @@ textarea{resize:vertical;min-height:60px;}
       <div class="page-sub">添加和管理每日期刊</div>
 
       <div class="form-card">
-        <div class="form-title">发布新一期</div>
+        <div class="form-title">上传新期日报</div>
+
+        <!-- Drag & Drop zone -->
+        <div id="drop-zone" style="border:2px dashed rgba(184,150,74,0.4);border-radius:10px;padding:32px;text-align:center;cursor:pointer;margin-bottom:20px;transition:all 0.2s;background:rgba(184,150,74,0.03);"
+          ondragover="event.preventDefault();this.style.borderColor='#b8964a';this.style.background='rgba(184,150,74,0.08)'"
+          ondragleave="this.style.borderColor='rgba(184,150,74,0.4)';this.style.background='rgba(184,150,74,0.03)'"
+          ondrop="handleDrop(event)"
+          onclick="document.getElementById('f-file').click()">
+          <div style="font-size:28px;margin-bottom:8px;">↑</div>
+          <div style="color:var(--text3);font-size:13px;">拖拽 HTML 文件到此处，或 <span style="color:var(--gold);text-decoration:underline;">点击选择文件</span></div>
+          <div id="drop-filename" style="margin-top:10px;color:var(--gold);font-family:'DM Mono',monospace;font-size:12px;"></div>
+        </div>
+        <input type="file" id="f-file" accept=".html" style="display:none" onchange="handleFileSelect(this)">
+
         <div class="form-grid">
           <div class="form-group">
-            <label>VOL 期数</label>
-            <input id="f-vol" type="number" placeholder="4" min="1">
+            <label>期号 VOL.</label>
+            <input id="f-vol" type="number" placeholder="例如 004" min="1">
           </div>
           <div class="form-group">
-            <label>发布日期</label>
-            <input id="f-date" type="date">
+            <label>日期 (YYYYMMDD)</label>
+            <input id="f-date" type="text" placeholder="20260313" maxlength="8">
           </div>
           <div class="form-group full">
-            <label>标题</label>
-            <input id="f-title" type="text" placeholder="Zeus Daily · Vol.004 · 2026.03.14">
-          </div>
-          <div class="form-group full">
-            <label>HTML 文件 URL（在 zeusdaily.blog 上的路径）</label>
-            <input id="f-url" type="text" placeholder="https://zeusdaily.blog/zeus-daily-20260314.html">
+            <label>标题摘要（可选）</label>
+            <input id="f-title" type="text" placeholder="本期日报标题或简介">
           </div>
           <div class="form-group">
             <label>稀有度</label>
@@ -208,17 +217,16 @@ textarea{resize:vertical;min-height:60px;}
               <option value="legendary">Legendary</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>总份数（留空=无限）</label>
-            <input id="f-copies" type="number" placeholder="999">
-          </div>
         </div>
-        <div style="margin-top:16px;display:flex;gap:10px;align-items:center;">
-          <button class="btn btn-primary" onclick="addEdition()">发布</button>
-          <button class="btn" style="background:var(--surface2);color:var(--text2);" onclick="autoFill()">自动填入今日</button>
+
+        <div style="margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-primary" id="publish-btn" onclick="publishToGithub()">⚡ 发布到 GitHub</button>
         </div>
-        <div class="msg msg-ok" id="ed-ok">✓ 发布成功</div>
-        <div class="msg msg-err" id="ed-err"></div>
+
+        <!-- Progress log -->
+        <div id="publish-log" style="margin-top:16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);display:none;"></div>
+        <div class="msg msg-ok" id="ed-ok" style="display:none;">✓ 发布成功！</div>
+        <div class="msg msg-err" id="ed-err" style="display:none;"></div>
       </div>
 
       <div class="table-card">
@@ -237,12 +245,22 @@ textarea{resize:vertical;min-height:60px;}
       <div class="table-card">
         <div class="table-header">
           <div class="table-title">用户列表</div>
-          <input style="width:200px;padding:6px 10px;font-size:12px;" placeholder="搜索用户名..." oninput="filterUsers(this.value)">
+          <input id="user-search" style="width:220px;padding:6px 12px;font-size:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--text);outline:none;" placeholder="搜索邮箱..." oninput="filterUsers(this.value)">
         </div>
         <table>
-          <thead><tr><th>用户名</th><th>等级</th><th>EXP</th><th>连续天数</th><th>最后签到</th><th>邀请码</th></tr></thead>
+          <thead><tr><th>邮箱</th><th>注册时间</th><th>累计打卡</th><th>连续天数</th><th>等级</th><th>操作</th></tr></thead>
           <tbody id="users-list"><tr><td colspan="6" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- USER DETAIL MODAL -->
+    <div id="user-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;">
+      <div style="background:#1a1030;border:1px solid rgba(184,150,74,0.3);border-radius:14px;padding:28px;min-width:360px;max-width:480px;position:relative;">
+        <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:6px;">用户详情</div>
+        <div style="height:1px;background:rgba(184,150,74,0.2);margin-bottom:16px;"></div>
+        <div id="modal-body" style="font-size:13px;line-height:2;color:var(--text3);"></div>
+        <button onclick="closeModal()" style="margin-top:20px;width:100%;padding:10px;background:var(--violet);border:none;border-radius:8px;color:white;cursor:pointer;font-size:13px;">关闭</button>
       </div>
     </div>
 
@@ -270,6 +288,10 @@ textarea{resize:vertical;min-height:60px;}
 <script>
 var SUPABASE_URL  = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
 var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
+
+var GITHUB_TOKEN = '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';
+var GITHUB_REPO  = 'GYneverlose/zeusdaily';
+var GITHUB_PATH  = 'zeusdaily'; // folder in repo
 var ADMIN_EMAIL   = 'thunderchic055@gmail.com'; // Only this email can access
 
 var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -417,8 +439,29 @@ function deleteEdition(id){
 }
 
 // ── USERS ──
+function calcLv(exp){ exp=exp||0; if(exp<300)return 1; if(exp<500)return 2; if(exp<1000)return 3; if(exp<2000)return 4; return 5; }
+function closeModal(){ document.getElementById('user-modal').style.display='none'; }
+var _userMap = {};
+function showUserDetail(id){
+  var u = _userMap[id]; if(!u) return;
+  var lv = calcLv(u.exp||0);
+  var LVN = ['','Observer','Scholar','Prophet','Sage','Creator'];
+  var joined = u.joined_at ? u.joined_at.slice(0,10) : '—';
+  var daysSince = u.joined_at ? Math.floor((Date.now()-new Date(u.joined_at))/86400000) : 0;
+  document.getElementById('modal-body').innerHTML =
+    '<div>邮箱：<span style="color:var(--text);">'+(u.email||'—')+'</span></div>'
+    +'<div>注册：<span style="color:var(--text);">'+joined+'</span></div>'
+    +'<div>注册天数：<span style="color:var(--text);">'+daysSince+' 天</span></div>'
+    +'<div>累计打卡：<span style="color:var(--gold);">'+(u.total_checkins||0)+' 次</span></div>'
+    +'<div>连续签到：<span style="color:var(--text);">'+(u.streak||0)+' 天</span></div>'
+    +'<div>EXP：<span style="color:var(--gold);">'+(u.exp||0)+'</span></div>'
+    +'<div>等级：<span style="color:var(--violet);">Lv.'+lv+' '+LVN[lv]+'</span></div>'
+    +'<div>状态：<span style="color:#4ade80;">✅ 正常</span></div>'
+    +'<div style="font-size:11px;color:var(--text3);margin-top:8px;">ID：'+u.id+'</div>';
+  document.getElementById('user-modal').style.display='flex';
+}
 function loadUsers(){
-  _sb.from('profiles').select('display_name,level,exp,streak,last_checkin,ref_code').order('exp',{ascending:false}).then(function(r){
+  _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,total_checkins,joined_at').order('joined_at',{ascending:false}).then(function(r){
     _allUsers = r.data || [];
     renderUsers(_allUsers);
   });
@@ -427,13 +470,29 @@ function loadUsers(){
 function renderUsers(users){
   var LV = ['','Observer','Scholar','Prophet','Sage','Creator'];
   var html = users.map(function(u){
-    return '<tr><td>'+(u.display_name||'—')+'</td><td><span class="badge badge-violet">Lv.'+u.level+' · '+(LV[u.level]||'')+'</span></td><td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+u.exp+'</td><td>'+u.streak+' 天</td><td style="color:var(--text3);font-size:11px;">'+(u.last_checkin||'—')+'</td><td style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--text3);">'+(u.ref_code||'—')+'</td></tr>';
+    var lv=calcLv(u.exp||0);
+    return '<tr>'
+      +'<td style="font-size:12px;font-family:\'DM Mono\',monospace;">'+(u.email||u.display_name||'—')+'<span style="margin-left:6px;padding:2px 6px;border-radius:10px;font-size:10px;background:rgba(74,222,128,0.15);color:#4ade80;">正常</span></td>'
+      +'<td style="color:var(--text3);font-size:12px;">'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</td>'
+      +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+(u.total_checkins||0)+'</td>'
+      +'<td>'+(u.streak||0)+' 天</td>'
+      +'<td><span class="badge badge-violet">Lv.'+lv+' · '+(LV[lv]||'')+'</span></td>'
+      +'<td style="white-space:nowrap;">'
+      +'<button onclick="showUserDetail('+JSON.stringify(u).replace(/"/g,\'&quot;\')+')" style="padding:3px 10px;font-size:11px;background:var(--violet);border:none;border-radius:4px;color:white;cursor:pointer;margin-right:4px;">详情</button>'
+      +'<button style="padding:3px 10px;font-size:11px;background:rgba(251,146,60,0.2);border:1px solid rgba(251,146,60,0.3);border-radius:4px;color:#fb923c;cursor:pointer;margin-right:4px;">封禁</button>'
+      +'<button onclick="if(confirm(\'确认删除?\'))deleteUser(\''+u.id+'\')" style="padding:3px 10px;font-size:11px;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.3);border-radius:4px;color:#f87171;cursor:pointer;">删除</button>'
+      +'</td>'
+      +'</tr>';
   }).join('');
+  _userMap={}; (r.data||[]).forEach(function(u){_userMap[u.id]=u;});
   document.getElementById('users-list').innerHTML = html || '<tr><td colspan="6" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
 }
 
+function deleteUser(id){
+  _sb.from('profiles').delete().eq('id',id).then(function(){ loadUsers(); });
+}
 function filterUsers(q){
-  var filtered = _allUsers.filter(function(u){ return !q || (u.display_name||'').toLowerCase().includes(q.toLowerCase()); });
+  var filtered = _allUsers.filter(function(u){ return !q || (u.email||u.display_name||'').toLowerCase().includes(q.toLowerCase()); });
   renderUsers(filtered);
 }
 
@@ -462,6 +521,110 @@ function showMsg(id,msg){
   if(msg) el.textContent=msg;
   setTimeout(function(){ el.style.display='none'; },3000);
 }
+
+// ── FILE HANDLING ──
+var _selectedFile = null;
+var _selectedFileContent = null;
+
+function handleDrop(ev){
+  ev.preventDefault();
+  document.getElementById('drop-zone').style.borderColor='rgba(184,150,74,0.4)';
+  document.getElementById('drop-zone').style.background='rgba(184,150,74,0.03)';
+  var file = ev.dataTransfer.files[0];
+  if(file) processFile(file);
+}
+
+function handleFileSelect(input){
+  var file = input.files[0];
+  if(file) processFile(file);
+}
+
+function processFile(file){
+  _selectedFile = file;
+  document.getElementById('drop-filename').textContent = '✓ ' + file.name;
+  // Auto-fill date from filename e.g. zeus-daily-20260313.html
+  var m = file.name.match(/(\d{8})/);
+  if(m){
+    document.getElementById('f-date').value = m[1];
+    // Auto-fill vol if empty
+    if(!document.getElementById('f-vol').value){
+      _sb.from('editions').select('vol_number').order('vol_number',{ascending:false}).limit(1).then(function(r){
+        var next = r.data && r.data[0] ? r.data[0].vol_number+1 : 1;
+        document.getElementById('f-vol').value = next;
+      });
+    }
+  }
+  // Read file as base64
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var b64 = btoa(unescape(encodeURIComponent(e.target.result)));
+    _selectedFileContent = b64;
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function log(msg, ok){
+  var el = document.getElementById('publish-log');
+  el.style.display = 'block';
+  var icon = ok === true ? '✅' : ok === false ? '❌' : '›';
+  el.innerHTML += '<div style="margin:3px 0;color:'+(ok===false?'#f87171':ok===true?'#4ade80':'var(--text3)')+'">'+icon+' '+msg+'</div>';
+}
+
+async function publishToGithub(){
+  var vol = parseInt(document.getElementById('f-vol').value);
+  var dateStr = document.getElementById('f-date').value.trim();
+  var title = document.getElementById('f-title').value.trim();
+  var rarity = document.getElementById('f-rarity').value;
+
+  if(!_selectedFile || !_selectedFileContent){ alert('请先选择 HTML 文件'); return; }
+  if(!vol || !dateStr){ alert('请填写期号和日期'); return; }
+
+  document.getElementById('publish-log').innerHTML = '';
+  document.getElementById('publish-log').style.display = 'block';
+  document.getElementById('ed-ok').style.display = 'none';
+  document.getElementById('ed-err').style.display = 'none';
+  document.getElementById('publish-btn').disabled = true;
+
+  var filename = _selectedFile.name;
+  var filePath = GITHUB_PATH + '/' + filename;
+  var htmlUrl = 'https://zeusdaily.blog/' + filename;
+  var apiUrl = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + filePath;
+  var isoDate = dateStr.slice(0,4)+'-'+dateStr.slice(4,6)+'-'+dateStr.slice(6,8);
+  if(!title) title = 'Zeus Daily · Vol.' + String(vol).padStart(3,'0') + ' · ' + dateStr;
+
+  log('检查文件是否已存在...');
+  var sha = null;
+  try{
+    var chk = await fetch(apiUrl, { headers:{ Authorization:'token '+GITHUB_TOKEN, Accept:'application/vnd.github.v3+json' }});
+    if(chk.ok){ var chkj = await chk.json(); sha = chkj.sha; log('文件已存在，将覆盖'); }
+    else{ log('新文件，将创建'); }
+  }catch(e){ log('新文件，将创建'); }
+
+  log('正在上传 HTML 到 GitHub...');
+  var body = { message: 'Zeus Daily '+filename, content: _selectedFileContent, branch:'main' };
+  if(sha) body.sha = sha;
+
+  try{
+    var res = await fetch(apiUrl, { method:'PUT', headers:{ Authorization:'token '+GITHUB_TOKEN, Accept:'application/vnd.github.v3+json', 'Content-Type':'application/json' }, body: JSON.stringify(body) });
+    if(!res.ok){ var e2=await res.json(); log('GitHub 上传失败: '+(e2.message||res.status), false); document.getElementById('publish-btn').disabled=false; return; }
+    log('HTML 文件已上传', true);
+  }catch(e){ log('上传失败: '+e.message, false); document.getElementById('publish-btn').disabled=false; return; }
+
+  log('正在写入 Supabase...');
+  var ins = await _sb.from('editions').insert({ vol_number:vol, date:isoDate, title:title, html_url:htmlUrl, rarity:rarity });
+  if(ins.error){ log('Supabase 写入失败: '+ins.error.message, false); document.getElementById('publish-btn').disabled=false; return; }
+  log('editions 数据已写入', true);
+
+  document.getElementById('ed-ok').style.display = 'block';
+  document.getElementById('publish-btn').disabled = false;
+  _selectedFile = null; _selectedFileContent = null;
+  document.getElementById('drop-filename').textContent = '';
+  document.getElementById('f-vol').value = '';
+  document.getElementById('f-date').value = '';
+  document.getElementById('f-title').value = '';
+  setTimeout(loadEditions, 1500);
+}
+
 </script>
 </body>
 </html>
