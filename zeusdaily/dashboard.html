@@ -144,13 +144,23 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .notif-body{flex:1;}
 .notif-text{font-size:12px;color:var(--text);line-height:1.6;}
 .notif-time{font-size:10px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:3px;}
-.col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;}
-.col-card{aspect-ratio:0.7;background:var(--surface);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all 0.2s;padding:16px 12px;position:relative;overflow:hidden;}
-.col-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 28px rgba(184,150,74,0.12);}
-.col-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-.col-card .vol{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text4);}
-.col-card .col-title{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:var(--text);text-align:center;line-height:1.4;}
-.col-card .col-date{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;text-align:center;}
+.col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:16px;}
+.col-card{
+  aspect-ratio:0.65;
+  background:linear-gradient(160deg,#1a0e2e 0%,#110820 60%,#0d0618 100%);
+  border:1px solid rgba(123,86,184,0.35);
+  border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;cursor:pointer;transition:all 0.25s;padding:18px 14px;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 20px rgba(91,43,140,0.18);
+}
+.col-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(184,150,74,0.6),rgba(123,86,184,0.6),transparent);}
+.col-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(123,86,184,0.08) 0%,transparent 70%);pointer-events:none;}
+.col-card:hover{border-color:rgba(184,150,74,0.6);transform:translateY(-4px);box-shadow:0 12px 36px rgba(91,43,140,0.32),0 0 0 1px rgba(184,150,74,0.15);}
+.col-card .vol{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(184,150,74,0.7);text-transform:uppercase;}
+.col-card .col-title{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:#e8dff8;text-align:center;line-height:1.5;}
+.col-card .col-date{font-size:9px;color:rgba(176,136,249,0.55);font-family:'DM Mono',monospace;text-align:center;letter-spacing:1px;}
 .lv-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;border:1px solid var(--border);margin-bottom:6px;transition:all 0.15s;}
 .lv-row.current{background:rgba(123,86,184,0.06);border-color:rgba(123,86,184,0.3);}
 .lv-row.locked{opacity:0.35;}
@@ -605,13 +615,8 @@ window.doLogout = function(){
     <!-- COLLECTION -->
     <div class="page" id="page-collection">
       <div class="section-head"><div class="section-title zh-only">我的收藏</div><div class="section-title en-only">My Collection</div><div class="section-line"></div><div class="section-sub" id="col-count-text"><span class="zh-only">加载中</span></div></div>
-      <div class="col-grid">
-        <div id="home-col-preview" style="display:contents;"><div style="color:var(--text4);font-size:12px;padding:16px;grid-column:1/-1;">加载中…</div></div>
-          <div class="col-date">Mar 12, 2026</div>
-          <div class="badge badge-read" style="font-size:8px;"><span class="zh-only">已读</span><span class="en-only">READ</span></div>
-        </div>
-        <div class="col-card" style="opacity:0.3;cursor:not-allowed;pointer-events:none;"><div style="font-size:24px;">🔒</div><div class="col-title zh-only" style="font-size:10px;">未解锁</div><div class="col-title en-only" style="font-size:10px;">Locked</div></div>
-        <div class="col-card" style="opacity:0.3;cursor:not-allowed;pointer-events:none;"><div style="font-size:24px;">🔒</div><div class="col-title zh-only" style="font-size:10px;">未解锁</div><div class="col-title en-only" style="font-size:10px;">Locked</div></div>
+      <div class="col-grid" id="collection-grid">
+        <div style="color:var(--text4);font-size:12px;padding:16px;grid-column:1/-1;">加载中…</div>
       </div>
     </div>
 
@@ -1183,26 +1188,35 @@ window.loadCollection = function(){
   if(!user) return;
   var grid = document.getElementById('collection-grid');
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  // Load all editions as "collected" (every reader collects all published issues)
-  _sb.from('editions').select('*').order('vol_number',{ascending:false}).then(function(r){
-    if(!r.data || !r.data.length){
-      if(grid) grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;">暂无藏品</div>';
+  var empty = '<div style="padding:48px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px;grid-column:1/-1;"><span class=\"zh-only\">还没有收藏 · 在期刊页点击 ⚡ 开始收藏</span><span class=\"en-only\">No collections yet · Click ⚡ on an issue to collect</span></div>';
+  // Load only editions the user has collected via collections table
+  _sb.from('collections').select('edition_id, collected_at').eq('user_id', user.id).then(function(colRes){
+    if(!colRes.data || !colRes.data.length){
+      if(grid){ grid.innerHTML = empty; if(window.applyLang) applyLang(getLang()); }
+      var cnt = document.getElementById('col-count-text');
+      if(cnt) cnt.innerHTML = '<span class="zh-only">0 件藏品</span><span class="en-only">0 items</span>';
       return;
     }
-    var eyeSvg = '<svg viewBox="0 0 120 52" width="80" height="35" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="cNeb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="cClip"><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath></defs><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/><g clip-path="url(#cClip)"><circle cx="60" cy="26" r="14" fill="url(#cNeb)"/><circle cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g></svg>';
-    var html = r.data.map(function(e){
-      var d = new Date(e.date);
-      var dateStr = MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
-      var isGenesis = e.vol_number === 1;
-      var volStr = 'VOL.'+String(e.vol_number).padStart(3,'0');
-      var badge = isGenesis ? '<div class="badge badge-special" style="font-size:8px;"><span>GENESIS</span></div>' : '<div class="badge badge-read" style="font-size:8px;"><span>READ</span></div>';
-      var clickAttr = e.html_url ? ' onclick="window.open(\''+e.html_url+'\')" style="cursor:pointer;"' : '';
-      return '<div class="col-card"'+clickAttr+'><div class="vol">'+volStr+'</div>'+eyeSvg+'<div class="col-title">'+e.title+'</div><div class="col-date">'+dateStr+'</div>'+badge+'</div>';
-    }).join('');
-    if(grid) grid.innerHTML = html;
-    var cnt = document.getElementById('col-count-text');
-    if(cnt) cnt.innerHTML = '<span class="zh-only">'+r.data.length+' 件藏品</span><span class="en-only">'+r.data.length+' items</span>';
-    if(window.applyLang) applyLang(getLang());
+    var editionIds = colRes.data.map(function(c){ return c.edition_id; });
+    _sb.from('editions').select('*').in('id', editionIds).order('vol_number',{ascending:false}).then(function(r){
+      if(!r.data || !r.data.length){
+        if(grid){ grid.innerHTML = empty; if(window.applyLang) applyLang(getLang()); }
+        return;
+      }
+      var eyeSvg = '<svg viewBox="0 0 120 52" width="80" height="35" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="cNeb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="cClip"><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath></defs><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/><g clip-path="url(#cClip)"><circle cx="60" cy="26" r="14" fill="url(#cNeb)"/><circle cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g></svg>';
+      var html = r.data.map(function(e){
+        var d = new Date(e.date);
+        var dateStr = MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+        var volStr = 'VOL.'+String(e.vol_number).padStart(3,'0');
+        var badge = e.vol_number===1 ? '<div class="badge badge-special" style="font-size:8px;"><span>GENESIS</span></div>' : '<div class="badge badge-new" style="font-size:8px;"><span>⚡</span></div>';
+        var clickAttr = e.html_url ? ' onclick="window.open(\''+e.html_url+'\',\'_blank\')" style="cursor:pointer;"' : '';
+        return '<div class="col-card"'+clickAttr+'><div class="vol">'+volStr+'</div>'+eyeSvg+'<div class="col-title">'+e.title+'</div><div class="col-date">'+dateStr+'</div>'+badge+'</div>';
+      }).join('');
+      if(grid) grid.innerHTML = html;
+      var cnt = document.getElementById('col-count-text');
+      if(cnt) cnt.innerHTML = '<span class="zh-only">'+r.data.length+' 件藏品</span><span class="en-only">'+r.data.length+' items</span>';
+      if(window.applyLang) applyLang(getLang());
+    });
   });
 };
 
@@ -1331,17 +1345,7 @@ window.loadHomePage = function(){
     prev.innerHTML = html || '<div style="color:var(--text4);font-size:12px;padding:16px;">暂无期刊</div>';
     if(window.applyLang) applyLang(getLang());
   });
-  // Home collection preview
-  _sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(2).then(function(r){
-    var prev = document.getElementById('home-col-preview');
-    if(!prev || !r.data) return;
-    var eyeSvg = '<svg viewBox="0 0 120 52" width="80" height="35" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="hNeb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient><clipPath id="hClip"><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath></defs><path d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/><g clip-path="url(#hClip)"><circle cx="60" cy="26" r="14" fill="url(#hNeb)"/><circle cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g></svg>';
-    var html = r.data.map(function(e){
-      var click = e.html_url?' onclick="window.open(\''+e.html_url+'\')" style="cursor:pointer;"':'';
-      return '<div class="col-card"'+click+'><div class="vol">VOL.'+String(e.vol_number).padStart(3,'0')+'</div>'+eyeSvg+'<div class="col-title">'+e.title+'</div><div class="col-date">'+MONTHS[new Date(e.date).getMonth()]+' '+new Date(e.date).getDate()+', '+new Date(e.date).getFullYear()+'</div></div>';
-    }).join('');
-    prev.innerHTML = html;
-  });
+
   // Ref count = other users count
   _sb.from('profiles').select('*',{count:'exact',head:true}).then(function(r){
     var el = document.getElementById('ref-count');
