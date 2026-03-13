@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zeus Daily · Login</title>
+<!-- Open Graph -->
+<meta property="og:type"        content="website"/>
+<meta property="og:site_name"   content="Zeus Daily"/>
+<meta property="og:title"       content="ZEUS DAILY · The God's Eye View"/>
+<meta property="og:description" content="每日一份神眼视角全球要闻 · AI精选 · 上帝视角"/>
+<meta property="og:image"       content="https://zeusdaily.blog/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url"         content="https://zeusdaily.blog"/>
+<!-- Twitter / X -->
+<meta name="twitter:card"        content="summary_large_image"/>
+<meta name="twitter:title"       content="ZEUS DAILY · The God's Eye View"/>
+<meta name="twitter:description" content="每日一份神眼视角全球要闻 · AI精选 · 上帝视角"/>
+<meta name="twitter:image"       content="https://zeusdaily.blog/og-cover.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -361,6 +375,7 @@ html,body{
 
 /* ── BOTTOM ROD (same as top) ── */
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -475,18 +490,19 @@ html,body{
       <div class="form-panel" id="panel-login">
         <div class="form-group">
           <label><span class="zh-only">电子邮件</span><span class="en-only">EMAIL</span></label>
-          <input type="email" placeholder="your@email.com"/>
+          <input id="login-email" type="email" placeholder="your@email.com"/>
         </div>
         <div class="form-group">
           <label><span class="zh-only">密码</span><span class="en-only">PASSWORD</span></label>
-          <input type="password" placeholder="••••••••"/>
+          <input id="login-password" type="password" placeholder="••••••••"/>
         </div>
-        <button class="btn-primary">
+        <div id="login-error" style="display:none;font-size:11px;color:#c0392b;font-family:'DM Sans',sans-serif;margin-bottom:8px;padding:8px 10px;background:rgba(192,57,43,0.08);border-radius:6px;border:1px solid rgba(192,57,43,0.2);"></div>
+        <button id="btn-login" class="btn-primary">
           <span class="zh-only">登入 · ENTER</span>
           <span class="en-only">SIGN IN · ENTER</span>
         </button>
         <div class="or-line"><span>OR</span></div>
-        <button class="btn-google">
+        <button id="btn-google" class="btn-google">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -502,13 +518,15 @@ html,body{
       <div class="form-panel" id="panel-register" style="display:none">
         <div class="form-group">
           <label><span class="zh-only">电子邮件</span><span class="en-only">EMAIL</span></label>
-          <input type="email" placeholder="your@email.com"/>
+          <input id="reg-email" type="email" placeholder="your@email.com"/>
         </div>
         <div class="form-group">
           <label><span class="zh-only">密码</span><span class="en-only">PASSWORD</span></label>
-          <input type="password" placeholder="••••••••"/>
+          <input id="reg-password" type="password" placeholder="••••••••"/>
         </div>
-        <button class="btn-primary">
+        <div id="reg-error" style="display:none;font-size:11px;color:#c0392b;font-family:'DM Sans',sans-serif;margin-bottom:8px;padding:8px 10px;background:rgba(192,57,43,0.08);border-radius:6px;border:1px solid rgba(192,57,43,0.2);"></div>
+        <div id="reg-success" style="display:none;font-size:11px;color:#2e7d5a;font-family:'DM Sans',sans-serif;margin-bottom:8px;padding:8px 10px;background:rgba(46,125,90,0.08);border-radius:6px;border:1px solid rgba(46,125,90,0.2);"></div>
+        <button id="btn-register" class="btn-primary">
           <span class="zh-only">创建账号</span>
           <span class="en-only">CREATE ACCOUNT</span>
         </button>
@@ -820,6 +838,117 @@ function setLang(lang){
   var saved = 'zh';
   try{ saved = localStorage.getItem('zeus-lang') || 'zh'; }catch(e){}
   applyLang(saved);
+})();
+
+// ── SUPABASE AUTH ──
+(function(){
+  var SUPABASE_URL = 'https://ruuksrwlgsenkkkapbu.supabase.co';
+  var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
+  var client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  var lang = function(){ try{ return localStorage.getItem('zeus-lang')||'zh'; }catch(e){ return 'zh'; } };
+
+  // If already logged in → go straight to dashboard
+  client.auth.getSession().then(function(res){
+    if(res.data && res.data.session) window.location.href = 'dashboard.html';
+  });
+
+  // Handle OAuth redirect (Google callback lands back here)
+  client.auth.onAuthStateChange(function(event, session){
+    if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session){
+      window.location.href = 'dashboard.html';
+    }
+  });
+
+  function setLoading(btn, loading){
+    btn.disabled = loading;
+    btn.style.opacity = loading ? '0.6' : '1';
+  }
+
+  function showError(elId, msg){
+    var el = document.getElementById(elId);
+    if(!el) return;
+    el.textContent = msg;
+    el.style.display = msg ? 'block' : 'none';
+  }
+
+  // ── Email / Password Login ──
+  var btnLogin = document.getElementById('btn-login');
+  if(btnLogin){
+    btnLogin.addEventListener('click', function(){
+      var email = (document.getElementById('login-email')||{}).value || '';
+      var pass  = (document.getElementById('login-password')||{}).value || '';
+      showError('login-error', '');
+      if(!email || !pass){
+        showError('login-error', lang()==='zh' ? '请填写邮件和密码' : 'Please enter email and password');
+        return;
+      }
+      setLoading(btnLogin, true);
+      client.auth.signInWithPassword({ email: email, password: pass }).then(function(res){
+        setLoading(btnLogin, false);
+        if(res.error){
+          var msg = res.error.message || '';
+          if(msg.indexOf('Invalid') >= 0 || msg.indexOf('credentials') >= 0)
+            msg = lang()==='zh' ? '邮件或密码错误' : 'Invalid email or password';
+          showError('login-error', msg);
+        } else {
+          window.location.href = 'dashboard.html';
+        }
+      });
+    });
+  }
+
+  // Enter key triggers login
+  ['login-email','login-password'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.addEventListener('keydown', function(e){ if(e.key==='Enter' && btnLogin) btnLogin.click(); });
+  });
+
+  // ── Google OAuth ──
+  var btnGoogle = document.getElementById('btn-google');
+  if(btnGoogle){
+    btnGoogle.addEventListener('click', function(){
+      setLoading(btnGoogle, true);
+      client.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/dashboard.html' }
+      }).then(function(res){
+        if(res.error){
+          setLoading(btnGoogle, false);
+          showError('login-error', res.error.message || (lang()==='zh' ? 'Google 登录失败' : 'Google sign-in failed'));
+        }
+        // On success browser redirects automatically — no need to do anything
+      });
+    });
+  }
+
+  // ── Register ──
+  var btnReg = document.getElementById('btn-register');
+  if(btnReg){
+    btnReg.addEventListener('click', function(){
+      var email = (document.getElementById('reg-email')||{}).value || '';
+      var pass  = (document.getElementById('reg-password')||{}).value || '';
+      showError('reg-error', '');
+      showError('reg-success', '');
+      if(!email || !pass){
+        showError('reg-error', lang()==='zh' ? '请填写邮件和密码' : 'Please enter email and password');
+        return;
+      }
+      if(pass.length < 6){
+        showError('reg-error', lang()==='zh' ? '密码至少 6 位' : 'Password must be at least 6 characters');
+        return;
+      }
+      setLoading(btnReg, true);
+      client.auth.signUp({ email: email, password: pass }).then(function(res){
+        setLoading(btnReg, false);
+        if(res.error){
+          showError('reg-error', res.error.message);
+        } else {
+          showError('reg-success', lang()==='zh' ? '✓ 注册成功！请检查邮箱验证链接' : '✓ Account created! Check your email to verify.');
+        }
+      });
+    });
+  }
 })();
 </script>
 </body>
