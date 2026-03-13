@@ -470,7 +470,7 @@ window.doLogout = function(){
 
 <div id="main">
   <div id="topbar">
-    <div class="topbar-title" id="page-title"><span class="zh-only">今日概览</span><span class="en-only">Overview</span></div>
+    <div class="topbar-title" id="page-title"></div>
     <div class="topbar-date" id="page-date"></div>
     <div class="lang-toggle" style="margin-left:auto;"><button class="lang-btn" id="btn-zh" data-lang="zh">中文</button><button class="lang-btn" id="btn-en" data-lang="en">EN</button></div>
     <div class="topbar-icon" data-page="notifications"><svg fill="none" viewBox="0 0 14 14"><path d="M7 1.5C4.5 1.5 3 3.5 3 5.5v3L1.5 10h11L11 8.5v-3C11 3.5 9.5 1.5 7 1.5z" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 10.5s0 2 1.5 2 1.5-2 1.5-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
@@ -756,8 +756,8 @@ window.doLogout = function(){
 </div>
 
 <script>
-var pageTitlesZh={home:'今日概览',issues:'所有期数',collection:'我的收藏',friends:'好友',profile:'个人档案',settings:'设置',notifications:'通知'};
-var pageTitlesEn={home:'Overview',issues:'All Issues',collection:'My Collection',friends:'Friends',profile:'Profile',settings:'Settings',notifications:'Notifications'};
+var pageTitlesZh={home:'',issues:'所有期数',collection:'我的收藏',friends:'好友',profile:'个人档案',settings:'设置',notifications:'通知'};
+var pageTitlesEn={home:'',issues:'All Issues',collection:'My Collection',friends:'Friends',profile:'Profile',settings:'Settings',notifications:'Notifications'};
 
 function getLang(){try{return localStorage.getItem('zeus-lang')||'zh';}catch(e){return 'zh';}}
 
@@ -1026,7 +1026,7 @@ document.addEventListener('click', function(ev){
     if(id==='profile') setTimeout(loadProfilePage, 0);
     if(id==='collection') setTimeout(loadCollection, 0);
     if(id==='notifications') setTimeout(loadNotifications, 0);
-    if(id==='friends') setTimeout(loadFriends, 0);
+    if(id==='friends') { setTimeout(loadFriends, 0); setTimeout(renderFriends, 100); }
   };
 
   // Also init if issues is the active page on load
@@ -1207,12 +1207,7 @@ document.addEventListener('click', function(ev){
     }
   });
 
-  // ── Hook into goPage ──
-  var _orig2 = window.goPage;
-  window.goPage = function(id){
-    _orig2(id);
-
-  };
+  // goPage hook removed - handled by main goPage
 
   window.addEventListener('load', function(){
     var ap = document.querySelector('.page.active');
