@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeus Daily · Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0612;--bg2:#120a1e;--surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.07);
+  --border:rgba(184,150,74,0.2);--border2:rgba(184,150,74,0.4);
+  --gold:#b8964a;--gold2:#d4aa5a;--gold-bg:rgba(184,150,74,0.1);
+  --violet:#7b56b8;--purple:#5c3d8f;
+  --text:#f0e8d8;--text2:#b8a8c8;--text3:#7a6a8a;
+  --green:#3dba7a;--red:#e05555;
+  --sidebar:220px;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;}
+
+/* ── LAYOUT ── */
+.shell{display:flex;min-height:100vh;}
+.sidebar{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;}
+.main{margin-left:var(--sidebar);flex:1;padding:32px;}
+
+/* ── SIDEBAR ── */
+.sb-logo{padding:24px 20px 16px;border-bottom:1px solid var(--border);}
+.sb-logo-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:900;color:var(--gold);letter-spacing:3px;}
+.sb-logo-sub{font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:2px;}
+.sb-nav{padding:16px 0;flex:1;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;color:var(--text2);font-size:13px;transition:all 0.2s;border-left:2px solid transparent;}
+.sb-item:hover{background:var(--surface);color:var(--text);}
+.sb-item.active{background:var(--gold-bg);color:var(--gold);border-left-color:var(--gold);}
+.sb-item svg{opacity:0.7;flex-shrink:0;}
+.sb-item.active svg{opacity:1;}
+.sb-footer{padding:16px 20px;border-top:1px solid var(--border);}
+.sb-user{font-size:11px;color:var(--text3);}
+.sb-user span{color:var(--text2);display:block;margin-bottom:2px;}
+.logout-btn{margin-top:8px;font-size:11px;color:var(--red);cursor:pointer;opacity:0.7;}
+.logout-btn:hover{opacity:1;}
+
+/* ── PAGES ── */
+.page{display:none;}
+.page.active{display:block;}
+.page-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--gold);margin-bottom:4px;}
+.page-sub{font-size:12px;color:var(--text3);margin-bottom:28px;}
+
+/* ── STAT CARDS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.stat-val{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:var(--gold);line-height:1;}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:6px;letter-spacing:1px;}
+
+/* ── TABLE ── */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;}
+.table-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.table-title{font-size:13px;font-weight:500;color:var(--text);}
+table{width:100%;border-collapse:collapse;}
+th{padding:10px 16px;text-align:left;font-size:10px;color:var(--text3);letter-spacing:1.5px;border-bottom:1px solid var(--border);font-weight:500;font-family:'DM Mono',monospace;}
+td{padding:12px 16px;font-size:13px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.04);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--surface2);}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:1px;}
+.badge-gold{background:rgba(184,150,74,0.15);color:var(--gold);border:1px solid rgba(184,150,74,0.3);}
+.badge-violet{background:rgba(123,86,184,0.15);color:#a080e0;border:1px solid rgba(123,86,184,0.3);}
+.badge-green{background:rgba(61,186,122,0.12);color:var(--green);border:1px solid rgba(61,186,122,0.3);}
+.badge-red{background:rgba(224,85,85,0.12);color:var(--red);border:1px solid rgba(224,85,85,0.3);}
+
+/* ── FORM ── */
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:24px;}
+.form-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+label{font-size:10px;color:var(--text3);letter-spacing:1.5px;font-family:'DM Mono',monospace;}
+input,select,textarea{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border 0.2s;}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);}
+select option{background:#1a0f2e;}
+textarea{resize:vertical;min-height:60px;}
+.btn{padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--violet));color:white;}
+.btn-primary:hover{opacity:0.85;}
+.btn-danger{background:rgba(224,85,85,0.15);color:var(--red);border:1px solid rgba(224,85,85,0.3);}
+.btn-danger:hover{background:rgba(224,85,85,0.25);}
+.btn-sm{padding:5px 12px;font-size:11px;}
+.msg{padding:10px 14px;border-radius:6px;font-size:12px;margin-top:12px;display:none;}
+.msg-ok{background:rgba(61,186,122,0.12);color:var(--green);border:1px solid rgba(61,186,122,0.3);}
+.msg-err{background:rgba(224,85,85,0.12);color:var(--red);border:1px solid rgba(224,85,85,0.3);}
+
+/* ── AUTH WALL ── */
+#auth-wall{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);}
+.auth-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:40px;width:340px;text-align:center;}
+.auth-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);margin-bottom:6px;}
+.auth-sub{font-size:12px;color:var(--text3);margin-bottom:24px;}
+.auth-box input{width:100%;margin-bottom:10px;}
+.auth-box .btn{width:100%;}
+#auth-err{font-size:11px;color:var(--red);margin-top:8px;display:none;}
+
+/* ── LOADING ── */
+.loading{color:var(--text3);font-size:12px;padding:20px;text-align:center;}
+.dot{display:inline-block;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);}
+</style>
+</head>
+<body>
+
+<!-- AUTH WALL -->
+<div id="auth-wall">
+  <div class="auth-box">
+    <div class="auth-title">ZEUS DAILY</div>
+    <div class="auth-sub">Admin Access Only</div>
+    <input id="a-email" type="email" placeholder="Admin email">
+    <input id="a-pass" type="password" placeholder="Password">
+    <button class="btn btn-primary" onclick="doLogin()">进入后台</button>
+    <div id="auth-err">无权限或密码错误</div>
+  </div>
+</div>
+
+<!-- MAIN SHELL -->
+<div class="shell" id="app" style="display:none;">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-title">ZEUS DAILY</div>
+      <div class="sb-logo-sub">ADMIN CONSOLE</div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-item active" onclick="showPage('overview')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+        总览
+      </div>
+      <div class="sb-item" onclick="showPage('editions')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        期刊管理
+      </div>
+      <div class="sb-item" onclick="showPage('users')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M2 13c0-2.761 2.686-5 6-5s6 2.239 6 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        用户管理
+      </div>
+      <div class="sb-item" onclick="showPage('checkins')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v4M11 1v4M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        签到统计
+      </div>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-user"><span id="admin-name">—</span>Admin</div>
+      <div class="logout-btn" onclick="doLogout()">退出登录</div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="page-overview">
+      <div class="page-title">总览</div>
+      <div class="page-sub">Zeus Daily 运营数据</div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="s-users">—</div><div class="stat-lbl">注册用户</div></div>
+        <div class="stat-card"><div class="stat-val" id="s-editions">—</div><div class="stat-lbl">已发期数</div></div>
+        <div class="stat-card"><div class="stat-val" id="s-checkins">—</div><div class="stat-lbl">今日签到</div></div>
+        <div class="stat-card"><div class="stat-val" id="s-total-checkins">—</div><div class="stat-lbl">累计签到</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">最近注册用户</div></div>
+        <table>
+          <thead><tr><th>用户名</th><th>等级</th><th>EXP</th><th>连续天数</th><th>注册时间</th></tr></thead>
+          <tbody id="recent-users"><tr><td colspan="5" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EDITIONS -->
+    <div class="page" id="page-editions">
+      <div class="page-title">期刊管理</div>
+      <div class="page-sub">添加和管理每日期刊</div>
+
+      <div class="form-card">
+        <div class="form-title">发布新一期</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>VOL 期数</label>
+            <input id="f-vol" type="number" placeholder="4" min="1">
+          </div>
+          <div class="form-group">
+            <label>发布日期</label>
+            <input id="f-date" type="date">
+          </div>
+          <div class="form-group full">
+            <label>标题</label>
+            <input id="f-title" type="text" placeholder="Zeus Daily · Vol.004 · 2026.03.14">
+          </div>
+          <div class="form-group full">
+            <label>HTML 文件 URL（在 zeusdaily.blog 上的路径）</label>
+            <input id="f-url" type="text" placeholder="https://zeusdaily.blog/zeus-daily-20260314.html">
+          </div>
+          <div class="form-group">
+            <label>稀有度</label>
+            <select id="f-rarity">
+              <option value="standard">Standard</option>
+              <option value="rare">Rare</option>
+              <option value="legendary">Legendary</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>总份数（留空=无限）</label>
+            <input id="f-copies" type="number" placeholder="999">
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;align-items:center;">
+          <button class="btn btn-primary" onclick="addEdition()">发布</button>
+          <button class="btn" style="background:var(--surface2);color:var(--text2);" onclick="autoFill()">自动填入今日</button>
+        </div>
+        <div class="msg msg-ok" id="ed-ok">✓ 发布成功</div>
+        <div class="msg msg-err" id="ed-err"></div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">所有期刊</div></div>
+        <table>
+          <thead><tr><th>VOL</th><th>日期</th><th>标题</th><th>稀有度</th><th>URL</th><th>操作</th></tr></thead>
+          <tbody id="editions-list"><tr><td colspan="6" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="page" id="page-users">
+      <div class="page-title">用户管理</div>
+      <div class="page-sub">所有注册用户</div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">用户列表</div>
+          <input style="width:200px;padding:6px 10px;font-size:12px;" placeholder="搜索用户名..." oninput="filterUsers(this.value)">
+        </div>
+        <table>
+          <thead><tr><th>用户名</th><th>等级</th><th>EXP</th><th>连续天数</th><th>最后签到</th><th>邀请码</th></tr></thead>
+          <tbody id="users-list"><tr><td colspan="6" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CHECKINS -->
+    <div class="page" id="page-checkins">
+      <div class="page-title">签到统计</div>
+      <div class="page-sub">每日签到数据</div>
+      <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
+        <div class="stat-card"><div class="stat-val" id="c-today">—</div><div class="stat-lbl">今日签到</div></div>
+        <div class="stat-card"><div class="stat-val" id="c-week">—</div><div class="stat-lbl">本周签到</div></div>
+        <div class="stat-card"><div class="stat-val" id="c-total">—</div><div class="stat-lbl">累计签到</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-header"><div class="table-title">最近签到记录</div></div>
+        <table>
+          <thead><tr><th>用户名</th><th>签到日期</th></tr></thead>
+          <tbody id="checkins-list"><tr><td colspan="2" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var SUPABASE_URL  = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
+var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3NlbmtramthcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
+// ⚠️ Replace with your actual anon key from Supabase Settings → API
+var ADMIN_EMAIL   = 'thunderchico55@gmail.com'; // Only this email can access
+
+var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+var _allUsers = [];
+
+// ── AUTH ──
+function doLogin(){
+  var email = document.getElementById('a-email').value.trim();
+  var pass  = document.getElementById('a-pass').value;
+  if(email !== ADMIN_EMAIL){ showAuthErr(); return; }
+  _sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
+    if(res.error){ showAuthErr(); return; }
+    bootAdmin(res.data.session.user);
+  });
+}
+
+function showAuthErr(){
+  document.getElementById('auth-err').style.display='block';
+}
+
+function bootAdmin(user){
+  document.getElementById('auth-wall').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('admin-name').textContent = user.email.split('@')[0] + ' · ';
+  loadAll();
+}
+
+function doLogout(){
+  _sb.auth.signOut().then(function(){ window.location.reload(); });
+}
+
+// Check existing session
+_sb.auth.getSession().then(function(res){
+  if(res.data && res.data.session && res.data.session.user.email === ADMIN_EMAIL){
+    bootAdmin(res.data.session.user);
+  }
+});
+
+// Enter key
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter' && document.getElementById('auth-wall').style.display!=='none') doLogin();
+});
+
+// ── NAVIGATION ──
+function showPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active');});
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── LOAD ALL DATA ──
+function loadAll(){
+  loadOverview();
+  loadEditions();
+  loadUsers();
+  loadCheckins();
+}
+
+function loadOverview(){
+  // User count
+  _sb.from('profiles').select('*',{count:'exact',head:true}).then(function(r){
+    document.getElementById('s-users').textContent = r.count || 0;
+  });
+  // Edition count
+  _sb.from('editions').select('*',{count:'exact',head:true}).then(function(r){
+    document.getElementById('s-editions').textContent = r.count || 0;
+  });
+  // Today checkins
+  var today = new Date().toISOString().slice(0,10);
+  _sb.from('checkins').select('*',{count:'exact',head:true}).eq('checked_in_at',today).then(function(r){
+    document.getElementById('s-checkins').textContent = r.count || 0;
+    document.getElementById('c-today').textContent = r.count || 0;
+  });
+  // Total checkins
+  _sb.from('checkins').select('*',{count:'exact',head:true}).then(function(r){
+    document.getElementById('s-total-checkins').textContent = r.count || 0;
+    document.getElementById('c-total').textContent = r.count || 0;
+  });
+  // Week checkins
+  var weekAgo = new Date(Date.now()-7*86400000).toISOString().slice(0,10);
+  _sb.from('checkins').select('*',{count:'exact',head:true}).gte('checked_in_at',weekAgo).then(function(r){
+    document.getElementById('c-week').textContent = r.count || 0;
+  });
+  // Recent users
+  _sb.from('profiles').select('display_name,level,exp,streak,joined_at').order('joined_at',{ascending:false}).limit(8).then(function(r){
+    if(!r.data){ return; }
+    var html = r.data.map(function(u){
+      return '<tr><td>'+(u.display_name||'—')+'</td><td><span class="badge badge-violet">Lv.'+u.level+'</span></td><td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+u.exp+'</td><td>'+u.streak+' 天</td><td style="color:var(--text3);font-size:11px;">'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</td></tr>';
+    }).join('');
+    document.getElementById('recent-users').innerHTML = html || '<tr><td colspan="5" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
+  });
+}
+
+// ── EDITIONS ──
+function loadEditions(){
+  _sb.from('editions').select('*').order('vol_number',{ascending:false}).then(function(r){
+    if(!r.data){ return; }
+    var html = r.data.map(function(e){
+      var rarityBadge = e.rarity==='legendary'?'badge-gold':(e.rarity==='rare'?'badge-violet':'');
+      return '<tr><td style="font-family:\'DM Mono\',monospace;color:var(--gold);">Vol.'+e.vol_number+'</td><td style="color:var(--text3);">'+e.date+'</td><td>'+e.title+'</td><td>'+(rarityBadge?'<span class="badge '+rarityBadge+'">'+e.rarity+'</span>':e.rarity)+'</td><td><a href="'+e.html_url+'" target="_blank" style="color:var(--violet);font-size:11px;">链接↗</a></td><td><button class="btn btn-danger btn-sm" onclick="deleteEdition('+e.id+')">删除</button></td></tr>';
+    }).join('');
+    document.getElementById('editions-list').innerHTML = html || '<tr><td colspan="6" style="text-align:center;color:var(--text3);">暂无期刊</td></tr>';
+  });
+}
+
+function autoFill(){
+  var now = new Date();
+  var dateStr = now.toISOString().slice(0,10);
+  var dateDisplay = dateStr.replace(/-/g,'.');
+  document.getElementById('f-date').value = dateStr;
+  _sb.from('editions').select('vol_number').order('vol_number',{ascending:false}).limit(1).then(function(r){
+    var nextVol = r.data && r.data[0] ? r.data[0].vol_number+1 : 1;
+    document.getElementById('f-vol').value = nextVol;
+    document.getElementById('f-title').value = 'Zeus Daily · Vol.'+String(nextVol).padStart(3,'0')+' · '+dateDisplay;
+    document.getElementById('f-url').value = 'https://zeusdaily.blog/zeus-daily-'+dateStr.replace(/-/g,'')+'.html';
+  });
+}
+
+function addEdition(){
+  var vol   = parseInt(document.getElementById('f-vol').value);
+  var date  = document.getElementById('f-date').value;
+  var title = document.getElementById('f-title').value.trim();
+  var url   = document.getElementById('f-url').value.trim();
+  var rarity= document.getElementById('f-rarity').value;
+  var copies= parseInt(document.getElementById('f-copies').value)||999;
+
+  if(!vol||!date||!title||!url){ showMsg('ed-err','请填写所有必填项'); return; }
+
+  _sb.from('editions').insert({vol_number:vol,date:date,title:title,html_url:url,rarity:rarity,total_copies:copies}).then(function(r){
+    if(r.error){ showMsg('ed-err',r.error.message); return; }
+    showMsg('ed-ok','');
+    loadEditions();
+    loadOverview();
+    // Clear form
+    ['f-vol','f-date','f-title','f-url','f-copies'].forEach(function(id){document.getElementById(id).value='';});
+  });
+}
+
+function deleteEdition(id){
+  if(!confirm('确认删除这期？')) return;
+  _sb.from('editions').delete().eq('id',id).then(function(r){
+    if(!r.error){ loadEditions(); loadOverview(); }
+  });
+}
+
+// ── USERS ──
+function loadUsers(){
+  _sb.from('profiles').select('display_name,level,exp,streak,last_checkin,ref_code').order('exp',{ascending:false}).then(function(r){
+    _allUsers = r.data || [];
+    renderUsers(_allUsers);
+  });
+}
+
+function renderUsers(users){
+  var LV = ['','Observer','Scholar','Prophet','Sage','Creator'];
+  var html = users.map(function(u){
+    return '<tr><td>'+(u.display_name||'—')+'</td><td><span class="badge badge-violet">Lv.'+u.level+' · '+(LV[u.level]||'')+'</span></td><td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+u.exp+'</td><td>'+u.streak+' 天</td><td style="color:var(--text3);font-size:11px;">'+(u.last_checkin||'—')+'</td><td style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--text3);">'+(u.ref_code||'—')+'</td></tr>';
+  }).join('');
+  document.getElementById('users-list').innerHTML = html || '<tr><td colspan="6" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
+}
+
+function filterUsers(q){
+  var filtered = _allUsers.filter(function(u){ return !q || (u.display_name||'').toLowerCase().includes(q.toLowerCase()); });
+  renderUsers(filtered);
+}
+
+// ── CHECKINS ──
+function loadCheckins(){
+  _sb.from('checkins').select('checked_in_at,user_id').order('checked_in_at',{ascending:false}).limit(50).then(function(r){
+    if(!r.data){ return; }
+    // Get user names
+    var userIds = [...new Set(r.data.map(function(c){return c.user_id;}))];
+    _sb.from('profiles').select('id,display_name').in('id',userIds).then(function(pr){
+      var nameMap = {};
+      (pr.data||[]).forEach(function(p){ nameMap[p.id]=p.display_name; });
+      var html = r.data.map(function(c){
+        return '<tr><td>'+(nameMap[c.user_id]||c.user_id.slice(0,8)+'...')+'</td><td style="font-family:\'DM Mono\',monospace;color:var(--text3);">'+c.checked_in_at+'</td></tr>';
+      }).join('');
+      document.getElementById('checkins-list').innerHTML = html || '<tr><td colspan="2" style="text-align:center;color:var(--text3);">暂无记录</td></tr>';
+    });
+  });
+}
+
+// ── UTILS ──
+function showMsg(id,msg){
+  var el=document.getElementById(id);
+  if(!el) return;
+  el.style.display='block';
+  if(msg) el.textContent=msg;
+  setTimeout(function(){ el.style.display='none'; },3000);
+}
+</script>
+</body>
+</html>
