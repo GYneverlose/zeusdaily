@@ -718,7 +718,7 @@ function renderCol(){
   if(!collections.length){el.innerHTML='<div class="col-empty"><div class="ce-sym">◎</div><div class="ce-h">'+t('no_issue')+'</div><div class="ce-p">'+t('nav_archive')+' → ☆ '+t('saved')+'</div></div>';return;}
   var cols=editions.filter(function(e){return collections.indexOf(e.date)>=0;});
   el.innerHTML=cols.map(function(e){
-    return '<div class="issue-card"><div class="ic-idx"><div class="ic-vol">'+(e.vol||'?')+'</div><div class="ic-vl">Vol</div></div><div class="ic-body"><div class="ic-date">'+fmtDate(e.date)+'</div><div class="ic-title">'+(e.title||'Zeus Daily')+'</div><div class="ic-actions"><a class="ia-r" href="'+e.filename+'" target="_blank">'+t('read_now')+'</a><button class="ia-s saved" onclick="toggleSave(event,''+e.date+'',this)">★ '+t('saved')+'</button></div></div></div>';
+    return '<div class="issue-card"><div class="ic-idx"><div class="ic-vol">'+(e.vol||'?')+'</div><div class="ic-vl">Vol</div></div><div class="ic-body"><div class="ic-date">'+fmtDate(e.date)+'</div><div class="ic-title">'+(e.title||'Zeus Daily')+'</div><div class="ic-actions"><a class="ia-r" href="'+e.filename+'" target="_blank">'+t('read_now')+'</a><button class="ia-s saved" onclick="toggleSave(event,\''+e.date+'\',this)">★ '+t('saved')+'</button></div></div></div>';
   }).join('');
 }
 
