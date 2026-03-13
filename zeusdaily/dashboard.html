@@ -190,6 +190,8 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
   #main{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px));}
   #topbar{padding:0 14px;}
   #content{padding:14px;}
+  #mobile-brand{display:block !important;}
+  #page-title{display:none;}
   .hero-banner{flex-direction:column;gap:12px;padding:16px;}
   .hero-eye-wrap{display:none;}
   .hero-content{max-width:100%;}
@@ -199,6 +201,13 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
   .stat-value{font-size:22px;}
   .checkin-btn{padding:10px 14px;}
   #checkin-label{font-size:12px;}
+  /* Single column layouts on mobile */
+  .grid-2 { grid-template-columns:1fr !important; }
+  .profile-grid { grid-template-columns:1fr !important; }
+  /* Recent issues card - don't overflow */
+  .issue-title { font-size:12px; white-space:normal; word-break:break-word; }
+  /* Topbar compact */
+  .topbar-date { display:none; }
 }
 .bn-item{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -527,6 +536,7 @@ window.doLogout = function(){
 <div id="main">
   <div id="topbar">
     <div class="topbar-title" id="page-title"></div>
+    <div class="mobile-brand" id="mobile-brand" style="display:none;font-family:'Playfair Display',serif;font-weight:900;font-size:14px;letter-spacing:3px;color:var(--text);">ZEUS DAILY</div>
     <div class="topbar-date" id="page-date"></div>
     <div class="lang-toggle" style="margin-left:auto;"><button class="lang-btn" id="btn-zh" data-lang="zh">中文</button><button class="lang-btn" id="btn-en" data-lang="en">EN</button></div>
     <div class="topbar-icon" data-page="notifications"><svg fill="none" viewBox="0 0 14 14"><path d="M7 1.5C4.5 1.5 3 3.5 3 5.5v3L1.5 10h11L11 8.5v-3C11 3.5 9.5 1.5 7 1.5z" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 10.5s0 2 1.5 2 1.5-2 1.5-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
