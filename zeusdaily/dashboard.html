@@ -307,8 +307,8 @@ function applyProfileToUI(p){
   var lang = getLang ? getLang() : 'zh';
   var name = p.display_name || 'Reader';
   var avatar = name.charAt(0).toUpperCase();
-  var lv = p.level || 1;
   var exp = p.exp || 0;
+  var lv = calcLevel(exp);  // always calculate from EXP
   var streak = p.streak || 0;
   var nextExp = getLvExpNeeded(lv);
   var lvName = getLvName(lv, lang);
@@ -873,6 +873,7 @@ window.doCheckin=function(){
 
 // Event delegation — handles all nav/page/lang clicks safely, immune to Cloudflare injection
 document.addEventListener('click', function(ev){
+  // debug: uncomment to test → // console.log('click', ev.target.tagName, ev.target.className);
   var el = ev.target;
   // Walk up to find a data-page or data-lang element
   while(el && el !== document.body){
@@ -1119,7 +1120,7 @@ document.addEventListener('click', function(ev){
         return {
           name: p.display_name || 'Reader',
           avatar: (p.display_name||'R').charAt(0).toUpperCase(),
-          level: p.level || 1,
+          level: calcLevel(p.exp || 0),
           days: p.streak || 0,
           joined: p.joined_at ? p.joined_at.slice(0,10) : '2026-01-01',
           active: p.streak > 0
@@ -1389,8 +1390,8 @@ window.loadProfilePage = function(){
   if(!p) return;
   var LV_ZH = ['','观察者','学者','先知','圣人','造物主'];
   var LV_EN = ['','Observer','Scholar','Prophet','Sage','Creator'];
-  var lv = p.level || 1;
   var exp = p.exp || 0;
+  var lv = calcLevel(exp);  // always from EXP
   var nextExp = [0,300,500,1000,2000,9999][lv];
   var el = function(id){ return document.getElementById(id); };
   if(el('prof-lv')) el('prof-lv').textContent = lv;
