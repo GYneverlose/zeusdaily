@@ -3,960 +3,823 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zeus Daily · The God's Eye View</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Zeus Daily · Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-:root {
-  --gold: #b8964a;
-  --gold-light: #d4aa60;
-  --gold-dark: #8a6d2f;
-  --purple: #5c3d8f;
-  --purple-light: #8b5cf6;
-  --purple-deep: #2d1b4e;
-  --cream: #faf8f4;
-  --parchment: #f2ead8;
-  --parchment-dark: #e8dcc0;
+:root{
+  --gold:#b8964a;
+  --gold-dark:#8a6d2f;
+  --purple-deep:#03010a;
+  --purple-mid:#1a0a2e;
+  --purple-accent:#5c3d8f;
+  --purple-btn:#3d1f6e;
+  --ink:#2a1a48;
+  --parchment:#f5eedc;
+  --parchment-dark:#ddc9a5;
+  --rod:#2a1e3e;
 }
 
-html, body {
-  width: 100%; height: 100%;
-  overflow: hidden;
+html,body{
+  width:100%;height:100%;
+  background:var(--purple-deep);
+  overflow:hidden;
+  font-family:'IM Fell English',serif;
 }
 
-body {
-  background: #06020f;
-  font-family: 'Cormorant Garamond', serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+/* ── STAR FIELD ── */
+#stars{
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:0;
 }
 
-/* ======================== STORM BACKGROUND ======================== */
-.storm {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
+/* ── LIGHTNING CANVAS ── */
+#lightning{
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:1;
+  opacity:0.55;
 }
 
-/* Deep nebula — darker to contrast with scroll */
-.nebula {
-  position: absolute;
-  inset: 0;
+/* ── SCENE ── */
+#scene{
+  position:fixed;inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:10;
+}
+
+/* ── SCROLL WRAPPER ── */
+.scroll-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:300px;
+  filter:drop-shadow(0 0 40px rgba(92,61,143,0.5)) drop-shadow(0 20px 60px rgba(0,0,0,0.8));
+}
+
+/* ── TOP ROD ── */
+.rod{
+  width:100%;
+  height:28px;
+  background:linear-gradient(180deg,#3a2a50 0%,#1c1228 40%,#040308 100%);
+  border-radius:14px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 10px;
+  border-top:1px solid rgba(184,150,74,0.3);
+  border-bottom:1px solid rgba(0,0,0,0.8);
+  z-index:2;
+}
+.rod::before{
+  content:'';
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:60%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(184,150,74,0.4),transparent);
+}
+/* gold tick marks */
+.rod::after{
+  content:'';
+  position:absolute;
+  inset:6px 55px;
+  background:repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 8px,
+    rgba(184,150,74,0.18) 8px,
+    rgba(184,150,74,0.18) 9px
+  );
+}
+
+/* ── ROD KNOB ── */
+.knob{
+  width:46px;height:17px;
+  background:linear-gradient(180deg,#3a2a50,#0c0818);
+  border-radius:8.5px;
+  border:1px solid rgba(184,150,74,0.25);
+  flex-shrink:0;
+  position:relative;
+  z-index:3;
+  box-shadow:0 2px 8px rgba(0,0,0,0.6);
+}
+.knob::after{
+  content:'';
+  position:absolute;
+  top:3px;left:8px;right:8px;height:1px;
+  background:rgba(184,150,74,0.2);
+  border-radius:1px;
+}
+
+/* ── PARCHMENT BODY ── */
+.parchment{
+  width:100%;
+  background:linear-gradient(175deg,var(--parchment) 0%,#ece3cf 40%,var(--parchment-dark) 100%);
+  padding:28px 26px 24px;
+  position:relative;
+  overflow:hidden;
+  border-left:1px solid rgba(184,150,74,0.15);
+  border-right:1px solid rgba(184,150,74,0.15);
+}
+
+/* aged texture */
+.parchment::before{
+  content:'';
+  position:absolute;inset:0;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(35,10,70,0.85) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 70%, rgba(20,5,50,0.9) 0%, transparent 55%),
-    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(8,2,20,1) 0%, #03010a 70%);
+    radial-gradient(ellipse at 15% 20%, rgba(139,90,20,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 75%, rgba(100,60,10,0.05) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(180,140,80,0.03) 0%, transparent 70%);
+  pointer-events:none;
+}
+/* paper grain */
+.parchment::after{
+  content:'';
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  opacity:0.5;
+  pointer-events:none;
 }
 
-/* Stars */
-.stars {
-  position: absolute;
-  inset: 0;
+/* ── EYE HEADER ── */
+.eye-header{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  margin-bottom:18px;
+  position:relative;
+  z-index:1;
 }
 
-/* Lightning bolts - SVG animated */
-.lightning-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+.brand-title{
+  font-family:'Playfair Display',serif;
+  font-weight:900;
+  font-size:15px;
+  letter-spacing:4px;
+  color:var(--ink);
+  text-align:center;
+  margin-bottom:10px;
+  opacity:0.9;
+}
+.brand-sub{
+  font-size:8px;
+  letter-spacing:3px;
+  color:var(--gold-dark);
+  font-family:'Playfair Display',serif;
+  font-weight:400;
+  text-align:center;
+  margin-top:4px;
+  opacity:0.7;
 }
 
-/* Ambient glow pools */
-.glow-pool {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  animation: breathe 4s ease-in-out infinite;
-}
-.glow-pool-1 {
-  width: 500px; height: 300px;
-  top: -80px; left: -100px;
-  background: rgba(92,61,143,0.35);
-  animation-delay: 0s;
-}
-.glow-pool-2 {
-  width: 400px; height: 400px;
-  bottom: -100px; right: -80px;
-  background: rgba(60,30,120,0.3);
-  animation-delay: 1.5s;
-}
-.glow-pool-3 {
-  width: 300px; height: 200px;
-  top: 40%; left: 50%;
-  transform: translate(-50%,-50%);
-  background: rgba(139,92,246,0.15);
-  animation-delay: 0.8s;
+/* eye SVG container */
+.eye-wrap{
+  width:140px;height:61px;
+  margin:0 auto 2px;
 }
 
-@keyframes breathe {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.15); }
+/* ── DIVIDER ── */
+.divider{
+  width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(184,150,74,0.4),transparent);
+  margin:14px 0 16px;
+  position:relative;
+  z-index:1;
 }
 
-/* Floating particles */
-.particles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+/* ── TABS ── */
+.tabs{
+  display:flex;
+  gap:0;
+  margin-bottom:18px;
+  border-bottom:1px solid rgba(42,26,72,0.15);
+  position:relative;
+  z-index:1;
 }
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  animation: drift linear infinite;
+.tab-btn{
+  flex:1;
+  background:none;
+  border:none;
+  padding:7px 0 8px;
+  font-family:'Playfair Display',serif;
+  font-size:11px;
+  letter-spacing:2px;
+  color:rgba(42,26,72,0.45);
+  cursor:pointer;
+  transition:color 0.2s;
+  position:relative;
 }
-
-@keyframes drift {
-  0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 0.6; }
-  100% { transform: translateY(-100px) translateX(var(--dx)) scale(1.2); opacity: 0; }
+.tab-btn.active{
+  color:var(--ink);
 }
-
-/* ======================== LIGHTNING ======================== */
-.bolt {
-  position: absolute;
-  top: 0;
-  opacity: 0;
-  filter: blur(0.5px);
-  animation: flash-bolt var(--dur) ease-out var(--delay) infinite;
-}
-
-@keyframes flash-bolt {
-  0% { opacity: 0; }
-  2% { opacity: 1; filter: drop-shadow(0 0 12px #a78bfa) drop-shadow(0 0 30px #7c3aed); }
-  4% { opacity: 0.3; }
-  5% { opacity: 0.9; }
-  8% { opacity: 0; }
-  100% { opacity: 0; }
+.tab-btn.active::after{
+  content:'';
+  position:absolute;
+  bottom:-1px;left:15%;right:15%;height:2px;
+  background:var(--gold);
+  border-radius:1px;
 }
 
-/* Screen flash */
-.screen-flash {
-  position: fixed;
-  inset: 0;
-  background: rgba(139,92,246,0.08);
-  pointer-events: none;
-  z-index: 1;
-  animation: screen-flicker 7s ease-in-out infinite;
+/* ── LANG TOGGLE ── */
+.lang-toggle{
+  position:absolute;
+  top:14px;right:14px;
+  display:flex;gap:4px;
+  z-index:5;
+}
+.lang-btn{
+  font-family:'Playfair Display',serif;
+  font-size:9px;
+  letter-spacing:1.5px;
+  padding:3px 7px;
+  border-radius:3px;
+  border:1px solid rgba(42,26,72,0.2);
+  background:transparent;
+  color:rgba(42,26,72,0.45);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.lang-btn.active{
+  background:rgba(184,150,74,0.15);
+  border-color:var(--gold);
+  color:var(--gold-dark);
 }
 
-@keyframes screen-flicker {
-  0%, 100% { opacity: 0; }
-  14% { opacity: 1; }
-  14.5% { opacity: 0; }
-  15% { opacity: 0.6; }
-  15.8% { opacity: 0; }
-  41% { opacity: 0; }
-  41.3% { opacity: 0.8; }
-  41.9% { opacity: 0; }
+/* ── FORM ── */
+.form-panel{
+  position:relative;
+  z-index:1;
+}
+.form-group{
+  margin-bottom:12px;
+}
+.form-group label{
+  display:block;
+  font-family:'Playfair Display',serif;
+  font-size:9px;
+  letter-spacing:2.5px;
+  color:rgba(42,26,72,0.55);
+  margin-bottom:5px;
+  text-transform:uppercase;
+}
+.form-group input{
+  width:100%;
+  padding:9px 12px;
+  background:rgba(255,255,255,0.45);
+  border:1px solid rgba(42,26,72,0.18);
+  border-radius:4px;
+  font-family:'IM Fell English',serif;
+  font-size:13px;
+  color:var(--ink);
+  outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input::placeholder{
+  color:rgba(42,26,72,0.3);
+  font-style:italic;
+}
+.form-group input:focus{
+  border-color:rgba(184,150,74,0.5);
+  box-shadow:0 0 0 3px rgba(184,150,74,0.08);
+  background:rgba(255,255,255,0.6);
 }
 
-/* ======================== SCROLL / PARCHMENT ======================== */
-.scroll-wrapper {
-  position: relative;
-  z-index: 10;
-  animation: float 6s ease-in-out infinite, fadeIn 1.2s ease both;
-  filter:
-    drop-shadow(0 0 1px rgba(184,150,74,0.6))
-    drop-shadow(0 20px 60px rgba(30,10,80,0.95))
-    drop-shadow(0 0 100px rgba(92,61,143,0.5));
+/* ── BUTTONS ── */
+.btn-primary{
+  width:100%;
+  padding:10px;
+  background:linear-gradient(135deg,var(--purple-btn),var(--purple-accent));
+  border:1px solid rgba(92,61,143,0.6);
+  border-radius:4px;
+  color:rgba(255,255,255,0.92);
+  font-family:'Playfair Display',serif;
+  font-size:11px;
+  letter-spacing:2.5px;
+  cursor:pointer;
+  margin-top:6px;
+  transition:all 0.2s;
+  position:relative;
+  overflow:hidden;
+}
+.btn-primary::before{
+  content:'';
+  position:absolute;
+  top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);
+  transition:left 0.4s;
+}
+.btn-primary:hover::before{left:100%;}
+.btn-primary:hover{
+  box-shadow:0 4px 20px rgba(92,61,143,0.4);
+  border-color:rgba(184,150,74,0.3);
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(-0.3deg); }
-  33% { transform: translateY(-12px) rotate(0.2deg); }
-  66% { transform: translateY(-6px) rotate(-0.15deg); }
+.btn-google{
+  width:100%;
+  padding:9px;
+  background:rgba(255,255,255,0.55);
+  border:1px solid rgba(42,26,72,0.18);
+  border-radius:4px;
+  color:var(--ink);
+  font-family:'Playfair Display',serif;
+  font-size:10px;
+  letter-spacing:1.5px;
+  cursor:pointer;
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:all 0.2s;
+}
+.btn-google:hover{
+  background:rgba(255,255,255,0.75);
+  border-color:rgba(184,150,74,0.3);
+}
+.btn-google svg{width:14px;height:14px;}
+
+.or-line{
+  display:flex;align-items:center;gap:10px;
+  margin:12px 0 4px;
+  position:relative;z-index:1;
+}
+.or-line::before,.or-line::after{
+  content:'';flex:1;height:1px;
+  background:rgba(42,26,72,0.15);
+}
+.or-line span{
+  font-size:9px;letter-spacing:2px;
+  color:rgba(42,26,72,0.35);
+  font-family:'Playfair Display',serif;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* ======================== SCROLL — PARCHMENT + DARK EBONY RODS ======================== */
-
-/* END CAPS — dark polished ebony/lacquer, creates frame around bright parchment */
-.scroll-cap {
-  width: 280px;
-  height: 28px;
-  border-radius: 14px;
-  position: relative;
-  z-index: 2;
-  background: linear-gradient(180deg,
-    rgba(120,100,160,0.6) 0%,
-    #2a1e3e 5%,
-    #1e1530 25%,
-    #140f22 50%,
-    #0e0a18 75%,
-    #08060f 100%
-  );
-  box-shadow:
-    0 10px 40px rgba(0,0,0,0.9),
-    0 2px 0 rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(180,150,255,0.3),
-    inset 0 -1px 0 rgba(0,0,0,0.8);
-  overflow: visible;
-}
-
-/* Gold engraved groove on cap */
-.scroll-cap::before {
-  content: '';
-  position: absolute;
-  left: 18px; right: 18px;
-  top: 36%; height: 1px;
-  background: linear-gradient(90deg,
-    transparent,
-    rgba(184,150,74,0.4) 10%,
-    rgba(220,185,100,0.85) 50%,
-    rgba(184,150,74,0.4) 90%,
-    transparent);
-  box-shadow: 0 0 6px rgba(200,165,80,0.35);
-}
-
-.scroll-cap::after {
-  content: '';
-  position: absolute;
-  left: 28px; right: 28px;
-  top: 62%; height: 1px;
-  background: linear-gradient(90deg,
-    transparent, rgba(139,92,246,0.4), rgba(184,150,74,0.3), rgba(139,92,246,0.4), transparent);
-}
-
-/* Knobs — dark ebony pillars with gold band */
-.scroll-cap-inner {
-  position: absolute;
-  top: 50%; transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  pointer-events: none;
-}
-
-.scroll-knob {
-  width: 17px; height: 46px;
-  border-radius: 9px;
-  background: linear-gradient(90deg,
-    rgba(140,120,200,0.35) 0%,
-    #2a1e3e 6%,
-    #1a1228 28%,
-    #100c1e 55%,
-    #080612 80%,
-    #040308 100%
-  );
-  box-shadow:
-    4px 0 16px rgba(0,0,0,0.9),
-    -1px 0 4px rgba(0,0,0,0.6),
-    inset 1px 0 0 rgba(160,130,220,0.2);
-  position: relative;
-  z-index: 3;
-  margin: 0 -9px;
-}
-
-.scroll-knob::before {
-  content: '';
-  position: absolute;
-  left: 2px; right: 2px;
-  top: 33%; height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(220,185,100,0.9), transparent);
-  border-radius: 1px;
-  box-shadow: 0 0 4px rgba(200,165,80,0.5);
-}
-.scroll-knob::after {
-  content: '';
-  position: absolute;
-  left: 2px; right: 2px;
-  top: 62%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(139,92,246,0.5), transparent);
-}
-
-/* SCROLL BODY — bright aged parchment, the "light island" */
-.scroll-body {
-  width: 280px;
-  position: relative;
-  overflow: visible;
-  padding: 14px 28px 12px;
-  background: linear-gradient(165deg,
-    #f5eedc 0%,
-    #ede0c4 20%,
-    #e8d8b8 45%,
-    #ead9ba 60%,
-    #e4d0ad 80%,
-    #ddc9a5 100%
-  );
-  border-left: 1px solid rgba(160,120,60,0.3);
-  border-right: 1px solid rgba(160,120,60,0.3);
-}
-
-/* Aged parchment texture — subtle staining + edge darkening */
-.scroll-body::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    /* left-right edge aging/shadow */
-    radial-gradient(ellipse 18% 100% at 0% 50%, rgba(100,65,20,0.18) 0%, transparent 100%),
-    radial-gradient(ellipse 18% 100% at 100% 50%, rgba(100,65,20,0.15) 0%, transparent 100%),
-    /* top/bottom edge curl shadow */
-    radial-gradient(ellipse 100% 25% at 50% 0%, rgba(80,50,15,0.2) 0%, transparent 70%),
-    radial-gradient(ellipse 100% 25% at 50% 100%, rgba(80,50,15,0.18) 0%, transparent 70%),
-    /* faint age spot in center */
-    radial-gradient(ellipse 60% 40% at 65% 40%, rgba(160,110,40,0.06) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-/* Parchment sheen removed */
-.scroll-body::after { content: none; }
-
-/* ======================== SCROLL CONTENT — dark ink on bright parchment ======================== */
-.scroll-brand {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.brand-eye {
-  margin-bottom: 8px;
-}
-
-.brand-title {
-  font-family: 'Playfair Display', serif;
-  font-weight: 900;
-  font-size: 1.4rem;
-  background: linear-gradient(135deg, #5c3d8f 0%, #8b5cf6 40%, #b8964a 70%, #5c3d8f 100%);
-  background-size: 250% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 0.12em;
-  line-height: 1;
-  animation: titleShimmer 6s linear infinite;
-}
-
-@keyframes titleShimmer {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 250% 0%; }
-}
-
-.brand-flash {
-  font-size: 1rem;
-  -webkit-text-fill-color: #7c3aed;
-}
-
-.brand-sub {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: rgba(80,50,120,0.6);
-  margin-top: 2px;
-}
-
-.scroll-divider {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(92,61,143,0.5), rgba(184,150,74,0.6), rgba(92,61,143,0.5), transparent);
-  margin: 8px 0;
-  opacity: 0.7;
-}
-
-/* Login form on parchment — dark ink style */
-.form-label {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.58rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(60,35,100,0.7);
-  display: block;
-  margin-bottom: 6px;
-}
-
-.form-field {
-  margin-bottom: 8px;
-}
-
-.form-input {
-  width: 100%;
-  background: rgba(255,250,235,0.6);
-  border: none;
-  border-bottom: 1.5px solid rgba(92,61,143,0.35);
-  padding: 7px 4px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.85rem;
-  color: #2a1a48;
-  outline: none;
-  border-radius: 0;
-  transition: border-color 0.2s, background 0.2s;
-}
-.form-input:focus {
-  border-bottom-color: rgba(92,61,143,0.75);
-  background: rgba(255,252,240,0.8);
-}
-.form-input::placeholder { color: rgba(92,61,143,0.3); font-style: italic; }
-
-.enter-btn {
-  width: 100%;
-  margin-top: 2px;
-  padding: 8px;
-  background: linear-gradient(135deg, #3d1f6e 0%, #5c3d8f 50%, #3d1f6e 100%);
-  background-size: 200% 100%;
-  border: none;
-  border-radius: 2px;
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 0.78rem;
-  letter-spacing: 0.15em;
-  color: #f5eedc;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(40,10,80,0.5), inset 0 1px 0 rgba(180,150,255,0.15);
-  transition: background-position 0.4s, box-shadow 0.2s;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-}
-.enter-btn:hover {
-  background-position: 100% 0%;
-  box-shadow: 0 6px 30px rgba(92,61,143,0.65), 0 0 20px rgba(139,92,246,0.3);
-}
-.enter-btn:active { transform: scale(0.98); }
-.enter-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.tabs-row {
-  display: flex;
-  border-bottom: 1.5px solid rgba(92,61,143,0.2);
-  margin-bottom: 10px;
-}
-.tab-btn {
-  flex: 1;
-  text-align: center;
-  padding: 3px 0 5px;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(92,61,143,0.4);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  transition: all 0.2s;
-  background: none;
-  border-top: none; border-left: none; border-right: none;
-}
-.tab-btn.active {
-  color: #5c3d8f;
-  border-bottom-color: #b8964a;
-}
-
-.msg {
-  margin-top: 10px;
-  font-size: 0.78rem;
-  text-align: center;
-  padding: 7px 10px;
-  border-radius: 2px;
-  display: none;
-  font-style: italic;
-}
-.msg.error   { background: rgba(180,40,40,0.08); color: #8b1a1a; border: 1px solid rgba(180,60,40,0.25); display: block; }
-.msg.success { background: rgba(40,120,40,0.08); color: #1a5e1a; border: 1px solid rgba(50,140,50,0.2); display: block; }
-
-.scroll-footer {
-  text-align: center;
-  margin-top: 8px;
-  font-size: 0.68rem;
-  color: rgba(60,35,100,0.45);
-  font-style: italic;
-  letter-spacing: 0.05em;
-}
-
-.or-divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 7px 0;
-}
-.or-divider::before, .or-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(92,61,143,0.25), transparent);
-}
-.or-divider span {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
-  color: rgba(92,61,143,0.4);
-  text-transform: uppercase;
-}
-
-.google-btn {
-  width: 100%;
-  padding: 7px;
-  background: rgba(255,250,235,0.5);
-  border: 1px solid rgba(92,61,143,0.25);
-  border-radius: 2px;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  color: rgba(50,30,90,0.8);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, border-color 0.2s;
-}
-.google-btn:hover {
-  background: rgba(255,252,240,0.8);
-  border-color: rgba(92,61,143,0.45);
-}
-
-/* ======================== ROPE ======================== */
-.rope {
-  width: 2px;
-  height: 40px;
-  background: linear-gradient(180deg, #4a2d8a, #8b5cf6, #b8964a, #8b5cf6);
-  margin: 0 auto;
-  box-shadow: 0 0 8px rgba(139,92,246,0.5);
-}
+/* ── BOTTOM ROD (same as top) ── */
 </style>
 </head>
 <body>
 
-<!-- Storm Background -->
-<div class="storm">
-  <div class="nebula"></div>
-  <div class="glow-pool glow-pool-1"></div>
-  <div class="glow-pool glow-pool-2"></div>
-  <div class="glow-pool glow-pool-3"></div>
+<!-- Stars -->
+<canvas id="stars"></canvas>
+<!-- Lightning -->
+<canvas id="lightning"></canvas>
 
-  <!-- Stars canvas -->
-  <canvas id="starsCanvas" class="stars"></canvas>
+<div id="scene">
+  <div class="scroll-wrap">
 
-  <!-- Lightning SVG — above scroll -->
-  <svg class="lightning-layer" id="lightningLayer" xmlns="http://www.w3.org/2000/svg" style="z-index:50;"></svg>
-
-  <!-- Particles canvas -->
-  <canvas id="particlesCanvas" class="particles"></canvas>
-</div>
-
-<div class="screen-flash"></div>
-
-<!-- The Floating Scroll -->
-<div class="scroll-wrapper">
-  <!-- Top rope -->
-  <div class="rope" style="background:linear-gradient(180deg,transparent,#4a2d8a 30%,#8b5cf6,#b8964a 70%,transparent);"></div>
-
-  <!-- Top cap -->
-  <div class="scroll-cap">
-    <div class="scroll-cap-inner">
-      <div class="scroll-knob"></div>
-      <div class="scroll-knob"></div>
+    <!-- Top rod -->
+    <div class="rod">
+      <div class="knob"></div>
+      <div class="knob"></div>
     </div>
-  </div>
 
-  <!-- Body -->
-  <div class="scroll-body">
-    <!-- Brand -->
-    <div class="scroll-brand">
-      <div class="brand-eye">
-        <svg id="theEye" width="80" height="35" viewBox="0 0 120 52" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="irisG" cx="50%" cy="45%" r="50%">
-              <stop offset="0%" stop-color="#b088f9"/>
-              <stop offset="45%" stop-color="#6b4c9a"/>
-              <stop offset="100%" stop-color="#2d1b4e"/>
-            </radialGradient>
-            <radialGradient id="pupilG" cx="50%" cy="45%" r="50%">
-              <stop offset="0%" stop-color="#1a0a30"/>
-              <stop offset="100%" stop-color="#0d0618"/>
-            </radialGradient>
-            <filter id="eyeGlow">
-              <feGaussianBlur stdDeviation="2.5" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
-          <path id="eyeLid" d="M 10 26 Q 60 4 110 26 Q 60 48 10 26 Z" fill="rgba(80,50,120,0.3)" stroke="#b8964a" stroke-width="1.3" filter="url(#eyeGlow)"/>
-          <circle cx="60" cy="26" r="14" fill="url(#irisG)"/>
-          <circle cx="60" cy="26" r="7" fill="url(#pupilG)"/>
-          <ellipse cx="64" cy="22" rx="3" ry="2.5" fill="rgba(255,255,255,0.6)"/>
-          <circle cx="57" cy="29" r="1" fill="rgba(255,255,255,0.25)"/>
-        </svg>
+    <!-- Parchment -->
+    <div class="parchment">
+
+      <!-- Lang toggle -->
+      <div class="lang-toggle">
+        <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
       </div>
-      <div class="brand-title">ZEUS DAILY</div>
-      <div class="brand-sub">The God's Eye View</div>
-    </div>
 
-    <div class="scroll-divider"></div>
+      <!-- Eye + Title -->
+      <div class="eye-header">
+        <div class="brand-title zh-only">ZEUS DAILY</div>
+        <div class="brand-title en-only">ZEUS DAILY</div>
 
-    <!-- Tabs -->
-    <div class="tabs-row">
-      <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">登入</button>
-      <button class="tab-btn" id="tabReg" onclick="switchTab('reg')">注册</button>
-    </div>
+        <!-- Eye SVG Vol.004 -->
+        <div class="eye-wrap">
+          <svg id="mainEye" viewBox="0 0 120 52" width="140" height="61" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Gold glow -->
+              <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="1.5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <!-- Iris glow -->
+              <filter id="irisGlow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="2" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <!-- Nebula gradient -->
+              <radialGradient id="nebulaGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#b088f9"/>
+                <stop offset="52%" stop-color="#6b4c9a"/>
+                <stop offset="100%" stop-color="#2d1b4e"/>
+              </radialGradient>
+              <!-- Pupil gradient -->
+              <radialGradient id="pupilGrad" cx="40%" cy="38%" r="60%">
+                <stop offset="0%" stop-color="#1a0a2e"/>
+                <stop offset="100%" stop-color="#0a0515"/>
+              </radialGradient>
+              <!-- Clip path -->
+              <clipPath id="eyeClip">
+                <path id="eyeClipPath" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/>
+              </clipPath>
+            </defs>
 
-    <!-- Login -->
-    <div id="loginForm">
-      <div class="form-field">
-        <label class="form-label">电子邮件</label>
-        <input class="form-input" type="email" id="lEmail" placeholder="your@email.com" autocomplete="email"/>
+            <!-- Eye outline (open shape) -->
+            <path id="eyeOutline"
+              d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"
+              fill="#0e0818"
+              stroke="#b8964a"
+              stroke-width="1.4"
+              filter="url(#goldGlow)"/>
+
+            <!-- Clipped content -->
+            <g clip-path="url(#eyeClip)">
+              <!-- Iris -->
+              <circle id="iris" cx="60" cy="26" r="14"
+                fill="url(#nebulaGrad)"
+                filter="url(#irisGlow)"/>
+              <!-- Pupil -->
+              <circle id="pupil" cx="60" cy="26" r="6.5"
+                fill="url(#pupilGrad)"/>
+              <!-- Highlight white -->
+              <circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/>
+              <!-- Highlight purple -->
+              <circle cx="56" cy="28" r="1" fill="rgba(176,136,249,0.4)"/>
+            </g>
+
+            <!-- Lash dots -->
+            <circle cx="30" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+            <circle cx="60" cy="8" r="0.7" fill="#b8964a" opacity="0.5"/>
+            <circle cx="90" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+          </svg>
+        </div>
+
+        <div class="brand-sub zh-only">上帝视角 · 全球洞见</div>
+        <div class="brand-sub en-only">THE GOD'S EYE VIEW</div>
       </div>
-      <div class="form-field">
-        <label class="form-label">密码</label>
-        <input class="form-input" type="password" id="lPass" placeholder="••••••••" autocomplete="current-password"/>
+
+      <div class="divider"></div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">
+          <span class="zh-only">登入</span>
+          <span class="en-only">SIGN IN</span>
+        </button>
+        <button class="tab-btn" id="tab-register" onclick="switchTab('register')">
+          <span class="zh-only">注册</span>
+          <span class="en-only">REGISTER</span>
+        </button>
       </div>
-      <button class="enter-btn" id="loginBtn" onclick="doLogin()">进入神之视界</button>
-      <div class="or-divider"><span>或</span></div>
-      <button class="google-btn" onclick="doGoogle()">
-        <svg width="16" height="16" viewBox="0 0 48 48" style="margin-right:8px;flex-shrink:0"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-        使用 Google 登入
-      </button>
+
+      <!-- Login Panel -->
+      <div class="form-panel" id="panel-login">
+        <div class="form-group">
+          <label><span class="zh-only">电子邮件</span><span class="en-only">EMAIL</span></label>
+          <input type="email" placeholder="your@email.com"/>
+        </div>
+        <div class="form-group">
+          <label><span class="zh-only">密码</span><span class="en-only">PASSWORD</span></label>
+          <input type="password" placeholder="••••••••"/>
+        </div>
+        <button class="btn-primary">
+          <span class="zh-only">登入 · ENTER</span>
+          <span class="en-only">SIGN IN · ENTER</span>
+        </button>
+        <div class="or-line"><span>OR</span></div>
+        <button class="btn-google">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span class="zh-only">使用 Google 登入</span>
+          <span class="en-only">Continue with Google</span>
+        </button>
+      </div>
+
+      <!-- Register Panel -->
+      <div class="form-panel" id="panel-register" style="display:none">
+        <div class="form-group">
+          <label><span class="zh-only">电子邮件</span><span class="en-only">EMAIL</span></label>
+          <input type="email" placeholder="your@email.com"/>
+        </div>
+        <div class="form-group">
+          <label><span class="zh-only">密码</span><span class="en-only">PASSWORD</span></label>
+          <input type="password" placeholder="••••••••"/>
+        </div>
+        <button class="btn-primary">
+          <span class="zh-only">创建账号</span>
+          <span class="en-only">CREATE ACCOUNT</span>
+        </button>
+      </div>
+
+    </div><!-- /parchment -->
+
+    <!-- Bottom rod -->
+    <div class="rod">
+      <div class="knob"></div>
+      <div class="knob"></div>
     </div>
 
-    <!-- Register -->
-    <div id="regForm" style="display:none;">
-      <div class="form-field">
-        <label class="form-label">电子邮件</label>
-        <input class="form-input" type="email" id="rEmail" placeholder="your@email.com" autocomplete="email"/>
-      </div>
-      <div class="form-field">
-        <label class="form-label">密码（至少6位）</label>
-        <input class="form-input" type="password" id="rPass" placeholder="••••••••" autocomplete="new-password"/>
-      </div>
-      <button class="enter-btn" id="regBtn" onclick="doRegister()">创建账号</button>
-    </div>
-
-    <div class="msg" id="msg"></div>
-
-  </div>
-
-  <!-- Bottom cap -->
-  <div class="scroll-cap">
-    <div class="scroll-cap-inner">
-      <div class="scroll-knob"></div>
-      <div class="scroll-knob"></div>
-    </div>
-  </div>
-
-  <!-- Bottom rope -->
-  <div class="rope" style="background:linear-gradient(180deg,#b8964a,#8b5cf6,#4a2d8a 70%,transparent);"></div>
-</div>
-
-
+  </div><!-- /scroll-wrap -->
+</div><!-- /scene -->
 
 <script>
-// ======================== SUPABASE ========================
-var SURL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
-var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
-var sb = supabase.createClient(SURL, SKEY);
-
-sb.auth.getSession().then(function(r) {
-  if (r.data && r.data.session) window.location.href = 'dashboard.html';
-});
-
-function switchTab(tab) {
-  var isLogin = tab === 'login';
-  document.getElementById('tabLogin').className = 'tab-btn' + (isLogin ? ' active' : '');
-  document.getElementById('tabReg').className = 'tab-btn' + (!isLogin ? ' active' : '');
-  document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
-  document.getElementById('regForm').style.display = isLogin ? 'none' : 'block';
-  clearMsg();
-}
-
-function clearMsg() {
-  var m = document.getElementById('msg');
-  m.className = 'msg'; m.textContent = '';
-}
-
-function showMsg(txt, type) {
-  var m = document.getElementById('msg');
-  m.textContent = txt;
-  m.className = 'msg ' + type;
-}
-
-function doLogin() {
-  var email = document.getElementById('lEmail').value.trim();
-  var pass = document.getElementById('lPass').value;
-  if (!email || !pass) { showMsg('请填写邮件和密码', 'error'); return; }
-  var btn = document.getElementById('loginBtn');
-  btn.disabled = true; btn.textContent = '验证中...';
-  sb.auth.signInWithPassword({ email: email, password: pass }).then(function(r) {
-    if (r.error) {
-      var msg = r.error.message.indexOf('Invalid') >= 0 ? '邮件或密码错误' : r.error.message;
-      showMsg(msg, 'error');
-      btn.disabled = false; btn.textContent = '进入神之视界';
-    } else {
-      showMsg('✓ 欢迎，观察者', 'success');
-      setTimeout(function() { window.location.href = 'dashboard.html'; }, 700);
-    }
-  });
-}
-
-function doRegister() {
-  var email = document.getElementById('rEmail').value.trim();
-  var pass = document.getElementById('rPass').value;
-  if (!email || !pass) { showMsg('请填写邮件和密码', 'error'); return; }
-  if (pass.length < 6) { showMsg('密码至少需要6位', 'error'); return; }
-  var btn = document.getElementById('regBtn');
-  btn.disabled = true; btn.textContent = '注册中...';
-  sb.auth.signUp({ email: email, password: pass }).then(function(r) {
-    if (r.error) {
-      showMsg(r.error.message, 'error');
-      btn.disabled = false; btn.textContent = '创建账号';
-    } else {
-      showMsg('注册成功！请检查邮件验证', 'success');
-      setTimeout(function() { switchTab('login'); btn.disabled = false; btn.textContent = '创建账号'; }, 2000);
-    }
-  });
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.key !== 'Enter') return;
-  var loginVisible = document.getElementById('loginForm').style.display !== 'none';
-  if (loginVisible) doLogin(); else doRegister();
-});
-
-function doGoogle() {
-  sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.origin + '/dashboard.html' }
-  });
-}
-
-// ======================== EYE BLINK ========================
-var blinkOpen = 'M 10 26 Q 60 4 110 26 Q 60 48 10 26 Z';
-var blinkClose = 'M 10 26 Q 60 22 110 26 Q 60 30 10 26 Z';
-
-function blink() {
-  eyeLid.setAttribute('d', blinkClose);
-  setTimeout(function() { eyeLid.setAttribute('d', blinkOpen); }, 130);
-}
-setInterval(blink, 3000 + Math.random() * 2000);
-
-// Eye cursor track
-document.addEventListener('mousemove', function(e) {
-  var eye = document.getElementById('theEye');
-  var rect = eye.getBoundingClientRect();
-  var cx = rect.left + rect.width / 2;
-  var cy = rect.top + rect.height / 2;
-  var dx = (e.clientX - cx) / window.innerWidth;
-  var dy = (e.clientY - cy) / window.innerHeight;
-  var mx = 60 + dx * 3;
-  var my = 26 + dy * 2;
-  var iris = eye.querySelectorAll('circle');
-  if (iris[0]) { iris[0].setAttribute('cx', mx); iris[0].setAttribute('cy', my); }
-  if (iris[1]) { iris[1].setAttribute('cx', mx); iris[1].setAttribute('cy', my); }
-});
-
-// ======================== STARS ========================
-(function() {
-  var c = document.getElementById('starsCanvas');
+// ── STARS ──
+(function(){
+  var c = document.getElementById('stars');
   var ctx = c.getContext('2d');
   var stars = [];
-
-  function resize() {
+  function resize(){
     c.width = window.innerWidth;
     c.height = window.innerHeight;
   }
   resize();
   window.addEventListener('resize', resize);
-
-  for (var i = 0; i < 220; i++) {
+  for(var i=0;i<200;i++){
     stars.push({
       x: Math.random(),
       y: Math.random(),
-      r: Math.random() * 1.2 + 0.2,
-      a: Math.random(),
-      speed: Math.random() * 0.008 + 0.002,
-      phase: Math.random() * Math.PI * 2
+      r: Math.random()*1.2+0.2,
+      o: Math.random()*0.6+0.1,
+      s: Math.random()*0.003+0.001,
+      p: Math.random()*Math.PI*2
     });
   }
-
-  function drawStars(t) {
-    ctx.clearRect(0, 0, c.width, c.height);
-    for (var i = 0; i < stars.length; i++) {
+  function drawStars(){
+    ctx.clearRect(0,0,c.width,c.height);
+    var t = Date.now()*0.001;
+    for(var i=0;i<stars.length;i++){
       var s = stars[i];
-      var alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+      var a = s.o*(0.6+0.4*Math.sin(t*s.s*10+s.p));
       ctx.beginPath();
-      ctx.arc(s.x * c.width, s.y * c.height, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(220,200,255,' + alpha + ')';
+      ctx.arc(s.x*c.width, s.y*c.height, s.r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(220,200,255,'+a+')';
       ctx.fill();
     }
     requestAnimationFrame(drawStars);
   }
-  requestAnimationFrame(drawStars);
+  drawStars();
 })();
 
-// ======================== PARTICLES ========================
-(function() {
-  var c = document.getElementById('particlesCanvas');
+// ── REALISTIC LIGHTNING ──
+(function(){
+  var c = document.getElementById('lightning');
   var ctx = c.getContext('2d');
-  var pts = [];
+  var bg = document.createElement('canvas'); // sky flash layer
+  var bgCtx = bg.getContext('2d');
 
-  function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+  function resize(){
+    c.width = bg.width = window.innerWidth;
+    c.height = bg.height = window.innerHeight;
+  }
   resize();
   window.addEventListener('resize', resize);
 
-  function spawn() {
-    pts.push({
-      x: Math.random() * c.width,
-      y: c.height + 10,
-      r: Math.random() * 1.5 + 0.5,
-      vx: (Math.random() - 0.5) * 0.8,
-      vy: -(Math.random() * 0.8 + 0.3),
-      life: 1,
-      decay: Math.random() * 0.004 + 0.002,
-      col: Math.random() > 0.5 ? '139,92,246' : '184,150,74'
-    });
+  // Build a jagged channel using stepped-leader physics
+  // Returns array of {x,y} points
+  function buildChannel(x0, y0, targetX, targetY, roughness, isBranch){
+    var pts = [{x:x0, y:y0}];
+    var steps = isBranch ? Math.floor(8+Math.random()*10) : Math.floor(18+Math.random()*14);
+    var dx = (targetX - x0) / steps;
+    var dy = (targetY - y0) / steps;
+    for(var i=1; i<=steps; i++){
+      var prev = pts[pts.length-1];
+      // Perpendicular jitter, stronger near middle, tapers at ends
+      var t = i/steps;
+      var jitterScale = roughness * Math.sin(Math.PI * t) * (0.7 + Math.random()*0.6);
+      var px = prev.x + dx + (Math.random()-0.5)*jitterScale;
+      var py = prev.y + dy + (Math.random()-0.48)*jitterScale*0.5; // bias downward
+      pts.push({x:px, y:py});
+    }
+    return pts;
   }
 
-  function tick() {
-    ctx.clearRect(0, 0, c.width, c.height);
-    if (Math.random() < 0.3) spawn();
-    for (var i = pts.length - 1; i >= 0; i--) {
-      var p = pts[i];
-      p.x += p.vx; p.y += p.vy; p.life -= p.decay;
-      if (p.life <= 0) { pts.splice(i, 1); continue; }
+  // Draw one segment set with glow layers
+  function drawChannel(pts, baseAlpha, isBranch){
+    if(pts.length < 2) return;
+
+    // Layer 1: wide outer glow (purple)
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.strokeStyle = 'rgba(100,40,200,'+(baseAlpha*0.18)+')';
+    ctx.lineWidth = isBranch ? 6 : 14;
+    ctx.shadowBlur = 0;
+    ctx.stroke();
+
+    // Layer 2: mid glow (blue-violet)
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.strokeStyle = 'rgba(140,80,255,'+(baseAlpha*0.35)+')';
+    ctx.lineWidth = isBranch ? 3 : 7;
+    ctx.stroke();
+
+    // Layer 3: inner channel (white-blue)
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.strokeStyle = 'rgba(200,180,255,'+(baseAlpha*0.75)+')';
+    ctx.lineWidth = isBranch ? 1 : 2.5;
+    ctx.stroke();
+
+    // Layer 4: bright core (near-white)
+    if(!isBranch){
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + p.col + ',' + p.life * 0.7 + ')';
-      ctx.fill();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.strokeStyle = 'rgba(240,235,255,'+(baseAlpha*0.9)+')';
+      ctx.lineWidth = 1;
+      ctx.stroke();
     }
-    requestAnimationFrame(tick);
   }
-  requestAnimationFrame(tick);
+
+  // Sky ambient flash
+  function skyFlash(intensity){
+    bgCtx.clearRect(0,0,bg.width,bg.height);
+    bgCtx.fillStyle = 'rgba(80,40,160,'+intensity+')';
+    bgCtx.fillRect(0,0,bg.width,bg.height);
+    c.getContext('2d'); // noop, just using bg canvas separately
+    // Draw directly onto main canvas as a rect behind bolts
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.fillStyle = 'rgba(60,20,120,'+intensity+')';
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.restore();
+  }
+
+  var boltAlpha = 0;
+  var boltData = null;
+  var fadeTimer = null;
+  var animFrame = null;
+
+  function renderBolts(alpha){
+    ctx.clearRect(0,0,c.width,c.height);
+    if(alpha <= 0 || !boltData) return;
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    // Sky flash flicker
+    skyFlash(alpha * 0.12);
+
+    // Draw all channels
+    for(var b=0; b<boltData.length; b++){
+      var bolt = boltData[b];
+      drawChannel(bolt.pts, bolt.isBranch ? alpha*0.6 : alpha, bolt.isBranch);
+    }
+
+    // Ground impact glow at bottom of main bolt
+    var main = boltData[0];
+    var tip = main.pts[main.pts.length-1];
+    var grd = ctx.createRadialGradient(tip.x,tip.y,0, tip.x,tip.y,60);
+    grd.addColorStop(0, 'rgba(180,140,255,'+(alpha*0.5)+')');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(tip.x, tip.y, 60, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function triggerBolt(){
+    // Origin: random x near top
+    var W = c.width, H = c.height;
+    var startX = W*0.1 + Math.random()*(W*0.8);
+    var startY = -10;
+    // Target: somewhere in upper 55% of screen
+    var endX = startX + (Math.random()-0.5)*W*0.35;
+    var endY = H * (0.25 + Math.random()*0.30);
+
+    // Build main channel
+    var mainPts = buildChannel(startX, startY, endX, endY, 55, false);
+
+    // Build 2–4 branches off random segments
+    var branches = [];
+    var branchCount = Math.floor(2 + Math.random()*3);
+    for(var b=0; b<branchCount; b++){
+      var segIdx = Math.floor(mainPts.length*0.2 + Math.random()*mainPts.length*0.6);
+      var origin = mainPts[segIdx];
+      var branchLen = 0.15 + Math.random()*0.25; // fraction of remaining distance
+      var bEndX = origin.x + (Math.random()-0.5)*W*0.2;
+      var bEndY = origin.y + (endY - origin.y)*branchLen;
+      branches.push({ pts: buildChannel(origin.x, origin.y, bEndX, bEndY, 35, true), isBranch:true });
+    }
+
+    boltData = [{pts: mainPts, isBranch:false}].concat(branches);
+
+    // Return stroke: multiple flickers
+    var strokes = Math.floor(1 + Math.random()*3); // 1-3 return strokes
+    var delay = 0;
+
+    function doStroke(n){
+      // Flash on
+      boltAlpha = 0.85 + Math.random()*0.15;
+      renderBolts(boltAlpha);
+
+      // Hold briefly then dim between strokes
+      setTimeout(function(){
+        var flickerOut = setInterval(function(){
+          boltAlpha -= 0.12;
+          if(boltAlpha <= 0){
+            boltAlpha = 0;
+            ctx.clearRect(0,0,c.width,c.height);
+            clearInterval(flickerOut);
+            if(n > 1){
+              // brief dark pause then next stroke (re-illuminate same channel)
+              setTimeout(function(){ doStroke(n-1); }, 40+Math.random()*60);
+            } else {
+              // final fade done, schedule next bolt
+              setTimeout(triggerBolt, 2500 + Math.random()*5000);
+            }
+          } else {
+            renderBolts(boltAlpha);
+          }
+        }, 25);
+      }, 60 + Math.random()*80);
+    }
+
+    doStroke(strokes);
+  }
+
+  // Start after short delay
+  setTimeout(triggerBolt, 800 + Math.random()*1500);
 })();
 
-// ======================== LIGHTNING — strikes INTO scroll ========================
-(function() {
-  var svg = document.getElementById('lightningLayer');
-  var W = window.innerWidth, H = window.innerHeight;
+// ── EYE BLINK + TRACKING ──
+(function(){
+  var OPEN  = 'M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z';
+  var CLOSE = 'M 5,26 C 25,26 95,26 115,26 C 95,26 25,26 5,26 Z';
+  var outline  = document.getElementById('eyeOutline');
+  var clipPath = document.getElementById('eyeClipPath');
+  var iris     = document.getElementById('iris');
+  var pupil    = document.getElementById('pupil');
+  var maxMove  = 4;
 
-  function setSize() {
-    W = window.innerWidth; H = window.innerHeight;
-    svg.setAttribute('width', W); svg.setAttribute('height', H);
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  // Blink
+  function blink(){
+    outline.setAttribute('d', CLOSE);
+    clipPath.setAttribute('d', CLOSE);
+    setTimeout(function(){
+      outline.setAttribute('d', OPEN);
+      clipPath.setAttribute('d', OPEN);
+    }, 180);
+    var next = 2000 + Math.random()*3000;
+    setTimeout(blink, next);
   }
-  setSize();
-  window.addEventListener('resize', setSize);
+  setTimeout(blink, 2000 + Math.random()*3000);
 
-  function rand(a, b) { return a + Math.random() * (b - a); }
+  // Tracking
+  document.addEventListener('mousemove', function(e){
+    var rect = document.getElementById('mainEye').getBoundingClientRect();
+    var cx = rect.left + rect.width/2;
+    var cy = rect.top  + rect.height/2;
+    var dx = e.clientX - cx;
+    var dy = e.clientY - cy;
+    var dist = Math.sqrt(dx*dx+dy*dy);
+    var angle = Math.atan2(dy,dx);
+    var move = Math.min(dist/60,1)*maxMove;
+    var nx = Math.cos(angle)*move;
+    var ny = Math.sin(angle)*move;
+    iris.setAttribute('cx',  60 + nx);
+    iris.setAttribute('cy',  26 + ny);
+    pupil.setAttribute('cx', 60 + nx*1.2);
+    pupil.setAttribute('cy', 26 + ny*1.2);
+  });
+})();
 
-  function generateBolt(x1, y1, x2, y2, depth) {
-    if (depth <= 0) return [[x1, y1, x2, y2]];
-    var spread = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)) * 0.38;
-    var mx = (x1+x2)/2 + (Math.random()-0.5) * spread;
-    var my = (y1+y2)/2 + (Math.random()-0.5) * spread * 0.5;
-    var segs = [].concat(
-      generateBolt(x1, y1, mx, my, depth-1),
-      generateBolt(mx, my, x2, y2, depth-1)
-    );
-    if (Math.random() < 0.45 && depth > 1) {
-      segs = segs.concat(generateBolt(mx, my,
-        mx + (Math.random()-0.5)*100, my + Math.random()*80, depth-2));
-    }
-    return segs;
-  }
+// ── TABS ──
+function switchTab(tab){
+  var isLogin = tab==='login';
+  document.getElementById('tab-login').className    = 'tab-btn'+(isLogin?' active':'');
+  document.getElementById('tab-register').className = 'tab-btn'+(!isLogin?' active':'');
+  document.getElementById('panel-login').style.display    = isLogin?'block':'none';
+  document.getElementById('panel-register').style.display = !isLogin?'block':'none';
+}
 
-  function makePath(segs) {
-    var d = '';
-    for (var i = 0; i < segs.length; i++)
-      d += 'M'+segs[i][0]+' '+segs[i][1]+' L'+segs[i][2]+' '+segs[i][3]+' ';
-    return d;
-  }
+// ── LANGUAGE ──
+function applyLang(lang){
+  var zhEls = document.querySelectorAll('.zh-only');
+  var enEls = document.querySelectorAll('.en-only');
+  for(var i=0;i<zhEls.length;i++) zhEls[i].style.display = lang==='zh'?'':'none';
+  for(var i=0;i<enEls.length;i++) enEls[i].style.display = lang==='en'?'':'none';
+  document.getElementById('btn-zh').className = 'lang-btn'+(lang==='zh'?' active':'');
+  document.getElementById('btn-en').className = 'lang-btn'+(lang==='en'?' active':'');
+}
 
-  function addBolt(pathD, glowColor, coreColor, glowW, coreW) {
-    var glow = document.createElementNS('http://www.w3.org/2000/svg','path');
-    glow.setAttribute('d', pathD);
-    glow.setAttribute('stroke', glowColor);
-    glow.setAttribute('stroke-width', glowW);
-    glow.setAttribute('fill', 'none');
-    glow.setAttribute('stroke-linecap','round');
-    glow.style.filter = 'blur(5px)';
-    svg.appendChild(glow);
-    var core = document.createElementNS('http://www.w3.org/2000/svg','path');
-    core.setAttribute('d', pathD);
-    core.setAttribute('stroke', coreColor);
-    core.setAttribute('stroke-width', coreW);
-    core.setAttribute('fill','none');
-    core.setAttribute('stroke-linecap','round');
-    svg.appendChild(core);
-  }
+function setLang(lang){
+  try{ localStorage.setItem('zeus-lang', lang); }catch(e){}
+  applyLang(lang);
+}
 
-  // Impact glow when bolt hits scroll
-  function addImpact(x, y) {
-    var circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    circle.setAttribute('cx', x); circle.setAttribute('cy', y);
-    circle.setAttribute('r', '18');
-    circle.setAttribute('fill','rgba(139,92,246,0.35)');
-    circle.style.filter = 'blur(8px)';
-    svg.appendChild(circle);
-    // small core flash
-    var core = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    core.setAttribute('cx', x); core.setAttribute('cy', y);
-    core.setAttribute('r','4');
-    core.setAttribute('fill','rgba(220,200,255,0.9)');
-    svg.appendChild(core);
-  }
-
-  function flashLightning() {
-    while (svg.firstChild) svg.removeChild(svg.firstChild);
-
-    var scroll = document.querySelector('.scroll-wrapper');
-    var sr = scroll ? scroll.getBoundingClientRect() : null;
-
-    var numBolts = Math.floor(Math.random()*2)+1;
-    for (var b = 0; b < numBolts; b++) {
-      var startX = rand(W*0.05, W*0.95);
-      var startY = 0;
-      var strikeScroll = sr && Math.random() < 0.55; // 55% chance to hit scroll
-
-      var endX, endY;
-      if (strikeScroll) {
-        // Target a random point ON the scroll
-        endX = rand(sr.left + 20, sr.right - 20);
-        endY = rand(sr.top + 10, sr.bottom - 10);
-      } else {
-        endX = startX + (Math.random()-0.5)*320;
-        endY = rand(H*0.35, H*0.8);
-      }
-
-      var segs = generateBolt(startX, startY, endX, endY, 5);
-      var pathD = makePath(segs);
-
-      addBolt(pathD, 'rgba(92,61,143,0.4)', 'rgba(200,180,255,0.95)', 8, 1.3);
-
-      if (strikeScroll) {
-        // Extra bright strike on scroll hit
-        addBolt(pathD, 'rgba(184,150,74,0.25)', 'rgba(255,240,180,0.5)', 4, 0.6);
-        addImpact(endX, endY);
-        // Also add scroll glow pulse
-        if (scroll) {
-          scroll.style.filter = 'drop-shadow(0 30px 80px rgba(92,61,143,0.9)) drop-shadow(0 0 60px rgba(139,92,246,0.8))';
-          setTimeout(function() {
-            scroll.style.filter = 'drop-shadow(0 30px 80px rgba(92,61,143,0.8)) drop-shadow(0 0 140px rgba(139,92,246,0.5))';
-          }, 200);
-        }
-      }
-    }
-
-    // Flicker frames
-    var frames = [1, 0.2, 1, 0, 0.7, 0];
-    var fi = 0;
-    function step() {
-      if (fi >= frames.length) {
-        while (svg.firstChild) svg.removeChild(svg.firstChild);
-        return;
-      }
-      svg.style.opacity = frames[fi++];
-      setTimeout(step, 55);
-    }
-    step();
-
-    setTimeout(flashLightning, rand(2200, 5500));
-  }
-
-  setTimeout(flashLightning, 600);
+// Init language from storage
+(function(){
+  var saved = 'zh';
+  try{ saved = localStorage.getItem('zeus-lang') || 'zh'; }catch(e){}
+  applyLang(saved);
 })();
 </script>
 </body>
