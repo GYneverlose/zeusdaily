@@ -18,7 +18,10 @@
 <meta name="twitter:title"       content="ZEUS DAILY · The God's Eye View"/>
 <meta name="twitter:description" content="每日一份神眼视角全球要闻 · AI精选 · 上帝视角"/>
 <meta name="twitter:image"       content="https://zeusdaily.blog/og-cover.png"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"></noscript>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 
@@ -397,8 +400,7 @@ html,body{
 
       <!-- Eye + Title -->
       <div class="eye-header">
-        <div class="brand-title zh-only">ZEUS DAILY</div>
-        <div class="brand-title en-only">ZEUS DAILY</div>
+        <div class="brand-title">ZEUS DAILY</div>
 
         <!-- Eye SVG Vol.004 -->
         <div class="eye-wrap">
@@ -461,11 +463,11 @@ html,body{
       <div class="tabs">
         <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">
           <span class="zh-only">登入</span>
-          <span class="en-only">SIGN IN</span>
+
         </button>
         <button class="tab-btn" id="tab-register" onclick="switchTab('register')">
           <span class="zh-only">注册</span>
-          <span class="en-only">REGISTER</span>
+
         </button>
       </div>
 
@@ -481,8 +483,7 @@ html,body{
         </div>
         <div id="login-error" style="display:none;font-size:11px;color:#c0392b;font-family:'DM Sans',sans-serif;margin-bottom:8px;padding:8px 10px;background:rgba(192,57,43,0.08);border-radius:6px;border:1px solid rgba(192,57,43,0.2);"></div>
         <button id="btn-login" class="btn-primary">
-          <span class="zh-only">登入 · ENTER</span>
-          <span class="en-only">SIGN IN · ENTER</span>
+          <span class="zh-only">登入</span><span class="en-only">SIGN IN</span>
         </button>
         <div class="or-line"><span>OR</span></div>
         <button id="btn-google" class="btn-google">
