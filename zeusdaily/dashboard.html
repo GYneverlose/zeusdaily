@@ -695,7 +695,7 @@ function filterArc(){
   if(!f.length){el.innerHTML='<div style="padding:40px;text-align:center;font-family:EB Garamond,serif;font-style:italic;color:var(--dim);font-size:16px">No results</div>';return;}
   el.innerHTML=f.map(function(e){
     var sv=collections.indexOf(e.date)>=0;
-    return '<div class="issue-card"><div class="ic-idx"><div class="ic-vol">'+(e.vol||'?')+'</div><div class="ic-vl">Vol</div></div><div class="ic-body"><div class="ic-date">'+fmtDate(e.date)+'</div><div class="ic-title">'+(e.title||'Zeus Daily')+'</div><div class="ic-actions"><a class="ia-r" href="'+e.filename+'" target="_blank">'+t('read_now')+'</a><button class="ia-s'+(sv?' saved':'')+'" onclick="toggleSave(event,''+e.date+'',this)">'+(sv?'★ '+t('saved'):'☆ '+t('saved'))+'</button></div></div></div>';
+   return '<div class="issue-card"><div class="ic-idx"><div class="ic-vol">'+(e.vol||'?')+'</div><div class="ic-vl">Vol</div></div><div class="ic-body"><div class="ic-date">'+fmtDate(e.date)+'</div><div class="ic-title">'+(e.title||'Zeus Daily')+'</div><div class="ic-actions"><a class="ia-r" href="'+e.filename+'" target="_blank">'+t('read_now')+'</a><button class="ia-s'+(sv?' saved':'')+'" onclick="toggleSave(event,\''+e.date+'\',this)">'+(sv?'★ '+t('saved'):'☆ '+t('saved'))+'</button></div></div></div>';
   }).join('');
 }
 function toggleSave(ev,date,btn){
