@@ -235,6 +235,47 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .spark{position:absolute;width:5px;height:5px;border-radius:50%;background:#b088f9;pointer-events:none;left:50%;top:50%;animation:spark-out 0.45s ease-out forwards;}
 @keyframes bolt-pop{0%{transform:scale(1);}40%{transform:scale(1.5);}70%{transform:scale(0.9);}100%{transform:scale(1);}}
 .collect-btn.pop{animation:bolt-pop 0.3s ease;}
+
+/* ── ACHIEVEMENT BADGES ── */
+@keyframes ach-flame{0%,100%{transform:scaleY(1) scaleX(1);}33%{transform:scaleY(1.06) scaleX(0.96);}66%{transform:scaleY(0.97) scaleX(1.03);}}
+@keyframes ach-heartbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.1);}28%{transform:scale(1);}42%{transform:scale(1.05);}70%{transform:scale(1);}}
+@keyframes ach-hue{0%{filter:hue-rotate(0deg) brightness(1.1);}50%{filter:hue-rotate(40deg) brightness(1.25);}100%{filter:hue-rotate(0deg) brightness(1.1);}}
+@keyframes ach-pulse-ring{0%,100%{opacity:0.3;transform:scale(1);}50%{opacity:0.65;transform:scale(1.04);}}
+@keyframes ach-pulse-glow{0%,100%{opacity:0.4;}50%{opacity:0.9;}}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:12px;margin-top:16px;}
+.ach-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px 10px;background:white;border:1px solid rgba(184,150,74,0.15);border-radius:12px;position:relative;cursor:default;transition:transform 0.3s cubic-bezier(.34,1.56,.64,1),box-shadow 0.2s;}
+.ach-item::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--ach-line,rgba(184,150,74,0.3)),transparent);}
+.ach-item:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(184,150,74,0.1);}
+.ach-item.locked{opacity:0.32;filter:grayscale(0.6);}
+.ach-item.locked:hover{transform:none;box-shadow:none;}
+.ach-item.earned::after{content:'✓';position:absolute;top:6px;right:7px;font-size:7px;padding:1px 4px;border-radius:2px;background:rgba(61,186,122,0.12);border:1px solid rgba(61,186,122,0.3);color:#3dba7a;font-family:'DM Mono',monospace;}
+.ach-svg-w{filter:drop-shadow(0 3px 10px var(--ach-glow,rgba(184,150,74,0.2)));transition:filter 0.2s;}
+.ach-item:hover .ach-svg-w{filter:drop-shadow(0 6px 18px var(--ach-glow,rgba(184,150,74,0.35)));}
+.ach-label{font-family:'Playfair Display',serif;font-size:9px;font-weight:700;text-align:center;line-height:1.3;}
+.ach-sub{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:1px;color:var(--text4);text-align:center;margin-top:-2px;}
+
+/* ── EQUIPPED BADGES ── */
+.equipped-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.equipped-slot{width:38px;height:38px;border-radius:8px;border:1px dashed rgba(184,150,74,0.3);background:rgba(184,150,74,0.04);display:flex;align-items:center;justify-content:center;transition:border-color 0.2s;}
+.equipped-slot.filled{border-style:solid;border-color:rgba(184,150,74,0.25);background:white;}
+.equip-btn{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--text4);cursor:pointer;padding:3px 8px;border:1px solid var(--border);border-radius:4px;background:transparent;transition:all 0.15s;margin-top:6px;}
+.equip-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* Equip picker overlay */
+#equip-picker{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center;}
+#equip-picker.open{display:flex;}
+.equip-panel{background:var(--surface-card,white);border:1px solid rgba(184,150,74,0.3);border-radius:16px;padding:24px;max-width:440px;width:90%;max-height:80vh;overflow-y:auto;}
+.equip-panel-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--gold);margin-bottom:4px;}
+.equip-panel-sub{font-size:10px;color:var(--text3,#8a7a9a);font-family:'DM Mono',monospace;letter-spacing:1px;margin-bottom:16px;}
+.equip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;}
+.equip-choice{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:10px;border:1.5px solid transparent;cursor:pointer;transition:all 0.2s;background:rgba(255,255,255,0.6);}
+.equip-choice:hover{border-color:rgba(184,150,74,0.4);background:white;}
+.equip-choice.selected{border-color:var(--gold,#b8964a);background:rgba(184,150,74,0.06);}
+.equip-choice.locked-choice{opacity:0.3;cursor:not-allowed;pointer-events:none;}
+.equip-choice-name{font-size:8px;font-family:'DM Mono',monospace;color:var(--text3,#8a7a9a);text-align:center;letter-spacing:0.5px;}
+.equip-actions{display:flex;gap:8px;margin-top:16px;justify-content:flex-end;}
+.equip-save{padding:8px 20px;border-radius:7px;background:linear-gradient(135deg,var(--purple,#5c3d8f),var(--violet,#7b56b8));border:none;color:white;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;}
+.equip-cancel{padding:8px 16px;border-radius:7px;background:transparent;border:1px solid var(--border);color:var(--text3,#8a7a9a);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -376,7 +417,12 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
         <div class="card">
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
             <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--violet));border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:white;flex-shrink:0;" id="prof-avatar">Z</div>
-            <div><div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;" id="prof-name">Zeus Reader</div><div style="font-size:11px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:2px;" id="prof-email"></div></div>
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;" id="prof-name">Zeus Reader</div>
+              <div style="font-size:11px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:2px;" id="prof-email"></div>
+              <div class="equipped-row" id="equipped-display"></div>
+              <button class="equip-btn" onclick="openEquipPicker()"><span class="zh-only">装备徽章</span><span class="en-only">Equip Badges</span></button>
+            </div>
           </div>
           <div class="level-pill lv2" id="prof-pill" style="margin-bottom:16px;"><span id="prof-pill-text">—</span></div>
           <div class="divider"></div>
@@ -574,7 +620,7 @@ document.addEventListener('click',function(ev){
   function applyFilter(){var q=(document.getElementById('issue-search')||{value:''}).value.toLowerCase();var yr=(document.getElementById('issue-year')||{value:''}).value;filtered=ISSUES.filter(function(iss){var matchQ=!q||String(iss.num).indexOf(q)>=0||iss.title.toLowerCase().indexOf(q)>=0||(iss.titleEn&&iss.titleEn.toLowerCase().indexOf(q)>=0);var matchY=!yr||iss.date.indexOf(yr)===0;return matchQ&&matchY;});currentPage=1;render();}
   function initIssues(){var s=document.getElementById('issue-search');var y=document.getElementById('issue-year');if(s&&!s._bound){s.addEventListener('input',applyFilter);s._bound=true;}if(y&&!y._bound){y.addEventListener('change',applyFilter);y._bound=true;}loadIssues();}
   var _origGoPage=window.goPage;
-  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile')setTimeout(loadProfilePage,0);if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);setTimeout(renderFriends,100);}};
+  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile')setTimeout(loadProfilePage,0);if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);}};
   window.addEventListener('load',function(){var ap=document.querySelector('.page.active');if(ap&&ap.id==='page-issues')initIssues();setTimeout(loadNotifications,1000);setTimeout(loadHomePage,500);});
   window._renderIssues=render;
 })();
@@ -679,39 +725,399 @@ document.addEventListener('click',function(ev){
   var hueAnim=d.hue?'style="animation:hue 6s ease-in-out infinite;"':'';
   return '<svg viewBox="'+d.vb+'" width="'+w+'" height="'+h+'" xmlns="http://www.w3.org/2000/svg" '+hueAnim+'>'+d.svg+'</svg>';
 };
-var FRIENDS=[];
-window.loadFriends=function(){
-  var p=window._profile; if(!p||!p.ref_code) return;
-  var today=new Date().toISOString().slice(0,10);
-  var yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
-  var lvColors=['','#4a9fd4','#7b56b8','#b8964a','#d4ac5c','#9b72d4'];
 
-  function buildFriend(u, tag){
+// ── EQUIP SYSTEM ──
+var _equippedIds = [];
+var _equippedTemp = [];
+
+function loadEquipped() {
+  try { _equippedIds = JSON.parse(localStorage.getItem('zeus-equipped') || '[]'); } catch(e) { _equippedIds = []; }
+  renderEquippedDisplay();
+}
+
+function renderEquippedDisplay() {
+  var el = document.getElementById('equipped-display');
+  if (!el) return;
+  var html = '';
+  // Always show 3 slots
+  for (var i = 0; i < 3; i++) {
+    var id = _equippedIds[i];
+    if (id && window._achBadge) {
+      html += '<div class="equipped-slot filled" title="' + id + '">' + window._achBadge(id, 30) + '</div>';
+    } else {
+      html += '<div class="equipped-slot"></div>';
+    }
+  }
+  el.innerHTML = html;
+}
+
+function getEarnedIds() {
+  var p = window._profile;
+  if (!p) return [];
+  var streak = p.streak || 0;
+  var fc = FRIENDS.filter(function(f){ return f.tag !== '引路人' && f.tag !== 'MENTOR'; }).length;
+  var cc = window._collectedSet ? window._collectedSet.size : 0;
+  var earned = [];
+  if (streak >= 7) earned.push('streak7');
+  if (streak >= 30) earned.push('streak30');
+  if (streak >= 100) earned.push('streak100');
+  earned.push('pioneer');
+  if (fc >= 1) earned.push('invite1');
+  if (fc >= 5) earned.push('invite5');
+  if (fc >= 10) earned.push('invite10');
+  if (cc >= 1) earned.push('collect1');
+  return earned;
+}
+
+function openEquipPicker() {
+  _equippedTemp = _equippedIds.slice();
+  var earned = getEarnedIds();
+  var grid = document.getElementById('equip-grid');
+  if (!grid) return;
+  var lang = getLang();
+  var html = '';
+  for (var i = 0; i < ACH_LIST.length; i++) {
+    var a = ACH_LIST[i];
+    var isEarned = earned.indexOf(a.id) >= 0;
+    var isSelected = _equippedTemp.indexOf(a.id) >= 0;
+    html += '<div class="equip-choice'
+      + (isSelected ? ' selected' : '')
+      + (isEarned ? '' : ' locked-choice')
+      + '" data-id="' + a.id + '" onclick="toggleEquipChoice(this,\'' + a.id + '\')">'
+      + '<div>' + (window._achBadge ? window._achBadge(a.id, 36) : '') + '</div>'
+      + '<div class="equip-choice-name">' + (lang === 'zh' ? a.zh : a.en) + '</div>'
+      + '</div>';
+  }
+  grid.innerHTML = html;
+  var picker = document.getElementById('equip-picker');
+  if (picker) { picker.classList.add('open'); applyLang(getLang()); }
+}
+
+function toggleEquipChoice(el, id) {
+  var idx = _equippedTemp.indexOf(id);
+  if (idx >= 0) {
+    _equippedTemp.splice(idx, 1);
+    el.classList.remove('selected');
+  } else {
+    if (_equippedTemp.length >= 3) {
+      // Deselect the oldest
+      var oldId = _equippedTemp.shift();
+      var oldEl = document.querySelector('.equip-choice[data-id="' + oldId + '"]');
+      if (oldEl) oldEl.classList.remove('selected');
+    }
+    _equippedTemp.push(id);
+    el.classList.add('selected');
+  }
+}
+
+function closeEquipPicker() {
+  var picker = document.getElementById('equip-picker');
+  if (picker) picker.classList.remove('open');
+}
+
+function saveEquipped() {
+  _equippedIds = _equippedTemp.slice();
+  try { localStorage.setItem('zeus-equipped', JSON.stringify(_equippedIds)); } catch(e) {}
+  renderEquippedDisplay();
+  closeEquipPicker();
+}
+
+// Load on boot
+window.addEventListener('load', function() { setTimeout(loadEquipped, 800); });
+
+// ── FRIENDS ──
+var FRIENDS = [];
+
+function fmtJoined(s) {
+  if (!s) return '—';
+  var d = new Date(s);
+  var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return M[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+}
+
+window.loadFriends = function() {
+  if (!window._profile || !window._profile.ref_code) {
+    var tries = 0;
+    var wait = setInterval(function() {
+      tries++;
+      if (window._profile && window._profile.ref_code) { clearInterval(wait); window.loadFriends(); }
+      else if (tries > 20) { clearInterval(wait); }
+    }, 300);
+    return;
+  }
+  var p = window._profile;
+  var list = document.getElementById('friends-list');
+  if (list) list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text4);font-family:'DM Mono',monospace;font-size:11px;">加载中…</div>';
+  var today = new Date().toISOString().slice(0,10);
+  var yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  function buildFriend(u,tag){
     var lv=calcLevel(u.exp||0);
     var name=u.display_name||u.email||'Reader';
-    var active=(u.last_checkin===today||u.last_checkin===yesterday);
-    return {id:u.id,name:name,avatar:name.charAt(0).toUpperCase(),level:lv,exp:u.exp||0,streak:u.streak||0,joined:u.joined_at,active:active,tag:tag||null};
+    return {id:u.id,name:name,avatar:name.charAt(0).toUpperCase(),level:lv,exp:u.exp||0,streak:u.streak||0,joined:u.joined_at,active:(u.last_checkin===today||u.last_checkin===yesterday),tag:tag||null};
   }
-
-  // Load inviter first, then my friends
-  var inviterPromise = p.invited_by
+  var inviterP = p.invited_by
     ? _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,joined_at').eq('ref_code',p.invited_by).single()
-    : Promise.resolve({data:null});
-
-  var friendsPromise = _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,joined_at').eq('invited_by',p.ref_code);
-
-  Promise.all([inviterPromise, friendsPromise]).then(function(results){
-    var inviterRes=results[0], friendsRes=results[1];
-    FRIENDS=[];
-    if(inviterRes.data) FRIENDS.push(buildFriend(inviterRes.data,'引路人'));
-    (friendsRes.data||[]).forEach(function(u){ FRIENDS.push(buildFriend(u)); });
+    : Promise.resolve({data:null,error:null});
+  var friendsP = _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,joined_at').eq('invited_by',p.ref_code);
+  Promise.all([inviterP, friendsP]).then(function(res){
+    FRIENDS = [];
+    if(res[0].data && !res[0].error) FRIENDS.push(buildFriend(res[0].data, getLang()==='zh'?'引路人':'MENTOR'));
+    (res[1].data||[]).forEach(function(u){ FRIENDS.push(buildFriend(u)); });
     window.renderFriends();
   });
 };
-window.renderFriends=function(){var list=document.getElementById('friends-list');if(!list)return;var lang=getLang();if(!FRIENDS.length){list.innerHTML='<div style="padding:48px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px;">'+(lang==='zh'?'还没有好友 · 分享你的邀请链接开始吧':'No friends yet · Share your invite link')+'</div>';return;}var html='';for(var i=0;i<FRIENDS.length;i++){var f=FRIENDS[i];var lv=LEVELS[f.level]||LEVELS[1];var lvName=lang==='zh'?lv.name:lv.nameEn;html+='<div class="friend-card"><div class="friend-avatar" style="background:linear-gradient(135deg,'+lv.colorLight+','+lv.color+'22);"><span style="font-family:\'DM Mono\',monospace;font-size:15px;font-weight:700;color:'+lv.color+';">'+f.avatar+'</span></div><div class="friend-info"><div class="friend-name">'+f.name+(f.tag?'<span style="margin-left:7px;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(184,150,74,0.12);border:1px solid rgba(184,150,74,0.25);color:var(--gold);font-family:\'DM Mono\',monospace;letter-spacing:1px;vertical-align:middle;">'+f.tag+'</span>':'')+'</div><div class="friend-meta"><span style="font-size:10px;color:'+lv.color+';font-family:\'DM Mono\',monospace;font-weight:600;letter-spacing:1px;">LV.'+f.level+'</span><span style="font-size:10px;color:var(--text3);font-family:\'Playfair Display\',serif;font-style:italic;"> · '+lvName+'</span></div><div style="font-size:9px;color:var(--text4);font-family:\'DM Mono\',monospace;margin-top:4px;">'+(lang==='zh'?'加入于 ':'Joined ')+fmtJoined(f.joined)+'</div></div><div class="friend-badge-wrap">'+window._badgeSVG(f.level,48)+(f.active?'<div class="friend-active"><span class="zh-only">活跃</span><span class="en-only">Active</span></div>':'<div class="friend-inactive"><span class="zh-only">不活跃</span><span class="en-only">Inactive</span></div>')+'</div></div>';}list.innerHTML=html;applyLang(getLang());var cnt=document.getElementById('friends-count');if(cnt)cnt.innerHTML=FRIENDS.length+(lang==='zh'?' 位好友':' friend'+(FRIENDS.length!==1?'s':''));var rc=document.getElementById('ref-count');if(rc)rc.textContent=FRIENDS.length;var ra=document.getElementById('ref-active');if(ra)ra.textContent=FRIENDS.filter(function(f){return f.active;}).length;};
+
+window.renderFriends = function() {
+  var list = document.getElementById('friends-list');
+  if (!list) return;
+  var lang = getLang();
+  if (!FRIENDS.length) {
+    list.innerHTML = '<div style="padding:48px;text-align:center;color:var(--text4);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;">'+(lang==='zh'?'还没有好友 · 分享你的邀请链接开始吧':'No friends yet · Share your invite link')+'</div>';
+    var rc=document.getElementById('ref-count'); if(rc) rc.textContent='0';
+    var ra=document.getElementById('ref-active'); if(ra) ra.textContent='0';
+    return;
+  }
+  var html='';
+  for(var i=0;i<FRIENDS.length;i++){
+    var f=FRIENDS[i]; var lv=LEVELS[f.level]||LEVELS[1]; var lvName=lang==='zh'?lv.name:lv.nameEn;
+    var tagHtml=f.tag?'<span style="margin-left:7px;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(184,150,74,0.12);border:1px solid rgba(184,150,74,0.25);color:var(--gold);font-family:'DM Mono',monospace;letter-spacing:1px;vertical-align:middle;">'+f.tag+'</span>':'';
+    html+='<div class="friend-card">'
+      +'<div class="friend-avatar" style="background:linear-gradient(135deg,'+lv.colorLight+','+lv.color+'22);"><span style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:'+lv.color+';">'+f.avatar+'</span></div>'
+      +'<div class="friend-info"><div class="friend-name">'+f.name+tagHtml+'</div>'
+      +'<div class="friend-meta"><span style="font-size:10px;color:'+lv.color+';font-family:'DM Mono',monospace;font-weight:600;letter-spacing:1px;">LV.'+f.level+'</span><span style="font-size:10px;color:var(--text3);font-family:'Playfair Display',serif;font-style:italic;"> · '+lvName+'</span></div>'
+      +'<div style="font-size:9px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:4px;">'+(lang==='zh'?'加入于 ':'Joined ')+fmtJoined(f.joined)+'</div></div>'
+      +'<div class="friend-badge-wrap">'+(window._badgeSVG?window._badgeSVG(f.level,48):'')
+      +(f.active?'<div class="friend-active"><span class="zh-only">活跃</span><span class="en-only">Active</span></div>':'<div class="friend-inactive"><span class="zh-only">不活跃</span><span class="en-only">Inactive</span></div>')
+      +'</div></div>';
+  }
+  list.innerHTML = html;
+  applyLang(getLang());
+  var isMentor = function(f){ return f.tag==='引路人'||f.tag==='MENTOR'; };
+  var invited = FRIENDS.filter(function(f){return !isMentor(f);}).length;
+  var active = FRIENDS.filter(function(f){return f.active && !isMentor(f);}).length;
+  var cnt=document.getElementById('friends-count'); if(cnt) cnt.innerHTML=invited+(lang==='zh'?' 位好友':(' friend'+(invited!==1?'s':'')));
+  var rc=document.getElementById('ref-count'); if(rc) rc.textContent=invited;
+  var ra=document.getElementById('ref-active'); if(ra) ra.textContent=active;
+};
   document.addEventListener('click',function(ev){var el=ev.target;while(el&&el!==document.body){var action=el.dataset&&el.dataset.action;if(action==='copy-ref'){var link=(document.getElementById('ref-link-box')||{}).textContent||'';if(navigator.clipboard)navigator.clipboard.writeText(link.trim());else{var ta=document.createElement('textarea');ta.value=link.trim();document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}var toast=document.getElementById('copy-toast');if(toast){toast.style.display='block';setTimeout(function(){toast.style.display='none';},2500);}return;}if(action==='share-ref'){var link=(document.getElementById('ref-link-box')||{}).textContent||'';if(navigator.share)navigator.share({title:'Zeus Daily',text:'每天一份神眼视角日报 ✦',url:link.trim()});else{var toast=document.getElementById('copy-toast');if(toast){toast.style.display='block';setTimeout(function(){toast.style.display='none';},2500);}if(navigator.clipboard)navigator.clipboard.writeText(link.trim());}return;}el=el.parentElement;}});
   window.addEventListener('load',function(){var ap=document.querySelector('.page.active');if(ap&&ap.id==='page-friends')renderFriends();});
 })();
+
+
+// ── ACHIEVEMENT BADGE SVG GENERATOR ──
+window._achBadge = function(id, size) {
+  var s = size || 52;
+  var uid = 'a' + id + (Math.random()*9999|0);
+  var svgs = {
+    'streak7': {
+      glow:'rgba(255,120,40,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="70%" r="65%"><stop offset="0%" stop-color="#fff4e0"/><stop offset="100%" stop-color="#ffd0a0"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<path d="M26,3 L47,15 L47,37 Q47,50 26,55 Q5,50 5,37 L5,15 Z" fill="url(#'+uid+'bg)" stroke="#ff8c3c" stroke-width="1.3"/>'
+      +'<g style="transform-origin:26px 32px;animation:ach-flame 1.8s ease-in-out infinite;">'
+      +'<path d="M26,14 C26,14 35,22 33,30 C31,38 37,38 35,43 C33,48 28,50 26,50 C24,50 19,48 17,43 C15,38 21,38 19,30 C17,22 26,14 26,14Z" fill="#ff8c3c" opacity="0.9" filter="url(#'+uid+'gl)"/>'
+      +'<path d="M26,20 C26,20 31,27 29,34 C27,41 31,41 29,45 C27,49 26,49 26,49 C24,48 22,45 22,43 C20,40 23,38 21,34 C19,27 26,20 26,20Z" fill="#ffcc44" opacity="0.9"/>'
+      +'<path d="M26,29 C26,29 28,33 27,37 C26,41 27,42 26,43 C25,42 25,40 24,37 C23,33 26,29 26,29Z" fill="white" opacity="0.6"/>'
+      +'</g>'
+    },
+    'streak30': {
+      glow:'rgba(255,60,60,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="60%" r="65%"><stop offset="0%" stop-color="#fff0f0"/><stop offset="100%" stop-color="#ffc0c0"/></radialGradient><linearGradient id="'+uid+'sh" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="rgba(255,255,255,0)"/><stop offset="50%" stop-color="rgba(255,255,255,0.4)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<path d="M26,3 L47,15 L47,37 Q47,50 26,55 Q5,50 5,37 L5,15 Z" fill="url(#'+uid+'bg)" stroke="#e04444" stroke-width="1.3"/>'
+      +'<rect x="-32" y="3" width="32" height="55" fill="url(#'+uid+'sh)" opacity="0.9" style="animation:shimmer 2s ease-in-out infinite;"/>'
+      +'<g style="transform-origin:26px 32px;animation:ach-flame 1.5s ease-in-out infinite;">'
+      +'<path d="M18,20 C16,26 13,30 15,37 C17,43 20,45 20,45 C18,41 17,37 20,33 C22,29 18,20 18,20Z" fill="#ff7070" opacity="0.7"/>'
+      +'<path d="M34,20 C36,26 39,30 37,37 C35,43 32,45 32,45 C34,41 35,37 32,33 C30,29 34,20 34,20Z" fill="#ff7070" opacity="0.7"/>'
+      +'<path d="M26,13 C26,13 35,22 33,31 C31,40 37,40 34,46 C32,50 26,51 26,51 C22,50 19,46 18,43 C14,37 20,37 18,31 C16,22 26,13 26,13Z" fill="#e04444" opacity="0.9" filter="url(#'+uid+'gl)"/>'
+      +'<path d="M26,20 C26,20 32,28 30,34 C28,40 31,40 28,45 C27,47 26,48 26,48 C24,47 23,44 22,42 C20,39 22,37 21,34 C19,28 26,20 26,20Z" fill="#ff9944" opacity="0.9"/>'
+      +'<path d="M26,28 C26,28 28,32 27,36 C26,40 27,41 26,43 C25,41 25,39 24,36 C23,32 26,28 26,28Z" fill="#ffe0a0" opacity="0.85"/>'
+      +'</g>'
+    },
+    'streak100': {
+      glow:'rgba(123,86,184,0.35)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#f0e8ff"/><stop offset="100%" stop-color="#c8a8ee"/></radialGradient><radialGradient id="'+uid+'sun" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e0d0ff"/><stop offset="60%" stop-color="#9b72d4"/><stop offset="100%" stop-color="#5c3d8f"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,3 42,9 48,26 42,42 26,48 10,42 4,26 10,9" fill="url(#'+uid+'bg)" stroke="#9b72d4" stroke-width="1.3"/>'
+      +'<circle cx="26" cy="26" r="9" fill="url(#'+uid+'sun)" filter="url(#'+uid+'gl)"/>'
+      +'<g style="transform-origin:26px 26px;animation:spin-slow 14s linear infinite;">'
+      +'<line x1="26" y1="11" x2="26" y2="15" stroke="#9b72d4" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>'
+      +'<line x1="26" y1="37" x2="26" y2="41" stroke="#9b72d4" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>'
+      +'<line x1="11" y1="26" x2="15" y2="26" stroke="#9b72d4" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>'
+      +'<line x1="37" y1="26" x2="41" y2="26" stroke="#9b72d4" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>'
+      +'<line x1="15.8" y1="15.8" x2="18.7" y2="18.7" stroke="#9b72d4" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>'
+      +'<line x1="36.2" y1="15.8" x2="33.3" y2="18.7" stroke="#9b72d4" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>'
+      +'<line x1="15.8" y1="36.2" x2="18.7" y2="33.3" stroke="#9b72d4" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>'
+      +'<line x1="36.2" y1="36.2" x2="33.3" y2="33.3" stroke="#9b72d4" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>'
+      +'</g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 6s linear infinite;"><circle cx="26" cy="7" r="2" fill="#b8964a" opacity="0.85"/></g>'
+    },
+    'genesis': {
+      glow:'rgba(212,172,92,0.4)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fffaee"/><stop offset="100%" stop-color="#e8d090"/></radialGradient><linearGradient id="'+uid+'gd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0c060"/><stop offset="50%" stop-color="#d4ac5c"/><stop offset="100%" stop-color="#8a6d2f"/></linearGradient><linearGradient id="'+uid+'sh" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="rgba(255,255,255,0)"/><stop offset="50%" stop-color="rgba(255,255,255,0.5)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,1 28.5,10 32,5 31.5,14 38,9 35,17 44,17 39,23 48,25 40,29 45,36 38,35 40,44 34,40 33,52 28.5,44 26,56 23.5,44 21,52 20,40 14,44 16,35 9,36 14,29 6,25 15,23 10,17 19,17 16,9 23,14 22.5,5 26,10"
+      +'fill="url(#'+uid+'bg)" stroke="url(#'+uid+'gd)" stroke-width="1" stroke-linejoin="round"/>'
+      +'<rect x="-38" y="0" width="38" height="58" fill="url(#'+uid+'sh)" opacity="0.9" style="animation:shimmer 2.2s ease-in-out infinite;"/>'
+      +'<path d="M30,14 L21,30 L27,30 L22,46 L33,24 L27,24 Z" fill="url(#'+uid+'gd)" stroke="#8a6d2f" stroke-width="0.6" stroke-linejoin="round" filter="url(#'+uid+'gl)" style="animation:ach-heartbeat 3s ease-in-out infinite;"/>'
+    },
+    'pioneer': {
+      glow:'rgba(184,150,74,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fff8f0"/><stop offset="100%" stop-color="#e8d4b8"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,1 48,24 26,54 4,24" fill="url(#'+uid+'bg)" stroke="#b8964a" stroke-width="1.3"/>'
+      +'<g style="transform-origin:26px 30px;animation:spin-slow 12s linear infinite;"><circle cx="26" cy="30" r="18" fill="none" stroke="#b8964a" stroke-width="0.6" stroke-dasharray="2 5" opacity="0.4"/></g>'
+      +'<g filter="url(#'+uid+'gl)">'
+      +'<polygon points="26,14 24,28 26,24 28,28" fill="#b8964a"/>'
+      +'<polygon points="26,46 24,32 26,36 28,32" fill="#b8964a" opacity="0.4"/>'
+      +'<polygon points="40,30 26,28 30,30 26,32" fill="#b8964a" opacity="0.4"/>'
+      +'<polygon points="12,30 26,28 22,30 26,32" fill="#b8964a" opacity="0.4"/>'
+      +'<circle cx="26" cy="30" r="2.5" fill="#8a6d2f"/><circle cx="26" cy="30" r="1" fill="#f0c060"/>'
+      +'</g>'
+    },
+    'invite1': {
+      glow:'rgba(61,186,122,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#e8fff4"/><stop offset="100%" stop-color="#b0e8cc"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<path d="M26,3 L45,13 L45,34 Q45,48 26,54 Q7,48 7,34 L7,13 Z" fill="url(#'+uid+'bg)" stroke="#3dba7a" stroke-width="1.3"/>'
+      +'<circle cx="26" cy="28" r="18" fill="none" stroke="#3dba7a" stroke-width="0.6" opacity="0.2" style="animation:ach-pulse-ring 2.5s ease-in-out infinite;"/>'
+      +'<g filter="url(#'+uid+'gl)">'
+      +'<circle cx="19" cy="24" r="7" fill="none" stroke="#3dba7a" stroke-width="2.3"/>'
+      +'<circle cx="33" cy="32" r="7" fill="none" stroke="#3dba7a" stroke-width="2.3"/>'
+      +'<rect x="22" y="21" width="8" height="14" fill="url(#'+uid+'bg)"/>'
+      +'<circle cx="19" cy="24" r="7" fill="none" stroke="#3dba7a" stroke-width="2.3"/>'
+      +'<circle cx="33" cy="32" r="7" fill="none" stroke="#3dba7a" stroke-width="2.3"/>'
+      +'</g>'
+    },
+    'invite5': {
+      glow:'rgba(61,186,122,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#e0fff2"/><stop offset="100%" stop-color="#90d8b4"/></radialGradient><radialGradient id="'+uid+'core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a0ffd0"/><stop offset="100%" stop-color="#2a8a5a"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,3 31,16 44,11 37,23 50,26 37,29 44,41 31,36 26,49 21,36 8,41 15,29 2,26 15,23 8,11 21,16" fill="url(#'+uid+'bg)" stroke="#3dba7a" stroke-width="1.3" stroke-linejoin="round"/>'
+      +'<polygon points="26,17 27.8,23 34,23 29,27 31,33 26,29 21,33 23,27 18,23 24.2,23" fill="url(#'+uid+'core)" filter="url(#'+uid+'gl)"/>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;"><circle cx="26" cy="8" r="1.8" fill="#3dba7a" opacity="0.9"/></g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;animation-delay:-1s;"><circle cx="26" cy="8" r="1.5" fill="#b8964a" opacity="0.75"/></g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;animation-delay:-2s;"><circle cx="26" cy="8" r="1.8" fill="#3dba7a" opacity="0.8"/></g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;animation-delay:-3s;"><circle cx="26" cy="8" r="1.5" fill="#78e0aa" opacity="0.8"/></g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;animation-delay:-4s;"><circle cx="26" cy="8" r="1.8" fill="#3dba7a" opacity="0.85"/></g>'
+    },
+    'invite10': {
+      glow:'rgba(155,114,212,0.35)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#f0e8ff"/><stop offset="50%" stop-color="#d0b8f8"/><stop offset="100%" stop-color="#9060d0"/></radialGradient><linearGradient id="'+uid+'bd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0c8ff"/><stop offset="50%" stop-color="#9b72d4"/><stop offset="100%" stop-color="#d4ac5c"/></linearGradient><radialGradient id="'+uid+'wg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e0c8ff"/><stop offset="100%" stop-color="#7b56b8"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,2 28,11 31,5 31,13 36,9 33,17 41,14 37,21 46,20 39,26 48,28 39,31 47,36 38,35 42,44 35,39 34,50 29,43 27,55 25,43 23,55 21,50 20,39 13,44 17,35 8,36 12,28 3,28 12,26 5,21 14,20 10,14 18,17 15,9 20,13 20,5 23,11"
+      +'fill="url(#'+uid+'bg)" stroke="url(#'+uid+'bd)" stroke-width="0.7" stroke-linejoin="round" style="animation:ach-hue 8s ease-in-out infinite;"/>'
+      +'<g style="transform-origin:26px 28px;animation:spin-slow 6s linear infinite;"><circle cx="26" cy="28" r="20" fill="none" stroke="#d4ac5c" stroke-width="0.6" stroke-dasharray="3 5" opacity="0.5"/></g>'
+      +'<g style="transform-origin:26px 28px;animation:orbit 4s linear infinite;"><circle cx="46" cy="28" r="2" fill="#d4ac5c" opacity="0.9"/><circle cx="6" cy="28" r="1.5" fill="#9b72d4" opacity="0.8"/></g>'
+      +'<g filter="url(#'+uid+'gl)">'
+      +'<path d="M26,20 C21,22 13,25 9,28 C13,31 21,34 26,36 C19,33 16,31 18,28 C16,25 19,23 26,20Z" fill="url(#'+uid+'wg)" opacity="0.88"/>'
+      +'<path d="M26,20 C31,22 39,25 43,28 C39,31 31,34 26,36 C33,33 36,31 34,28 C36,25 33,23 26,20Z" fill="url(#'+uid+'wg)" opacity="0.88"/>'
+      +'<circle cx="26" cy="28" r="3.5" fill="#d4ac5c" opacity="0.95"/><circle cx="26" cy="28" r="1.5" fill="white" opacity="0.7"/>'
+      +'</g>'
+      +'<circle cx="8" cy="14" r="1.2" fill="#f0c8ff" opacity="0.7" style="animation:sparkle 2s ease-in-out infinite;"/>'
+      +'<circle cx="44" cy="14" r="1" fill="#d4ac5c" opacity="0.8" style="animation:sparkle 2s ease-in-out infinite;animation-delay:0.7s;"/>'
+    },
+    'collect1': {
+      glow:'rgba(184,150,74,0.25)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fffcf0"/><stop offset="100%" stop-color="#f0e4c0"/></radialGradient></defs>'
+      +'<rect x="8" y="6" width="36" height="44" rx="3" fill="url(#'+uid+'bg)" stroke="#b8964a" stroke-width="1.3"/>'
+      +'<ellipse cx="26" cy="6" rx="18" ry="3.5" fill="#e0c870" stroke="#b8964a" stroke-width="1"/>'
+      +'<ellipse cx="26" cy="50" rx="18" ry="3.5" fill="#e0c870" stroke="#b8964a" stroke-width="1"/>'
+      +'<line x1="14" y1="18" x2="38" y2="18" stroke="#b8964a" stroke-width="0.7" opacity="0.3"/>'
+      +'<line x1="14" y1="23" x2="32" y2="23" stroke="#b8964a" stroke-width="0.7" opacity="0.3"/>'
+      +'<circle cx="26" cy="38" r="8" fill="#b8964a"/>'
+      +'<polygon points="26,32 27.8,37 33,37 28.8,40 30.5,45 26,42 21.5,45 23.2,40 19,37 24.2,37" fill="white" opacity="0.92"/>'
+    },
+    'collect_legend': {
+      glow:'rgba(212,172,92,0.4)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fffaee"/><stop offset="60%" stop-color="#f5e8c0"/><stop offset="100%" stop-color="#d4ac5c"/></radialGradient><linearGradient id="'+uid+'gd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0c060"/><stop offset="50%" stop-color="#d4ac5c"/><stop offset="100%" stop-color="#8a6d2f"/></linearGradient><linearGradient id="'+uid+'sh" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="rgba(255,255,255,0)"/><stop offset="50%" stop-color="rgba(255,255,255,0.5)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,1 29,12 38,6 35,17 47,14 41,24 52,26 41,29 47,38 35,36 38,47 29,42 26,54 23,42 14,47 17,36 5,38 11,29 0,26 11,24 5,14 17,17 14,6 23,12" fill="url(#'+uid+'bg)" stroke="url(#'+uid+'gd)" stroke-width="1.2" stroke-linejoin="round"/>'
+      +'<rect x="-38" y="0" width="38" height="56" fill="url(#'+uid+'sh)" opacity="0.9" style="animation:shimmer 2s ease-in-out infinite;"/>'
+      +'<g style="transform-origin:26px 28px;animation:spin-slow 8s linear infinite;"><circle cx="26" cy="28" r="22" fill="none" stroke="#d4ac5c" stroke-width="0.7" stroke-dasharray="3 5" opacity="0.5"/></g>'
+      +'<g filter="url(#'+uid+'gl)">'
+      +'<path d="M13,38 L13,23 L21,31 L26,18 L31,31 L39,23 L39,38 Z" fill="url(#'+uid+'gd)" stroke="#8a6d2f" stroke-width="0.7" stroke-linejoin="round"/>'
+      +'<rect x="13" y="36" width="26" height="3" rx="1.5" fill="#8a6d2f"/>'
+      +'<circle cx="26" cy="20" r="2.5" fill="white" opacity="0.95"/><circle cx="26" cy="20" r="1" fill="#f0c060" opacity="0.8"/>'
+      +'<circle cx="15" cy="25" r="1.8" fill="white" opacity="0.8"/>'
+      +'<circle cx="37" cy="25" r="1.8" fill="white" opacity="0.8"/>'
+      +'</g>'
+    },
+    'night_owl': {
+      glow:'rgba(60,80,200,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e0e8ff"/><stop offset="100%" stop-color="#9098d8"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<path d="M26,3 L46,14 L46,37 Q46,49 26,55 Q6,49 6,37 L6,14 Z" fill="url(#'+uid+'bg)" stroke="#6474d4" stroke-width="1.3"/>'
+      +'<g style="transform-origin:26px 30px;animation:spin-rev 18s linear infinite;"><circle cx="26" cy="30" r="19" fill="none" stroke="#6474d4" stroke-width="0.5" stroke-dasharray="2 7" opacity="0.35"/></g>'
+      +'<g filter="url(#'+uid+'gl)"><circle cx="27" cy="28" r="12" fill="#5060c0" opacity="0.88"/><circle cx="32" cy="25" r="9" fill="url(#'+uid+'bg)"/></g>'
+      +'<circle cx="12" cy="16" r="1.2" fill="#c8d0ff" style="animation:sparkle 3s ease-in-out infinite;"/>'
+      +'<circle cx="19" cy="12" r="0.9" fill="#c8d0ff" style="animation:sparkle 3s ease-in-out infinite;animation-delay:0.6s;"/>'
+      +'<circle cx="39" cy="14" r="1.1" fill="#c8d0ff" style="animation:sparkle 3s ease-in-out infinite;animation-delay:1.2s;"/>'
+      +'<circle cx="42" cy="22" r="0.8" fill="#c8d0ff" style="animation:sparkle 3s ease-in-out infinite;animation-delay:1.8s;"/>'
+      +'<line x1="12" y1="16" x2="19" y2="12" stroke="#c8d0ff" stroke-width="0.5" opacity="0.3"/>'
+      +'<line x1="39" y1="14" x2="42" y2="22" stroke="#c8d0ff" stroke-width="0.5" opacity="0.3"/>'
+    },
+    'silent_god': {
+      glow:'rgba(80,80,80,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e8e8f0"/><stop offset="100%" stop-color="#a8a8c0"/></radialGradient><radialGradient id="'+uid+'void" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#282838"/><stop offset="100%" stop-color="#060610"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,3 46,14 46,40 26,51 6,40 6,14" fill="url(#'+uid+'bg)" stroke="#606080" stroke-width="1.3" opacity="0.8"/>'
+      +'<g style="transform-origin:26px 28px;animation:spin-slow 28s linear infinite;"><circle cx="26" cy="28" r="18" fill="none" stroke="#606080" stroke-width="1.2" stroke-dasharray="6 3 1 3 6 32" opacity="0.5"/></g>'
+      +'<circle cx="26" cy="28" r="10" fill="url(#'+uid+'void)" filter="url(#'+uid+'gl)"/>'
+      +'<line x1="26" y1="28" x2="20" y2="20" stroke="#9090a8" stroke-width="0.8" opacity="0.6"/>'
+      +'<line x1="20" y1="20" x2="17" y2="17" stroke="#9090a8" stroke-width="0.5" opacity="0.35"/>'
+      +'<line x1="26" y1="28" x2="33" y2="22" stroke="#9090a8" stroke-width="0.8" opacity="0.6"/>'
+      +'<line x1="26" y1="28" x2="30" y2="36" stroke="#9090a8" stroke-width="0.7" opacity="0.5"/>'
+      +'<line x1="26" y1="28" x2="19" y2="35" stroke="#9090a8" stroke-width="0.6" opacity="0.4"/>'
+      +'<circle cx="26" cy="28" r="2" fill="#606080" opacity="0.5" style="animation:ach-pulse-glow 3.5s ease-in-out infinite;"/>'
+    }
+  };
+  var d = svgs[id];
+  if (!d) return '';
+  return '<svg viewBox="0 0 52 58" width="'+s+'" height="'+Math.round(s*58/52)+'" xmlns="http://www.w3.org/2000/svg">'+ d.svg +'</svg>';
+};
+
+// Achievement data config
+window.ACH_LIST = [
+  {id:'streak7',    zh:'初燃',    en:'First Spark',    desc_zh:'连续 7 天',   desc_en:'7-day streak',    earned:false, line:'rgba(255,140,60,0.5)', glow:'rgba(255,120,40,0.3)'},
+  {id:'streak30',   zh:'不灭之焰', en:'Steady Flame',   desc_zh:'连续 30 天',  desc_en:'30-day streak',   earned:false, line:'rgba(255,80,80,0.5)',  glow:'rgba(255,60,60,0.3)'},
+  {id:'streak100',  zh:'百日',    en:'Century',         desc_zh:'连续 100 天', desc_en:'100-day streak',  earned:false, line:'rgba(123,86,184,0.5)', glow:'rgba(123,86,184,0.35)'},
+  {id:'genesis',    zh:'创世纪',  en:'Genesis',         desc_zh:'前 100 名',   desc_en:'Top 100 user',    earned:false, line:'rgba(212,172,92,0.6)', glow:'rgba(212,172,92,0.4)'},
+  {id:'pioneer',    zh:'先行者',  en:'Pioneer',         desc_zh:'Beta 注册',   desc_en:'Beta sign-up',    earned:false, line:'rgba(184,150,74,0.4)', glow:'rgba(184,150,74,0.3)'},
+  {id:'invite1',    zh:'引路人',  en:'First Invite',    desc_zh:'邀请 1 人',   desc_en:'Invite 1 friend', earned:false, line:'rgba(100,180,150,0.5)', glow:'rgba(61,186,122,0.3)'},
+  {id:'invite5',    zh:'布道者',  en:'Evangelist',      desc_zh:'邀请 5 人',   desc_en:'Invite 5 friends',earned:false, line:'rgba(61,186,122,0.4)', glow:'rgba(61,186,122,0.3)'},
+  {id:'invite10',   zh:'神使',    en:'Divine Herald',   desc_zh:'邀请 10 人',  desc_en:'Invite 10 friends',earned:false, line:'rgba(155,114,212,0.5)', glow:'rgba(155,114,212,0.35)'},
+  {id:'collect1',   zh:'初藏',    en:'First Relic',     desc_zh:'收藏 1 期',   desc_en:'Collect 1 issue', earned:false, line:'rgba(184,150,74,0.4)', glow:'rgba(184,150,74,0.25)'},
+  {id:'collect_legend',zh:'传说藏家',en:'Legend Keeper',desc_zh:'传说版藏品',  desc_en:'Legendary issue', earned:false, line:'rgba(212,172,92,0.6)', glow:'rgba(212,172,92,0.4)'},
+  {id:'night_owl',  zh:'夜枭',    en:'Night Owl',       desc_zh:'凌晨签到',    desc_en:'Check in 0–4 AM', earned:false, line:'rgba(78,100,180,0.5)', glow:'rgba(60,80,200,0.3)'},
+  {id:'silent_god', zh:'沉默的神', en:'Silent God',      desc_zh:'失联后回归',  desc_en:'Return after 7d', earned:false, line:'rgba(40,40,40,0.5)',  glow:'rgba(80,80,80,0.3)'}
+];
+
+window.renderAchievements = function(profile) {
+  var el = document.getElementById('ach-grid-inner');
+  if (!el) return;
+  var p = profile || window._profile;
+  var lang = getLang();
+
+  // Compute which are earned
+  var streak = p ? (p.streak || 0) : 0;
+  var friendCount = FRIENDS.length;
+  var colCount = window._collectedSet ? window._collectedSet.size : 0;
+
+  var earned = {};
+  if (streak >= 7)   earned['streak7'] = true;
+  if (streak >= 30)  earned['streak30'] = true;
+  if (streak >= 100) earned['streak100'] = true;
+  if (p && p.joined_at) {
+    // genesis/pioneer: check against a threshold — approximated here
+    earned['pioneer'] = true; // everyone in beta gets pioneer
+  }
+  if (friendCount >= 1) earned['invite1'] = true;
+  if (friendCount >= 5) earned['invite5'] = true;
+  if (friendCount >= 10) earned['invite10'] = true;
+  if (colCount >= 1) earned['collect1'] = true;
+
+  var html = '';
+  for (var i = 0; i < ACH_LIST.length; i++) {
+    var a = ACH_LIST[i];
+    var isEarned = !!earned[a.id];
+    html += '<div class="ach-item' + (isEarned ? ' earned' : ' locked') + '" style="--ach-line:' + a.line + ';--ach-glow:' + a.glow + ';">'
+      + '<div class="ach-svg-w">' + (window._achBadge ? window._achBadge(a.id, 44) : '') + '</div>'
+      + '<div class="ach-label" style="color:' + (isEarned ? 'var(--text)' : 'var(--text3)') + ';">' + (lang === 'zh' ? a.zh : a.en) + '</div>'
+      + '<div class="ach-sub">' + (lang === 'zh' ? a.desc_zh : a.desc_en) + '</div>'
+      + '</div>';
+  }
+  el.innerHTML = html;
+};
 
 window.loadCollection=function(){var user=window._currentUser;if(!user)return;var grid=document.getElementById('collection-grid');var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];var empty='<div style="padding:48px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px;grid-column:1/-1;"><span class=\"zh-only\">还没有收藏 · 在期刊页点击 ⚡ 开始收藏</span><span class=\"en-only\">No collections yet · Click ⚡ on an issue to collect</span></div>';_sb.from('collections').select('edition_id,collected_at').eq('user_id',user.id).then(function(colRes){if(!colRes.data||!colRes.data.length){if(grid){grid.innerHTML=empty;if(window.applyLang)applyLang(getLang());}var cnt=document.getElementById('col-count-text');if(cnt)cnt.innerHTML='<span class="zh-only">0 件藏品</span><span class="en-only">0 items</span>';return;}var editionIds=colRes.data.map(function(c){return c.edition_id;});_sb.from('editions').select('*').in('id',editionIds).order('vol_number',{ascending:false}).then(function(r){if(!r.data||!r.data.length){if(grid){grid.innerHTML=empty;if(window.applyLang)applyLang(getLang());}return;}var eyeSvg='<svg viewBox="0 0 60 70" width="28" height="34" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="lglow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8d5ff"/><stop offset="100%" stop-color="#c4a0f0" stop-opacity="0"/></radialGradient></defs><ellipse cx="30" cy="35" rx="22" ry="22" fill="url(#lglow)" opacity="0.5"/><polygon points="33,8 21,33 29,33 25,62 39,31 31,31" fill="#c4a0f0" opacity="0.6" stroke="#b088f9" stroke-width="1" stroke-linejoin="round"/></svg>';var html=r.data.map(function(e){var d=new Date(e.date);var dateStr=MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();var volStr='VOL.'+String(e.vol_number).padStart(3,'0');var badge=e.vol_number===1?'<div class="badge badge-special" style="font-size:8px;"><span>GENESIS</span></div>':'<div class="badge badge-new" style="font-size:8px;"><span>⚡</span></div>';var clickAttr=e.html_url?' onclick="window.open(\''+e.html_url+'\',\'_blank\')" style="cursor:pointer;"':'';return'<div class="col-card"'+clickAttr+'><div class="vol">'+volStr+'</div>'+eyeSvg+'<div class="col-title">'+e.title+'</div><div class="col-date">'+dateStr+'</div>'+badge+'</div>';}).join('');if(grid)grid.innerHTML=html;var cnt=document.getElementById('col-count-text');if(cnt)cnt.innerHTML='<span class="zh-only">'+r.data.length+' 件藏品</span><span class="en-only">'+r.data.length+' items</span>';if(window.applyLang)applyLang(getLang());});});};
 
@@ -724,7 +1130,7 @@ function boltSvg(){return'<svg width="18" height="18" viewBox="0 0 16 16" fill="
 
 window.loadHomePage=function(){var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];function fmtD(s){var d=new Date(s);return MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();}_sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(1).single().then(function(r){if(!r.data)return;var e=r.data;var volStr='VOL.'+String(e.vol_number).padStart(3,'0');var vzh=document.getElementById('hero-vol-zh');var ven=document.getElementById('hero-vol-en');if(vzh)vzh.textContent=volStr+' · 今日新刊';if(ven)ven.textContent=volStr+' · LATEST ISSUE';var zh=document.getElementById('hero-title-zh');var en=document.getElementById('hero-title-en');if(zh)zh.textContent=e.title;if(en)en.textContent=e.title;var subzh=document.getElementById('hero-sub-zh');var suben=document.getElementById('hero-sub-en');if(subzh)subzh.textContent=fmtD(e.date);if(suben)suben.textContent=fmtD(e.date);});_sb.from('editions').select('*').order('vol_number',{ascending:false}).limit(3).then(function(r){var prev=document.getElementById('home-issues-preview');if(!prev||!r.data)return;var html=r.data.map(function(e,i){var numStr=String(e.vol_number).padStart(3,'0');var badge=i===0?'<div class="badge badge-new">NEW</div>':e.vol_number===1?'<div class="badge badge-special"><span>GENESIS</span></div>':'<div class="badge badge-read"><span class="zh-only">已读</span><span class="en-only">READ</span></div>';var click=e.html_url?' onclick="window.open(\''+e.html_url+'\')" style="cursor:pointer;"':'';return'<div class="issue-row"'+click+'><div class="issue-num">'+numStr+'</div><div class="issue-meta"><div class="issue-title">'+e.title+'</div><div class="issue-date">'+fmtD(e.date)+'</div></div>'+badge+'</div>';}).join('');prev.innerHTML=html||'<div style="color:var(--text4);font-size:12px;padding:16px;">暂无期刊</div>';if(window.applyLang)applyLang(getLang());});_sb.from('profiles').select('*',{count:'exact',head:true}).then(function(r){var el=document.getElementById('ref-count');if(el)el.textContent=Math.max(0,(r.count||1)-1);});};
 
-window.loadProfilePage=function(){var p=window._profile;if(!p)return;var LV_ZH=['','观察者','学者','先知','圣人','造物主'];var LV_EN=['','Observer','Scholar','Prophet','Sage','Creator'];var exp=p.exp||0;var lv=calcLevel(exp);var nextExp=[0,300,500,1000,2000,9999][lv];var el=function(id){return document.getElementById(id);};if(el('prof-pill'))el('prof-pill').className='level-pill lv'+lv;if(el('prof-pill-text'))el('prof-pill-text').textContent='Lv.'+lv+' · '+(getLang()==='zh'?LV_ZH[lv]:LV_EN[lv]);if(el('prof-streak'))el('prof-streak').textContent=p.streak||0;if(el('prof-exp2'))el('prof-exp2').textContent=exp;if(el('prof-name'))el('prof-name').textContent=p.display_name||'Zeus Reader';if(el('prof-avatar'))el('prof-avatar').textContent=(p.display_name||'Z').charAt(0).toUpperCase();if(el('prof-email'))el('prof-email').textContent=window._currentUser&&window._currentUser.email?window._currentUser.email:'';var roadEl=document.getElementById('lv-roadmap-list');if(roadEl){var lvColors=['','#4a9fd4','#7b56b8','#b8964a','#d4ac5c','#9b72d4'];var lvDays=['','0–30d','31–90d','91–180d','181–364d','365d+'];var html='';for(var i=1;i<=5;i++){var isCurrent=(i===lv);var isPast=(i<lv);var nameZh=LV_ZH[i],nameEn=LV_EN[i];var color=lvColors[i];var badge=window._badgeSVG?window._badgeSVG(i,36):'';var rowClass=isCurrent?'lv-row current':(isPast?'lv-row':'lv-row locked');var nameHtml='<div style="font-size:12px;font-weight:'+(isCurrent?'600':'500')+';color:'+color+';">Lv.'+i+' · <span class="zh-only">'+nameZh+'</span><span class="en-only">'+nameEn+'</span></div>';var subHtml='';if(isCurrent)subHtml='<div style="font-size:9px;color:var(--text4);font-family:\'DM Mono\',monospace;margin-top:1px;">'+exp+' / '+nextExp+' EXP</div>';else if(isPast)subHtml='<div style="font-size:9px;color:var(--green);font-family:\'DM Mono\',monospace;margin-top:1px;">✓ 已达成</div>';html+='<div class="'+rowClass+'">'+badge+'<div>'+nameHtml+subHtml+'</div><span class="lv-range">'+lvDays[i]+'</span></div>';}roadEl.innerHTML=html;if(window.applyLang)applyLang(getLang());}};
+window.loadProfilePage=function(){var p=window._profile;if(!p)return;var LV_ZH=['','观察者','学者','先知','圣人','造物主'];var LV_EN=['','Observer','Scholar','Prophet','Sage','Creator'];var exp=p.exp||0;var lv=calcLevel(exp);var nextExp=[0,300,500,1000,2000,9999][lv];var el=function(id){return document.getElementById(id);};if(el('prof-pill'))el('prof-pill').className='level-pill lv'+lv;if(el('prof-pill-text'))el('prof-pill-text').textContent='Lv.'+lv+' · '+(getLang()==='zh'?LV_ZH[lv]:LV_EN[lv]);if(el('prof-streak'))el('prof-streak').textContent=p.streak||0;if(el('prof-exp2'))el('prof-exp2').textContent=exp;if(el('prof-name'))el('prof-name').textContent=p.display_name||'Zeus Reader';if(el('prof-avatar'))el('prof-avatar').textContent=(p.display_name||'Z').charAt(0).toUpperCase();if(el('prof-email'))el('prof-email').textContent=window._currentUser&&window._currentUser.email?window._currentUser.email:'';var roadEl=document.getElementById('lv-roadmap-list');if(roadEl){var lvColors=['','#4a9fd4','#7b56b8','#b8964a','#d4ac5c','#9b72d4'];var lvDays=['','0–30d','31–90d','91–180d','181–364d','365d+'];var html='';for(var i=1;i<=5;i++){var isCurrent=(i===lv);var isPast=(i<lv);var nameZh=LV_ZH[i],nameEn=LV_EN[i];var color=lvColors[i];var badge=window._badgeSVG?window._badgeSVG(i,36):'';var rowClass=isCurrent?'lv-row current':(isPast?'lv-row':'lv-row locked');var nameHtml='<div style="font-size:12px;font-weight:'+(isCurrent?'600':'500')+';color:'+color+';">Lv.'+i+' · <span class="zh-only">'+nameZh+'</span><span class="en-only">'+nameEn+'</span></div>';var subHtml='';if(isCurrent)subHtml='<div style="font-size:9px;color:var(--text4);font-family:\'DM Mono\',monospace;margin-top:1px;">'+exp+' / '+nextExp+' EXP</div>';else if(isPast)subHtml='<div style="font-size:9px;color:var(--green);font-family:\'DM Mono\',monospace;margin-top:1px;">✓ 已达成</div>';html+='<div class="'+rowClass+'">'+badge+'<div>'+nameHtml+subHtml+'</div><span class="lv-range">'+lvDays[i]+'</span></div>';}roadEl.innerHTML=html;if(window.applyLang)applyLang(getLang());}if(window.renderAchievements)window.renderAchievements(p);loadEquipped();};
 
 applyLang(getLang());
 </script>
@@ -748,6 +1154,19 @@ applyLang(getLang());
   <div class="bn-item" data-page="profile">
     <svg fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 13.5c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
     <span class="bn-label zh-only">我的</span><span class="bn-label en-only">Me</span>
+  </div>
+</div>
+
+<!-- EQUIP PICKER -->
+<div id="equip-picker">
+  <div class="equip-panel">
+    <div class="equip-panel-title"><span class="zh-only">选择展示徽章</span><span class="en-only">Choose Display Badges</span></div>
+    <div class="equip-panel-sub"><span class="zh-only">最多选择 3 枚已解锁的成就</span><span class="en-only">Select up to 3 unlocked achievements</span></div>
+    <div class="equip-grid" id="equip-grid"></div>
+    <div class="equip-actions">
+      <button class="equip-cancel" onclick="closeEquipPicker()"><span class="zh-only">取消</span><span class="en-only">Cancel</span></button>
+      <button class="equip-save" onclick="saveEquipped()"><span class="zh-only">保存</span><span class="en-only">Save</span></button>
+    </div>
   </div>
 </div>
 </body>
