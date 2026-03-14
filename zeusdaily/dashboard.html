@@ -679,7 +679,36 @@ document.addEventListener('click',function(ev){
   var hueAnim=d.hue?'style="animation:hue 6s ease-in-out infinite;"':'';
   return '<svg viewBox="'+d.vb+'" width="'+w+'" height="'+h+'" xmlns="http://www.w3.org/2000/svg" '+hueAnim+'>'+d.svg+'</svg>';
 };
-window.renderFriends=function(){var list=document.getElementById('friends-list');if(!list)return;var lang=getLang();if(!FRIENDS.length){list.innerHTML='<div style="padding:48px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px;">'+(lang==='zh'?'还没有好友 · 分享你的邀请链接开始吧':'No friends yet · Share your invite link')+'</div>';return;}var html='';for(var i=0;i<FRIENDS.length;i++){var f=FRIENDS[i];var lv=LEVELS[f.level]||LEVELS[1];var lvName=lang==='zh'?lv.name:lv.nameEn;html+='<div class="friend-card"><div class="friend-avatar" style="background:linear-gradient(135deg,'+lv.colorLight+','+lv.color+'22);"><span style="font-family:\'DM Mono\',monospace;font-size:15px;font-weight:700;color:'+lv.color+';">'+f.avatar+'</span></div><div class="friend-info"><div class="friend-name">'+f.name+'</div><div class="friend-meta"><span style="font-size:10px;color:'+lv.color+';font-family:\'DM Mono\',monospace;font-weight:600;letter-spacing:1px;">LV.'+f.level+'</span><span style="font-size:10px;color:var(--text3);font-family:\'Playfair Display\',serif;font-style:italic;"> · '+lvName+'</span></div><div style="font-size:9px;color:var(--text4);font-family:\'DM Mono\',monospace;margin-top:4px;">'+(lang==='zh'?'加入于 ':'Joined ')+fmtJoined(f.joined)+'</div></div><div class="friend-badge-wrap">'+window._badgeSVG(f.level,48)+(f.active?'<div class="friend-active"><span class="zh-only">活跃</span><span class="en-only">Active</span></div>':'<div class="friend-inactive"><span class="zh-only">不活跃</span><span class="en-only">Inactive</span></div>')+'</div></div>';}list.innerHTML=html;applyLang(getLang());var cnt=document.getElementById('friends-count');if(cnt)cnt.innerHTML=FRIENDS.length+(lang==='zh'?' 位好友':' friend'+(FRIENDS.length!==1?'s':''));var rc=document.getElementById('ref-count');if(rc)rc.textContent=FRIENDS.length;var ra=document.getElementById('ref-active');if(ra)ra.textContent=FRIENDS.filter(function(f){return f.active;}).length;};
+var FRIENDS=[];
+window.loadFriends=function(){
+  var p=window._profile; if(!p||!p.ref_code) return;
+  var today=new Date().toISOString().slice(0,10);
+  var yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
+  var lvColors=['','#4a9fd4','#7b56b8','#b8964a','#d4ac5c','#9b72d4'];
+
+  function buildFriend(u, tag){
+    var lv=calcLevel(u.exp||0);
+    var name=u.display_name||u.email||'Reader';
+    var active=(u.last_checkin===today||u.last_checkin===yesterday);
+    return {id:u.id,name:name,avatar:name.charAt(0).toUpperCase(),level:lv,exp:u.exp||0,streak:u.streak||0,joined:u.joined_at,active:active,tag:tag||null};
+  }
+
+  // Load inviter first, then my friends
+  var inviterPromise = p.invited_by
+    ? _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,joined_at').eq('ref_code',p.invited_by).single()
+    : Promise.resolve({data:null});
+
+  var friendsPromise = _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,joined_at').eq('invited_by',p.ref_code);
+
+  Promise.all([inviterPromise, friendsPromise]).then(function(results){
+    var inviterRes=results[0], friendsRes=results[1];
+    FRIENDS=[];
+    if(inviterRes.data) FRIENDS.push(buildFriend(inviterRes.data,'引路人'));
+    (friendsRes.data||[]).forEach(function(u){ FRIENDS.push(buildFriend(u)); });
+    window.renderFriends();
+  });
+};
+window.renderFriends=function(){var list=document.getElementById('friends-list');if(!list)return;var lang=getLang();if(!FRIENDS.length){list.innerHTML='<div style="padding:48px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px;">'+(lang==='zh'?'还没有好友 · 分享你的邀请链接开始吧':'No friends yet · Share your invite link')+'</div>';return;}var html='';for(var i=0;i<FRIENDS.length;i++){var f=FRIENDS[i];var lv=LEVELS[f.level]||LEVELS[1];var lvName=lang==='zh'?lv.name:lv.nameEn;html+='<div class="friend-card"><div class="friend-avatar" style="background:linear-gradient(135deg,'+lv.colorLight+','+lv.color+'22);"><span style="font-family:\'DM Mono\',monospace;font-size:15px;font-weight:700;color:'+lv.color+';">'+f.avatar+'</span></div><div class="friend-info"><div class="friend-name">'+f.name+(f.tag?'<span style="margin-left:7px;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(184,150,74,0.12);border:1px solid rgba(184,150,74,0.25);color:var(--gold);font-family:\'DM Mono\',monospace;letter-spacing:1px;vertical-align:middle;">'+f.tag+'</span>':'')+'</div><div class="friend-meta"><span style="font-size:10px;color:'+lv.color+';font-family:\'DM Mono\',monospace;font-weight:600;letter-spacing:1px;">LV.'+f.level+'</span><span style="font-size:10px;color:var(--text3);font-family:\'Playfair Display\',serif;font-style:italic;"> · '+lvName+'</span></div><div style="font-size:9px;color:var(--text4);font-family:\'DM Mono\',monospace;margin-top:4px;">'+(lang==='zh'?'加入于 ':'Joined ')+fmtJoined(f.joined)+'</div></div><div class="friend-badge-wrap">'+window._badgeSVG(f.level,48)+(f.active?'<div class="friend-active"><span class="zh-only">活跃</span><span class="en-only">Active</span></div>':'<div class="friend-inactive"><span class="zh-only">不活跃</span><span class="en-only">Inactive</span></div>')+'</div></div>';}list.innerHTML=html;applyLang(getLang());var cnt=document.getElementById('friends-count');if(cnt)cnt.innerHTML=FRIENDS.length+(lang==='zh'?' 位好友':' friend'+(FRIENDS.length!==1?'s':''));var rc=document.getElementById('ref-count');if(rc)rc.textContent=FRIENDS.length;var ra=document.getElementById('ref-active');if(ra)ra.textContent=FRIENDS.filter(function(f){return f.active;}).length;};
   document.addEventListener('click',function(ev){var el=ev.target;while(el&&el!==document.body){var action=el.dataset&&el.dataset.action;if(action==='copy-ref'){var link=(document.getElementById('ref-link-box')||{}).textContent||'';if(navigator.clipboard)navigator.clipboard.writeText(link.trim());else{var ta=document.createElement('textarea');ta.value=link.trim();document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}var toast=document.getElementById('copy-toast');if(toast){toast.style.display='block';setTimeout(function(){toast.style.display='none';},2500);}return;}if(action==='share-ref'){var link=(document.getElementById('ref-link-box')||{}).textContent||'';if(navigator.share)navigator.share({title:'Zeus Daily',text:'每天一份神眼视角日报 ✦',url:link.trim()});else{var toast=document.getElementById('copy-toast');if(toast){toast.style.display='block';setTimeout(function(){toast.style.display='none';},2500);}if(navigator.clipboard)navigator.clipboard.writeText(link.trim());}return;}el=el.parentElement;}});
   window.addEventListener('load',function(){var ap=document.querySelector('.page.active');if(ap&&ap.id==='page-friends')renderFriends();});
 })();
