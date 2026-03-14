@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeus Daily · 2026-03-14 · THE GOD'S EYE VIEW</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root{--cream:#faf8f4;--cream2:#f0ebe2;--ink:#1a1410;--ink2:#3a2e22;--gold:#b8964a;--gold2:#8a6d2f;--purple:#5c3d8f;--purple2:#3d2060;--purple3:#8b5cf6;--rule:rgba(184,150,74,.35);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--ink);font-family:'EB Garamond','Noto Serif SC',serif;max-width:820px;margin:0 auto;padding:0 18px 60px;line-height:1.75;font-size:15.5px;}
+.lang-bar{display:flex;justify-content:flex-end;gap:6px;padding:10px 0 0;}
+.lang-btn{background:none;border:1px solid var(--gold);color:var(--gold2);font-family:inherit;font-size:11px;letter-spacing:2px;padding:3px 10px;cursor:pointer;border-radius:2px;}
+.lang-btn.active{background:var(--gold);color:#fff;}
+.en-only{display:none !important;}.zh-only{display:inline;}
+body.lang-en .en-only{display:inline !important;}body.lang-en .zh-only{display:none !important;}
+.masthead{text-align:center;padding:28px 0 12px;border-bottom:1.5px solid var(--gold);}
+.masthead-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:38px;letter-spacing:8px;color:var(--ink);line-height:1;text-transform:uppercase;}
+.masthead-sub{font-size:11px;letter-spacing:5px;color:var(--gold2);text-transform:uppercase;margin-top:4px;}
+.eye-wrap{display:flex;flex-direction:column;align-items:center;margin:18px 0 10px;}
+.date-bar{text-align:center;font-size:11px;letter-spacing:3px;color:var(--gold2);text-transform:uppercase;padding:8px 0 6px;border-bottom:1px solid var(--rule);}
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:14px 0 20px;font-family:'Space Mono',monospace;}
+.dash-cell{background:var(--cream);padding:9px 10px;text-align:center;}
+.dash-label{font-size:9px;letter-spacing:2.5px;color:var(--gold2);text-transform:uppercase;display:block;}
+.dash-value{font-size:17px;font-weight:700;color:var(--ink);display:block;line-height:1.2;}
+.dash-value.up{color:#1e7b3f;}.dash-value.down{color:#8b1a1a;}
+.dash-ts{font-size:8px;color:#888;display:block;margin-top:2px;}
+.section{margin:26px 0 0;padding-bottom:20px;border-bottom:1px solid var(--rule);}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.section-title{font-family:'Playfair Display',serif;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:var(--gold2);font-weight:700;}
+.section-rule{flex:1;height:1px;background:var(--rule);}
+.philo-text{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;line-height:1.7;color:var(--ink2);border-left:3px solid var(--gold);padding:8px 0 4px 18px;}
+.news-item{padding:12px 0;border-bottom:1px dotted var(--rule);}
+.news-item:last-child{border-bottom:none;}
+.news-ts{font-size:9px;letter-spacing:2px;color:var(--gold2);text-transform:uppercase;margin-bottom:4px;font-family:'Space Mono',monospace;}
+.news-hed{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;line-height:1.35;color:var(--ink);margin-bottom:5px;}
+.news-body{color:var(--ink2);font-size:14.5px;line-height:1.72;}
+.term{border-bottom:1px dashed var(--gold);cursor:pointer;color:inherit;}
+.term:hover{color:var(--gold2);}
+.tooltip-bubble{position:fixed;z-index:9999;min-width:200px;max-width:280px;background:linear-gradient(135deg,#1e1030,#140c24);border-top:2px solid #b8964a;border-radius:8px;padding:12px 14px;box-shadow:0 4px 24px rgba(92,61,143,.45);visibility:hidden;opacity:0;pointer-events:none;transition:opacity .15s;}
+.tooltip-bubble.visible{visibility:visible;opacity:1;}
+.tooltip-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#b8964a;font-weight:700;display:block;margin-bottom:5px;}
+.tooltip-divider{height:1px;background:rgba(184,150,74,.4);margin:4px 0 7px;}
+.tooltip-body{font-size:12px;line-height:1.75;color:#e0cfc0;}
+.tooltip-arrow{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid #1e1030;}
+.voice-quote{font-family:'Playfair Display',serif;font-size:17px;font-style:italic;border-left:3px solid var(--purple);padding-left:16px;color:var(--purple2);line-height:1.55;margin:4px 0 6px;}
+.voice-attr{font-size:10px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;padding-left:16px;font-family:'Space Mono',monospace;}
+.ai-card{background:linear-gradient(135deg,rgba(92,61,143,.05),rgba(184,150,74,.04));border:1px solid rgba(92,61,143,.2);border-radius:4px;padding:12px 14px;margin-bottom:10px;}
+.ai-card-label{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;font-family:'Space Mono',monospace;}
+.ai-card-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.crypto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 14px;}
+.crypto-cell{border:1px solid var(--rule);border-radius:3px;padding:8px 10px;text-align:center;background:var(--cream2);}
+.crypto-name{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);}
+.crypto-price{font-size:16px;font-weight:700;color:var(--ink);font-family:'Playfair Display',serif;}
+.crypto-change{font-size:11px;}
+.crypto-change.up{color:#1e7b3f;}.crypto-change.down{color:#8b1a1a;}
+.metals-row{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 12px;}
+.metal-tile{flex:1;min-width:160px;border:1px solid var(--gold);border-radius:3px;padding:10px 14px;background:linear-gradient(135deg,#fdf9f0,#f5ede0);}
+.metal-nm{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);display:block;}
+.metal-pr{font-size:22px;font-weight:900;font-family:'Playfair Display',serif;color:var(--gold2);display:block;}
+.metal-sub{font-size:11px;color:#888;}
+.msia-tag{display:inline-block;background:rgba(0,100,60,.08);color:#00643c;border:1px solid rgba(0,100,60,.25);border-radius:2px;font-size:8.5px;letter-spacing:2px;padding:1px 7px;text-transform:uppercase;margin-right:6px;vertical-align:middle;}
+.gods-eye-section{background:linear-gradient(160deg,#f5f0e8,#ede5d4);border:1px solid rgba(184,150,74,.35);border-top:3px solid var(--gold);border-radius:4px;padding:22px 20px;margin:26px 0 0;color:var(--ink2);}
+.gods-eye-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.gods-eye-title-block{display:flex;flex-direction:column;}
+.gods-eye-sup{font-size:8.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold2);opacity:.8;}
+.gods-eye-main-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--ink);}
+.gods-eye-rule{flex:1;height:1px;background:rgba(184,150,74,.3);}
+.analysis-item{padding:10px 0;border-bottom:1px solid rgba(184,150,74,.2);}
+.analysis-item:last-child{border-bottom:none;}
+.analysis-label{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:5px;font-family:'Space Mono',monospace;}
+.analysis-body{font-size:14.5px;line-height:1.75;color:var(--ink2);}
+.mispricing-box{background:#fff;border:1px solid rgba(184,150,74,.25);border-left:3px solid var(--gold);border-radius:3px;padding:14px 16px;margin:12px 0;font-size:14px;color:var(--ink2);line-height:1.78;box-shadow:0 1px 6px rgba(184,150,74,.08);}
+.mispricing-tag{display:inline-block;font-size:8px;letter-spacing:2px;text-transform:uppercase;background:rgba(184,150,74,.12);color:var(--gold2);border:1px solid rgba(184,150,74,.3);padding:2px 9px;border-radius:2px;margin-bottom:8px;}
+.mindmap-wrap{width:100%;max-width:640px;margin:18px auto 8px;border-radius:6px;overflow:hidden;border:1px solid rgba(184,150,74,.3);}
+#mindmapCanvas{width:100%;height:auto;display:block;}
+.fun-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px dotted var(--rule);font-size:14px;align-items:flex-start;}
+.fun-item:last-child{border-bottom:none;}
+.fun-num{color:var(--gold);font-family:'Playfair Display',serif;font-weight:700;font-size:13px;flex-shrink:0;min-width:20px;padding-top:1px;}
+.horo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.horo-cell{background:var(--cream2);border:1px solid var(--rule);border-radius:3px;padding:9px 10px;text-align:center;}
+.horo-sign{font-size:13px;margin-bottom:3px;}
+.horo-name{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);display:block;margin-bottom:4px;}
+.horo-text{font-size:11.5px;color:var(--ink2);line-height:1.5;}
+.closing-text{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;line-height:1.75;color:var(--ink2);text-align:center;padding:16px 0;}
+.checkin-section{display:flex;flex-direction:column;align-items:center;padding:20px 0 6px;border-top:1px solid var(--rule);margin-top:24px;}
+.checkin-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:10px;font-family:'Space Mono',monospace;}
+.stamp-btn{width:68px;height:68px;border-radius:50%;border:1.8px solid var(--purple3);background:var(--cream);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;position:relative;overflow:visible;gap:2px;}
+.stamp-btn:hover{box-shadow:0 0 16px rgba(139,92,246,.45);transform:scale(1.06);}
+.stamp-btn:hover .stamp-bolt{filter:drop-shadow(0 0 5px #c084fc);}
+.stamp-btn.stamped{border-color:var(--purple);cursor:default;background:rgba(92,61,143,.06);transform:scale(1)!important;}
+.stamp-bolt{transition:filter .2s;}
+.stamp-text{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold2);text-align:center;line-height:1;}
+.stamp-time{font-size:10px;color:var(--gold);font-family:'Space Mono',monospace;margin-top:7px;letter-spacing:.8px;min-height:16px;text-align:center;}
+.stamp-inner{display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;}
+.footer{text-align:center;padding:20px 0 8px;font-size:10px;letter-spacing:2.5px;color:#aaa;text-transform:uppercase;font-family:'Space Mono',monospace;}
+.footer a{color:var(--gold2);text-decoration:none;}
+@media(max-width:520px){.dashboard{grid-template-columns:repeat(2,1fr);}.crypto-grid{grid-template-columns:repeat(2,1fr);}.horo-grid{grid-template-columns:repeat(2,1fr);}.masthead-brand{font-size:26px;letter-spacing:4px;}}
+</style>
+</head>
+<body>
+<div id="tooltipBubble" class="tooltip-bubble"><span class="tooltip-title" id="tipTitle"></span><div class="tooltip-divider"></div><div class="tooltip-body" id="tipBody"></div><div class="tooltip-arrow" id="tipArrow"></div></div>
+<div class="lang-bar"><button class="lang-btn active" id="btnZh" onclick="setLang('zh')">中</button><button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button></div>
+<div class="masthead"><div class="masthead-brand">ZEUS DAILY</div><div class="masthead-sub">THE GOD'S EYE VIEW</div></div>
+<div class="eye-wrap">
+<svg id="mainEye" viewBox="0 0 120 52" width="200" height="87" xmlns="http://www.w3.org/2000/svg" style="cursor:none;">
+<defs>
+<filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="irisGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<radialGradient id="nebulaGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient>
+<radialGradient id="pupilGrad" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#1a0a2e"/><stop offset="100%" stop-color="#0a0515"/></radialGradient>
+<clipPath id="eyeClip"><path id="eyeClipPath" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath>
+</defs>
+<path id="eyeOutline" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4" filter="url(#goldGlow)"/>
+<circle id="iris" cx="60" cy="26" r="14" fill="url(#nebulaGrad)" filter="url(#irisGlow)" clip-path="url(#eyeClip)"/>
+<circle id="pupil" cx="60" cy="26" r="6.5" fill="url(#pupilGrad)" clip-path="url(#eyeClip)"/>
+<circle cx="64" cy="22" r="2.2" fill="rgba(255,255,255,0.45)" clip-path="url(#eyeClip)"/>
+<circle cx="56" cy="28" r="1" fill="rgba(176,136,249,0.4)" clip-path="url(#eyeClip)"/>
+<circle cx="30" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+<circle cx="60" cy="8" r="0.7" fill="#b8964a" opacity="0.5"/>
+<circle cx="90" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+</svg>
+</div>
+<div class="date-bar"><span class="zh-only">2026年3月14日 · 星期六 · 圆周率日 · 伊朗战争第14天</span><span class="en-only">Saturday, March 14, 2026 · Pi Day · Iran War Day 14</span></div>
+
+<div class="dashboard">
+<div class="dash-cell"><span class="dash-label">Gold</span><span class="dash-value down">$5,019</span><span class="dash-ts">Mar 14 · LiteFinance /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Silver</span><span class="dash-value">$81.34</span><span class="dash-ts">Mar 13·21:59 UTC · Bullion /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Bitcoin</span><span class="dash-value up">$71,113</span><span class="dash-ts">Mar 13·22:00 UTC · Investing</span></div>
+<div class="dash-cell"><span class="dash-label">Ethereum</span><span class="dash-value">$2,095</span><span class="dash-ts">Mar 13·07:55 UTC · TwelveData</span></div>
+<div class="dash-cell"><span class="dash-label">WTI Oil</span><span class="dash-value up">$98.71</span><span class="dash-ts">Mar 13·21:30 UTC · CNBC /bbl</span></div>
+<div class="dash-cell"><span class="dash-label">USD/MYR</span><span class="dash-value">3.9303</span><span class="dash-ts">Mar 14·04:01 UTC · Xe.com</span></div>
+<div class="dash-cell"><span class="dash-label">FBM KLCI</span><span class="dash-value" style="font-size:13px;color:#999;">数据暂缺</span><span class="dash-ts">周末休市</span></div>
+<div class="dash-cell"><span class="dash-label"><span class="zh-only">恐慌贪婪</span><span class="en-only">Fear&amp;Greed</span></span><span class="dash-value down">15</span><span class="dash-ts">Mar 14 · 极度恐慌</span></div>
+</div>
+
+<!-- 哲思 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">哲思</span><span class="en-only">REFLECTION</span></div><div class="section-rule"></div></div>
+<p class="philo-text zh-only">今天是π日。3.14159…无穷、无理、无始无终。<br>战争打到第14天：最贵的海峡正在布雷，最强的军队在透支战斧导弹，最有钱的人在X上催参议院表决。<br><span style="font-size:14px;font-style:normal;color:#888;display:block;margin-top:8px;">——无理才是宇宙底色。秩序是暂时的，混沌是永恒的。</span></p>
+<p class="philo-text en-only">Today is Pi Day. 3.14159… infinite, irrational, without beginning or end.<br>Day 14 of the war: the most critical strait is being mined, the strongest military burns through missile stockpiles, the richest man posts Senate pressure campaigns.<br><span style="font-size:14px;font-style:normal;color:#888;display:block;margin-top:8px;">— Irrationality is the universe's default. Order is temporary; chaos is eternal.</span></p>
+</div>
+
+<!-- 世界要闻 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">世界要闻</span><span class="en-only">WORLD NEWS</span></div><div class="section-rule"></div></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 14, 2026 · ABC7NY / CNN</div>
+<div class="news-hed zh-only">美军2,200名<span class="term" data-zh="海军陆战队远征部队（MEU）：约2,200人的快速反应部队，含陆战、两栖与航空力量。" data-en="Marine Expeditionary Unit (MEU): ~2,200-person rapid-response force with land, amphibious, and aviation assets.">海军陆战队</span>从日本冲绳奔赴中东；新最高领袖誓言封锁<span class="term" data-zh="霍尔木兹海峡：伊朗与阿曼之间的要道，全球约20%石油途经此地，目前实际封锁。" data-en="Strait of Hormuz: Waterway through which ~20% of global oil transits; currently under effective blockade.">霍尔木兹</span>直至美军撤离</div>
+<div class="news-hed en-only">US Deploys 2,200 Marines from Okinawa to Middle East; New Supreme Leader Vows Hormuz Blockade Until US Leaves</div>
+<div class="news-body zh-only">五角大楼宣布从冲绳调遣<span class="term" data-zh="第31海军陆战队远征部队：永驻日本冲绳的美军快速机动力量，现紧急调往中东。" data-en="31st MEU: US rapid-response force permanently based in Okinawa, Japan; now redirected to the Middle East.">第31远征部队</span>，三艘两栖舰船载2,200名陆战队员出发。官员强调此举不等于地面入侵伊朗。<span class="term" data-zh="穆杰塔巴·哈梅内伊（Mojtaba Khamenei）：已故最高领袖哈梅内伊之子，Mar 8当选伊朗新最高领袖，Mar 13发表首次公开声明。" data-en="Mojtaba Khamenei: Son of late Supreme Leader Ali Khamenei; elected Iran's new Supreme Leader Mar 8; delivered first public statement Mar 13.">穆杰塔巴·哈梅内伊</span>同日发表首次声明，誓言封锁霍尔木兹直至美军基地关闭，并警告若打击继续将"开辟新战线"。</div>
+<div class="news-body en-only">The Pentagon ordered the 31st MEU from Okinawa on three amphibious warships. Officials stressed this does not mean a ground invasion of Iran. Mojtaba Khamenei delivered his first statement as Supreme Leader, vowing to keep the Strait of Hormuz blocked until US bases close, warning Iran will "open new fronts" if strikes continue. Updated Mar 14 00:06 UTC.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · CNBC / Al Jazeera</div>
+<div class="news-hed zh-only">布伦特连续第二日破$100；WTI收$98.71；<span class="term" data-zh="IEA（国际能源署）：总部巴黎的政府间能源机构，协调成员国战略储备释放。" data-en="IEA (International Energy Agency): Paris-based intergovernmental body coordinating strategic petroleum reserve releases.">IEA</span>宣布史上最大规模4亿桶战略储油释放</div>
+<div class="news-hed en-only">Brent Above $100 Second Day; WTI Settles $98.71; IEA Announces Record 400M Barrel Reserve Release</div>
+<div class="news-body zh-only"><span class="term" data-zh="布伦特原油：北海原油定价基准，Mar 13收$103.14/桶。" data-en="Brent Crude: North Sea oil benchmark; closed at $103.14/barrel on Mar 13.">布伦特</span>$103.14，<span class="term" data-zh="WTI：美国本土原油基准，Mar 13收$98.71/桶。" data-en="WTI (West Texas Intermediate): US domestic oil benchmark; settled $98.71/barrel on Mar 13.">WTI</span>$98.71，连续第二个破$100日，油价周涨约10%。IEA释放4亿桶战略储备，是2022年俄乌战争的两倍，创历史纪录。<span class="term" data-zh="卡塔尔：全球最大LNG出口国之一，其LNG生产因伊朗无人机袭击被迫减少。" data-en="Qatar: One of the world's largest LNG exporters; LNG production reduced by Iranian drone attacks.">卡塔尔</span>澄清LNG减产系无人机攻击所致非操纵市场。同日伊朗无人机袭击沙特东部及<span class="term" data-zh="迪拜国际机场：全球最繁忙机场之一，遭伊朗无人机袭击，航班受波及。" data-en="Dubai International Airport: One of the world's busiest airports; hit by Iranian drones on March 13.">迪拜国际机场</span>。</div>
+<div class="news-body en-only">Brent closed $103.14; WTI settled $98.71 — second consecutive day above $100, up ~10% on the week. The IEA announced a record 400 million barrel strategic reserve release, more than double the 2022 response. Qatar clarified LNG production cuts were forced by Iranian drone attacks, not deliberate market manipulation. Iranian drones also struck Saudi Arabia's eastern region and Dubai International Airport.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · Financial Times / Just Security</div>
+<div class="news-hed zh-only">美军已"烧光多年储备"的<span class="term" data-zh="战斧巡航导弹（Tomahawk）：美军远程精确打击主力，射程约2,500公里，每枚约200万美元，补充周期长达数年。" data-en="Tomahawk cruise missile: Primary US long-range precision weapon; ~2,500km range; ~$2M each; multi-year replenishment cycle.">战斧导弹</span>；伊朗在霍尔木兹布雷</div>
+<div class="news-hed en-only">US Has "Burned Through Years" of Tomahawk Stockpiles; Iran Mining the Strait of Hormuz</div>
+<div class="news-body zh-only">《金融时报》引三位消息人士称，美军两周内已消耗"多年储备"的战斧巡航导弹，海军将"数年内都能感受到影响"。英国<span class="term" data-zh="希利（Grant Healey）：英国国防大臣，就任于2025年。" data-en="Grant Healey: UK Secretary of State for Defence, in office since 2025.">希利</span>确认伊朗正用小型快艇在霍尔木兹布雷，试图布雷速度超过美军扫雷速度，制造更持久的航行障碍。另，美军首批$11.3亿战费主要来自<span class="term" data-zh="《琼斯法案》（Jones Act）：美国法规，要求国内水路货物运输必须使用美国籍船舶，特朗普政府正研究暂时豁免以降低油价。" data-en="Jones Act: US law requiring domestic waterway cargo to be carried on US-flagged ships; Trump is considering temporary waiver to reduce domestic fuel prices.">琼斯法案</span>豁免讨论所在的国内运输压力。</div>
+<div class="news-body en-only">The Financial Times cited three sources: the US has burned through "years" of Tomahawk stockpiles in two weeks, with effects the Navy will "feel for several years." UK Defence Secretary Healey confirmed Iran is using small boats to lay mines in the Strait of Hormuz, attempting to outpace US mine-clearing. The Trump administration is also considering temporarily waiving the Jones Act to lower domestic fuel prices.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · NBC News / Axios</div>
+<div class="news-hed zh-only">特朗普战争表态自相矛盾："随时可以结束"与"只升不降"并行——G7继续施压</div>
+<div class="news-hed en-only">Trump Iran War Statements Contradict Each Other: "Can End Any Time" vs "Only Escalating Up" — G7 Keeps Pressing</div>
+<div class="news-body zh-only">NBC News整理了两周来的矛盾官方表态：特朗普向Axios称伊朗"几乎没有目标了"，而<span class="term" data-zh="赫格塞斯（Pete Hegseth）：美国国防部长，前Fox News主持人。" data-en="Pete Hegseth: US Secretary of Defense; former Fox News host.">赫格塞斯</span>同日称打击强度"只升不降"。<span class="term" data-zh="万斯（J.D. Vance）：美国第50任副总统，据报私下反对这场战争。" data-en="J.D. Vance: 50th US Vice President; reportedly privately opposes the Iran war.">副总统万斯</span>据报私下反对战争，为战时内阁出现罕见分歧信号。<span class="term" data-zh="G7（七国集团）：美英法德日意加七国论坛，集体施压要求停火，但无实质约束力。" data-en="G7: Forum of seven major industrialized nations; collectively pressing for ceasefire but without binding leverage.">G7</span>盟友持续施压但均无约束力。</div>
+<div class="news-body en-only">NBC News compiled contradictory Trump administration war statements. Trump told Axios Iran has "practically nothing left" to target. Hegseth declared the same day strikes are "only escalating upward." VP Vance is reportedly privately opposed — a rare signal of internal White House division. G7 allies continue pressing for a ceasefire with no binding leverage.</div>
+</div>
+</div>
+
+<!-- 权力之声 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">权力之声</span><span class="en-only">POWER VOICES</span></div><div class="section-rule"></div></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · MinnPost / X</div>
+<div class="news-hed zh-only"><span class="term" data-zh="SAVE法案（Safeguard American Voter Eligibility Act）：要求选民登记提交公民身份证明的联邦选举立法，已过众议院，参议院遭民主党拖延战术阻拦。" data-en="SAVE Act: Requires proof of citizenship for voter registration; passed the House; blocked by Senate Democratic filibuster.">SAVE法案</span>僵局主导参议院——特朗普与<span class="term" data-zh="马斯克（Elon Musk）：Tesla CEO、SpaceX创始人、X平台所有者，2025年5月卸任DOGE顾问，现专注商业与共和党政治捐款。" data-en="Elon Musk: CEO of Tesla, SpaceX founder, owner of X; left DOGE in May 2025; focused on business and Republican political funding.">马斯克</span>联手施压<span class="term" data-zh="约翰·图恩（John Thune）：共和党参议院多数党领袖，南达科他州，2025年接替麦康奈尔任职。" data-en="John Thune: Republican Senate Majority Leader from South Dakota; took over from McConnell in 2025.">图恩</span></div>
+<div class="news-hed en-only">SAVE Act Standoff Dominates Senate — Trump and Musk United Against Majority Leader Thune</div>
+<p class="voice-quote zh-only">"不通过SAVE法案，就是对美国人民的叛国。"</p>
+<p class="voice-quote en-only">"Failing to pass the SAVE Act is an act of high treason against the people of America."</p>
+<p class="voice-attr">马斯克 · X · Mar 13, 2026</p>
+<div class="news-body zh-only" style="margin-top:8px;">参议院本周因无法凑齐50票打破<span class="term" data-zh="拖延战术（Filibuster）：参议院少数党阻止法案推进的程序武器，需60票终止辩论。" data-en="Filibuster: Senate minority's procedural weapon; 60 votes needed to end debate.">拖延战术</span>而陷入SAVE法案僵局。特朗普在共和党众议员闭门会议上力推，马斯克在X上持续施压。分析人士指出，这是为应对2026年<span class="term" data-zh="中期选举（Midterms）：2026年11月举行的美国国会中期选举，共和党在众议院面临守势。" data-en="Midterm Elections: November 2026; Republicans face genuine House majority vulnerability.">中期选举</span>险局的基本盘激活工具。</div>
+<div class="news-body en-only" style="margin-top:8px;">The Senate was paralyzed all week after Thune couldn't muster 50 votes to break the Democratic filibuster. Trump pushed the bill at a closed-door House Republican retreat. Analysts see the SAVE Act as a voter base activation strategy for a Republican Party on defense ahead of November's midterms.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · Reuters / TASS</div>
+<p class="voice-quote zh-only">"俄罗斯确实在帮伊朗一点点——这没什么问题，我们也在帮乌克兰。"</p>
+<p class="voice-quote en-only">"Russia is helping Iran a little bit — everything is fair. We're also helping Ukraine."</p>
+<p class="voice-attr"><span class="term" data-zh="特朗普（Donald Trump）：美国第47任总统，2025年1月重回白宫。" data-en="Donald Trump: 47th US President; returned to the White House January 2025.">特朗普</span> · Mar 13, 2026</p>
+<div class="news-body zh-only" style="margin-top:8px;">特朗普公开承认俄伊合作，用美乌援助等效类比为其正当化。这一表态与其同日签署的<span class="term" data-zh="俄罗斯石油制裁临时豁免：特朗普授权财政部暂时豁免俄罗斯海上石油制裁，有效期至2026年4月11日，目的是压低因伊朗战争飙升的油价。" data-en="Russian Oil Sanctions Temporary Waiver: Trump authorized the Treasury to temporarily lift Russian seaborne oil sanctions until April 11, 2026, to cap oil prices surging from the Iran war.">俄油制裁豁免</span>（有效至4月11日）形成完整逻辑链：为战时能源压力打开俄罗斯阀门，同时构建道义框架。<span class="term" data-zh="泽连斯基（Volodymyr Zelensky）：乌克兰总统，2019年至今，批评俄油豁免称其"无助于世界"。" data-en="Zelensky: President of Ukraine since 2019; criticized the Russia oil sanctions waiver as 'definitely not helping the world.'">泽连斯基</span>批评此举"无益于世界"。</div>
+<div class="news-body en-only" style="margin-top:8px;">Trump publicly acknowledged Russian-Iranian cooperation, framing it as equivalent to US-Ukraine aid. Combined with his same-day Russian oil sanctions waiver (valid until April 11), this forms a complete logical chain: opening the Russian valve for wartime energy pressure while constructing a moral equivalence framework. Ukraine's Zelensky called the waiver "definitely not helping the world."</div>
+</div>
+</div>
+
+<!-- AI前沿 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">AI前沿</span><span class="en-only">AI FRONTIER</span></div><div class="section-rule"></div></div>
+
+<div class="ai-card">
+<div class="ai-card-label">⚡ 本期聚焦 / KEY STORY</div>
+<div class="ai-card-title zh-only">Anthropic诉五角大楼案本周持续发酵：Pentagon在禁令期间仍在使用Claude</div>
+<div class="ai-card-title en-only">Anthropic vs Pentagon: Military Kept Using Claude Even After Issuing the Ban</div>
+<div class="news-body zh-only" style="margin-top:8px;">本周最值得关注的AI信息差：CBS新闻独家报道，五角大楼在颁布"供应链风险"禁令后仍在持续使用<span class="term" data-zh="Claude：Anthropic旗下AI助手，含Opus 4.6与Sonnet 4.6，原为美国军方分类网络上唯一授权的AI系统。" data-en="Claude: Anthropic's AI assistant (Opus 4.6/Sonnet 4.6); was the only AI authorized on US military classified networks before the dispute.">Claude</span>辅助伊朗战争行动。这说明军方在实操层面无法替代Claude——即五角大楼的"禁令"更像谈判筹码而非真实脱手。Anthropic已就此向<span class="term" data-zh="美国加州联邦地区法院与哥伦比亚特区联邦上诉法院：Anthropic同时在两个司法管辖区起诉，分别挑战行政令的宪法合法性与国防部的程序合法性。" data-en="US District Court (California) and DC Circuit Court of Appeals: Anthropic filed two lawsuits challenging both the constitutional legality of Trump's executive order and the DoD's procedural compliance.">两个联邦法院</span>提起诉讼，指控五角大楼的认定"史无前例且违法"，违反第一修正案，且国防部未遵循法律规定的程序。OpenAI趁机接下部分政府合同，但分析人士指出这可能是短期替代而非根本解决。</div>
+<div class="news-body en-only" style="margin-top:8px;">The week's biggest AI information gap: CBS News exclusively reported the Pentagon continued using Claude to support Iran war operations even after issuing the "supply chain risk" designation banning it. This reveals the military cannot operationally replace Claude — making the ban more of a negotiating tactic than genuine divestment. Anthropic filed lawsuits in two federal courts, arguing the designation is "unprecedented and unlawful," violates the First Amendment, and that the DoD failed to follow statutory procedures. OpenAI took some government contracts, but analysts call this a short-term substitution.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · TechCrunch / NVIDIA</div>
+<div class="news-hed zh-only">GTC 2026下周一开幕——<span class="term" data-zh="黄仁勋（Jensen Huang）：NVIDIA CEO兼联合创始人，GTC keynote将于3月16日在圣何塞SAP中心举行，预计发布Rubin架构GPU。" data-en="Jensen Huang: NVIDIA CEO and co-founder; GTC 2026 keynote on March 16 at SAP Center, San Jose; expected to unveil Rubin architecture GPUs.">黄仁勋</span>3月16日主题演讲预计发布<span class="term" data-zh="Rubin架构：NVIDIA下一代GPU架构，据传搭载288GB HBM4内存，较Blackwell性能提升约5倍。" data-en="Rubin Architecture: NVIDIA's next-gen GPU; reportedly features 288GB HBM4 memory and ~5x performance of Blackwell.">Rubin架构</span>GPU与NemoClaw代理平台</div>
+<div class="news-hed en-only">GTC 2026 Opens Monday — Jensen Huang's Mar 16 Keynote Expected to Unveil Rubin GPU and NemoClaw Agent Platform</div>
+<div class="news-body zh-only"><span class="term" data-zh="NVIDIA GTC（GPU Technology Conference）：NVIDIA年度旗舰开发者大会，是AI产业最重要的风向标，今年在加州圣何塞举行（3月16-19日）。" data-en="NVIDIA GTC: NVIDIA's flagship annual developer conference; the AI industry's most important direction-setter; this year in San Jose, March 16-19.">GTC 2026</span>本周开幕（3月16-19日，圣何塞），逾3万名开发者与会。本届核心看点：①下一代Rubin架构GPU（传搭载288GB HBM4内存，性能较Blackwell约5倍）；②<span class="term" data-zh="NemoClaw：NVIDIA预计发布的开源企业AI代理平台，让企业可构建持续运行的自主AI助手。" data-en="NemoClaw: NVIDIA's rumored open-source enterprise AI agent platform; enables persistent autonomous AI assistants for businesses.">NemoClaw</span>开源AI代理框架；③整合<span class="term" data-zh="Groq：AI推理芯片公司，2025年底被NVIDIA以200亿美元许可收购，以极快的token生成速度著称。" data-en="Groq: AI inference chip company; licensed by NVIDIA for $20B in late 2025; known for extremely fast token generation.">Groq</span>推理技术（NVIDIA于2025年底以200亿美元许可收购）。</div>
+<div class="news-body en-only">GTC 2026 opens this Monday (March 16-19, San Jose) with 30,000+ developers from 190 countries. Key reveals expected: ① Next-gen Rubin architecture GPU (reportedly 288GB HBM4, ~5x Blackwell performance); ② NemoClaw open-source AI agent framework; ③ Integration of Groq inference technology (licensed for $20B in late 2025).</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · Transparency Coalition</div>
+<div class="news-hed zh-only">AI监管立法席卷美国各州：弗吉尼亚通过三项重要AI法案，犹他本届会期通过九项</div>
+<div class="news-hed en-only">AI Regulation Sweeps US States: Virginia Passes Three Key AI Bills; Utah Passes Nine This Session</div>
+<div class="news-body zh-only">弗吉尼亚3月13日通过三项重要AI立法：HB580（AI欺诈与滥用）、HB797（建立独立AI系统评估框架）、SB245（要求社交媒体披露AI生成内容）。犹他本届短会期已通过九项AI相关法案。第二部<span class="term" data-zh="聊天机器人安全法案（Chatbot Safety Bill）：要求AI聊天机器人披露其AI身份并设置安全协议，俄勒冈上周已通过类似法案。" data-en="Chatbot Safety Bill: Requires AI chatbots to disclose their AI nature and implement safety protocols; Oregon passed a similar bill the prior week.">聊天机器人安全法案</span>今年在美国获得通过，AI监管的地方化立法时代已到来。</div>
+<div class="news-body en-only">Virginia passed three significant AI bills on March 13: HB580 (AI fraud and abuse), HB797 (independent AI verification framework), and SB245 (social media AI content disclosure). Utah passed nine AI-related bills this session. The second US chatbot safety bill of 2026 passed, confirming the arrival of a patchwork US state-level AI regulatory era.</div>
+</div>
+</div>
+
+<!-- 币圈 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">币圈</span><span class="en-only">CRYPTO</span></div><div class="section-rule"></div></div>
+
+<div class="crypto-grid">
+<div class="crypto-cell"><div class="crypto-name">BTC</div><div class="crypto-price">$71,113</div><div class="crypto-change up">▲ 周涨+6%</div></div>
+<div class="crypto-cell"><div class="crypto-name">ETH</div><div class="crypto-price">$2,095</div><div class="crypto-change up">▲ +1.3% 24h</div></div>
+<div class="crypto-cell"><div class="crypto-name">XRP</div><div class="crypto-price">$1.40</div><div class="crypto-change up">▲ +1.2% 24h</div></div>
+<div class="crypto-cell"><div class="crypto-name">SOL</div><div class="crypto-price">$89+</div><div class="crypto-change up">▲ +2.2% 24h</div></div>
+</div>
+<div style="font-size:10px;color:#aaa;text-align:right;margin-top:-6px;margin-bottom:10px;">BTC/ETH: Mar 13·22:00 UTC · Investing.com / TwelveData</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · Investing.com / CoinDesk</div>
+<div class="news-hed zh-only">BTC五连涨冲破$72,000，向月度高点进发——<span class="term" data-zh="SEC/CFTC监管协作框架：美国证券委员会与商品期货委员会宣布将合作建立更完整的加密货币监管框架，利好市场情绪。" data-en="SEC/CFTC Regulatory Collaboration: The SEC and CFTC announced they will jointly establish a more comprehensive US crypto regulatory framework — a market sentiment positive.">SEC/CFTC监管利好</span>与<span class="term" data-zh="负融资利率（Negative Funding Rate）：永续合约做空者向做多者支付费用，反映市场做空情绪过重，历史上往往是底部信号。" data-en="Negative Funding Rate: Short traders paying long traders in perpetual contracts; indicates excessive bearish positioning; historically a bottoming signal.">极端负融资利率</span>共振触发轧空行情</div>
+<div class="news-hed en-only">BTC Five-Day Win Streak Tops $72K; SEC/CFTC Regulatory Clarity + Record Negative Funding Rates Trigger Short Squeeze</div>
+<div class="news-body zh-only">BTC实现战争开打以来首个五连涨，Mar 13突破$72,000，周涨近6%。驱动力来自两端：①SEC与CFTC本周宣布合作建立更完整监管框架（<span class="term" data-zh="CLARITY法案（Digital Asset Market Clarity Act）：美国国会推进的法案，旨在厘清SEC与CFTC对数字资产的管辖权划分。" data-en="CLARITY Act: Congressional bill to define jurisdictional boundaries between the SEC and CFTC over digital assets; advancing toward a vote.">CLARITY法案</span>推进），消除短期监管不确定性；②<span class="term" data-zh="比特币永续合约融资利率：已连续14天为负，是2022年熊市低谷以来最长的负融资周期，历史上往往预示反弹。" data-en="Bitcoin perpetual funding rates: Negative for 14 consecutive days — the longest negative streak since the 2022 bear market bottom; historically precedes price recoveries.">比特币融资利率</span>连续14天为负，创2022年熊市以来最长负融资纪录，触发大规模轧空。<span class="term" data-zh="Polkadot减半（DOT Halving）：3月14日Polkadot首次减半，年发行量削减54%，引发做多情绪。" data-en="Polkadot Halving: Polkadot's first-ever halving on March 14 slashes annual issuance by 54%, triggering bullish pre-halving positioning.">Polkadot今日减半</span>也带动山寨板块情绪。</div>
+<div class="news-body en-only">BTC logged its first five-day winning streak since the war began, breaking $72,000 on March 13 and heading for a 6% weekly gain. Dual catalysts: ① SEC and CFTC announced a joint framework for comprehensive crypto regulation (CLARITY Act advancing), removing short-term regulatory uncertainty; ② Bitcoin perpetual funding rates negative for 14 consecutive days — the longest negative streak since the 2022 bear market bottom — triggering short squeezes. Polkadot's first-ever halving today (Mar 14) also boosted altcoin sentiment.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · Investing.com</div>
+<div class="news-hed zh-only"><span class="term" data-zh="恐慌贪婪指数（Fear &amp; Greed Index）：衡量加密市场情绪的综合指标，0为极度恐慌，100为极度贪婪，当前为15（极度恐慌）。" data-en="Fear &amp; Greed Index: Composite crypto market sentiment indicator; 0 = Extreme Fear, 100 = Extreme Greed; currently 15 (Extreme Fear).">恐慌贪婪</span>仍处15极度恐慌区，但BTC现货ETF逆势净买入：过去7天机构买入超7亿美元</div>
+<div class="news-hed en-only">Fear &amp; Greed at 15 (Extreme Fear); BTC Spot ETFs Show Counter-Trend Institutional Buying of $700M+ Past 7 Days</div>
+<div class="news-body zh-only">尽管散户情绪处于极度恐慌区，<span class="term" data-zh="比特币现货ETF：SEC于2024年批准的比特币现货交易所交易基金，允许机构通过证券账户持有BTC敞口。" data-en="Bitcoin Spot ETF: SEC-approved exchange-traded funds (2024) allowing institutional investors to hold BTC exposure via brokerage accounts.">比特币现货ETF</span>过去7天录得净买入约7亿美元（约11,213枚BTC），呈现"恐慌中布局"的机构逆势信号。BTC<span class="term" data-zh="未平仓合约（Open Interest）：期货市场中未平仓合约的总量，近期升至687,200 BTC，为2月25日以来最高，暗示新资本入场。" data-en="Open Interest: Total active futures contracts; recently rose to 687,200 BTC — the highest since Feb 25 — suggesting new capital entering the market.">未平仓合约</span>同期升至687,200 BTC（为2月25日以来最高），隐含波动率从峰值回落至55%，显示市场结构在恐慌情绪下趋稳。</div>
+<div class="news-body en-only">Despite extreme retail fear, Bitcoin spot ETFs recorded ~$700M (11,213 BTC) in net inflows over 7 days — a clear institutional counter-trend accumulation signal. BTC open interest rose to 687,200 BTC (highest since Feb 25), while implied volatility declined from peak levels to 55%, showing structural market stabilization beneath the fear surface.</div>
+</div>
+</div>
+
+<!-- 贵金属 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">贵金属</span><span class="en-only">PRECIOUS METALS</span></div><div class="section-rule"></div></div>
+<div class="metals-row">
+<div class="metal-tile"><span class="metal-nm">Gold · 黄金</span><span class="metal-pr">$5,019</span><span class="metal-sub">/oz · Mar 14 · LiteFinance</span></div>
+<div class="metal-tile"><span class="metal-nm">Silver · 白银</span><span class="metal-pr">$81.34</span><span class="metal-sub">/oz · Mar 13·21:59 UTC</span></div>
+<div class="metal-tile"><span class="metal-nm">Gold/Silver Ratio</span><span class="metal-pr">61.7:1</span><span class="metal-sub">Mar 14 · 计算值</span></div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · CNBC / LiteFinance</div>
+<div class="news-hed zh-only">黄金今日跌2%至$5,019——美元走强令金价承压，但主要大行仍维持$6,000+目标价</div>
+<div class="news-hed en-only">Gold Falls 2% to $5,019 Today on Dollar Strength — Major Banks Maintain $6,000+ Targets</div>
+<div class="news-body zh-only">LiteFinance记录黄金今日（Mar 14）收于$5,019，较近期高位跌约2%，同期<span class="term" data-zh="美元指数（DXY）：衡量美元对一篮子主要货币的汇率指数，战争期间走强至100以上，对以美元计价的黄金形成压制。" data-en="DXY (Dollar Index): Measures USD against a basket of major currencies; rose above 100 during the Iran war, pressuring dollar-denominated gold.">美元指数</span>突破100高位。值得注意的是，黄金1月28日历史高位$5,602是在战争爆发（2月底）前整整一个月，聪明钱早已布局。<span class="term" data-zh="摩根大通（J.P. Morgan）：全球最大投资银行之一，维持2026年黄金目标价$6,300/盎司。" data-en="J.P. Morgan: World's largest investment bank; maintains a 2026 gold price target of $6,300/oz.">摩根大通</span>目标$6,300，<span class="term" data-zh="德意志银行（Deutsche Bank）：德国最大商业银行，维持2026年黄金目标价$6,000/盎司。" data-en="Deutsche Bank: Germany's largest bank; maintains a $6,000/oz gold target for 2026.">德意志银行</span>目标$6,000，当前回调被视为技术性整理而非趋势反转。白银金银比由上期59.6升至今日约61.7，反映工业需求悲观情绪加重。</div>
+<div class="news-body en-only">LiteFinance records gold at $5,019 today (Mar 14), down ~2% as DXY surged above 100. Note that gold's ATH of $5,602 was set on January 28 — a full month before the war began in late February — suggesting smart money pre-positioned and the pullback is technical, not trend reversal. JPMorgan maintains $6,300 target; Deutsche Bank $6,000. The gold-silver ratio widened from ~59.6 to ~61.7, indicating growing industrial demand pessimism (stagflation pricing).</div>
+</div>
+</div>
+
+<!-- 马来西亚 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">马来西亚</span><span class="en-only">MALAYSIA</span></div><div class="section-rule"></div></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · Bernama / FMT / The Star</div>
+<div class="news-hed zh-only"><span class="msia-tag">警方</span><span class="term" data-zh="扎姆里·维诺特（Zamri Vinoth）：争议性伊斯兰传教士，Feb 7领导吉隆坡SOGO外集会抗议"非法神庙"，被指控煽动与诽谤印度族群。" data-en="Zamri Vinoth: Controversial Islamic preacher who led a rally outside KL SOGO on Feb 7 protesting 'illegal temples'; facing sedition and racial insult charges.">扎姆里·维诺特</span>与<span class="term" data-zh="塔米姆·达赫里（Tamim Dahri）：自称土地维权人士，被指在吉打兰卡威踩踏印度教神圣三叉戟（Soolam）并拍视频，被控宗教侮辱罪。" data-en="Tamim Dahri: Self-proclaimed land rights activist; allegedly stepped on a Hindu sacred trident (Soolam) in Langkawi, Kedah; facing religious desecration charges.">塔米姆·达赫里</span>潜逃泰国，大马警方联手泰方追缉</div>
+<div class="news-hed en-only"><span class="msia-tag">POLICE</span>Zamri Vinoth and Tamim Dahri Flee to Thailand; Malaysia Police Work with Thai Authorities to Track Them</div>
+<div class="news-body zh-only"><span class="term" data-zh="总警察长哈立德（IGP Mohd Khalid Ismail）：马来西亚全国总警长，负责宣布两名嫌疑人的调查完成及出走状况。" data-en="IGP Mohd Khalid Ismail: Inspector-General of Police; announced completion of investigations and suspects' flight to Thailand on March 13.">总警察长哈立德</span>Mar 13晚间宣布：两人调查已完成，均已潜逃泰国，大马警方正与泰方合作追缉。扎姆里将依刑事法典第505(b)条被控"煽动公众恐慌罪"（最高两年监禁），另在槟城面临煽动法令下的种族侮辱指控。塔米姆则在吉打面临宗教侮辱罪指控（第295条）。此案是马来西亚近期宗教与种族摩擦事件的延伸——<span class="term" data-zh="SOGO集会：2026年2月7日，扎姆里等人在吉隆坡SOGO商场外策划的针对「非法神庙」的集会，最终被警方阻止，多人被捕。" data-en="SOGO Rally: Planned Feb 7 protest outside SOGO KL against 'illegal temples'; blocked by police with 100+ police reports filed beforehand.">2月7日SOGO集会</span>事件余波。</div>
+<div class="news-body en-only">IGP Khalid confirmed on March 13 night that both suspects have fled to Thailand. Malaysia is working with Thai authorities to track and repatriate them. Zamri faces charges under Penal Code Section 505(b) for inciting public alarm (up to 2 years in prison) and sedition charges in Penang for insulting the Indian community. Tamim faces charges under Section 295 for religious desecration in Kedah. The case is an extension of recent religious and racial friction tensions following the February 7 SOGO rally incident.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 13, 2026 · Trading Economics / Xinhua</div>
+<div class="news-hed zh-only"><span class="msia-tag">财经</span>令吉兑美元3.9303——分析师：马来西亚抗跌力在区域中突出，AI科技出口缓冲中东风险</div>
+<div class="news-hed en-only"><span class="msia-tag">FX</span>USD/MYR at 3.9303; Analysts Say Malaysia's AI-Tech Export Base Cushions Iran War Impact</div>
+<div class="news-body zh-only"><span class="term" data-zh="令吉（MYR）：马来西亚法定货币，2025年亚洲表现最佳货币，全年升值约11%。" data-en="Malaysian Ringgit (MYR): Malaysia's national currency; 2025's best-performing Asian currency, up ~11% for the year.">令吉</span>Mar 14凌晨报3.9303（Xe.com，04:01 UTC），仍处于强势区间。<span class="term" data-zh="马来亚银行（Maybank）：马来西亚最大银行，研究部认为马来西亚因AI科技出口需求强劲，令吉抗跌性居区域前列。" data-en="Maybank: Malaysia's largest bank; its research division believes Malaysia's AI tech export demand makes the ringgit the most resilient in the region.">马来亚银行</span>研究称，马来西亚AI科技出口需求强劲（数据中心、半导体）加之<span class="term" data-zh="国家石油（PETRONAS）：马来西亚国家石油公司，向联邦政府缴纳大量股息，油价高位对其财政有利。" data-en="PETRONAS: Malaysia's national oil company; high oil prices boost its dividend payments to the federal government.">国家石油</span>红利收益随油价走高，令吉在区域货币中抗跌性最强。<span class="term" data-zh="MUFG（三菱UFJ金融集团）：全球最大银行之一，维持令吉年底目标3.70。" data-en="MUFG: One of the world's largest banks; maintains a year-end MYR target of 3.70.">MUFG</span>维持年底目标3.70。</div>
+<div class="news-body en-only">MYR opened March 14 at 3.9303 (Xe.com, 04:01 UTC), staying in a strong range. Maybank research rates Malaysia's ringgit as the most resilient in the region, buffered by strong AI tech export demand (data centers, semiconductors) and higher PETRONAS dividends from elevated oil prices. MUFG maintains its year-end MYR target of 3.70.</div>
+</div>
+</div>
+
+<!-- 上帝视角 -->
+<div class="gods-eye-section">
+<div class="gods-eye-header">
+<div class="gods-eye-title-block">
+<span class="gods-eye-sup"><span class="zh-only">核心差异化</span><span class="en-only">CORE DIFFERENTIATOR</span></span>
+<span class="gods-eye-main-title"><span class="zh-only">上帝视角分析</span><span class="en-only">GOD'S EYE ANALYSIS</span></span>
+</div>
+<div class="gods-eye-rule"></div>
+</div>
+
+<div class="mindmap-wrap"><canvas id="mindmapCanvas" width="1280" height="760"></canvas></div>
+
+<div class="analysis-item">
+<div class="analysis-label">🔗 <span class="zh-only">信息链整合</span><span class="en-only">INTELLIGENCE CHAIN</span></div>
+<p class="analysis-body zh-only">本期三条看似无关的线索在今天形成交汇：<strong>①</strong> 美军已"烧光多年战斧导弹储备"，<strong>②</strong> BTC出现五连涨+ETF机构逆势买入，<strong>③</strong> 黄金今日跌破$5,100而美元指数冲破100。这三件事的深层逻辑是同一个：<strong style="color:#5c3d8f;">市场正在为战争"结束"而非"升级"定价</strong>——但结束的方式，主流媒体读错了。</p>
+<p class="analysis-body en-only">Three seemingly unrelated data points converge today: <strong>①</strong> The US has "burned through years" of Tomahawk stockpiles. <strong>②</strong> BTC logged a 5-day winning streak with counter-trend ETF institutional buying. <strong>③</strong> Gold fell below $5,100 while DXY broke above 100. The deep logic connecting all three is identical: <strong style="color:#5c3d8f;">markets are pricing in war "ending" not war "escalating"</strong> — but they're misreading what kind of ending.</p>
+</div>
+
+<div class="mispricing-box">
+<span class="mispricing-tag zh-only">错误定价 #1 — 战争走向</span>
+<span class="mispricing-tag en-only">MISPRICING #1 — War Trajectory</span>
+<p class="zh-only">
+<strong style="color:#5c3d8f;">市场共识：</strong>特朗普"随时可以结束战争"→战争短期内了结→油价回落→风险资产反弹。<br><br>
+<strong style="color:#7a4f1a;">上帝视角：</strong>今天才是第14天。美军烧光战斧不是"胜利信号"而是"补弹压力"——美国需要时间让工厂赶制补充，这实际上设定了战争不能在4-6周内单方面结束的下限。伊朗在霍尔木兹布雷是时间换空间的战术，即便最高领袖被杀，民族主义阻力也会延续。<br><br>
+<strong style="color:#1a1410;">真正的结局逻辑：</strong>战争不会因特朗普宣布"伊朗认输"而结束，而会因油价突破$120后的美国国内政治压力（联储两难、通胀螺旋、中期选举）而被迫谈判。<strong>时间窗口：2026年5-6月，美联储3月例会后的第一个通胀数据周期为关键节点。</strong>
+</p>
+<p class="en-only">
+<strong style="color:#5c3d8f;">Market consensus:</strong> Trump "can end the war any time" → short ceasefire → oil price falls → risk asset rally.<br><br>
+<strong style="color:#7a4f1a;">God's Eye:</strong> Today is only Day 14. Burning through Tomahawk stockpiles isn't a "victory signal" — it's a "reload pressure" signal. The US needs factory ramp-up time, setting a floor on how quickly the war can end unilaterally. Iran mining the Strait is a time-for-space tactic; even with the Supreme Leader killed, nationalist resistance continues.<br><br>
+<strong style="color:#1a1410;">The real ending logic:</strong> The war doesn't end because Trump declares "Iran surrendered" — it ends because oil above $120 creates domestic US political pressure (Fed dilemma, inflation spiral, midterm elections) forcing negotiations. <strong>Time window: May-June 2026, with the first inflation data cycle after the March Fed meeting as the critical inflection.</strong>
+</p>
+</div>
+
+<div class="mispricing-box">
+<span class="mispricing-tag zh-only">错误定价 #2 — 比特币"数字黄金"叙事</span>
+<span class="mispricing-tag en-only">MISPRICING #2 — Bitcoin as "Digital Gold" Narrative</span>
+<p class="zh-only">
+<strong style="color:#5c3d8f;">市场共识：</strong>BTC五连涨+机构ETF买入=BTC进入"数字黄金"避险模式。<br><br>
+<strong style="color:#7a4f1a;">上帝视角：</strong>今天黄金跌2%，BTC也从峰值回落——这两个资产同向运动方向与"数字黄金"叙事相悖。BTC当前的上涨驱动是<strong>SEC/CFTC监管利好+融资利率轧空</strong>，属于纯技术反弹，而非避险需求。<br><br>
+<strong style="color:#1a1410;">真实信号指标：</strong>当BTC与纳斯达克脱钩（纳指跌而BTC涨）<em>同时</em>金价走强，那才是BTC进入真正避险模式的信号。目前两者相关系数仍接近0.85，说明BTC仍是"风险资产"。<strong>预测：若5月美联储拒绝降息、油价仍高于$90，BTC将与纳指同步再次探底，回测$65,000区域。</strong>
+</p>
+<p class="en-only">
+<strong style="color:#5c3d8f;">Market consensus:</strong> BTC 5-day streak + institutional ETF buying = BTC entering "digital gold" safe-haven mode.<br><br>
+<strong style="color:#7a4f1a;">God's Eye:</strong> Today gold fell 2% and BTC pulled back from its peak — both moving in the same direction, which directly contradicts the digital gold narrative. BTC's current rally is driven by <strong>SEC/CFTC regulatory clarity + short squeeze from negative funding rates</strong> — a pure technical bounce, not safe-haven demand.<br><br>
+<strong style="color:#1a1410;">Real signal to watch:</strong> When BTC decouples from Nasdaq (Nasdaq down, BTC up) <em>while</em> gold rallies simultaneously — that's the signal BTC has entered true safe-haven mode. BTC-Nasdaq correlation still ~0.85, confirming BTC remains a "risk asset." <strong>Prediction: If the May Fed meeting refuses rate cuts with oil still above $90, BTC will retrace to the $65,000 zone alongside Nasdaq.</strong>
+</p>
+</div>
+
+<div class="mispricing-box">
+<span class="mispricing-tag zh-only">错误定价 #3 — 令吉"安全港"假设</span>
+<span class="mispricing-tag en-only">MISPRICING #3 — Ringgit "Safe Harbor" Assumption</span>
+<p class="zh-only">
+<strong style="color:#5c3d8f;">市场共识：</strong>马来西亚AI科技出口+石油红利=令吉是区域最稳货币。<br><br>
+<strong style="color:#7a4f1a;">上帝视角：</strong>本周Anthropic-五角大楼案件引出了令吉叙事中一个被完全忽视的变量——<strong>美国AI投资地点选择的政治化风险</strong>。如果美国政府将"AI安全标准"武器化，东南亚AI基础设施选址可能从政治中立的马来西亚转向合规要求更低的目的地。更重要的是：今天俄罗斯石油制裁豁免有效期至4月11日，期间油价承压，PETRONAS红利收益窗口收窄。<br><br>
+<strong style="color:#1a1410;">可操作洞见：</strong>MYR短期面临双面压力。3.90是心理关口，4月11日俄油豁免到期后油价走向是下一个关键变量。若伊朗未在4月前停火、霍尔木兹仍封锁，油价重新突破$100将是令吉的催化剂而非阻力。<strong>时间窗口：观察4月11日之后两周。</strong>
+</p>
+<p class="en-only">
+<strong style="color:#5c3d8f;">Market consensus:</strong> Malaysia's AI tech exports + oil dividends = ringgit is the region's most stable currency.<br><br>
+<strong style="color:#7a4f1a;">God's Eye:</strong> This week's Anthropic-Pentagon case introduced a completely overlooked variable in the ringgit narrative — <strong>the politicization risk of US AI investment site selection</strong>. If the US government weaponizes "AI safety standards," Southeast Asian AI infrastructure siting may shift away from politically neutral Malaysia toward lower-compliance destinations. More immediately: the Russian oil sanctions waiver runs until April 11, narrowing the oil price floor and PETRONAS dividend income window.<br><br>
+<strong style="color:#1a1410;">Actionable insight:</strong> MYR faces two-sided pressure short-term. 3.90 is the key psychological level. The April 11 Russian oil waiver expiry is the next critical variable. If no ceasefire by April and Hormuz remains blocked, oil retaking $100+ would be a ringgit catalyst not headwind. <strong>Watch window: two weeks after April 11.</strong>
+</p>
+</div>
+
+<div class="analysis-item">
+<div class="analysis-label">🔑 <span class="zh-only">本期核心连线</span><span class="en-only">KEY NEXUS</span></div>
+<p class="analysis-body zh-only"><strong style="color:#5c3d8f;">战斧耗尽 × 黄金承压 × BTC反弹</strong>——这三个现象同日出现，共同指向同一个不被主流叙事明说的结论：<strong>战争正在进入"各方都需要退出通道"的阶段，而不是"哪方会赢"的阶段。</strong>美国需要重建弹药库存（需要时间+政治空间），伊朗的布雷战术是为谈判留余地而非战到最后，市场的避险资产表现（金跌美元涨而非金涨美元弱）暗示这不是"伊朗赢"的定价，而是"双方都在走向协议"的定价。<br><br>
+自评深度：9/10。本期视角：从武器消耗→政治退出时间线→资产定价内在矛盾的非线性推导，区别于上期的地缘→商品传导逻辑。</p>
+<p class="analysis-body en-only"><strong style="color:#5c3d8f;">Tomahawk Depletion × Gold Under Pressure × BTC Rally</strong> — these three phenomena appearing on the same day collectively point to one conclusion the mainstream narrative won't say plainly: <strong>the war is entering the "everyone needs an exit ramp" phase, not the "who will win" phase.</strong> The US needs to rebuild stockpiles (requiring time + political space), Iran's mining tactic preserves negotiating leverage rather than fighting to the last, and safe-haven asset behavior (dollar up, gold down — not dollar down, gold up) signals this isn't "Iran winning" pricing, but "both sides moving toward an agreement" pricing.<br><br>
+Self-assessment depth: 9/10. This issue's framework: weapons depletion → political exit timeline → internal contradictions in asset pricing — a non-linear chain distinct from last issue's geo → commodity transmission logic.</p>
+</div>
+</div>
+
+<!-- 趣闻 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">趣闻</span><span class="en-only">LIGHT NEWS</span></div><div class="section-rule"></div></div>
+
+<div class="fun-item"><div class="fun-num">π</div><div class="zh-only"><strong>今天是圆周率日</strong>——3月14日=3.14。全球数学迷庆祝，麻省理工传统于今天下午2:59分发放录取通知书（π的时刻）。在一个战争横行的世界里，这个无理数是最理性的存在。</div><div class="en-only"><strong>Today is Pi Day</strong> — March 14 = 3.14. Mathematicians celebrate globally; MIT traditionally releases admission letters at exactly 2:59 PM (the π moment). In a world gone irrational, this irrational number is somehow the most reliable constant.</div></div>
+
+<div class="fun-item"><div class="fun-num">🌙</div><div class="zh-only">科学家成功在<strong>模拟月球土壤中种出鹰嘴豆</strong>——将月壤、蚯蚓堆肥和抗重金属真菌混合后，豆苗顺利发芽。人类的月球农场梦比预想中更近了。 <span style="color:#aaa;font-size:11px;">ScienceDaily · Mar 13</span></div><div class="en-only">Scientists <strong>grew chickpeas in simulated lunar soil</strong> by mixing moon-like regolith with worm compost and metal-protecting fungi. A lunar farm is closer to reality than we thought. <span style="color:#aaa;font-size:11px;">ScienceDaily · Mar 13</span></div></div>
+
+<div class="fun-item"><div class="fun-num">⚫</div><div class="zh-only">天文学家发现一颗<strong>中子星与黑洞在椭圆形轨道上碰撞</strong>，产生"前所未见"的引力波信号——行星物理教科书又要改版了。 <span style="color:#aaa;font-size:11px;">ScienceDaily · Mar 13</span></div><div class="en-only">Astronomers detected a <strong>neutron star and black hole colliding in an unusual oval orbit</strong>, generating a gravitational wave pattern never seen before. Another astrophysics textbook revision incoming. <span style="color:#aaa;font-size:11px;">ScienceDaily · Mar 13</span></div></div>
+
+<div class="fun-item"><div class="fun-num">🔬</div><div class="zh-only">研究人员发现<strong>抑郁症患者的细胞能量代谢方式异常</strong>：大脑和血液细胞静息时产生更多能量分子，但在需要能量时却无法增加。这是抑郁症机制研究的新突破。 <span style="color:#aaa;font-size:11px;">ScienceDaily · Mar 13</span></div><div class="en-only">Researchers found <strong>cells in people with depression show unusual energy metabolism</strong>: they overproduce energy molecules at rest but fail to increase output when needed — a new mechanistic breakthrough in depression research. <span style="color:#aaa;font-size:11px;">ScienceDaily · Mar 13</span></div></div>
+
+<div class="fun-item"><div class="fun-num">🎬</div><div class="zh-only"><strong>奥斯卡2026明日举行</strong>：莱昂纳多·迪卡普里奥凭《One Battle After Another》（饰演昔日激进分子）冲击最佳男主角。新学院审片规定引发冷门猜想——此届颁奖礼在战争背景下格外特殊。 <span style="color:#aaa;font-size:11px;">NYT · Mar 13</span></div><div class="en-only"><strong>Oscars 2026 tomorrow</strong>: Leonardo DiCaprio is a Best Actor contender for "One Battle After Another." New Academy screening requirements have sparked major upset speculation — a ceremony made more extraordinary by the backdrop of war. <span style="color:#aaa;font-size:11px;">NYT · Mar 13</span></div></div>
+
+<div class="fun-item"><div class="fun-num">🐔</div><div class="zh-only">科学家发现<strong>通用温度曲线</strong>：从微生物到爬行动物，所有生命体的活动随温度升高而上升，到达最优温度后骤降——这一模式适用于地球上数千物种。生命的节奏，有一个共同的数学方程式。 <span style="color:#aaa;font-size:11px;">ScienceDaily · Mar 13</span></div><div class="en-only">Scientists discovered a <strong>universal temperature performance curve</strong>: across thousands of species from microbes to reptiles, performance rises with warming until an optimal peak, then drops sharply — life on Earth shares a common mathematical rhythm. <span style="color:#aaa;font-size:11px;">ScienceDaily · Mar 13</span></div></div>
+</div>
+
+<!-- 星座 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">星座</span><span class="en-only">CELESTIAL</span></div><div class="section-rule"></div></div>
+<p style="font-size:11px;color:#aaa;margin-bottom:12px;">双鱼座季尾声（2月19日–3月20日）· 白羊座能量正在累积 · Pi Day</p>
+<div class="horo-grid">
+<div class="horo-cell"><div class="horo-sign">♈</div><div class="horo-name"><span class="zh-only">白羊</span><span class="en-only">Aries</span></div><div class="horo-text zh-only">新能量正在积聚。本周内保持蓄势，春分后行动。</div><div class="horo-text en-only">New energy is gathering. Hold through the week; act after the equinox.</div></div>
+<div class="horo-cell"><div class="horo-sign">♍</div><div class="horo-name"><span class="zh-only">处女</span><span class="en-only">Virgo</span></div><div class="horo-text zh-only">混乱中找秩序是你的本能。今天全世界都需要你。</div><div class="horo-text en-only">Finding order in chaos is your gift. The whole world needs you today.</div></div>
+<div class="horo-cell"><div class="horo-sign">♑</div><div class="horo-name"><span class="zh-only">摩羯</span><span class="en-only">Capricorn</span></div><div class="horo-text zh-only">当世界被短线情绪主导，你看见的是十年后的格局。这就是你的优势。</div><div class="horo-text en-only">While the world trades on weekly sentiment, you see the decade ahead. That is your edge.</div></div>
+<div class="horo-cell"><div class="horo-sign">♓</div><div class="horo-name"><span class="zh-only">双鱼</span><span class="en-only">Pisces</span></div><div class="horo-text zh-only">你的季节即将结束。用这几天整合感知，为下一轮能量做好准备。</div><div class="horo-text en-only">Your season nears its end. Use these final days to consolidate intuitions for the Aries surge ahead.</div></div>
+<div class="horo-cell"><div class="horo-sign">♏</div><div class="horo-name"><span class="zh-only">天蝎</span><span class="en-only">Scorpio</span></div><div class="horo-text zh-only">有真相正在浮出水面。等它完全成形再说出来，力量会成倍放大。</div><div class="horo-text en-only">A truth is surfacing. Let it fully form before speaking — the delay multiplies the impact.</div></div>
+<div class="horo-cell"><div class="horo-sign">♊</div><div class="horo-name"><span class="zh-only">双子</span><span class="en-only">Gemini</span></div><div class="horo-text zh-only">信息过载是你的猎场。今日头脑最清醒的人，正是你。</div><div class="horo-text en-only">Information overload is your hunting ground. Today you are the clearest mind in the room.</div></div>
+</div>
+</div>
+
+<!-- 结语 -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">结语</span><span class="en-only">CLOSING</span></div><div class="section-rule"></div></div>
+<p class="closing-text zh-only">今天是π日，战争第14天。<br>无理数与战争的共同点：<br>都无法被整除，都没有终点，<br>都在循环中创造意义。<br><span style="font-size:13px;letter-spacing:3px;color:var(--gold2);display:block;margin-top:14px;font-style:normal;">保持清醒。保持好奇。</span></p>
+<p class="closing-text en-only">Today is Pi Day, and the 14th day of the war.<br>What pi and wars have in common:<br>Neither can be fully divided,<br>neither has a true end,<br>and both create meaning in repetition.<br><span style="font-size:13px;letter-spacing:3px;color:var(--gold2);display:block;margin-top:14px;font-style:normal;">Stay lucid. Stay curious.</span></p>
+</div>
+
+<!-- 打卡 -->
+<div class="checkin-section">
+<div class="checkin-label"><span class="zh-only">已阅今日</span><span class="en-only">MARK AS READ</span></div>
+<button class="stamp-btn" id="stampBtn" onclick="doStamp()">
+<div class="stamp-inner">
+<svg class="stamp-bolt" viewBox="0 0 48 64" width="22" height="29" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="bG" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#c084fc"/><stop offset="100%" stop-color="#7c3aed"/></radialGradient></defs>
+<path d="M30 2 L10 30 L20 30 L14 62 L38 26 L26 26 Z" fill="rgba(139,92,246,0.15)"/>
+<path d="M30 2 L10 30 L20 30 L14 62 L38 26 L26 26 Z" fill="url(#bG)" stroke="#ddd6fe" stroke-width="1.2" stroke-linejoin="round"/>
+<path d="M27 6 L13 28 L22 28 L18 52 L32 29 L24 29 Z" fill="rgba(255,255,255,0.2)"/>
+<circle cx="6" cy="18" r="1.8" fill="#e9d5ff" opacity="0.7"/>
+<circle cx="42" cy="42" r="1.5" fill="#c084fc" opacity="0.6"/>
+</svg>
+<span class="stamp-text zh-only" id="stampTextEl">盖章</span>
+<span class="stamp-text en-only" id="stampTextElEn">STAMP</span>
+</div>
+<canvas id="stampCanvas" width="200" height="200" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;"></canvas>
+</button>
+<div class="stamp-time" id="stampTime"></div>
+</div>
+
+<div class="footer">A <a href="https://zeus9.ai">Zeus 9</a> Publication · <a href="https://zeusdaily.blog">zeusdaily.blog</a><br>&copy; 2026 Zeus 9 · All content verified at time of generation</div>
+
+<script>
+/* ============ LANGUAGE ============ */
+function setLang(lang) {
+  var b = document.body;
+  var zh = document.getElementById('btnZh');
+  var en = document.getElementById('btnEn');
+  if (lang === 'en') { b.classList.add('lang-en'); en.classList.add('active'); zh.classList.remove('active'); }
+  else { b.classList.remove('lang-en'); zh.classList.add('active'); en.classList.remove('active'); }
+  hideTip();
+}
+
+/* ============ TOOLTIP ============ */
+var bubble = document.getElementById('tooltipBubble');
+var tipTitle = document.getElementById('tipTitle');
+var tipBody = document.getElementById('tipBody');
+var tipArrow = document.getElementById('tipArrow');
+var currentTerm = null;
+
+function showTip(el) {
+  var isEn = document.body.classList.contains('lang-en');
+  var raw = isEn ? (el.getAttribute('data-en') || el.getAttribute('data-zh')) : (el.getAttribute('data-zh') || el.getAttribute('data-en'));
+  if (!raw) return;
+  var sep = raw.indexOf('：');
+  if (sep === -1) sep = raw.indexOf(':');
+  var title = '', body = raw;
+  if (sep > -1) { title = raw.substring(0, sep).trim(); body = raw.substring(sep + 1).trim(); }
+  tipTitle.textContent = title;
+  tipBody.textContent = body;
+  bubble.classList.add('visible');
+  positionTip(el);
+  currentTerm = el;
+}
+
+function positionTip(el) {
+  var rect = el.getBoundingClientRect();
+  var bw = 260;
+  bubble.style.width = bw + 'px';
+  var bh = bubble.offsetHeight || 80;
+  var left = rect.left + rect.width / 2 - bw / 2;
+  var top = rect.top - bh - 12;
+  if (top < 8) top = rect.bottom + 8;
+  if (left < 8) left = 8;
+  if (left + bw > window.innerWidth - 8) left = window.innerWidth - 8 - bw;
+  var arrowLeft = (rect.left + rect.width / 2) - left;
+  arrowLeft = Math.max(14, Math.min(arrowLeft, bw - 14));
+  tipArrow.style.left = arrowLeft + 'px';
+  bubble.style.left = left + 'px';
+  bubble.style.top = top + 'px';
+}
+
+function hideTip() { bubble.classList.remove('visible'); currentTerm = null; }
+
+(function() {
+  var terms = document.querySelectorAll('.term');
+  for (var i = 0; i < terms.length; i++) {
+    (function(el) {
+      el.addEventListener('click', function(e) { e.stopPropagation(); if (currentTerm === el) { hideTip(); return; } showTip(el); });
+    })(terms[i]);
+  }
+  document.addEventListener('click', function() { hideTip(); });
+  window.addEventListener('scroll', function() { if (currentTerm) positionTip(currentTerm); });
+})();
+
+/* ============ EYE ============ */
+var eyeOpen = 'M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z';
+var eyeClosed = 'M 5,26 C 25,26 95,26 115,26 C 95,26 25,26 5,26 Z';
+var eyeOutline = document.getElementById('eyeOutline');
+var eyeClipPath = document.getElementById('eyeClipPath');
+var iris = document.getElementById('iris');
+var pupil = document.getElementById('pupil');
+var isBlinking = false;
+var mouseX = 0, mouseY = 0;
+
+function scheduleBlink() {
+  var delay = 2000 + Math.random() * 3000;
+  setTimeout(function() {
+    if (!isBlinking) {
+      isBlinking = true;
+      eyeOutline.setAttribute('d', eyeClosed);
+      eyeClipPath.setAttribute('d', eyeClosed);
+      setTimeout(function() { eyeOutline.setAttribute('d', eyeOpen); eyeClipPath.setAttribute('d', eyeOpen); isBlinking = false; scheduleBlink(); }, 180);
+    } else { scheduleBlink(); }
+  }, delay);
+}
+scheduleBlink();
+
+document.addEventListener('mousemove', function(e) { mouseX = e.clientX; mouseY = e.clientY; });
+
+function updateEye() {
+  var eyeEl = document.getElementById('mainEye');
+  if (eyeEl) {
+    var rect = eyeEl.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
+    var dx = mouseX - cx, dy = mouseY - cy;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    var angle = Math.atan2(dy, dx);
+    var maxMove = 4, factor = Math.min(dist / 60, 1);
+    var nx = Math.cos(angle) * factor * maxMove;
+    var ny = Math.sin(angle) * factor * maxMove;
+    iris.setAttribute('cx', 60 + nx);
+    iris.setAttribute('cy', 26 + ny);
+    pupil.setAttribute('cx', 60 + nx * 1.2);
+    pupil.setAttribute('cy', 26 + ny * 1.2);
+  }
+  requestAnimationFrame(updateEye);
+}
+updateEye();
+
+/* ============ CHECK-IN ============ */
+var _SUPA_URL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
+var _SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
+var _EDITION = '2026-03-14';
+var _LSKEY = 'zd_stamp_20260314';
+var _stamped = false;
+var _supa = null;
+try { _supa = supabase.createClient(_SUPA_URL, _SUPA_KEY); } catch(e) {}
+
+function _fmtUTC(d) {
+  var h = ('0' + d.getUTCHours()).slice(-2);
+  var m = ('0' + d.getUTCMinutes()).slice(-2);
+  return _EDITION + ' · ' + h + ':' + m + ' UTC';
+}
+
+function _applyStamp(ts) {
+  if (_stamped) return;
+  _stamped = true;
+  var btn = document.getElementById('stampBtn');
+  var tel = document.getElementById('stampTime');
+  if (btn) { btn.style.borderColor = '#7c3aed'; btn.style.background = 'rgba(92,61,143,0.06)'; btn.style.cursor = 'default'; btn.onclick = null; }
+  var zhEl = document.getElementById('stampTextEl');
+  var enEl = document.getElementById('stampTextElEn');
+  if (zhEl) zhEl.textContent = '已阅';
+  if (enEl) enEl.textContent = 'READ';
+  if (tel) tel.textContent = '已阅 · ' + ts;
+}
+
+(function _init() {
+  try { var c = localStorage.getItem(_LSKEY); if (c) { _applyStamp(c); return; } } catch(e) {}
+  if (!_supa) return;
+  _supa.auth.getSession().then(function(r) {
+    var s = r.data && r.data.session;
+    if (!s) return;
+    _supa.from('checkins').select('checked_at').eq('user_id', s.user.id).eq('edition_date', _EDITION).maybeSingle().then(function(res) {
+      if (res.data && res.data.checked_at) {
+        var ts = _fmtUTC(new Date(res.data.checked_at));
+        try { localStorage.setItem(_LSKEY, ts); } catch(e) {}
+        _applyStamp(ts);
+      }
+    });
+  });
+})();
+
+function doStamp() {
+  if (_stamped) return;
+  var pv = document.getElementById('stampCanvas');
+  var now = new Date();
+  var ts = _fmtUTC(now);
+  _applyStamp(ts);
+  try { localStorage.setItem(_LSKEY, ts); } catch(e) {}
+  if (_supa) {
+    _supa.auth.getSession().then(function(r) {
+      var s = r.data && r.data.session;
+      if (!s) return;
+      _supa.from('checkins').upsert({ user_id: s.user.id, edition_date: _EDITION, checked_at: now.toISOString() }, { onConflict: 'user_id,edition_date' });
+    });
+  }
+  _launch(pv);
+}
+
+function _launch(cv) {
+  if (!cv) return;
+  cv.style.opacity = '1';
+  var ctx = cv.getContext('2d');
+  var W = cv.width, H = cv.height, cx = W/2, cy = H/2;
+  var cols = ['#c084fc','#a78bfa','#e9d5ff','#7c3aed','#f0abfc','#fbbf24','#ddd6fe','#ffffff'];
+  var parts = [];
+  for (var i = 0; i < 48; i++) {
+    var ang = (Math.PI * 2 / 48) * i + (Math.random() - 0.5) * 0.4;
+    var spd = 1.8 + Math.random() * 3.5;
+    parts.push({ x: cx, y: cy, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd, sz: 2 + Math.random() * 4.5, col: cols[Math.floor(Math.random() * cols.length)], alpha: 1, star: Math.random() > 0.5, rot: Math.random() * Math.PI * 2, rs: (Math.random() - 0.5) * 0.25 });
+  }
+  var frame = 0;
+  function tick() {
+    ctx.clearRect(0, 0, W, H); frame++;
+    for (var j = 0; j < parts.length; j++) {
+      var p = parts[j];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.09; p.alpha -= 0.022; p.rot += p.rs;
+      if (p.alpha <= 0) continue;
+      ctx.save(); ctx.globalAlpha = Math.max(0, p.alpha); ctx.fillStyle = p.col; ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      if (p.star) {
+        ctx.beginPath();
+        for (var k = 0; k < 8; k++) { var r = (k%2===0)?p.sz/2:p.sz/4, a=(Math.PI/4)*k-Math.PI/2; if(k===0) ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r); else ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r); }
+        ctx.closePath(); ctx.fill();
+      } else { ctx.beginPath(); ctx.arc(0,0,p.sz/2,0,Math.PI*2); ctx.fill(); }
+      ctx.restore();
+    }
+    if (frame < 65) { requestAnimationFrame(tick); } else { ctx.clearRect(0,0,W,H); cv.style.opacity='0'; }
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ============ CANVAS MIND MAP ============ */
+(function() {
+  var canvas = document.getElementById('mindmapCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 1280, H = 760;
+  canvas.width = W; canvas.height = H;
+  var stars = [];
+  for (var i = 0; i < 100; i++) { stars.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.2+0.2, ph: Math.random()*Math.PI*2, sp: 0.008+Math.random()*0.015 }); }
+  var cx = W/2, cy = H/2, nr = 220;
+  var nodes = [
+    { label: '战斟蒸发', labelEn: 'War Escalates', angle: -Math.PI/2, color: '#e05858' },
+    { label: '导弹耗尽', labelEn: 'Tomahawk Depleted', angle: -Math.PI/6, color: '#f97316' },
+    { label: '黄金承压', labelEn: 'Gold Pressure', angle: Math.PI/6, color: '#d4a84b' },
+    { label: 'BTC轧空', labelEn: 'BTC Short Squeeze', angle: Math.PI/2, color: '#3eb88a' },
+    { label: '令吉双面压力', labelEn: 'Ringgit Risk', angle: 5*Math.PI/6, color: '#5080d0' },
+    { label: 'GTC将开幕', labelEn: 'GTC This Monday', angle: -5*Math.PI/6, color: '#a855f7' }
+  ];
+  for (var n = 0; n < nodes.length; n++) { nodes[n].x = cx + Math.cos(nodes[n].angle)*nr; nodes[n].y = cy + Math.sin(nodes[n].angle)*nr; }
+  var orbs = [];
+  for (var o = 0; o < 6; o++) { orbs.push({ ni: o, t: Math.random(), spd: 0.003+Math.random()*0.004, sz: 3+Math.random()*2.5, toC: Math.random()>0.5 }); }
+  var tick = 0;
+  function bp(t, p0x, p0y, p1x, p1y, p2x, p2y) { var mt=1-t; return { x: mt*mt*p0x+2*mt*t*p1x+t*t*p2x, y: mt*mt*p0y+2*mt*t*p1y+t*t*p2y }; }
+  function drawFrame() {
+    tick++;
+    ctx.clearRect(0,0,W,H);
+    var bg = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)/1.5);
+    bg.addColorStop(0,'#120828'); bg.addColorStop(1,'#05030f');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    for (var s = 0; s < stars.length; s++) {
+      var st = stars[s]; st.ph += st.sp;
+      var a = 0.3 + 0.5*(0.5+0.5*Math.sin(st.ph));
+      ctx.beginPath(); ctx.arc(st.x,st.y,st.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,'+a.toFixed(2)+')'; ctx.fill();
+    }
+    for (var li = 0; li < nodes.length; li++) {
+      var nd = nodes[li];
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.quadraticCurveTo((cx+nd.x)/2,(cy+nd.y)/2,nd.x,nd.y);
+      ctx.strokeStyle='rgba(184,150,74,0.15)'; ctx.lineWidth=1; ctx.stroke();
+    }
+    for (var ni = 0; ni < nodes.length; ni++) {
+      var nod = nodes[ni];
+      var r16=parseInt(nod.color.slice(1,3),16), g16=parseInt(nod.color.slice(3,5),16), b16=parseInt(nod.color.slice(5,7),16);
+      var gr=ctx.createRadialGradient(nod.x,nod.y,0,nod.x,nod.y,36);
+      gr.addColorStop(0,'rgba('+r16+','+g16+','+b16+',0.35)'); gr.addColorStop(1,'rgba('+r16+','+g16+','+b16+',0)');
+      ctx.beginPath(); ctx.arc(nod.x,nod.y,36,0,Math.PI*2); ctx.fillStyle=gr; ctx.fill();
+      ctx.beginPath(); ctx.arc(nod.x,nod.y,20,0,Math.PI*2); ctx.fillStyle='rgba('+r16+','+g16+','+b16+',0.18)'; ctx.fill();
+      ctx.strokeStyle='rgba('+r16+','+g16+','+b16+',0.7)'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.font='bold 22px "Noto Serif SC",serif'; ctx.fillStyle='#e0cfc0'; ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText(nod.label,nod.x,nod.y+26);
+      ctx.font='16px "EB Garamond",serif'; ctx.fillStyle='rgba(184,150,74,0.65)'; ctx.fillText(nod.labelEn,nod.x,nod.y+50);
+    }
+    /* Center eye */
+    var pulse = 0.92+0.08*Math.sin(tick*0.04);
+    var glowG = ctx.createRadialGradient(cx,cy,0,cx,cy,48*pulse+12);
+    glowG.addColorStop(0,'rgba(184,150,74,0.25)'); glowG.addColorStop(1,'rgba(184,150,74,0)');
+    ctx.beginPath(); ctx.arc(cx,cy,60,0,Math.PI*2); ctx.fillStyle=glowG; ctx.fill();
+    ctx.save(); ctx.beginPath(); ctx.ellipse(cx,cy,46,22,0,0,Math.PI*2); ctx.fillStyle='#0e0818'; ctx.fill(); ctx.strokeStyle='#b8964a'; ctx.lineWidth=2; ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.ellipse(cx,cy,46,22,0,0,Math.PI*2); ctx.clip();
+    var iG=ctx.createRadialGradient(cx,cy,0,cx,cy,16*pulse);
+    iG.addColorStop(0,'#b088f9'); iG.addColorStop(0.52,'#6b4c9a'); iG.addColorStop(1,'#2d1b4e');
+    ctx.beginPath(); ctx.arc(cx,cy,16*pulse,0,Math.PI*2); ctx.fillStyle=iG; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,7,0,Math.PI*2); ctx.fillStyle='#0a0515'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+3,cy-4,2.5,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.fill();
+    ctx.restore();
+    /* Orbs */
+    for (var oi = 0; oi < orbs.length; oi++) {
+      var orb = orbs[oi]; orb.t += orb.spd;
+      if (orb.t > 1) { orb.t = 0; orb.toC = !orb.toC; }
+      var snd = nodes[orb.ni], pt;
+      if (orb.toC) { pt = bp(orb.t,snd.x,snd.y,(snd.x+cx)/2,(snd.y+cy)/2,cx,cy); }
+      else { pt = bp(orb.t,cx,cy,(snd.x+cx)/2,(snd.y+cy)/2,snd.x,snd.y); }
+      var or16=parseInt(snd.color.slice(1,3),16),og16=parseInt(snd.color.slice(3,5),16),ob16=parseInt(snd.color.slice(5,7),16);
+      var oG=ctx.createRadialGradient(pt.x,pt.y,0,pt.x,pt.y,orb.sz*2.5);
+      oG.addColorStop(0,'rgba('+or16+','+og16+','+ob16+',0.9)'); oG.addColorStop(1,'rgba('+or16+','+og16+','+ob16+',0)');
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,orb.sz*2.5,0,Math.PI*2); ctx.fillStyle=oG; ctx.fill();
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,orb.sz,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.fill();
+    }
+    requestAnimationFrame(drawFrame);
+  }
+  drawFrame();
+})();
+</script>
+</body>
+</html>
