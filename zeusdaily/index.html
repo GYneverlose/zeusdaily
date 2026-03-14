@@ -4,679 +4,417 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zeus Daily · Login</title>
-<!-- Open Graph -->
-<meta property="og:type"        content="website"/>
-<meta property="og:site_name"   content="Zeus Daily"/>
-<meta property="og:title"       content="ZEUS DAILY · The God's Eye View"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Zeus Daily"/>
+<meta property="og:title" content="ZEUS DAILY · The God's Eye View"/>
 <meta property="og:description" content="每日一份神眼视角全球要闻 · AI精选 · 上帝视角"/>
-<meta property="og:image"       content="https://zeusdaily.blog/og-cover.png"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
-<meta property="og:url"         content="https://zeusdaily.blog"/>
-<!-- Twitter / X -->
-<meta name="twitter:card"        content="summary_large_image"/>
-<meta name="twitter:title"       content="ZEUS DAILY · The God's Eye View"/>
+<meta property="og:image" content="https://zeusdaily.blog/og-cover.png"/>
+<meta property="og:url" content="https://zeusdaily.blog"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="ZEUS DAILY · The God's Eye View"/>
 <meta name="twitter:description" content="每日一份神眼视角全球要闻 · AI精选 · 上帝视角"/>
-<meta name="twitter:image"       content="https://zeusdaily.blog/og-cover.png"/>
+<meta name="twitter:image" content="https://zeusdaily.blog/og-cover.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-
 :root{
-  --gold:#b8964a;
-  --gold-dark:#8a6d2f;
-  --purple-deep:#03010a;
-  --purple-mid:#1a0a2e;
-  --purple-accent:#5c3d8f;
-  --purple-btn:#3d1f6e;
+  --gold:#b8964a;--gold-dark:#8a6d2f;
+  --purple-deep:#03010a;--purple-mid:#1a0a2e;
+  --purple-accent:#5c3d8f;--purple-btn:#3d1f6e;
   --ink:#2a1a48;
-  --parchment:#f5eedc;
-  --parchment-dark:#ddc9a5;
-  --rod:#2a1e3e;
+  --parchment:#f5eedc;--parchment-dark:#ddc9a5;
 }
+html,body{width:100%;height:100%;background:var(--purple-deep);overflow:hidden;font-family:'IM Fell English',serif;}
 
-html,body{
-  width:100%;height:100%;
-  background:var(--purple-deep);
-  overflow:hidden;
-  font-family:'IM Fell English',serif;
-}
+/* ── STARS ── */
+#stars-canvas{position:fixed;inset:0;z-index:1;pointer-events:none;will-change:contents;}
 
-/* ── STAR FIELD ── */
-
-
-/* ── LIGHTNING CANVAS ── */
-
+/* ── LIGHTNING ── */
 
 /* ── SCENE ── */
-#scene{
-  position:fixed;inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:10;
-}
+#scene{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;}
 
-/* ── SCROLL WRAPPER ── */
+/* ── SCROLL ── */
 .scroll-wrap{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:300px;
-  filter:drop-shadow(0 0 40px rgba(92,61,143,0.5)) drop-shadow(0 20px 60px rgba(0,0,0,0.8));
+  display:flex;flex-direction:column;align-items:center;width:296px;
+  filter:drop-shadow(0 0 32px rgba(92,61,143,0.45));
+  animation:scroll-in 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+  will-change:transform,opacity;
 }
+@keyframes scroll-in{from{opacity:0;transform:translateY(24px) scale(0.97);}to{opacity:1;transform:none;}}
 
-/* ── TOP ROD ── */
+/* ── ROD ── */
 .rod{
-  width:100%;
-  height:28px;
+  width:100%;height:28px;
   background:linear-gradient(180deg,#3a2a50 0%,#1c1228 40%,#040308 100%);
   border-radius:14px;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 10px;
-  border-top:1px solid rgba(184,150,74,0.3);
-  border-bottom:1px solid rgba(0,0,0,0.8);
-  z-index:2;
+  display:flex;align-items:center;justify-content:space-between;padding:0 10px;
+  border-top:1px solid rgba(184,150,74,0.3);border-bottom:1px solid rgba(0,0,0,0.8);
+  position:relative;z-index:2;
 }
-.rod::before{
-  content:'';
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:60%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(184,150,74,0.4),transparent);
-}
-/* gold tick marks */
-.rod::after{
-  content:'';
-  position:absolute;
-  inset:6px 55px;
-  background:repeating-linear-gradient(
-    90deg,
-    transparent 0px,
-    transparent 8px,
-    rgba(184,150,74,0.18) 8px,
-    rgba(184,150,74,0.18) 9px
-  );
-}
+.rod::before{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(184,150,74,0.4),transparent);}
+.rod::after{content:'';position:absolute;inset:6px 55px;background:repeating-linear-gradient(90deg,transparent 0px,transparent 8px,rgba(184,150,74,0.18) 8px,rgba(184,150,74,0.18) 9px);}
+.knob{width:46px;height:17px;background:linear-gradient(180deg,#3a2a50,#0c0818);border-radius:8.5px;border:1px solid rgba(184,150,74,0.25);flex-shrink:0;position:relative;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,0.6);}
+.knob::after{content:'';position:absolute;top:3px;left:8px;right:8px;height:1px;background:rgba(184,150,74,0.2);border-radius:1px;}
 
-/* ── ROD KNOB ── */
-.knob{
-  width:46px;height:17px;
-  background:linear-gradient(180deg,#3a2a50,#0c0818);
-  border-radius:8.5px;
-  border:1px solid rgba(184,150,74,0.25);
-  flex-shrink:0;
-  position:relative;
-  z-index:3;
-  box-shadow:0 2px 8px rgba(0,0,0,0.6);
-}
-.knob::after{
-  content:'';
-  position:absolute;
-  top:3px;left:8px;right:8px;height:1px;
-  background:rgba(184,150,74,0.2);
-  border-radius:1px;
-}
-
-/* ── PARCHMENT BODY ── */
+/* ── PARCHMENT ── */
 .parchment{
-  width:100%;
+  width:100%;will-change:auto;
   background:linear-gradient(175deg,var(--parchment) 0%,#ece3cf 40%,var(--parchment-dark) 100%);
-  padding:28px 26px 24px;
-  position:relative;
-  overflow:hidden;
-  border-left:1px solid rgba(184,150,74,0.15);
-  border-right:1px solid rgba(184,150,74,0.15);
+  padding:26px 24px 22px;
+  position:relative;overflow:hidden;
+  border-left:1px solid rgba(184,150,74,0.15);border-right:1px solid rgba(184,150,74,0.15);
 }
-
-/* aged texture */
 .parchment::before{
-  content:'';
-  position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse at 15% 20%, rgba(139,90,20,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 75%, rgba(100,60,10,0.05) 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 50%, rgba(180,140,80,0.03) 0%, transparent 70%);
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 15% 20%,rgba(139,90,20,0.07) 0%,transparent 50%),
+             radial-gradient(ellipse at 85% 75%,rgba(100,60,10,0.05) 0%,transparent 45%);
   pointer-events:none;
-}
-/* paper grain */
-.parchment::after{
-  content:'';
-  position:absolute;inset:0;
-  
-  opacity:0.5;
-  pointer-events:none;
-}
-
-/* ── EYE HEADER ── */
-.eye-header{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  margin-bottom:18px;
-  position:relative;
-  z-index:1;
-}
-
-.brand-title{
-  font-family:'Playfair Display',serif;
-  font-weight:900;
-  font-size:15px;
-  letter-spacing:4px;
-  color:var(--ink);
-  text-align:center;
-  margin-bottom:10px;
-  opacity:0.9;
-}
-.brand-sub{
-  font-size:8px;
-  letter-spacing:3px;
-  color:var(--gold-dark);
-  font-family:'Playfair Display',serif;
-  font-weight:400;
-  text-align:center;
-  margin-top:4px;
-  opacity:0.7;
-}
-
-/* eye SVG container */
-.eye-wrap{
-  width:140px;height:61px;
-  margin:0 auto 2px;
-}
-
-/* ── DIVIDER ── */
-.divider{
-  width:100%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(184,150,74,0.4),transparent);
-  margin:14px 0 16px;
-  position:relative;
-  z-index:1;
-}
-
-/* ── TABS ── */
-.tabs{
-  display:flex;
-  gap:0;
-  margin-bottom:18px;
-  border-bottom:1px solid rgba(42,26,72,0.15);
-  position:relative;
-  z-index:1;
-}
-.tab-btn{
-  flex:1;
-  background:none;
-  border:none;
-  padding:7px 0 8px;
-  font-family:'Playfair Display',serif;
-  font-size:11px;
-  letter-spacing:2px;
-  color:rgba(42,26,72,0.45);
-  cursor:pointer;
-  transition:color 0.2s;
-  position:relative;
-}
-.tab-btn.active{
-  color:var(--ink);
-}
-.tab-btn.active::after{
-  content:'';
-  position:absolute;
-  bottom:-1px;left:15%;right:15%;height:2px;
-  background:var(--gold);
-  border-radius:1px;
 }
 
 /* ── LANG TOGGLE ── */
-.lang-toggle{
-  position:absolute;
-  top:14px;right:14px;
-  display:flex;gap:4px;
-  z-index:5;
-}
-.lang-btn{
-  font-family:'Playfair Display',serif;
-  font-size:9px;
-  letter-spacing:1.5px;
-  padding:3px 7px;
-  border-radius:3px;
-  border:1px solid rgba(42,26,72,0.2);
-  background:transparent;
-  color:rgba(42,26,72,0.45);
-  cursor:pointer;
-  transition:all 0.2s;
-}
-.lang-btn.active{
-  background:rgba(184,150,74,0.15);
-  border-color:var(--gold);
-  color:var(--gold-dark);
-}
+.lang-toggle{position:absolute;top:13px;right:13px;display:flex;gap:4px;z-index:5;}
+.lang-btn{font-family:'Playfair Display',serif;font-size:9px;letter-spacing:1.5px;padding:3px 7px;border-radius:3px;border:1px solid rgba(42,26,72,0.2);background:transparent;color:rgba(42,26,72,0.45);cursor:pointer;transition:all 0.2s;}
+.lang-btn.active{background:rgba(184,150,74,0.15);border-color:var(--gold);color:var(--gold-dark);}
+
+/* ── EYE HEADER ── */
+.eye-header{display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;z-index:1;}
+.brand-title{font-family:'Playfair Display',serif;font-weight:900;font-size:15px;letter-spacing:4px;color:var(--ink);text-align:center;margin-bottom:10px;opacity:0.9;}
+.brand-sub{font-size:8px;letter-spacing:3px;color:var(--gold-dark);font-family:'Playfair Display',serif;font-weight:400;text-align:center;margin-top:4px;opacity:0.7;}
+.eye-wrap{width:140px;height:61px;margin:0 auto 2px;}
+
+/* ── DIVIDER ── */
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(184,150,74,0.4),transparent);margin:12px 0 14px;position:relative;z-index:1;}
+
+/* ── TABS ── */
+.tabs{display:flex;margin-bottom:16px;border-bottom:1px solid rgba(42,26,72,0.15);position:relative;z-index:1;}
+.tab-btn{flex:1;background:none;border:none;padding:7px 0 8px;font-family:'Playfair Display',serif;font-size:11px;letter-spacing:2px;color:rgba(42,26,72,0.45);cursor:pointer;transition:color 0.2s;position:relative;}
+.tab-btn.active{color:var(--ink);}
+.tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:15%;right:15%;height:2px;background:var(--gold);border-radius:1px;}
 
 /* ── FORM ── */
-.form-panel{
-  position:relative;
-  z-index:1;
-}
-.form-group{
-  margin-bottom:12px;
-}
-.form-group label{
-  display:block;
-  font-family:'Playfair Display',serif;
-  font-size:9px;
-  letter-spacing:2.5px;
-  color:rgba(42,26,72,0.55);
-  margin-bottom:5px;
-  text-transform:uppercase;
-}
-.form-group input{
-  width:100%;
-  padding:9px 12px;
-  background:rgba(255,255,255,0.45);
-  border:1px solid rgba(42,26,72,0.18);
-  border-radius:4px;
-  font-family:'IM Fell English',serif;
-  font-size:13px;
-  color:var(--ink);
-  outline:none;
-  transition:border-color 0.2s, box-shadow 0.2s;
-}
-.form-group input::placeholder{
-  color:rgba(42,26,72,0.3);
-  font-style:italic;
-}
-.form-group input:focus{
-  border-color:rgba(184,150,74,0.5);
-  box-shadow:0 0 0 3px rgba(184,150,74,0.08);
-  background:rgba(255,255,255,0.6);
-}
+.form-panel{position:relative;z-index:1;}
+.form-group{margin-bottom:11px;}
+.form-group label{display:block;font-family:'Playfair Display',serif;font-size:9px;letter-spacing:2.5px;color:rgba(42,26,72,0.55);margin-bottom:5px;text-transform:uppercase;}
+.form-group input{width:100%;padding:9px 12px;background:rgba(255,255,255,0.45);border:1px solid rgba(42,26,72,0.18);border-radius:4px;font-family:'IM Fell English',serif;font-size:13px;color:var(--ink);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.form-group input::placeholder{color:rgba(42,26,72,0.3);font-style:italic;}
+.form-group input:focus{border-color:rgba(184,150,74,0.5);box-shadow:0 0 0 3px rgba(184,150,74,0.08);background:rgba(255,255,255,0.6);}
 
 /* ── BUTTONS ── */
-.btn-primary{
-  width:100%;
-  padding:10px;
-  background:linear-gradient(135deg,var(--purple-btn),var(--purple-accent));
-  border:1px solid rgba(92,61,143,0.6);
-  border-radius:4px;
-  color:rgba(255,255,255,0.92);
-  font-family:'Playfair Display',serif;
-  font-size:11px;
-  letter-spacing:2.5px;
-  cursor:pointer;
-  margin-top:6px;
-  transition:all 0.2s;
-  position:relative;
-  overflow:hidden;
-}
-.btn-primary::before{
-  content:'';
-  position:absolute;
-  top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);
-  transition:left 0.4s;
-}
+.btn-primary{width:100%;padding:10px;background:linear-gradient(135deg,var(--purple-btn),var(--purple-accent));border:1px solid rgba(92,61,143,0.6);border-radius:4px;color:rgba(255,255,255,0.92);font-family:'Playfair Display',serif;font-size:11px;letter-spacing:2.5px;cursor:pointer;margin-top:6px;transition:all 0.2s;position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);transition:left 0.4s;}
 .btn-primary:hover::before{left:100%;}
-.btn-primary:hover{
-  box-shadow:0 4px 20px rgba(92,61,143,0.4);
-  border-color:rgba(184,150,74,0.3);
-}
+.btn-primary:hover{box-shadow:0 4px 20px rgba(92,61,143,0.45);border-color:rgba(184,150,74,0.35);}
+.btn-primary:disabled{opacity:0.55;cursor:default;}
 
-.btn-google{
-  width:100%;
-  padding:9px;
-  background:rgba(255,255,255,0.55);
-  border:1px solid rgba(42,26,72,0.18);
-  border-radius:4px;
-  color:var(--ink);
-  font-family:'Playfair Display',serif;
-  font-size:10px;
-  letter-spacing:1.5px;
-  cursor:pointer;
-  margin-top:8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  transition:all 0.2s;
-}
-.btn-google:hover{
-  background:rgba(255,255,255,0.75);
-  border-color:rgba(184,150,74,0.3);
-}
-.btn-google svg{width:14px;height:14px;}
+.btn-google{width:100%;padding:9px;background:rgba(255,255,255,0.55);border:1px solid rgba(42,26,72,0.18);border-radius:4px;color:var(--ink);font-family:'Playfair Display',serif;font-size:10px;letter-spacing:1.5px;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
+.btn-google:hover{background:rgba(255,255,255,0.75);border-color:rgba(184,150,74,0.35);}
+.btn-google:disabled{opacity:0.55;cursor:default;}
+.btn-google svg{width:14px;height:14px;flex-shrink:0;}
 
-.or-line{
-  display:flex;align-items:center;gap:10px;
-  margin:12px 0 4px;
-  position:relative;z-index:1;
-}
-.or-line::before,.or-line::after{
-  content:'';flex:1;height:1px;
-  background:rgba(42,26,72,0.15);
-}
-.or-line span{
-  font-size:9px;letter-spacing:2px;
-  color:rgba(42,26,72,0.35);
-  font-family:'Playfair Display',serif;
-}
+.or-line{display:flex;align-items:center;gap:10px;margin:10px 0 2px;position:relative;z-index:1;}
+.or-line::before,.or-line::after{content:'';flex:1;height:1px;background:rgba(42,26,72,0.15);}
+.or-line span{font-size:9px;letter-spacing:2px;color:rgba(42,26,72,0.35);font-family:'Playfair Display',serif;}
 
-/* ── BOTTOM ROD (same as top) ── */
+/* ── ALERTS ── */
+.alert-err{display:none;font-size:11px;color:#c0392b;font-family:'Playfair Display',serif;margin-bottom:8px;padding:8px 10px;background:rgba(192,57,43,0.08);border-radius:5px;border:1px solid rgba(192,57,43,0.2);line-height:1.5;}
+.alert-ok{display:none;font-size:11px;color:#2e7d5a;font-family:'Playfair Display',serif;margin-bottom:8px;padding:8px 10px;background:rgba(46,125,90,0.08);border-radius:5px;border:1px solid rgba(46,125,90,0.2);line-height:1.5;}
 
+.en-only{display:none;}
 
-  #mainEye #iris { filter: none !important; }
+/* mobile performance */
+@media(max-width:768px){
+  .scroll-wrap{ filter:drop-shadow(0 0 20px rgba(92,61,143,0.4)); }
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-
-<!-- Stars -->
-<!-- Lightning -->
+<canvas id="stars-canvas"></canvas>
 
 <div id="scene">
   <div class="scroll-wrap">
-
-    <!-- Top rod -->
-    <div class="rod">
-      <div class="knob"></div>
-      <div class="knob"></div>
-    </div>
-
-    <!-- Parchment -->
+    <div class="rod"><div class="knob"></div><div class="knob"></div></div>
     <div class="parchment">
-
-      <!-- Lang toggle -->
       <div class="lang-toggle">
         <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
         <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
       </div>
-
-      <!-- Eye + Title -->
       <div class="eye-header">
         <div class="brand-title">ZEUS DAILY</div>
-
-        <!-- Eye SVG Vol.004 -->
         <div class="eye-wrap">
           <svg id="mainEye" viewBox="0 0 120 52" width="140" height="61" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
             <defs>
-              <!-- Nebula gradient -->
-              <radialGradient id="nebulaGrad" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#b088f9"/>
-                <stop offset="52%" stop-color="#6b4c9a"/>
-                <stop offset="100%" stop-color="#2d1b4e"/>
-              </radialGradient>
-              <!-- Pupil gradient -->
-              <radialGradient id="pupilGrad" cx="40%" cy="38%" r="60%">
-                <stop offset="0%" stop-color="#1a0a2e"/>
-                <stop offset="100%" stop-color="#0a0515"/>
-              </radialGradient>
-              <!-- Clip path -->
-              <clipPath id="eyeClip">
-                <path id="eyeClipPath" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/>
-              </clipPath>
+              <radialGradient id="nebulaGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient>
+              <radialGradient id="pupilGrad" cx="40%" cy="38%" r="60%"><stop offset="0%" stop-color="#1a0a2e"/><stop offset="100%" stop-color="#0a0515"/></radialGradient>
+              <clipPath id="eyeClip"><path id="eyeClipPath" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath>
             </defs>
-
-            <!-- Eye outline (open shape) -->
-            <path id="eyeOutline"
-              d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"
-              fill="#0e0818"
-              stroke="#b8964a"
-              stroke-width="1.4"
-             />
-
-            <!-- Clipped content -->
+            <path id="eyeOutline" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
             <g clip-path="url(#eyeClip)">
-              <!-- Iris -->
-              <circle id="iris" cx="60" cy="26" r="14"
-                fill="url(#nebulaGrad)"
-               />
-              <!-- Pupil -->
-              <circle id="pupil" cx="60" cy="26" r="6.5"
-                fill="url(#pupilGrad)"/>
-              <!-- Highlight white -->
+              <circle id="iris" cx="60" cy="26" r="14" fill="url(#nebulaGrad)"/>
+              <circle id="pupil" cx="60" cy="26" r="6.5" fill="url(#pupilGrad)"/>
               <circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/>
-              <!-- Highlight purple -->
               <circle cx="56" cy="28" r="1" fill="rgba(176,136,249,0.4)"/>
             </g>
-
-            <!-- Lash dots -->
             <circle cx="30" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
             <circle cx="60" cy="8" r="0.7" fill="#b8964a" opacity="0.5"/>
             <circle cx="90" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
           </svg>
         </div>
-
         <div class="brand-sub zh-only">上帝视角 · 全球洞见</div>
         <div class="brand-sub en-only">THE GOD'S EYE VIEW</div>
       </div>
-
       <div class="divider"></div>
-
-      <!-- Tabs -->
       <div class="tabs">
         <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">
-          <span class="zh-only">登入</span>
-
-        </button>
-        <button class="tab-btn" id="tab-register" onclick="switchTab('register')">
-          <span class="zh-only">注册</span>
-
-        </button>
-      </div>
-
-      <!-- Login Panel -->
-      <div class="form-panel" id="panel-login">
-        <div class="form-group">
-          <label><span class="zh-only">电子邮件</span><span class="en-only">EMAIL</span></label>
-          <input id="login-email" type="email" placeholder="your@email.com"/>
-        </div>
-        <div class="form-group">
-          <label><span class="zh-only">密码</span><span class="en-only">PASSWORD</span></label>
-          <input id="login-password" type="password" placeholder="••••••••"/>
-        </div>
-        <div id="login-error" style="display:none;font-size:11px;color:#c0392b;font-family:'DM Sans',sans-serif;margin-bottom:8px;padding:8px 10px;background:rgba(192,57,43,0.08);border-radius:6px;border:1px solid rgba(192,57,43,0.2);"></div>
-        <button id="btn-login" class="btn-primary">
           <span class="zh-only">登入</span><span class="en-only">SIGN IN</span>
         </button>
+        <button class="tab-btn" id="tab-register" onclick="switchTab('register')">
+          <span class="zh-only">注册</span><span class="en-only">REGISTER</span>
+        </button>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="form-panel" id="panel-login">
+        <div class="form-group"><label><span class="zh-only">电子邮件</span><span class="en-only">EMAIL</span></label><input id="login-email" type="email" placeholder="your@email.com" autocomplete="email"/></div>
+        <div class="form-group"><label><span class="zh-only">密码</span><span class="en-only">PASSWORD</span></label><input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
+        <div class="alert-err" id="login-error"></div>
+        <button id="btn-login" class="btn-primary"><span class="zh-only">登入</span><span class="en-only">SIGN IN</span></button>
         <div class="or-line"><span>OR</span></div>
         <button id="btn-google" class="btn-google">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-          <span class="zh-only">使用 Google 登入</span>
-          <span class="en-only">Continue with Google</span>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          <span class="zh-only">使用 Google 登入</span><span class="en-only">Continue with Google</span>
         </button>
       </div>
 
-      <!-- Register Panel -->
+      <!-- REGISTER -->
       <div class="form-panel" id="panel-register" style="display:none">
-        <div class="form-group">
-          <label><span class="zh-only">电子邮件</span><span class="en-only">EMAIL</span></label>
-          <input id="reg-email" type="email" placeholder="your@email.com"/>
-        </div>
-        <div class="form-group">
-          <label><span class="zh-only">密码</span><span class="en-only">PASSWORD</span></label>
-          <input id="reg-password" type="password" placeholder="••••••••"/>
-        </div>
-        <div id="reg-error" style="display:none;font-size:11px;color:#c0392b;font-family:'DM Sans',sans-serif;margin-bottom:8px;padding:8px 10px;background:rgba(192,57,43,0.08);border-radius:6px;border:1px solid rgba(192,57,43,0.2);"></div>
-        <div id="reg-success" style="display:none;font-size:11px;color:#2e7d5a;font-family:'DM Sans',sans-serif;margin-bottom:8px;padding:8px 10px;background:rgba(46,125,90,0.08);border-radius:6px;border:1px solid rgba(46,125,90,0.2);"></div>
-        <button id="btn-register" class="btn-primary">
-          <span class="zh-only">创建账号</span>
-          <span class="en-only">CREATE ACCOUNT</span>
-        </button>
+        <div class="form-group"><label><span class="zh-only">电子邮件</span><span class="en-only">EMAIL</span></label><input id="reg-email" type="email" placeholder="your@email.com" autocomplete="email"/></div>
+        <div class="form-group"><label><span class="zh-only">密码</span><span class="en-only">PASSWORD</span></label><input id="reg-password" type="password" placeholder="••••••••" autocomplete="new-password"/></div>
+        <div class="alert-err" id="reg-error"></div>
+        <div class="alert-ok" id="reg-success"></div>
+        <button id="btn-register" class="btn-primary"><span class="zh-only">创建账号</span><span class="en-only">CREATE ACCOUNT</span></button>
       </div>
-
-    </div><!-- /parchment -->
-
-    <!-- Bottom rod -->
-    <div class="rod">
-      <div class="knob"></div>
-      <div class="knob"></div>
     </div>
-
-  </div><!-- /scroll-wrap -->
-</div><!-- /scene -->
+    <div class="rod"><div class="knob"></div><div class="knob"></div></div>
+  </div>
+</div>
 
 <script>
+// ── CAPTURE REF CODE ON PAGE LOAD ──
+(function(){
+  var ref = new URLSearchParams(window.location.search).get('ref');
+  if(ref){ try{ localStorage.setItem('zeus-ref', ref); }catch(e){} }
+})();
+
+// ── BACKGROUND ANIMATION (single RAF loop, mobile-optimised) ──
+(function(){
+  var starsCV = document.getElementById('stars-canvas');
+  var sCtx = starsCV.getContext('2d');
+
+  // Detect low-power device
+  var isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+  var STAR_COUNT = isMobile ? 80 : 160;
+
+  function resize(){
+    starsCV.width = innerWidth;
+    starsCV.height = innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Stars
+  var stars = [];
+  for(var i=0;i<STAR_COUNT;i++) stars.push({
+    x:Math.random(), y:Math.random(),
+    r:Math.random()*1.0+0.25,
+    ph:Math.random()*Math.PI*2,
+    sp:0.005+Math.random()*0.01
+  });
 
 
+  var frame = 0;
+  var lastTime = 0;
+  var FPS_CAP = 1000 / 62; // ~60fps cap
 
-// ── TABS ──
-function switchTab(tab){
-  var isLogin = tab==='login';
-  document.getElementById('tab-login').className    = 'tab-btn'+(isLogin?' active':'');
-  document.getElementById('tab-register').className = 'tab-btn'+(!isLogin?' active':'');
-  document.getElementById('panel-login').style.display    = isLogin?'block':'none';
-  document.getElementById('panel-register').style.display = !isLogin?'block':'none';
-}
+  function tick(now){
+    if(now - lastTime < FPS_CAP){ requestAnimationFrame(tick); return; }
+    lastTime = now;
+    frame++;
+
+    // Stars
+    sCtx.clearRect(0,0,starsCV.width,starsCV.height);
+    for(var i=0;i<stars.length;i++){
+      var s=stars[i]; s.ph+=s.sp;
+      var a=0.2+0.55*(0.5+0.5*Math.sin(s.ph));
+      sCtx.beginPath();
+      sCtx.arc(s.x*starsCV.width, s.y*starsCV.height, s.r, 0, Math.PI*2);
+      sCtx.fillStyle='rgba(255,255,255,'+a.toFixed(2)+')';
+      sCtx.fill();
+    }
+
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+// ── EYE BLINK + TRACK ──
+(function(){
+  var OPEN='M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z';
+  var CLOSE='M 5,26 C 25,26 95,26 115,26 C 95,26 25,26 5,26 Z';
+  function blink(){
+    var o=document.getElementById('eyeOutline'),c=document.getElementById('eyeClipPath');
+    if(o)o.setAttribute('d',CLOSE); if(c)c.setAttribute('d',CLOSE);
+    setTimeout(function(){ var o=document.getElementById('eyeOutline'),c=document.getElementById('eyeClipPath'); if(o)o.setAttribute('d',OPEN); if(c)c.setAttribute('d',OPEN); },180);
+    setTimeout(blink, 2200+Math.random()*3200);
+  }
+  setTimeout(blink, 1500);
+  document.addEventListener('mousemove',function(ev){
+    var svg=document.getElementById('mainEye'); if(!svg) return;
+    var r=svg.getBoundingClientRect();
+    var cx=r.left+r.width/2, cy=r.top+r.height/2;
+    var dx=ev.clientX-cx, dy=ev.clientY-cy;
+    var angle=Math.atan2(dy,dx), dist=Math.sqrt(dx*dx+dy*dy);
+    var mv=Math.min(dist/80,1)*3;
+    var nx=Math.cos(angle)*mv, ny=Math.sin(angle)*mv;
+    var iris=document.getElementById('iris'),pup=document.getElementById('pupil');
+    if(iris){iris.setAttribute('cx',60+nx);iris.setAttribute('cy',26+ny);}
+    if(pup){pup.setAttribute('cx',60+nx*1.2);pup.setAttribute('cy',26+ny*1.2);}
+  });
+})();
 
 // ── LANGUAGE ──
 function applyLang(lang){
-  var zhEls = document.querySelectorAll('.zh-only');
-  var enEls = document.querySelectorAll('.en-only');
-  for(var i=0;i<zhEls.length;i++) zhEls[i].style.display = lang==='zh'?'':'none';
-  for(var i=0;i<enEls.length;i++) enEls[i].style.display = lang==='en'?'':'none';
-  document.getElementById('btn-zh').className = 'lang-btn'+(lang==='zh'?' active':'');
-  document.getElementById('btn-en').className = 'lang-btn'+(lang==='en'?' active':'');
+  document.querySelectorAll('.zh-only').forEach(function(el){el.style.display=lang==='zh'?'':' none';});
+  document.querySelectorAll('.en-only').forEach(function(el){el.style.display=lang==='en'?'':' none';});
+  document.getElementById('btn-zh').className='lang-btn'+(lang==='zh'?' active':'');
+  document.getElementById('btn-en').className='lang-btn'+(lang==='en'?' active':'');
+}
+function setLang(lang){ try{localStorage.setItem('zeus-lang',lang);}catch(e){} applyLang(lang); }
+(function(){ var s='zh'; try{s=localStorage.getItem('zeus-lang')||'zh';}catch(e){} applyLang(s); })();
+
+// ── TABS ──
+function switchTab(tab){
+  var isLogin=tab==='login';
+  document.getElementById('tab-login').className='tab-btn'+(isLogin?' active':'');
+  document.getElementById('tab-register').className='tab-btn'+(!isLogin?' active':'');
+  document.getElementById('panel-login').style.display=isLogin?'block':'none';
+  document.getElementById('panel-register').style.display=!isLogin?'block':'none';
 }
 
-function setLang(lang){
-  try{ localStorage.setItem('zeus-lang', lang); }catch(e){}
-  applyLang(lang);
-}
-
-// Init language from storage
+// ── SUPABASE ──
 (function(){
-  var saved = 'zh';
-  try{ saved = localStorage.getItem('zeus-lang') || 'zh'; }catch(e){}
-  applyLang(saved);
-})();
+  var _sb = supabase.createClient(
+    'https://ruuksrwlgsenkkkkapbu.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw'
+  );
 
-// ── SUPABASE AUTH ──
-(function(){
-  var SUPABASE_URL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
-  var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
-  var client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  var L = function(){ try{return localStorage.getItem('zeus-lang')||'zh';}catch(e){return 'zh';} };
 
-  var lang = function(){ try{ return localStorage.getItem('zeus-lang')||'zh'; }catch(e){ return 'zh'; } };
-
-  // If already logged in → go straight to dashboard
-  client.auth.getSession().then(function(res){
-    if(res.data && res.data.session) window.location.href = 'dashboard.html';
+  // Redirect if already logged in
+  _sb.auth.getSession().then(function(res){
+    if(res.data&&res.data.session) window.location.href='dashboard.html';
   });
 
-  // Handle OAuth redirect (Google callback lands back here)
-  client.auth.onAuthStateChange(function(event, session){
-    if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session){
-      window.location.href = 'dashboard.html';
+  // Handle OAuth return (Google) + write invited_by if needed
+  _sb.auth.onAuthStateChange(function(event,session){
+    if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED')&&session){
+      var savedRef=''; try{savedRef=localStorage.getItem('zeus-ref')||'';}catch(e){}
+      if(savedRef){
+        // Try to update invited_by — retry up to 5 times until profile exists
+        var attempts=0;
+        function tryUpdate(){
+          attempts++;
+          _sb.from('profiles').update({invited_by:savedRef}).eq('id',session.user.id).is('invited_by',null).then(function(r){
+            if(!r.error){ try{localStorage.removeItem('zeus-ref');}catch(e){} }
+            else if(attempts<5){ setTimeout(tryUpdate,1500); }
+          });
+        }
+        setTimeout(tryUpdate,1000);
+      }
+      window.location.href='dashboard.html';
     }
   });
 
-  function setLoading(btn, loading){
-    btn.disabled = loading;
-    btn.style.opacity = loading ? '0.6' : '1';
-  }
+  function setLoading(btn,on){ btn.disabled=on; btn.style.opacity=on?'0.58':'1'; }
+  function showErr(id,msg){ var el=document.getElementById(id); if(el){el.textContent=msg;el.style.display=msg?'block':'none';} }
+  function showOk(id,msg){ var el=document.getElementById(id); if(el){el.textContent=msg;el.style.display=msg?'block':'none';} }
 
-  function showError(elId, msg){
-    var el = document.getElementById(elId);
-    if(!el) return;
-    el.textContent = msg;
-    el.style.display = msg ? 'block' : 'none';
-  }
-
-  // ── Email / Password Login ──
-  var btnLogin = document.getElementById('btn-login');
+  // Login
+  var btnLogin=document.getElementById('btn-login');
   if(btnLogin){
-    btnLogin.addEventListener('click', function(){
-      var email = (document.getElementById('login-email')||{}).value || '';
-      var pass  = (document.getElementById('login-password')||{}).value || '';
-      showError('login-error', '');
-      if(!email || !pass){
-        showError('login-error', lang()==='zh' ? '请填写邮件和密码' : 'Please enter email and password');
-        return;
-      }
-      setLoading(btnLogin, true);
-      client.auth.signInWithPassword({ email: email, password: pass }).then(function(res){
-        setLoading(btnLogin, false);
+    btnLogin.addEventListener('click',function(){
+      var email=(document.getElementById('login-email')||{}).value||'';
+      var pass=(document.getElementById('login-password')||{}).value||'';
+      showErr('login-error','');
+      if(!email||!pass){showErr('login-error',L()==='zh'?'请填写邮件和密码':'Please enter email and password');return;}
+      setLoading(btnLogin,true);
+      _sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
+        setLoading(btnLogin,false);
         if(res.error){
-          var msg = res.error.message || '';
-          if(msg.indexOf('Invalid') >= 0 || msg.indexOf('credentials') >= 0)
-            msg = lang()==='zh' ? '邮件或密码错误' : 'Invalid email or password';
-          showError('login-error', msg);
-        } else {
-          window.location.href = 'dashboard.html';
-        }
+          var m=res.error.message||'';
+          if(m.indexOf('Invalid')>=0||m.indexOf('credentials')>=0) m=L()==='zh'?'邮件或密码错误':'Invalid email or password';
+          showErr('login-error',m);
+        } else { window.location.href='dashboard.html'; }
       });
+    });
+    ['login-email','login-password'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter')btnLogin.click();});
     });
   }
 
-  // Enter key triggers login
-  ['login-email','login-password'].forEach(function(id){
-    var el = document.getElementById(id);
-    if(el) el.addEventListener('keydown', function(e){ if(e.key==='Enter' && btnLogin) btnLogin.click(); });
-  });
-
-  // ── Google OAuth ──
-  var btnGoogle = document.getElementById('btn-google');
+  // Google
+  var btnGoogle=document.getElementById('btn-google');
   if(btnGoogle){
-    btnGoogle.addEventListener('click', function(){
-      setLoading(btnGoogle, true);
-      client.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: window.location.origin + '/dashboard.html' }
-      }).then(function(res){
-        if(res.error){
-          setLoading(btnGoogle, false);
-          showError('login-error', res.error.message || (lang()==='zh' ? 'Google 登录失败' : 'Google sign-in failed'));
-        }
-        // On success browser redirects automatically — no need to do anything
+    btnGoogle.addEventListener('click',function(){
+      setLoading(btnGoogle,true);
+      _sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/dashboard.html'}}).then(function(res){
+        if(res.error){setLoading(btnGoogle,false);showErr('login-error',res.error.message||(L()==='zh'?'Google 登录失败':'Google sign-in failed'));}
       });
     });
   }
 
-  // ── Register ──
-  var btnReg = document.getElementById('btn-register');
+  // Register
+  var btnReg=document.getElementById('btn-register');
   if(btnReg){
-    btnReg.addEventListener('click', function(){
-      var email = (document.getElementById('reg-email')||{}).value || '';
-      var pass  = (document.getElementById('reg-password')||{}).value || '';
-      showError('reg-error', '');
-      showError('reg-success', '');
-      if(!email || !pass){
-        showError('reg-error', lang()==='zh' ? '请填写邮件和密码' : 'Please enter email and password');
-        return;
-      }
-      if(pass.length < 6){
-        showError('reg-error', lang()==='zh' ? '密码至少 6 位' : 'Password must be at least 6 characters');
-        return;
-      }
-      setLoading(btnReg, true);
-      // Read referral code from URL ?ref=XXXX
-      var urlRef = (new URLSearchParams(window.location.search)).get('ref') || '';
-      client.auth.signUp({ email: email, password: pass }).then(function(res){
-        setLoading(btnReg, false);
+    btnReg.addEventListener('click',function(){
+      var email=(document.getElementById('reg-email')||{}).value||'';
+      var pass=(document.getElementById('reg-password')||{}).value||'';
+      showErr('reg-error',''); showOk('reg-success','');
+      if(!email||!pass){showErr('reg-error',L()==='zh'?'请填写邮件和密码':'Please enter email and password');return;}
+      if(pass.length<6){showErr('reg-error',L()==='zh'?'密码至少 6 位':'Password must be at least 6 characters');return;}
+      setLoading(btnReg,true);
+      // Read ref from URL or localStorage
+      var savedRef='';
+      try{savedRef=new URLSearchParams(window.location.search).get('ref')||localStorage.getItem('zeus-ref')||'';}catch(e){}
+      _sb.auth.signUp({email:email,password:pass}).then(function(res){
+        setLoading(btnReg,false);
         if(res.error){
-          showError('reg-error', res.error.message);
+          showErr('reg-error',res.error.message);
         } else {
-          // If referred, update invited_by in profiles after a short delay
-          if(urlRef && res.data && res.data.user){
-            setTimeout(function(){
-              client.from('profiles').update({ invited_by: urlRef }).eq('id', res.data.user.id).then(function(){});
-            }, 2000);
+          // Write invited_by with retry
+          if(savedRef&&res.data&&res.data.user){
+            var uid=res.data.user.id, attempts=0;
+            function tryUpdate(){
+              attempts++;
+              _sb.from('profiles').update({invited_by:savedRef}).eq('id',uid).is('invited_by',null).then(function(r){
+                if(!r.error){ try{localStorage.removeItem('zeus-ref');}catch(e){} }
+                else if(attempts<6){ setTimeout(tryUpdate,1500); }
+              });
+            }
+            setTimeout(tryUpdate,1200);
           }
-          showError('reg-success', lang()==='zh' ? '✓ 注册成功！请检查邮箱验证链接' : '✓ Account created! Check your email to verify.');
+          showOk('reg-success',L()==='zh'?'✓ 注册成功，请检查邮箱完成验证':'✓ Account created! Check your email to verify.');
         }
       });
+    });
+    ['reg-email','reg-password'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter')btnReg.click();});
     });
   }
 })();
