@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeus Daily · Badge Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f5eedc;
+  --bg2:#faf8f4;
+  --parchment:#ede4ce;
+  --gold:#b8964a;--gold2:#d4ac5c;--gold-dark:#8a6d2f;
+  --violet:#5c3d8f;--violet2:#7b56b8;
+  --text:#1e1530;--text2:#4a3a6a;--text3:#8a7a9a;--text4:#b8a8c8;
+  --border:rgba(184,150,74,0.2);--border2:rgba(184,150,74,0.35);
+  --shadow-sm:0 2px 12px rgba(30,21,48,0.07);
+  --shadow-md:0 8px 32px rgba(30,21,48,0.10);
+  --shadow-lg:0 20px 60px rgba(30,21,48,0.13);
+}
+
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
+
+/* ── BACKGROUND TEXTURE ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 5%, rgba(184,150,74,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 90%, rgba(92,61,143,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255,255,255,0.5) 0%, transparent 70%);
+}
+/* Subtle linen weave */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  opacity:0.018;
+  background-image:repeating-linear-gradient(0deg,#b8964a 0px,transparent 1px,transparent 4px),
+                   repeating-linear-gradient(90deg,#b8964a 0px,transparent 1px,transparent 4px);
+  background-size:4px 4px;
+}
+
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:56px 28px 100px;}
+
+/* ── HEADER ── */
+.header{text-align:center;margin-bottom:56px;}
+.header-rule{display:flex;align-items:center;gap:16px;margin-bottom:18px;}
+.header-rule-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);}
+.header-rule-ornament{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:4px;color:var(--gold);white-space:nowrap;}
+.header-title{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,52px);font-weight:900;line-height:1.05;color:var(--text);margin-bottom:10px;letter-spacing:-0.5px;}
+.header-title em{font-style:italic;color:var(--gold);}
+.header-sub{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3.5px;color:var(--text3);text-transform:uppercase;}
+
+/* ── STAT RIBBON ── */
+.stat-ribbon{
+  display:flex;align-items:stretch;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow-sm);
+  margin-bottom:48px;
+  overflow:hidden;
+}
+.stat-cell{flex:1;padding:20px 16px;text-align:center;border-right:1px solid var(--border);position:relative;}
+.stat-cell:last-child{border-right:none;}
+.stat-cell::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;}
+.stat-cell.highlight::before{opacity:1;}
+.stat-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--text);line-height:1;}
+.stat-val.gold{color:var(--gold);}
+.stat-lbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--text4);margin-top:5px;}
+
+/* ── CABINET SECTION ── */
+.cabinet-section{margin-bottom:32px;}
+
+/* Cabinet label */
+.cab-header{
+  display:flex;align-items:center;gap:0;
+  margin-bottom:20px;
+}
+.cab-number{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  color:var(--gold);
+  width:28px;flex-shrink:0;
+}
+.cab-title-zh{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text2);}
+.cab-title-en{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;color:var(--text4);margin-left:10px;margin-top:2px;}
+.cab-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent);margin-left:16px;}
+
+/* Cabinet box — glass vitrine */
+.cabinet{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:32px 28px 28px;
+  box-shadow:var(--shadow-md);
+  position:relative;
+  overflow:hidden;
+}
+/* Subtle inner shadow top */
+.cabinet::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:80px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.9),transparent);
+  pointer-events:none;
+}
+/* Gold top accent line */
+.cabinet::after{
+  content:'';position:absolute;top:0;left:8%;right:8%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0.5;
+}
+/* Bottom glass depth */
+.cab-floor{
+  position:absolute;bottom:0;left:0;right:0;height:12px;
+  background:linear-gradient(0deg,rgba(184,150,74,0.06),transparent);
+}
+
+/* Badge grid inside cabinet */
+.shelf{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:16px;
+}
+
+/* ── BADGE CELL ── */
+.badge-cell{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:20px 10px 16px;
+  border-radius:14px;
+  background:var(--bg2);
+  border:1px solid rgba(184,150,74,0.1);
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.38s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s, border-color 0.25s, background 0.25s;
+  animation:cell-in 0.5s ease both;
+}
+.badge-cell:hover{
+  transform:translateY(-7px) scale(1.02);
+  box-shadow:0 16px 40px rgba(30,21,48,0.12), 0 0 0 1px rgba(184,150,74,0.25);
+  background:white;
+  border-color:rgba(184,150,74,0.3);
+}
+.badge-cell.locked{
+  opacity:0.35;
+  filter:grayscale(0.65) brightness(0.95);
+}
+.badge-cell.locked:hover{transform:none;box-shadow:none;}
+.badge-cell.earned{border-color:rgba(184,150,74,0.18);}
+
+/* Hover glow floor */
+.badge-cell::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:40px;
+  background:linear-gradient(0deg,var(--cell-glow,rgba(184,150,74,0.06)),transparent);
+  opacity:0;transition:opacity 0.35s;
+}
+.badge-cell:hover::after{opacity:1;}
+
+/* Earned indicator */
+.earned-pip{
+  position:absolute;top:9px;right:9px;
+  width:16px;height:16px;border-radius:50%;
+  background:rgba(61,186,122,0.12);border:1px solid rgba(61,186,122,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:7px;color:#3dba7a;
+}
+
+/* Lock icon */
+.lock-pip{
+  position:absolute;top:9px;right:9px;
+  width:16px;height:16px;border-radius:50%;
+  background:rgba(184,150,74,0.08);border:1px solid rgba(184,150,74,0.15);
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* SVG drop shadow */
+.badge-svg-w{
+  filter:drop-shadow(0 5px 14px var(--cell-glow,rgba(184,150,74,0.2)));
+  transition:filter 0.3s;
+}
+.badge-cell:hover .badge-svg-w{
+  filter:drop-shadow(0 10px 24px var(--cell-glow,rgba(184,150,74,0.4)));
+}
+
+/* Pedestal */
+.pedestal{
+  width:40px;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0.4;border-radius:1px;
+  margin-top:2px;
+}
+
+.cell-name{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:var(--text);text-align:center;line-height:1.3;}
+.cell-en{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:1.5px;color:var(--text4);text-align:center;margin-top:-2px;}
+.cell-cond{font-size:8.5px;color:var(--text3);text-align:center;line-height:1.5;}
+.rarity-tag{
+  font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:1.5px;
+  padding:2px 6px;border-radius:3px;
+  color:var(--rarity-color,var(--text4));
+  border:1px solid var(--rarity-color,rgba(184,150,74,0.2));
+  background:rgba(255,255,255,0.6);
+  margin-top:2px;
+}
+
+/* ── DETAIL DRAWER ── */
+#panel-backdrop{
+  display:none;position:fixed;inset:0;z-index:90;
+  background:rgba(30,21,48,0.25);
+  backdrop-filter:blur(2px);
+}
+#panel-backdrop.open{display:block;}
+
+#detail-panel{
+  position:fixed;bottom:-100%;left:0;right:0;z-index:100;
+  max-width:560px;margin:0 auto;
+  background:white;
+  border:1px solid var(--border);
+  border-top-left-radius:24px;border-top-right-radius:24px;
+  padding:8px 28px 48px;
+  box-shadow:0 -12px 48px rgba(30,21,48,0.16);
+  transition:bottom 0.42s cubic-bezier(.32,1.1,.6,1);
+}
+#detail-panel.open{bottom:0;}
+#detail-panel::before{
+  content:'';display:block;width:36px;height:3px;border-radius:2px;
+  background:rgba(184,150,74,0.3);margin:14px auto 20px;
+}
+.detail-inner{display:flex;gap:20px;align-items:flex-start;}
+.detail-badge-wrap{flex-shrink:0;}
+.detail-info{flex:1;padding-top:4px;}
+.detail-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--text);margin-bottom:2px;}
+.detail-en{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--text4);margin-bottom:12px;}
+.detail-desc{font-size:12px;color:var(--text2);line-height:1.75;margin-bottom:14px;}
+.detail-status{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;
+  padding:6px 14px;border-radius:20px;
+}
+.detail-status.earned{background:rgba(61,186,122,0.08);border:1px solid rgba(61,186,122,0.3);color:#2a8a5a;}
+.detail-status.locked{background:rgba(184,150,74,0.06);border:1px solid rgba(184,150,74,0.2);color:var(--text3);}
+.detail-rarity{
+  display:inline-block;margin-left:8px;
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;
+  padding:5px 12px;border-radius:20px;
+  border:1px solid var(--rarity-color,var(--border));
+  color:var(--rarity-color,var(--text4));
+  background:rgba(255,255,255,0.8);
+}
+
+/* ── LEGEND ── */
+.legend{
+  display:flex;gap:24px;justify-content:center;
+  margin-top:36px;flex-wrap:wrap;
+  padding:16px;
+  background:white;border:1px solid var(--border);border-radius:12px;
+}
+.legend-item{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:0.5px;}
+.legend-pip{width:7px;height:7px;border-radius:50%;}
+
+/* ── ANIMATIONS ── */
+@keyframes cell-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes spin-slow{to{transform:rotate(360deg);}}
+@keyframes spin-rev{to{transform:rotate(-360deg);}}
+@keyframes orbit{to{transform:rotate(360deg);}}
+@keyframes shimmer{0%{transform:translateX(-80px);}100%{transform:translateX(80px);}}
+@keyframes hue{0%{filter:hue-rotate(0deg) brightness(1.1);}50%{filter:hue-rotate(40deg) brightness(1.25);}100%{filter:hue-rotate(0deg) brightness(1.1);}}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0);}50%{opacity:1;transform:scale(1);}}
+@keyframes ach-flame{0%,100%{transform:scaleY(1) scaleX(1);}33%{transform:scaleY(1.06) scaleX(0.96);}66%{transform:scaleY(0.97) scaleX(1.03);}}
+@keyframes ach-heartbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.1);}28%{transform:scale(1);}42%{transform:scale(1.05);}70%{transform:scale(1);}}
+@keyframes ach-hue{0%{filter:hue-rotate(0deg) brightness(1.1);}50%{filter:hue-rotate(40deg) brightness(1.25);}100%{filter:hue-rotate(0deg) brightness(1.1);}}
+@keyframes ach-pulse-ring{0%,100%{opacity:0.3;transform:scale(1);}50%{opacity:0.65;transform:scale(1.04);}}
+@keyframes ach-pulse-glow{0%,100%{opacity:0.4;}50%{opacity:0.9;}}
+
+/* Mobile */
+@media(max-width:600px){
+  .shelf{grid-template-columns:repeat(3,1fr);gap:10px;}
+  .badge-cell{padding:14px 8px 12px;}
+  .cabinet{padding:20px 16px 16px;}
+  .stat-ribbon{flex-wrap:wrap;}
+  .stat-cell{min-width:50%;border-bottom:1px solid var(--border);}
+  .stat-cell:nth-child(2){border-right:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-rule">
+      <div class="header-rule-line"></div>
+      <div class="header-rule-ornament">Zeus Daily · Achievement System</div>
+      <div class="header-rule-line"></div>
+    </div>
+    <div class="header-title">成就<em>徽章</em>专柜</div>
+    <div class="header-sub">解锁属于你的文明印记 · Unlock Your Civilization Marks</div>
+  </div>
+
+  <!-- STAT RIBBON -->
+  <div class="stat-ribbon">
+    <div class="stat-cell highlight">
+      <div class="stat-val gold" id="stat-earned">0</div>
+      <div class="stat-lbl">已解锁 · UNLOCKED</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val">12</div>
+      <div class="stat-lbl">全部徽章 · TOTAL</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val gold" id="stat-pct">0%</div>
+      <div class="stat-lbl">完成度 · PROGRESS</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-val" id="stat-rarest" style="font-size:16px;padding-top:6px;">—</div>
+      <div class="stat-lbl">最高稀有度 · RAREST</div>
+    </div>
+  </div>
+
+  <!-- CAT: STREAK -->
+  <div class="cabinet-section">
+    <div class="cab-header">
+      <div class="cab-number">01</div>
+      <div class="cab-title-zh">连续签到</div>
+      <div class="cab-title-en">STREAK</div>
+      <div class="cab-line"></div>
+    </div>
+    <div class="cabinet">
+      <div class="shelf" id="shelf-streak"></div>
+      <div class="cab-floor"></div>
+    </div>
+  </div>
+
+  <!-- CAT: FOUNDING -->
+  <div class="cabinet-section">
+    <div class="cab-header">
+      <div class="cab-number">02</div>
+      <div class="cab-title-zh">创始人</div>
+      <div class="cab-title-en">FOUNDING</div>
+      <div class="cab-line"></div>
+    </div>
+    <div class="cabinet">
+      <div class="shelf" id="shelf-founding"></div>
+      <div class="cab-floor"></div>
+    </div>
+  </div>
+
+  <!-- CAT: SOCIAL -->
+  <div class="cabinet-section">
+    <div class="cab-header">
+      <div class="cab-number">03</div>
+      <div class="cab-title-zh">社交影响</div>
+      <div class="cab-title-en">SOCIAL</div>
+      <div class="cab-line"></div>
+    </div>
+    <div class="cabinet">
+      <div class="shelf" id="shelf-social"></div>
+      <div class="cab-floor"></div>
+    </div>
+  </div>
+
+  <!-- CAT: COLLECTOR -->
+  <div class="cabinet-section">
+    <div class="cab-header">
+      <div class="cab-number">04</div>
+      <div class="cab-title-zh">收藏家</div>
+      <div class="cab-title-en">COLLECTOR</div>
+      <div class="cab-line"></div>
+    </div>
+    <div class="cabinet">
+      <div class="shelf" id="shelf-collector"></div>
+      <div class="cab-floor"></div>
+    </div>
+  </div>
+
+  <!-- CAT: HIDDEN -->
+  <div class="cabinet-section">
+    <div class="cab-header">
+      <div class="cab-number">05</div>
+      <div class="cab-title-zh">隐藏成就</div>
+      <div class="cab-title-en">HIDDEN</div>
+      <div class="cab-line"></div>
+    </div>
+    <div class="cabinet">
+      <div class="shelf" id="shelf-hidden"></div>
+      <div class="cab-floor"></div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-pip" style="background:#b8a8c8;"></div>Common</div>
+    <div class="legend-item"><div class="legend-pip" style="background:#b8964a;box-shadow:0 0 5px rgba(184,150,74,0.6);"></div>Rare</div>
+    <div class="legend-item"><div class="legend-pip" style="background:#7b56b8;box-shadow:0 0 6px rgba(123,86,184,0.5);"></div>Epic</div>
+    <div class="legend-item"><div class="legend-pip" style="background:#d4ac5c;box-shadow:0 0 8px rgba(212,172,92,0.7);"></div>Legendary</div>
+  </div>
+
+</div>
+
+<!-- DETAIL DRAWER -->
+<div id="panel-backdrop" onclick="closeDetail()"></div>
+<div id="detail-panel">
+  <div class="detail-inner">
+    <div class="detail-badge-wrap" id="detail-badge-svg"></div>
+    <div class="detail-info">
+      <div class="detail-name" id="detail-name"></div>
+      <div class="detail-en" id="detail-en"></div>
+      <div class="detail-desc" id="detail-desc"></div>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
+        <div class="detail-status" id="detail-status"></div>
+        <div class="detail-rarity" id="detail-rarity"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── ACHIEVEMENT BADGE SVG GENERATOR ──
+window._achBadge = function(id, size) {
+  var s = size || 52;
+  var uid = 'a' + id + (Math.random()*9999|0);
+  var svgs = {
+    'streak7': {
+      glow:'rgba(255,120,40,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="70%" r="65%"><stop offset="0%" stop-color="#fff4e0"/><stop offset="100%" stop-color="#ffd0a0"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<path d="M26,3 L47,15 L47,37 Q47,50 26,55 Q5,50 5,37 L5,15 Z" fill="url(#'+uid+'bg)" stroke="#ff8c3c" stroke-width="1.3"/>'
+      +'<g style="transform-origin:26px 32px;animation:ach-flame 1.8s ease-in-out infinite;">'
+      +'<path d="M26,14 C26,14 35,22 33,30 C31,38 37,38 35,43 C33,48 28,50 26,50 C24,50 19,48 17,43 C15,38 21,38 19,30 C17,22 26,14 26,14Z" fill="#ff8c3c" opacity="0.9" filter="url(#'+uid+'gl)"/>'
+      +'<path d="M26,20 C26,20 31,27 29,34 C27,41 31,41 29,45 C27,49 26,49 26,49 C24,48 22,45 22,43 C20,40 23,38 21,34 C19,27 26,20 26,20Z" fill="#ffcc44" opacity="0.9"/>'
+      +'<path d="M26,29 C26,29 28,33 27,37 C26,41 27,42 26,43 C25,42 25,40 24,37 C23,33 26,29 26,29Z" fill="white" opacity="0.6"/>'
+      +'</g>'
+    },
+    'streak30': {
+      glow:'rgba(255,60,60,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="60%" r="65%"><stop offset="0%" stop-color="#fff0f0"/><stop offset="100%" stop-color="#ffc0c0"/></radialGradient><linearGradient id="'+uid+'sh" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="rgba(255,255,255,0)"/><stop offset="50%" stop-color="rgba(255,255,255,0.4)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<path d="M26,3 L47,15 L47,37 Q47,50 26,55 Q5,50 5,37 L5,15 Z" fill="url(#'+uid+'bg)" stroke="#e04444" stroke-width="1.3"/>'
+      +'<rect x="-32" y="3" width="32" height="55" fill="url(#'+uid+'sh)" opacity="0.9" style="animation:shimmer 2s ease-in-out infinite;"/>'
+      +'<g style="transform-origin:26px 32px;animation:ach-flame 1.5s ease-in-out infinite;">'
+      +'<path d="M18,20 C16,26 13,30 15,37 C17,43 20,45 20,45 C18,41 17,37 20,33 C22,29 18,20 18,20Z" fill="#ff7070" opacity="0.7"/>'
+      +'<path d="M34,20 C36,26 39,30 37,37 C35,43 32,45 32,45 C34,41 35,37 32,33 C30,29 34,20 34,20Z" fill="#ff7070" opacity="0.7"/>'
+      +'<path d="M26,13 C26,13 35,22 33,31 C31,40 37,40 34,46 C32,50 26,51 26,51 C22,50 19,46 18,43 C14,37 20,37 18,31 C16,22 26,13 26,13Z" fill="#e04444" opacity="0.9" filter="url(#'+uid+'gl)"/>'
+      +'<path d="M26,20 C26,20 32,28 30,34 C28,40 31,40 28,45 C27,47 26,48 26,48 C24,47 23,44 22,42 C20,39 22,37 21,34 C19,28 26,20 26,20Z" fill="#ff9944" opacity="0.9"/>'
+      +'<path d="M26,28 C26,28 28,32 27,36 C26,40 27,41 26,43 C25,41 25,39 24,36 C23,32 26,28 26,28Z" fill="#ffe0a0" opacity="0.85"/>'
+      +'</g>'
+    },
+    'streak100': {
+      glow:'rgba(123,86,184,0.35)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#f0e8ff"/><stop offset="100%" stop-color="#c8a8ee"/></radialGradient><radialGradient id="'+uid+'sun" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e0d0ff"/><stop offset="60%" stop-color="#9b72d4"/><stop offset="100%" stop-color="#5c3d8f"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,3 42,9 48,26 42,42 26,48 10,42 4,26 10,9" fill="url(#'+uid+'bg)" stroke="#9b72d4" stroke-width="1.3"/>'
+      +'<circle cx="26" cy="26" r="9" fill="url(#'+uid+'sun)" filter="url(#'+uid+'gl)"/>'
+      +'<g style="transform-origin:26px 26px;animation:spin-slow 14s linear infinite;">'
+      +'<line x1="26" y1="11" x2="26" y2="15" stroke="#9b72d4" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>'
+      +'<line x1="26" y1="37" x2="26" y2="41" stroke="#9b72d4" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>'
+      +'<line x1="11" y1="26" x2="15" y2="26" stroke="#9b72d4" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>'
+      +'<line x1="37" y1="26" x2="41" y2="26" stroke="#9b72d4" stroke-width="1.8" stroke-linecap="round" opacity="0.8"/>'
+      +'<line x1="15.8" y1="15.8" x2="18.7" y2="18.7" stroke="#9b72d4" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>'
+      +'<line x1="36.2" y1="15.8" x2="33.3" y2="18.7" stroke="#9b72d4" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>'
+      +'<line x1="15.8" y1="36.2" x2="18.7" y2="33.3" stroke="#9b72d4" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>'
+      +'<line x1="36.2" y1="36.2" x2="33.3" y2="33.3" stroke="#9b72d4" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>'
+      +'</g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 6s linear infinite;"><circle cx="26" cy="7" r="2" fill="#b8964a" opacity="0.85"/></g>'
+    },
+    'genesis': {
+      glow:'rgba(212,172,92,0.4)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fffaee"/><stop offset="100%" stop-color="#e8d090"/></radialGradient><linearGradient id="'+uid+'gd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0c060"/><stop offset="50%" stop-color="#d4ac5c"/><stop offset="100%" stop-color="#8a6d2f"/></linearGradient><linearGradient id="'+uid+'sh" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="rgba(255,255,255,0)"/><stop offset="50%" stop-color="rgba(255,255,255,0.5)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,1 28.5,10 32,5 31.5,14 38,9 35,17 44,17 39,23 48,25 40,29 45,36 38,35 40,44 34,40 33,52 28.5,44 26,56 23.5,44 21,52 20,40 14,44 16,35 9,36 14,29 6,25 15,23 10,17 19,17 16,9 23,14 22.5,5 26,10 " fill="url(#'+uid+'bg)" stroke="url(#'+uid+'gd)" stroke-width="1" stroke-linejoin="round"/>'
+      +'<rect x="-38" y="0" width="38" height="58" fill="url(#'+uid+'sh)" opacity="0.9" style="animation:shimmer 2.2s ease-in-out infinite;"/>'
+      +'<path d="M30,14 L21,30 L27,30 L22,46 L33,24 L27,24 Z" fill="url(#'+uid+'gd)" stroke="#8a6d2f" stroke-width="0.6" stroke-linejoin="round" filter="url(#'+uid+'gl)" style="animation:ach-heartbeat 3s ease-in-out infinite;"/>'
+    },
+    'pioneer': {
+      glow:'rgba(184,150,74,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fff8f0"/><stop offset="100%" stop-color="#e8d4b8"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,1 48,24 26,54 4,24" fill="url(#'+uid+'bg)" stroke="#b8964a" stroke-width="1.3"/>'
+      +'<g style="transform-origin:26px 30px;animation:spin-slow 12s linear infinite;"><circle cx="26" cy="30" r="18" fill="none" stroke="#b8964a" stroke-width="0.6" stroke-dasharray="2 5" opacity="0.4"/></g>'
+      +'<g filter="url(#'+uid+'gl)">'
+      +'<polygon points="26,14 24,28 26,24 28,28" fill="#b8964a"/>'
+      +'<polygon points="26,46 24,32 26,36 28,32" fill="#b8964a" opacity="0.4"/>'
+      +'<polygon points="40,30 26,28 30,30 26,32" fill="#b8964a" opacity="0.4"/>'
+      +'<polygon points="12,30 26,28 22,30 26,32" fill="#b8964a" opacity="0.4"/>'
+      +'<circle cx="26" cy="30" r="2.5" fill="#8a6d2f"/><circle cx="26" cy="30" r="1" fill="#f0c060"/>'
+      +'</g>'
+    },
+    'invite1': {
+      glow:'rgba(61,186,122,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#e8fff4"/><stop offset="100%" stop-color="#b0e8cc"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<path d="M26,3 L45,13 L45,34 Q45,48 26,54 Q7,48 7,34 L7,13 Z" fill="url(#'+uid+'bg)" stroke="#3dba7a" stroke-width="1.3"/>'
+      +'<circle cx="26" cy="28" r="18" fill="none" stroke="#3dba7a" stroke-width="0.6" opacity="0.2" style="animation:ach-pulse-ring 2.5s ease-in-out infinite;"/>'
+      +'<g filter="url(#'+uid+'gl)">'
+      +'<circle cx="19" cy="24" r="7" fill="none" stroke="#3dba7a" stroke-width="2.3"/>'
+      +'<circle cx="33" cy="32" r="7" fill="none" stroke="#3dba7a" stroke-width="2.3"/>'
+      +'<rect x="22" y="21" width="8" height="14" fill="url(#'+uid+'bg)"/>'
+      +'<circle cx="19" cy="24" r="7" fill="none" stroke="#3dba7a" stroke-width="2.3"/>'
+      +'<circle cx="33" cy="32" r="7" fill="none" stroke="#3dba7a" stroke-width="2.3"/>'
+      +'</g>'
+    },
+    'invite5': {
+      glow:'rgba(61,186,122,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#e0fff2"/><stop offset="100%" stop-color="#90d8b4"/></radialGradient><radialGradient id="'+uid+'core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a0ffd0"/><stop offset="100%" stop-color="#2a8a5a"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,3 31,16 44,11 37,23 50,26 37,29 44,41 31,36 26,49 21,36 8,41 15,29 2,26 15,23 8,11 21,16" fill="url(#'+uid+'bg)" stroke="#3dba7a" stroke-width="1.3" stroke-linejoin="round"/>'
+      +'<polygon points="26,17 27.8,23 34,23 29,27 31,33 26,29 21,33 23,27 18,23 24.2,23" fill="url(#'+uid+'core)" filter="url(#'+uid+'gl)"/>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;"><circle cx="26" cy="8" r="1.8" fill="#3dba7a" opacity="0.9"/></g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;animation-delay:-1s;"><circle cx="26" cy="8" r="1.5" fill="#b8964a" opacity="0.75"/></g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;animation-delay:-2s;"><circle cx="26" cy="8" r="1.8" fill="#3dba7a" opacity="0.8"/></g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;animation-delay:-3s;"><circle cx="26" cy="8" r="1.5" fill="#78e0aa" opacity="0.8"/></g>'
+      +'<g style="transform-origin:26px 26px;animation:orbit 5s linear infinite;animation-delay:-4s;"><circle cx="26" cy="8" r="1.8" fill="#3dba7a" opacity="0.85"/></g>'
+    },
+    'invite10': {
+      glow:'rgba(155,114,212,0.35)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#f0e8ff"/><stop offset="50%" stop-color="#d0b8f8"/><stop offset="100%" stop-color="#9060d0"/></radialGradient><linearGradient id="'+uid+'bd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0c8ff"/><stop offset="50%" stop-color="#9b72d4"/><stop offset="100%" stop-color="#d4ac5c"/></linearGradient><radialGradient id="'+uid+'wg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e0c8ff"/><stop offset="100%" stop-color="#7b56b8"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,2 28,11 31,5 31,13 36,9 33,17 41,14 37,21 46,20 39,26 48,28 39,31 47,36 38,35 42,44 35,39 34,50 29,43 27,55 25,43 23,55 21,50 20,39 13,44 17,35 8,36 12,28 3,28 12,26 5,21 14,20 10,14 18,17 15,9 20,13 20,5 23,11" fill="url(#'+uid+'bg)" stroke="url(#'+uid+'bd)" stroke-width="0.7" stroke-linejoin="round" style="animation:ach-hue 8s ease-in-out infinite;"/>'
+      +'<g style="transform-origin:26px 28px;animation:spin-slow 6s linear infinite;"><circle cx="26" cy="28" r="20" fill="none" stroke="#d4ac5c" stroke-width="0.6" stroke-dasharray="3 5" opacity="0.5"/></g>'
+      +'<g style="transform-origin:26px 28px;animation:orbit 4s linear infinite;"><circle cx="46" cy="28" r="2" fill="#d4ac5c" opacity="0.9"/><circle cx="6" cy="28" r="1.5" fill="#9b72d4" opacity="0.8"/></g>'
+      +'<g filter="url(#'+uid+'gl)">'
+      +'<path d="M26,20 C21,22 13,25 9,28 C13,31 21,34 26,36 C19,33 16,31 18,28 C16,25 19,23 26,20Z" fill="url(#'+uid+'wg)" opacity="0.88"/>'
+      +'<path d="M26,20 C31,22 39,25 43,28 C39,31 31,34 26,36 C33,33 36,31 34,28 C36,25 33,23 26,20Z" fill="url(#'+uid+'wg)" opacity="0.88"/>'
+      +'<circle cx="26" cy="28" r="3.5" fill="#d4ac5c" opacity="0.95"/><circle cx="26" cy="28" r="1.5" fill="white" opacity="0.7"/>'
+      +'</g>'
+      +'<circle cx="8" cy="14" r="1.2" fill="#f0c8ff" opacity="0.7" style="animation:sparkle 2s ease-in-out infinite;"/>'
+      +'<circle cx="44" cy="14" r="1" fill="#d4ac5c" opacity="0.8" style="animation:sparkle 2s ease-in-out infinite;animation-delay:0.7s;"/>'
+    },
+    'collect1': {
+      glow:'rgba(184,150,74,0.25)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fffcf0"/><stop offset="100%" stop-color="#f0e4c0"/></radialGradient></defs>'
+      +'<rect x="8" y="6" width="36" height="44" rx="3" fill="url(#'+uid+'bg)" stroke="#b8964a" stroke-width="1.3"/>'
+      +'<ellipse cx="26" cy="6" rx="18" ry="3.5" fill="#e0c870" stroke="#b8964a" stroke-width="1"/>'
+      +'<ellipse cx="26" cy="50" rx="18" ry="3.5" fill="#e0c870" stroke="#b8964a" stroke-width="1"/>'
+      +'<line x1="14" y1="18" x2="38" y2="18" stroke="#b8964a" stroke-width="0.7" opacity="0.3"/>'
+      +'<line x1="14" y1="23" x2="32" y2="23" stroke="#b8964a" stroke-width="0.7" opacity="0.3"/>'
+      +'<circle cx="26" cy="38" r="8" fill="#b8964a"/>'
+      +'<polygon points="26,32 27.8,37 33,37 28.8,40 30.5,45 26,42 21.5,45 23.2,40 19,37 24.2,37" fill="white" opacity="0.92"/>'
+    },
+    'collect_legend': {
+      glow:'rgba(212,172,92,0.4)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fffaee"/><stop offset="60%" stop-color="#f5e8c0"/><stop offset="100%" stop-color="#d4ac5c"/></radialGradient><linearGradient id="'+uid+'gd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0c060"/><stop offset="50%" stop-color="#d4ac5c"/><stop offset="100%" stop-color="#8a6d2f"/></linearGradient><linearGradient id="'+uid+'sh" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="rgba(255,255,255,0)"/><stop offset="50%" stop-color="rgba(255,255,255,0.5)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,1 29,12 38,6 35,17 47,14 41,24 52,26 41,29 47,38 35,36 38,47 29,42 26,54 23,42 14,47 17,36 5,38 11,29 0,26 11,24 5,14 17,17 14,6 23,12" fill="url(#'+uid+'bg)" stroke="url(#'+uid+'gd)" stroke-width="1.2" stroke-linejoin="round"/>'
+      +'<rect x="-38" y="0" width="38" height="56" fill="url(#'+uid+'sh)" opacity="0.9" style="animation:shimmer 2s ease-in-out infinite;"/>'
+      +'<g style="transform-origin:26px 28px;animation:spin-slow 8s linear infinite;"><circle cx="26" cy="28" r="22" fill="none" stroke="#d4ac5c" stroke-width="0.7" stroke-dasharray="3 5" opacity="0.5"/></g>'
+      +'<g filter="url(#'+uid+'gl)">'
+      +'<path d="M13,38 L13,23 L21,31 L26,18 L31,31 L39,23 L39,38 Z" fill="url(#'+uid+'gd)" stroke="#8a6d2f" stroke-width="0.7" stroke-linejoin="round"/>'
+      +'<rect x="13" y="36" width="26" height="3" rx="1.5" fill="#8a6d2f"/>'
+      +'<circle cx="26" cy="20" r="2.5" fill="white" opacity="0.95"/><circle cx="26" cy="20" r="1" fill="#f0c060" opacity="0.8"/>'
+      +'<circle cx="15" cy="25" r="1.8" fill="white" opacity="0.8"/>'
+      +'<circle cx="37" cy="25" r="1.8" fill="white" opacity="0.8"/>'
+      +'</g>'
+    },
+    'night_owl': {
+      glow:'rgba(60,80,200,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e0e8ff"/><stop offset="100%" stop-color="#9098d8"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<path d="M26,3 L46,14 L46,37 Q46,49 26,55 Q6,49 6,37 L6,14 Z" fill="url(#'+uid+'bg)" stroke="#6474d4" stroke-width="1.3"/>'
+      +'<g style="transform-origin:26px 30px;animation:spin-rev 18s linear infinite;"><circle cx="26" cy="30" r="19" fill="none" stroke="#6474d4" stroke-width="0.5" stroke-dasharray="2 7" opacity="0.35"/></g>'
+      +'<g filter="url(#'+uid+'gl)"><circle cx="27" cy="28" r="12" fill="#5060c0" opacity="0.88"/><circle cx="32" cy="25" r="9" fill="url(#'+uid+'bg)"/></g>'
+      +'<circle cx="12" cy="16" r="1.2" fill="#c8d0ff" style="animation:sparkle 3s ease-in-out infinite;"/>'
+      +'<circle cx="19" cy="12" r="0.9" fill="#c8d0ff" style="animation:sparkle 3s ease-in-out infinite;animation-delay:0.6s;"/>'
+      +'<circle cx="39" cy="14" r="1.1" fill="#c8d0ff" style="animation:sparkle 3s ease-in-out infinite;animation-delay:1.2s;"/>'
+      +'<circle cx="42" cy="22" r="0.8" fill="#c8d0ff" style="animation:sparkle 3s ease-in-out infinite;animation-delay:1.8s;"/>'
+      +'<line x1="12" y1="16" x2="19" y2="12" stroke="#c8d0ff" stroke-width="0.5" opacity="0.3"/>'
+      +'<line x1="39" y1="14" x2="42" y2="22" stroke="#c8d0ff" stroke-width="0.5" opacity="0.3"/>'
+    },
+    'silent_god': {
+      glow:'rgba(80,80,80,0.3)',
+      svg: '<defs><radialGradient id="'+uid+'bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#e8e8f0"/><stop offset="100%" stop-color="#a8a8c0"/></radialGradient><radialGradient id="'+uid+'void" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#282838"/><stop offset="100%" stop-color="#060610"/></radialGradient><filter id="'+uid+'gl"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+      +'<polygon points="26,3 46,14 46,40 26,51 6,40 6,14" fill="url(#'+uid+'bg)" stroke="#606080" stroke-width="1.3" opacity="0.8"/>'
+      +'<g style="transform-origin:26px 28px;animation:spin-slow 28s linear infinite;"><circle cx="26" cy="28" r="18" fill="none" stroke="#606080" stroke-width="1.2" stroke-dasharray="6 3 1 3 6 32" opacity="0.5"/></g>'
+      +'<circle cx="26" cy="28" r="10" fill="url(#'+uid+'void)" filter="url(#'+uid+'gl)"/>'
+      +'<line x1="26" y1="28" x2="20" y2="20" stroke="#9090a8" stroke-width="0.8" opacity="0.6"/>'
+      +'<line x1="20" y1="20" x2="17" y2="17" stroke="#9090a8" stroke-width="0.5" opacity="0.35"/>'
+      +'<line x1="26" y1="28" x2="33" y2="22" stroke="#9090a8" stroke-width="0.8" opacity="0.6"/>'
+      +'<line x1="26" y1="28" x2="30" y2="36" stroke="#9090a8" stroke-width="0.7" opacity="0.5"/>'
+      +'<line x1="26" y1="28" x2="19" y2="35" stroke="#9090a8" stroke-width="0.6" opacity="0.4"/>'
+      +'<circle cx="26" cy="28" r="2" fill="#606080" opacity="0.5" style="animation:ach-pulse-glow 3.5s ease-in-out infinite;"/>'
+    }
+  };
+  var d = svgs[id];
+  if (!d) return '';
+  return '<svg viewBox="0 0 52 58" width="'+s+'" height="'+Math.round(s*58/52)+'" xmlns="http://www.w3.org/2000/svg">'+ d.svg +'</svg>';
+};
+
+// Achievement data config
+window.ACH_LIST = [
+  {id:'streak7',    zh:'初燃',    en:'First Spark',    desc_zh:'连续 7 天',   desc_en:'7-day streak',    earned:false, line:'rgba(255,140,60,0.5)', glow:'rgba(255,120,40,0.3)'},
+  {id:'streak30',   zh:'不灭之焰', en:'Steady Flame',   desc_zh:'连续 30 天',  desc_en:'30-day streak',   earned:false, line:'rgba(255,80,80,0.5)',  glow:'rgba(255,60,60,0.3)'},
+  {id:'streak100',  zh:'百日',    en:'Century',         desc_zh:'连续 100 天', desc_en:'100-day streak',  earned:false, line:'rgba(123,86,184,0.5)', glow:'rgba(123,86,184,0.35)'},
+  {id:'genesis',    zh:'创世纪',  en:'Genesis',         desc_zh:'前 100 名',   desc_en:'Top 100 user',    earned:false, line:'rgba(212,172,92,0.6)', glow:'rgba(212,172,92,0.4)'},
+  {id:'pioneer',    zh:'先行者',  en:'Pioneer',         desc_zh:'Beta 注册',   desc_en:'Beta sign-up',    earned:false, line:'rgba(184,150,74,0.4)', glow:'rgba(184,150,74,0.3)'},
+  {id:'invite1',    zh:'引路人',  en:'First Invite',    desc_zh:'邀请 1 人',   desc_en:'Invite 1 friend', earned:false, line:'rgba(100,180,150,0.5)', glow:'rgba(61,186,122,0.3)'},
+  {id:'invite5',    zh:'布道者',  en:'Evangelist',      desc_zh:'邀请 5 人',   desc_en:'Invite 5 friends',earned:false, line:'rgba(61,186,122,0.4)', glow:'rgba(61,186,122,0.3)'},
+  {id:'invite10',   zh:'神使',    en:'Divine Herald',   desc_zh:'邀请 10 人',  desc_en:'Invite 10 friends',earned:false, line:'rgba(155,114,212,0.5)', glow:'rgba(155,114,212,0.35)'},
+  {id:'collect1',   zh:'初藏',    en:'First Relic',     desc_zh:'收藏 1 期',   desc_en:'Collect 1 issue', earned:false, line:'rgba(184,150,74,0.4)', glow:'rgba(184,150,74,0.25)'},
+  {id:'collect_legend',zh:'传说藏家',en:'Legend Keeper',desc_zh:'传说版藏品',  desc_en:'Legendary issue', earned:false, line:'rgba(212,172,92,0.6)', glow:'rgba(212,172,92,0.4)'},
+  {id:'night_owl',  zh:'夜枭',    en:'Night Owl',       desc_zh:'凌晨签到',    desc_en:'Check in 0–4 AM', earned:false, line:'rgba(78,100,180,0.5)', glow:'rgba(60,80,200,0.3)'},
+  {id:'silent_god', zh:'沉默的神', en:'Silent God',      desc_zh:'失联后回归',  desc_en:'Return after 7d', earned:false, line:'rgba(40,40,40,0.5)',  glow:'rgba(80,80,80,0.3)'}
+];
+
+// ── BADGE CONFIG ──
+var ACH_CATS = {
+  streak:    ['streak7','streak30','streak100'],
+  founding:  ['genesis','pioneer'],
+  social:    ['invite1','invite5','invite10'],
+  collector: ['collect1','collect_legend'],
+  hidden:    ['night_owl','silent_god']
+};
+
+var ACH_META = {
+  streak7:       {zh:'初燃',     en:'First Spark',    desc_zh:'连续签到 7 天，火焰初燃',              rarity:'rare',      rc:'#b8964a', glow:'rgba(255,120,40,0.22)'},
+  streak30:      {zh:'不灭之焰', en:'Steady Flame',   desc_zh:'连续签到 30 天，烈焰不熄',             rarity:'epic',      rc:'#7b56b8', glow:'rgba(224,68,68,0.2)'},
+  streak100:     {zh:'百日',     en:'Century',         desc_zh:'连续签到 100 天，晨曦永照',            rarity:'legendary', rc:'#d4ac5c', glow:'rgba(123,86,184,0.22)'},
+  genesis:       {zh:'创世纪',   en:'Genesis',         desc_zh:'前 100 名注册用户，见证黎明',           rarity:'legendary', rc:'#d4ac5c', glow:'rgba(212,172,92,0.28)'},
+  pioneer:       {zh:'先行者',   en:'Pioneer',         desc_zh:'Beta 测试阶段注册，携带天命',           rarity:'rare',      rc:'#b8964a', glow:'rgba(184,150,74,0.22)'},
+  invite1:       {zh:'引路人',   en:'First Invite',    desc_zh:'邀请第一位好友加入神域',               rarity:'common',    rc:'#b8a8c8', glow:'rgba(61,186,122,0.2)'},
+  invite5:       {zh:'布道者',   en:'Evangelist',      desc_zh:'邀请 5 位好友，散播神谕',              rarity:'rare',      rc:'#b8964a', glow:'rgba(61,186,122,0.22)'},
+  invite10:      {zh:'神使',     en:'Divine Herald',   desc_zh:'邀请 10 位好友，成为神之使者',         rarity:'epic',      rc:'#7b56b8', glow:'rgba(155,114,212,0.25)'},
+  collect1:      {zh:'初藏',     en:'First Relic',     desc_zh:'收藏第一期日报，珍存神迹',             rarity:'common',    rc:'#b8a8c8', glow:'rgba(184,150,74,0.18)'},
+  collect_legend:{zh:'传说藏家', en:'Legend Keeper',   desc_zh:'收藏一期传说版日报，触碰永恒',         rarity:'legendary', rc:'#d4ac5c', glow:'rgba(212,172,92,0.28)'},
+  night_owl:     {zh:'夜枭',     en:'Night Owl',       desc_zh:'凌晨 0–4 时签到，与暗夜共舞',         rarity:'rare',      rc:'#b8964a', glow:'rgba(60,80,200,0.2)'},
+  silent_god:    {zh:'沉默的神', en:'Silent God',      desc_zh:'失联 7 天后重新回归，虚空归来',        rarity:'epic',      rc:'#7b56b8', glow:'rgba(80,80,80,0.18)'}
+};
+
+function getEarned() {
+  var earned = {};
+  try {
+    var p = JSON.parse(localStorage.getItem('zeus-profile') || 'null');
+    if (p) {
+      if ((p.streak||0) >= 7)   earned['streak7'] = true;
+      if ((p.streak||0) >= 30)  earned['streak30'] = true;
+      if ((p.streak||0) >= 100) earned['streak100'] = true;
+    }
+  } catch(e) {}
+  earned['pioneer'] = true;
+  return earned;
+}
+
+var RARITY_LABEL = {common:'Common', rare:'Rare', epic:'Epic', legendary:'Legendary'};
+var RARITY_ORDER = {common:1, rare:2, epic:3, legendary:4};
+
+var _earned = getEarned();
+var _earnedCount = Object.keys(_earned).length;
+
+function buildCell(id, delay) {
+  var m = ACH_META[id];
+  var isEarned = !!_earned[id];
+  var svg = window._achBadge ? window._achBadge(id, 60) : '';
+  return '<div class="badge-cell ' + (isEarned?'earned':'locked') + '" '
+    + 'style="--cell-glow:' + m.glow + ';animation-delay:' + (delay*70) + 'ms;" '
+    + 'onclick="openDetail(\'' + id + '\')">'
+    + (isEarned
+      ? '<div class="earned-pip">✓</div>'
+      : '<div class="lock-pip"><svg width="8" height="10" viewBox="0 0 8 10" fill="none"><rect x="1" y="4.5" width="6" height="5" rx="1" stroke="#b8964a" stroke-width="1.1" opacity="0.7"/><path d="M2.5 4.5V3A1.5 1.5 0 015.5 3v1.5" stroke="#b8964a" stroke-width="1.1" opacity="0.7"/></svg></div>')
+    + '<div class="badge-svg-w">' + svg + '</div>'
+    + '<div class="pedestal"></div>'
+    + '<div class="cell-name">' + m.zh + '</div>'
+    + '<div class="cell-en">' + m.en + '</div>'
+    + '<div class="cell-cond">' + m.desc_zh + '</div>'
+    + '<div class="rarity-tag" style="--rarity-color:' + m.rc + ';">' + RARITY_LABEL[m.rarity] + '</div>'
+    + '</div>';
+}
+
+Object.keys(ACH_CATS).forEach(function(cat) {
+  var el = document.getElementById('shelf-' + cat);
+  if (!el) return;
+  el.innerHTML = ACH_CATS[cat].map(function(id, i){ return buildCell(id, i); }).join('');
+});
+
+// Stats
+document.getElementById('stat-earned').textContent = _earnedCount;
+document.getElementById('stat-pct').textContent = Math.round(_earnedCount/12*100) + '%';
+var highRarity = 'common';
+Object.keys(_earned).forEach(function(id){
+  if (ACH_META[id] && RARITY_ORDER[ACH_META[id].rarity] > RARITY_ORDER[highRarity]) highRarity = ACH_META[id].rarity;
+});
+document.getElementById('stat-rarest').textContent = RARITY_LABEL[highRarity] || '—';
+
+// ── DETAIL ──
+function openDetail(id) {
+  var m = ACH_META[id];
+  var isEarned = !!_earned[id];
+  document.getElementById('detail-badge-svg').innerHTML = window._achBadge ? window._achBadge(id, 84) : '';
+  document.getElementById('detail-name').textContent = m.zh;
+  document.getElementById('detail-en').textContent = m.en.toUpperCase();
+  document.getElementById('detail-desc').textContent = m.desc_zh;
+  var st = document.getElementById('detail-status');
+  st.className = 'detail-status ' + (isEarned ? 'earned' : 'locked');
+  st.textContent = isEarned ? '✓ 已解锁' : '🔒 未解锁 · ' + m.desc_zh;
+  var rt = document.getElementById('detail-rarity');
+  rt.textContent = RARITY_LABEL[m.rarity];
+  rt.style.setProperty('--rarity-color', m.rc);
+  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('panel-backdrop').classList.add('open');
+}
+function closeDetail() {
+  document.getElementById('detail-panel').classList.remove('open');
+  document.getElementById('panel-backdrop').classList.remove('open');
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeDetail(); });
+</script>
+</body>
+</html>
