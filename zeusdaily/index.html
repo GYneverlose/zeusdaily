@@ -400,6 +400,7 @@ function switchTab(tab){
   if(btnGoogle){
     btnGoogle.addEventListener('click',function(){
       setLoading(btnGoogle,true);
+var refParam=new URLSearchParams(window.location.search).get('ref');if(refParam)localStorage.setItem('zeus-ref',refParam);
       _sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/dashboard.html'}}).then(function(res){
         if(res.error){setLoading(btnGoogle,false);showErr('login-error',res.error.message||(L()==='zh'?'Google 登录失败':'Google sign-in failed'));}
       });
