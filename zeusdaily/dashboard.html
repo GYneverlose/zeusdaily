@@ -737,10 +737,24 @@ var _equippedTemp = [];
 
 window.loadEquipped = function() {
   try { _equippedIds = JSON.parse(localStorage.getItem('zeus-equipped') || '[]'); } catch(e) { _equippedIds = []; }
-  renderEquippedDisplay();
+  renderEquippedDisplay();renderHomeEquippedDisplay();
 }
 
-function renderEquippedDisplay() {
+function renderHomeEquippedDisplay() {
+  var el = document.getElementById('home-equipped-display');
+  if (!el) return;
+  var html = '';
+  for (var i = 0; i < 3; i++) {
+    var id = _equippedIds[i];
+    if (id && window._achBadge) {
+      html += '<div class="equipped-slot filled">' + window._achBadge(id, 30) + '</div>';
+    } else {
+      html += '<div class="equipped-slot"></div>';
+    }
+  }
+  el.innerHTML = html;
+}
+  function renderEquippedDisplay() {
   var el = document.getElementById('equipped-display');
   if (!el) return;
   var html = '';
