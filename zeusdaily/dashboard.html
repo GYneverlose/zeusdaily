@@ -814,7 +814,7 @@ window.toggleEquipChoice = function(el, id) {
   }
 }
 
-function closeEquipPicker() {
+window.closeEquipPicker = function() {
   var picker = document.getElementById('equip-picker');
   if (picker) picker.classList.remove('open');
 }
