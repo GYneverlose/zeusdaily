@@ -797,7 +797,7 @@ window.openEquipPicker = function() {
   if (picker) { picker.classList.add('open'); applyLang(getLang()); }
 }
 
-function toggleEquipChoice(el, id) {
+window.toggleEquipChoice = function(el, id) {
   var idx = _equippedTemp.indexOf(id);
   if (idx >= 0) {
     _equippedTemp.splice(idx, 1);
