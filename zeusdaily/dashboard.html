@@ -819,7 +819,7 @@ function closeEquipPicker() {
   if (picker) picker.classList.remove('open');
 }
 
-function saveEquipped() {
+window.saveEquipped = function() {
   _equippedIds = _equippedTemp.slice();
   try { localStorage.setItem('zeus-equipped', JSON.stringify(_equippedIds)); } catch(e) {}
   renderEquippedDisplay();
