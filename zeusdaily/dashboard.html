@@ -847,7 +847,7 @@ window.loadFriends = function() {
   }
   var p = window._profile;
   var list = document.getElementById('friends-list');
-  if (list) list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text4);font-family:'DM Mono',monospace;font-size:11px;">加载中…</div>';
+  if (list) list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;">加载中…</div>';
   var today = new Date().toISOString().slice(0,10);
   var yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
   function buildFriend(u,tag){
@@ -872,7 +872,7 @@ window.renderFriends = function() {
   if (!list) return;
   var lang = getLang();
   if (!FRIENDS.length) {
-    list.innerHTML = '<div style="padding:48px;text-align:center;color:var(--text4);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;">'+(lang==='zh'?'还没有好友 · 分享你的邀请链接开始吧':'No friends yet · Share your invite link')+'</div>';
+    list.innerHTML = '<div style="padding:48px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;letter-spacing:1px;">'+(lang==='zh'?'还没有好友 · 分享你的邀请链接开始吧':'No friends yet · Share your invite link')+'</div>';
     var rc=document.getElementById('ref-count'); if(rc) rc.textContent='0';
     var ra=document.getElementById('ref-active'); if(ra) ra.textContent='0';
     return;
@@ -880,12 +880,12 @@ window.renderFriends = function() {
   var html='';
   for(var i=0;i<FRIENDS.length;i++){
     var f=FRIENDS[i]; var lv=LEVELS[f.level]||LEVELS[1]; var lvName=lang==='zh'?lv.name:lv.nameEn;
-    var tagHtml=f.tag?'<span style="margin-left:7px;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(184,150,74,0.12);border:1px solid rgba(184,150,74,0.25);color:var(--gold);font-family:'DM Mono',monospace;letter-spacing:1px;vertical-align:middle;">'+f.tag+'</span>':'';
+    var tagHtml=f.tag?'<span style="margin-left:7px;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(184,150,74,0.12);border:1px solid rgba(184,150,74,0.25);color:var(--gold);font-family:\'DM Mono\',monospace;letter-spacing:1px;vertical-align:middle;">'+f.tag+'</span>':'';
     html+='<div class="friend-card">'
-      +'<div class="friend-avatar" style="background:linear-gradient(135deg,'+lv.colorLight+','+lv.color+'22);"><span style="font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:'+lv.color+';">'+f.avatar+'</span></div>'
+      +'<div class="friend-avatar" style="background:linear-gradient(135deg,'+lv.colorLight+','+lv.color+'22);"><span style="font-family:\'DM Mono\',monospace;font-size:15px;font-weight:700;color:'+lv.color+';">'+f.avatar+'</span></div>'
       +'<div class="friend-info"><div class="friend-name">'+f.name+tagHtml+'</div>'
-      +'<div class="friend-meta"><span style="font-size:10px;color:'+lv.color+';font-family:'DM Mono',monospace;font-weight:600;letter-spacing:1px;">LV.'+f.level+'</span><span style="font-size:10px;color:var(--text3);font-family:'Playfair Display',serif;font-style:italic;"> · '+lvName+'</span></div>'
-      +'<div style="font-size:9px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:4px;">'+(lang==='zh'?'加入于 ':'Joined ')+fmtJoined(f.joined)+'</div></div>'
+      +'<div class="friend-meta"><span style="font-size:10px;color:'+lv.color+';font-family:\'DM Mono\',monospace;font-weight:600;letter-spacing:1px;">LV.'+f.level+'</span><span style="font-size:10px;color:var(--text3);font-family:\'Playfair Display\',serif;font-style:italic;"> · '+lvName+'</span></div>'
+      +'<div style="font-size:9px;color:var(--text4);font-family:\'DM Mono\',monospace;margin-top:4px;">'+(lang==='zh'?'加入于 ':'Joined ')+fmtJoined(f.joined)+'</div></div>'
       +'<div class="friend-badge-wrap">'+(window._badgeSVG?window._badgeSVG(f.level,48):'')
       +(f.active?'<div class="friend-active"><span class="zh-only">活跃</span><span class="en-only">Active</span></div>':'<div class="friend-inactive"><span class="zh-only">不活跃</span><span class="en-only">Inactive</span></div>')
       +'</div></div>';
