@@ -730,7 +730,7 @@ document.addEventListener('click',function(ev){
 var _equippedIds = [];
 var _equippedTemp = [];
 
-function loadEquipped() {
+window.loadEquipped = function() {
   try { _equippedIds = JSON.parse(localStorage.getItem('zeus-equipped') || '[]'); } catch(e) { _equippedIds = []; }
   renderEquippedDisplay();
 }
