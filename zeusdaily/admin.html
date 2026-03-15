@@ -88,13 +88,17 @@ textarea{resize:vertical;min-height:60px;}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);}
-
-/* EXP quick buttons in table */
 .btn-exp{padding:3px 8px;font-size:11px;background:rgba(184,150,74,0.15);border:1px solid rgba(184,150,74,0.3);border-radius:4px;color:var(--gold);cursor:pointer;}
 .btn-exp:hover{background:rgba(184,150,74,0.28);}
+/* toast */
+#toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:8px;font-size:12px;font-family:'DM Mono',monospace;z-index:9999;display:none;pointer-events:none;}
+#toast.ok{background:rgba(61,186,122,0.9);color:#fff;}
+#toast.err{background:rgba(224,85,85,0.9);color:#fff;}
 </style>
 </head>
 <body>
+
+<div id="toast"></div>
 
 <!-- AUTH WALL -->
 <div id="auth-wall">
@@ -116,19 +120,19 @@ textarea{resize:vertical;min-height:60px;}
       <div class="sb-logo-sub">ADMIN CONSOLE</div>
     </div>
     <nav class="sb-nav">
-      <div class="sb-item active" onclick="showPage('overview')">
+      <div class="sb-item active" onclick="showPage('overview',this)">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
         总览
       </div>
-      <div class="sb-item" onclick="showPage('editions')">
+      <div class="sb-item" onclick="showPage('editions',this)">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         期刊管理
       </div>
-      <div class="sb-item" onclick="showPage('users')">
+      <div class="sb-item" onclick="showPage('users',this)">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M2 13c0-2.761 2.686-5 6-5s6 2.239 6 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         用户管理
       </div>
-      <div class="sb-item" onclick="showPage('checkins')">
+      <div class="sb-item" onclick="showPage('checkins',this)">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v4M11 1v4M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         签到统计
       </div>
@@ -178,12 +182,12 @@ textarea{resize:vertical;min-height:60px;}
         <input type="file" id="f-file" accept=".html" style="display:none" onchange="handleFileSelect(this)">
         <div class="form-grid">
           <div class="form-group">
-            <label>期号 VOL.</label>
-            <input id="f-vol" type="number" placeholder="例如 004" min="1">
+            <label>期号 VOL.（可留空）</label>
+            <input id="f-vol" type="number" placeholder="留空则不记录期号" min="1">
           </div>
           <div class="form-group">
             <label>日期 (YYYYMMDD)</label>
-            <input id="f-date" type="text" placeholder="20260313" maxlength="8">
+            <input id="f-date" type="text" placeholder="20260315" maxlength="8">
           </div>
           <div class="form-group full">
             <label>标题摘要（可选）</label>
@@ -210,8 +214,8 @@ textarea{resize:vertical;min-height:60px;}
       <div class="table-card">
         <div class="table-header"><div class="table-title">所有期刊</div></div>
         <table>
-          <thead><tr><th>VOL</th><th>日期</th><th>标题</th><th>稀有度</th><th>URL</th><th>操作</th></tr></thead>
-          <tbody id="editions-list"><tr><td colspan="6" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
+          <thead><tr><th>日期</th><th>标题</th><th>稀有度</th><th>URL</th><th>操作</th></tr></thead>
+          <tbody id="editions-list"><tr><td colspan="5" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -238,8 +242,6 @@ textarea{resize:vertical;min-height:60px;}
         <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:6px;">用户详情</div>
         <div style="height:1px;background:rgba(184,150,74,0.2);margin-bottom:16px;"></div>
         <div id="modal-body" style="font-size:13px;line-height:2.2;color:var(--text3);"></div>
-
-        <!-- EXP ADJUSTMENT -->
         <div style="margin-top:16px;padding:16px;background:rgba(184,150,74,0.06);border:1px solid rgba(184,150,74,0.2);border-radius:8px;">
           <div style="font-size:11px;color:var(--gold);letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Mono',monospace;">手动调整 EXP</div>
           <div style="display:flex;gap:8px;align-items:center;">
@@ -251,7 +253,6 @@ textarea{resize:vertical;min-height:60px;}
           <div style="font-size:10px;color:var(--text3);margin-top:6px;">点 + 加 EXP，点 − 减 EXP。当前 EXP：<span id="modal-exp-val" style="color:var(--gold);">—</span></div>
           <div id="exp-msg" style="font-size:11px;margin-top:8px;padding:6px 10px;border-radius:4px;display:none;"></div>
         </div>
-
         <button onclick="closeModal()" style="margin-top:16px;width:100%;padding:10px;background:var(--violet);border:none;border-radius:8px;color:white;cursor:pointer;font-size:13px;">关闭</button>
       </div>
     </div>
@@ -268,7 +269,7 @@ textarea{resize:vertical;min-height:60px;}
       <div class="table-card">
         <div class="table-header"><div class="table-title">最近签到记录</div></div>
         <table>
-          <thead><tr><th>用户名</th><th>签到日期</th></tr></thead>
+          <thead><tr><th>用户邮箱</th><th>签到时间</th></tr></thead>
           <tbody id="checkins-list"><tr><td colspan="2" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
         </table>
       </div>
@@ -289,6 +290,15 @@ var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 var _allUsers = [];
 var _userMap = {};
 var _currentModalUserId = null;
+
+// ── TOAST ──
+function toast(msg, ok) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = ok ? 'ok' : 'err';
+  el.style.display = 'block';
+  setTimeout(function(){ el.style.display='none'; }, 3000);
+}
 
 // ── AUTH ──
 function doLogin(){
@@ -321,230 +331,297 @@ document.addEventListener('keydown',function(e){
 });
 
 // ── NAVIGATION ──
-function showPage(id){
+function showPage(id, el){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active');});
   document.getElementById('page-'+id).classList.add('active');
-  event.currentTarget.classList.add('active');
+  if(el) el.classList.add('active');
 }
 
 // ── LOAD ALL ──
 function loadAll(){ loadOverview(); loadEditions(); loadUsers(); loadCheckins(); }
 
 function loadOverview(){
-  _sb.from('profiles').select('*',{count:'exact',head:true}).then(function(r){ document.getElementById('s-users').textContent=r.count||0; });
-  _sb.from('editions').select('*',{count:'exact',head:true}).then(function(r){ document.getElementById('s-editions').textContent=r.count||0; });
-  var today=new Date().toISOString().slice(0,10);
-  _sb.from('checkins').select('*',{count:'exact',head:true}).eq('checked_in_at',today).then(function(r){ document.getElementById('s-checkins').textContent=r.count||0; document.getElementById('c-today').textContent=r.count||0; });
-  _sb.from('checkins').select('*',{count:'exact',head:true}).then(function(r){ document.getElementById('s-total-checkins').textContent=r.count||0; document.getElementById('c-total').textContent=r.count||0; });
-  var weekAgo=new Date(Date.now()-7*86400000).toISOString().slice(0,10);
-  _sb.from('checkins').select('*',{count:'exact',head:true}).gte('checked_in_at',weekAgo).then(function(r){ document.getElementById('c-week').textContent=r.count||0; });
-  _sb.from('profiles').select('display_name,level,exp,streak,joined_at').order('joined_at',{ascending:false}).limit(8).then(function(r){
-    if(!r.data) return;
-    var html=r.data.map(function(u){
-      return '<tr><td>'+(u.display_name||'—')+'</td><td><span class="badge badge-violet">Lv.'+u.level+'</span></td><td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+u.exp+'</td><td>'+u.streak+' 天</td><td style="color:var(--text3);font-size:11px;">'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</td></tr>';
-    }).join('');
-    document.getElementById('recent-users').innerHTML=html||'<tr><td colspan="5" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
+  _sb.from('profiles').select('*',{count:'exact',head:true}).then(function(r){
+    document.getElementById('s-users').textContent = r.count||0;
   });
+  _sb.from('editions').select('*',{count:'exact',head:true}).then(function(r){
+    document.getElementById('s-editions').textContent = r.count||0;
+  });
+
+  // FIX: use checked_at with date range (not checked_in_at)
+  var today = new Date().toISOString().slice(0,10);
+  var todayStart = today+'T00:00:00Z';
+  var todayEnd   = today+'T23:59:59Z';
+  _sb.from('checkins').select('*',{count:'exact',head:true})
+    .gte('checked_at', todayStart).lte('checked_at', todayEnd)
+    .then(function(r){
+      document.getElementById('s-checkins').textContent = r.count||0;
+      document.getElementById('c-today').textContent   = r.count||0;
+    });
+
+  _sb.from('checkins').select('*',{count:'exact',head:true}).then(function(r){
+    document.getElementById('s-total-checkins').textContent = r.count||0;
+    document.getElementById('c-total').textContent          = r.count||0;
+  });
+
+  var weekAgo = new Date(Date.now()-7*86400000).toISOString().slice(0,10)+'T00:00:00Z';
+  _sb.from('checkins').select('*',{count:'exact',head:true}).gte('checked_at', weekAgo).then(function(r){
+    document.getElementById('c-week').textContent = r.count||0;
+  });
+
+  _sb.from('profiles').select('display_name,level,exp,streak,joined_at')
+    .order('joined_at',{ascending:false}).limit(8).then(function(r){
+      if(!r.data) return;
+      var html = r.data.map(function(u){
+        return '<tr><td>'+(u.display_name||'—')+'</td>'
+          +'<td><span class="badge badge-violet">Lv.'+u.level+'</span></td>'
+          +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+u.exp+'</td>'
+          +'<td>'+(u.streak||0)+' 天</td>'
+          +'<td style="color:var(--text3);font-size:11px;">'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</td></tr>';
+      }).join('');
+      document.getElementById('recent-users').innerHTML = html||'<tr><td colspan="5" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
+    });
 }
 
 // ── EDITIONS ──
 function loadEditions(){
-  _sb.from('editions').select('*').order('vol_number',{ascending:false}).then(function(r){
+  _sb.from('editions').select('*').order('date',{ascending:false}).then(function(r){
     if(!r.data) return;
-    var html=r.data.map(function(e){
-      var rb=e.rarity==='legendary'?'badge-gold':(e.rarity==='rare'?'badge-violet':'');
-      return '<tr><td style="font-family:\'DM Mono\',monospace;color:var(--gold);">Vol.'+e.vol_number+'</td><td style="color:var(--text3);">'+e.date+'</td><td>'+e.title+'</td><td>'+(rb?'<span class="badge '+rb+'">'+e.rarity+'</span>':e.rarity)+'</td><td><a href="'+e.html_url+'" target="_blank" style="color:var(--violet);font-size:11px;">链接↗</a></td><td><button class="btn btn-danger btn-sm" onclick="deleteEdition('+e.id+')">删除</button></td></tr>';
+    var html = r.data.map(function(e){
+      var rb = e.rarity==='legendary'?'badge-gold':(e.rarity==='rare'?'badge-violet':'');
+      return '<tr>'
+        +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+e.date+'</td>'
+        +'<td>'+(e.title||'—')+'</td>'
+        +'<td>'+(rb?'<span class="badge '+rb+'">'+e.rarity+'</span>':e.rarity)+'</td>'
+        +'<td><a href="'+e.html_url+'" target="_blank" style="color:var(--violet);font-size:11px;">链接↗</a></td>'
+        +'<td><button class="btn btn-danger btn-sm" onclick="deleteEdition('+e.id+')">删除</button></td></tr>';
     }).join('');
-    document.getElementById('editions-list').innerHTML=html||'<tr><td colspan="6" style="text-align:center;color:var(--text3);">暂无期刊</td></tr>';
+    document.getElementById('editions-list').innerHTML = html||'<tr><td colspan="5" style="text-align:center;color:var(--text3);">暂无期刊</td></tr>';
   });
 }
-function deleteEdition(id){ if(!confirm('确认删除这期？')) return; _sb.from('editions').delete().eq('id',id).then(function(r){ if(!r.error){ loadEditions(); loadOverview(); } }); }
+
+function deleteEdition(id){
+  if(!confirm('确认删除这期？')) return;
+  _sb.from('editions').delete().eq('id',id).then(function(r){
+    if(!r.error){ loadEditions(); loadOverview(); toast('已删除',true); }
+    else toast('删除失败: '+r.error.message, false);
+  });
+}
 
 // ── USERS ──
 function calcLv(exp){ exp=exp||0; if(exp<300)return 1; if(exp<500)return 2; if(exp<1000)return 3; if(exp<2000)return 4; return 5; }
 
 function loadUsers(){
-  _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,joined_at').order('joined_at',{ascending:false}).then(function(r){
-    _allUsers=r.data||[];
-    _userMap={};
-    _allUsers.forEach(function(u){ _userMap[u.id]=u; });
-    renderUsers(_allUsers);
-  });
+  _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,joined_at')
+    .order('joined_at',{ascending:false}).then(function(r){
+      _allUsers = r.data||[];
+      _userMap = {};
+      _allUsers.forEach(function(u){ _userMap[u.id]=u; });
+      renderUsers(_allUsers);
+    });
 }
 
 function renderUsers(users){
-  var LV=['','Observer','Scholar','Prophet','Sage','Creator'];
-  var html=users.map(function(u){
-    var lv=calcLv(u.exp||0);
+  var LV = ['','Observer','Scholar','Prophet','Sage','Creator'];
+  var html = users.map(function(u){
+    var lv = calcLv(u.exp||0);
     return '<tr>'
       +'<td style="font-size:12px;font-family:\'DM Mono\',monospace;">'+(u.email||u.display_name||'—')+'</td>'
       +'<td style="color:var(--text3);font-size:12px;">'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</td>'
       +'<td>'+(u.streak||0)+' 天</td>'
-      +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+(u.exp||0)+'</td>'
+      +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);" id="exp-cell-'+u.id+'">'+(u.exp||0)+'</td>'
       +'<td><span class="badge badge-violet">Lv.'+lv+' · '+(LV[lv]||'')+'</span></td>'
       +'<td style="white-space:nowrap;">'
       +'<button onclick="showUserDetail(\''+u.id+'\')" style="padding:3px 10px;font-size:11px;background:var(--violet);border:none;border-radius:4px;color:white;cursor:pointer;margin-right:4px;">详情</button>'
-      +'<button onclick="quickExp(\''+u.id+'\',50)" style="padding:3px 8px;font-size:11px;background:rgba(61,186,122,0.18);border:1px solid rgba(61,186,122,0.3);border-radius:4px;color:#4ade80;cursor:pointer;margin-right:2px;" title="+50 EXP">+50</button>'
-      +'<button onclick="quickExp(\''+u.id+'\',-50)" style="padding:3px 8px;font-size:11px;background:rgba(248,113,113,0.18);border:1px solid rgba(248,113,113,0.3);border-radius:4px;color:#f87171;cursor:pointer;margin-right:4px;" title="-50 EXP">−50</button>'
+      +'<button onclick="quickExp(\''+u.id+'\',50)" style="padding:3px 8px;font-size:11px;background:rgba(61,186,122,0.18);border:1px solid rgba(61,186,122,0.3);border-radius:4px;color:#4ade80;cursor:pointer;margin-right:2px;">+50</button>'
+      +'<button onclick="quickExp(\''+u.id+'\',-50)" style="padding:3px 8px;font-size:11px;background:rgba(248,113,113,0.18);border:1px solid rgba(248,113,113,0.3);border-radius:4px;color:#f87171;cursor:pointer;margin-right:4px;">−50</button>'
       +'<button onclick="if(confirm(\'确认删除?\'))deleteUser(\''+u.id+'\')" style="padding:3px 10px;font-size:11px;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.3);border-radius:4px;color:#f87171;cursor:pointer;">删除</button>'
       +'</td>'
       +'</tr>';
   }).join('');
-  document.getElementById('users-list').innerHTML=html||'<tr><td colspan="6" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
+  document.getElementById('users-list').innerHTML = html||'<tr><td colspan="6" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
 }
 
-function deleteUser(id){ _sb.from('profiles').delete().eq('id',id).then(function(){ loadUsers(); }); }
-function filterUsers(q){ var f=_allUsers.filter(function(u){ return !q||(u.email||u.display_name||'').toLowerCase().includes(q.toLowerCase()); }); renderUsers(f); }
+function deleteUser(id){
+  _sb.from('profiles').delete().eq('id',id).then(function(r){
+    if(!r.error){ toast('用户已删除',true); loadUsers(); }
+    else toast('删除失败: '+r.error.message, false);
+  });
+}
+function filterUsers(q){
+  var f = _allUsers.filter(function(u){ return !q||(u.email||u.display_name||'').toLowerCase().includes(q.toLowerCase()); });
+  renderUsers(f);
+}
+
+// ── QUICK EXP (table row +50 / -50) ──
+function quickExp(id, delta){
+  var u = _userMap[id];
+  if(!u){ toast('找不到用户', false); return; }
+  var newExp = Math.max(0, (u.exp||0) + delta);
+  var newLv  = calcLv(newExp);
+  _sb.from('profiles').update({exp: newExp, level: newLv}).eq('id', id).then(function(r){
+    if(r.error){
+      toast('更新失败: ' + r.error.message, false);
+    } else {
+      u.exp = newExp;
+      u.level = newLv;
+      // Update cell inline without full reload
+      var cell = document.getElementById('exp-cell-'+id);
+      if(cell) cell.textContent = newExp;
+      toast((delta > 0 ? '+' : '') + delta + ' EXP → ' + newExp, true);
+      // Reload to update level badge
+      loadUsers();
+    }
+  });
+}
 
 // ── USER DETAIL MODAL ──
 function showUserDetail(id){
-  _currentModalUserId=id;
-  var u=_userMap[id]; if(!u) return;
-  var lv=calcLv(u.exp||0);
-  var LVN=['','Observer','Scholar','Prophet','Sage','Creator'];
-  var joined=u.joined_at?u.joined_at.slice(0,10):'—';
-  var daysSince=u.joined_at?Math.floor((Date.now()-new Date(u.joined_at))/86400000):0;
-  document.getElementById('modal-body').innerHTML=
+  _currentModalUserId = id;
+  var u = _userMap[id]; if(!u) return;
+  var lv = calcLv(u.exp||0);
+  var LVN = ['','Observer','Scholar','Prophet','Sage','Creator'];
+  var joined = u.joined_at ? u.joined_at.slice(0,10) : '—';
+  var daysSince = u.joined_at ? Math.floor((Date.now()-new Date(u.joined_at))/86400000) : 0;
+  document.getElementById('modal-body').innerHTML =
     '<div>邮箱：<span style="color:var(--text);">'+(u.email||'—')+'</span></div>'
     +'<div>注册：<span style="color:var(--text);">'+joined+'（'+daysSince+' 天前）</span></div>'
     +'<div>连续签到：<span style="color:var(--text);">'+(u.streak||0)+' 天</span></div>'
     +'<div>EXP：<span style="color:var(--gold);" id="modal-exp-val">'+(u.exp||0)+'</span></div>'
     +'<div>等级：<span style="color:#a080e0;">Lv.'+lv+' · '+LVN[lv]+'</span></div>'
     +'<div style="font-size:10px;color:var(--text3);margin-top:4px;">ID：'+u.id+'</div>';
-  document.getElementById('exp-delta').value='';
-  document.getElementById('exp-msg').style.display='none';
-  document.getElementById('user-modal').style.display='flex';
+  document.getElementById('exp-delta').value = '';
+  document.getElementById('exp-msg').style.display = 'none';
+  document.getElementById('user-modal').style.display = 'flex';
 }
-
 function closeModal(){ document.getElementById('user-modal').style.display='none'; _currentModalUserId=null; }
 
 // ── EXP ADJUSTMENT (modal) ──
 function adjustExp(sign){
-  var id=_currentModalUserId; if(!id) return;
-  var u=_userMap[id]; if(!u) return;
-  var raw=parseInt(document.getElementById('exp-delta').value);
-  var msgEl=document.getElementById('exp-msg');
+  var id = _currentModalUserId; if(!id) return;
+  var u  = _userMap[id]; if(!u) return;
+  var raw = parseInt(document.getElementById('exp-delta').value);
+  var msgEl = document.getElementById('exp-msg');
   if(isNaN(raw)||raw===0){
-    msgEl.style.display='block'; msgEl.style.background='rgba(248,113,113,0.12)'; msgEl.style.color='#f87171'; msgEl.textContent='请输入有效数值（非零）'; return;
+    msgEl.style.display='block'; msgEl.style.background='rgba(248,113,113,0.12)';
+    msgEl.style.color='#f87171'; msgEl.textContent='请输入有效数值（非零）'; return;
   }
-  var delta=Math.abs(raw)*sign;
-  var newExp=Math.max(0,(u.exp||0)+delta);
-  var newLv=calcLv(newExp);
-  _sb.from('profiles').update({exp:newExp,level:newLv}).eq('id',id).then(function(r){
+  var delta  = Math.abs(raw) * sign;
+  var newExp = Math.max(0, (u.exp||0) + delta);
+  var newLv  = calcLv(newExp);
+  _sb.from('profiles').update({exp:newExp, level:newLv}).eq('id',id).then(function(r){
     if(r.error){
-      msgEl.style.display='block'; msgEl.style.background='rgba(248,113,113,0.12)'; msgEl.style.color='#f87171'; msgEl.textContent='更新失败: '+r.error.message;
+      msgEl.style.display='block'; msgEl.style.background='rgba(248,113,113,0.12)';
+      msgEl.style.color='#f87171'; msgEl.textContent='更新失败: '+r.error.message+' ('+r.error.code+')';
     } else {
-      u.exp=newExp; u.level=newLv;
-      var expValEl=document.getElementById('modal-exp-val'); if(expValEl) expValEl.textContent=newExp;
-      msgEl.style.display='block'; msgEl.style.background='rgba(61,186,122,0.12)'; msgEl.style.color='#4ade80';
-      msgEl.textContent='✓ '+(delta>0?'+':'')+delta+' EXP → 现为 '+newExp+' EXP（Lv.'+newLv+'）';
-      document.getElementById('exp-delta').value='';
+      u.exp = newExp; u.level = newLv;
+      var ev = document.getElementById('modal-exp-val'); if(ev) ev.textContent = newExp;
+      msgEl.style.display='block'; msgEl.style.background='rgba(61,186,122,0.12)';
+      msgEl.style.color='#4ade80';
+      msgEl.textContent = '✓ '+(delta>0?'+':'')+delta+' EXP → 现为 '+newExp+' EXP（Lv.'+newLv+'）';
+      document.getElementById('exp-delta').value = '';
       loadUsers();
     }
   });
 }
 
-// ── QUICK EXP (table row buttons) ──
-function quickExp(id, delta){
-  var u=_userMap[id]; if(!u) return;
-  var newExp=Math.max(0,(u.exp||0)+delta);
-  var newLv=calcLv(newExp);
-  _sb.from('profiles').update({exp:newExp,level:newLv}).eq('id',id).then(function(r){
-    if(!r.error){ u.exp=newExp; u.level=newLv; loadUsers(); }
-  });
-}
-
 // ── CHECKINS ──
 function loadCheckins(){
-  _sb.from('checkins').select('checked_in_at,user_id').order('checked_in_at',{ascending:false}).limit(50).then(function(r){
-    if(!r.data) return;
-    var userIds=[...new Set(r.data.map(function(c){return c.user_id;}))];
-    _sb.from('profiles').select('id,display_name').in('id',userIds).then(function(pr){
-      var nameMap={};
-      (pr.data||[]).forEach(function(p){ nameMap[p.id]=p.display_name; });
-      var html=r.data.map(function(c){
-        return '<tr><td>'+(nameMap[c.user_id]||c.user_id.slice(0,8)+'...')+'</td><td style="font-family:\'DM Mono\',monospace;color:var(--text3);">'+c.checked_in_at+'</td></tr>';
-      }).join('');
-      document.getElementById('checkins-list').innerHTML=html||'<tr><td colspan="2" style="text-align:center;color:var(--text3);">暂无记录</td></tr>';
+  var today = new Date().toISOString().slice(0,10);
+  var weekAgo = new Date(Date.now()-7*86400000).toISOString().slice(0,10)+'T00:00:00Z';
+
+  // FIX: use checked_at (not checked_in_at)
+  _sb.from('checkins').select('checked_at, user_id')
+    .order('checked_at',{ascending:false}).limit(50).then(function(r){
+      if(!r.data) return;
+      var userIds = [];
+      r.data.forEach(function(c){ if(userIds.indexOf(c.user_id)<0) userIds.push(c.user_id); });
+      _sb.from('profiles').select('id,email,display_name').in('id',userIds).then(function(pr){
+        var nameMap = {};
+        (pr.data||[]).forEach(function(p){ nameMap[p.id] = p.email||p.display_name||p.id.slice(0,8); });
+        var html = r.data.map(function(c){
+          var ts = c.checked_at ? c.checked_at.slice(0,16).replace('T',' ') : '—';
+          return '<tr>'
+            +'<td style="font-family:\'DM Mono\',monospace;font-size:12px;">'+(nameMap[c.user_id]||c.user_id.slice(0,8)+'...')+'</td>'
+            +'<td style="font-family:\'DM Mono\',monospace;color:var(--text3);">'+ts+'</td></tr>';
+        }).join('');
+        document.getElementById('checkins-list').innerHTML = html||'<tr><td colspan="2" style="text-align:center;color:var(--text3);">暂无记录</td></tr>';
+      });
     });
-  });
 }
 
-// ── UTILS ──
-function showMsg(id,msg){ var el=document.getElementById(id); if(!el) return; el.style.display='block'; if(msg) el.textContent=msg; setTimeout(function(){ el.style.display='none'; },3000); }
-
 // ── FILE HANDLING ──
-var _selectedFile=null;
-var _selectedFileContent=null;
+var _selectedFile = null;
+var _selectedFileContent = null;
 
 function handleDrop(ev){
   ev.preventDefault();
   document.getElementById('drop-zone').style.borderColor='rgba(184,150,74,0.4)';
   document.getElementById('drop-zone').style.background='rgba(184,150,74,0.03)';
-  var file=ev.dataTransfer.files[0]; if(file) processFile(file);
+  var file = ev.dataTransfer.files[0]; if(file) processFile(file);
 }
 function handleFileSelect(input){ var file=input.files[0]; if(file) processFile(file); }
 function processFile(file){
-  _selectedFile=file;
-  document.getElementById('drop-filename').textContent='✓ '+file.name;
-  var m=file.name.match(/(\d{8})/);
-  if(m){
-    document.getElementById('f-date').value=m[1];
-    if(!document.getElementById('f-vol').value){
-      _sb.from('editions').select('vol_number').order('vol_number',{ascending:false}).limit(1).then(function(r){
-        var next=r.data&&r.data[0]?r.data[0].vol_number+1:1;
-        document.getElementById('f-vol').value=next;
-      });
-    }
-  }
-  var reader=new FileReader();
-  reader.onload=function(e){ _selectedFileContent=btoa(unescape(encodeURIComponent(e.target.result))); };
+  _selectedFile = file;
+  document.getElementById('drop-filename').textContent = '✓ '+file.name;
+  var m = file.name.match(/(\d{8})/);
+  if(m){ document.getElementById('f-date').value = m[1]; }
+  var reader = new FileReader();
+  reader.onload = function(e){ _selectedFileContent = btoa(unescape(encodeURIComponent(e.target.result))); };
   reader.readAsText(file,'UTF-8');
 }
 
-function log(msg,ok){
-  var el=document.getElementById('publish-log'); el.style.display='block';
-  var icon=ok===true?'✅':ok===false?'❌':'›';
-  el.innerHTML+='<div style="margin:3px 0;color:'+(ok===false?'#f87171':ok===true?'#4ade80':'var(--text3)')+'">'+icon+' '+msg+'</div>';
+function log(msg, ok){
+  var el = document.getElementById('publish-log'); el.style.display='block';
+  var icon = ok===true?'✅':ok===false?'❌':'›';
+  el.innerHTML += '<div style="margin:3px 0;color:'+(ok===false?'#f87171':ok===true?'#4ade80':'var(--text3)')+'">'+icon+' '+msg+'</div>';
 }
 
 async function publishToGithub(){
-  GITHUB_TOKEN=localStorage.getItem('gh_token')||'';
+  GITHUB_TOKEN = localStorage.getItem('gh_token')||'';
   if(!GITHUB_TOKEN){ var t=prompt('请输入 GitHub Personal Access Token：'); if(!t) return; localStorage.setItem('gh_token',t.trim()); GITHUB_TOKEN=t.trim(); }
-  var vol=parseInt(document.getElementById('f-vol').value);
-  var dateStr=document.getElementById('f-date').value.trim();
-  var title=document.getElementById('f-title').value.trim();
-  var rarity=document.getElementById('f-rarity').value;
+  var dateStr = document.getElementById('f-date').value.trim();
+  var title   = document.getElementById('f-title').value.trim();
+  var rarity  = document.getElementById('f-rarity').value;
   if(!_selectedFile||!_selectedFileContent){ alert('请先选择 HTML 文件'); return; }
-  if(!vol||!dateStr){ alert('请填写期号和日期'); return; }
-  document.getElementById('publish-log').innerHTML='';
-  document.getElementById('publish-log').style.display='block';
-  document.getElementById('ed-ok').style.display='none';
-  document.getElementById('ed-err').style.display='none';
-  document.getElementById('publish-btn').disabled=true;
-  var filename=_selectedFile.name;
-  var filePath=GITHUB_PATH+'/'+filename;
-  var htmlUrl='https://zeusdaily.blog/'+filename;
-  var apiUrl='https://api.github.com/repos/'+GITHUB_REPO+'/contents/'+filePath;
-  var isoDate=dateStr.slice(0,4)+'-'+dateStr.slice(4,6)+'-'+dateStr.slice(6,8);
-  if(!title) title='Zeus Daily · Vol.'+String(vol).padStart(3,'0')+' · '+dateStr;
+  if(!dateStr){ alert('请填写日期'); return; }
+  document.getElementById('publish-log').innerHTML = '';
+  document.getElementById('publish-log').style.display = 'block';
+  document.getElementById('ed-ok').style.display = 'none';
+  document.getElementById('ed-err').style.display = 'none';
+  document.getElementById('publish-btn').disabled = true;
+  var filename = _selectedFile.name;
+  var filePath = GITHUB_PATH+'/'+filename;
+  var htmlUrl  = 'https://zeusdaily.blog/'+filename;
+  var apiUrl   = 'https://api.github.com/repos/'+GITHUB_REPO+'/contents/'+filePath;
+  var isoDate  = dateStr.slice(0,4)+'-'+dateStr.slice(4,6)+'-'+dateStr.slice(6,8);
+  if(!title) title = 'Zeus Daily · '+isoDate;
   log('检查文件是否已存在...');
-  var sha=null;
-  try{ var chk=await fetch(apiUrl,{headers:{Authorization:'token '+GITHUB_TOKEN,Accept:'application/vnd.github.v3+json'}}); if(chk.ok){ var chkj=await chk.json(); sha=chkj.sha; log('文件已存在，将覆盖'); } else { log('新文件，将创建'); } }catch(e){ log('新文件，将创建'); }
-  log('正在上传 HTML 到 GitHub...');
-  var body={message:'Zeus Daily '+filename,content:_selectedFileContent,branch:'main'}; if(sha) body.sha=sha;
+  var sha = null;
   try{
-    var res=await fetch(apiUrl,{method:'PUT',headers:{Authorization:'token '+GITHUB_TOKEN,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    var chk = await fetch(apiUrl,{headers:{Authorization:'token '+GITHUB_TOKEN,Accept:'application/vnd.github.v3+json'}});
+    if(chk.ok){ var chkj=await chk.json(); sha=chkj.sha; log('文件已存在，将覆盖'); } else { log('新文件，将创建'); }
+  }catch(e){ log('新文件，将创建'); }
+  log('正在上传 HTML 到 GitHub...');
+  var body = {message:'Zeus Daily '+filename, content:_selectedFileContent, branch:'main'};
+  if(sha) body.sha = sha;
+  try{
+    var res = await fetch(apiUrl,{method:'PUT',headers:{Authorization:'token '+GITHUB_TOKEN,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
     if(!res.ok){ var e2=await res.json(); log('GitHub 上传失败: '+(e2.message||res.status),false); document.getElementById('publish-btn').disabled=false; return; }
     log('HTML 文件已上传',true);
   }catch(e){ log('上传失败: '+e.message,false); document.getElementById('publish-btn').disabled=false; return; }
   log('正在写入 Supabase...');
-  var ins=await _sb.from('editions').insert({vol_number:vol,date:isoDate,title:title,html_url:htmlUrl,rarity:rarity});
+  // vol_number is optional now
+  var volRaw = parseInt(document.getElementById('f-vol').value);
+  var insertData = {date:isoDate, title:title, html_url:htmlUrl, rarity:rarity};
+  if(!isNaN(volRaw) && volRaw > 0) insertData.vol_number = volRaw;
+  var ins = await _sb.from('editions').insert(insertData);
   if(ins.error){ log('Supabase 写入失败: '+ins.error.message,false); document.getElementById('publish-btn').disabled=false; return; }
   log('editions 数据已写入',true);
   document.getElementById('ed-ok').style.display='block';
   document.getElementById('publish-btn').disabled=false;
+  toast('发布成功！',true);
   _selectedFile=null; _selectedFileContent=null;
   document.getElementById('drop-filename').textContent='';
   document.getElementById('f-vol').value=''; document.getElementById('f-date').value=''; document.getElementById('f-title').value='';
