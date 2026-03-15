@@ -773,7 +773,7 @@ function getEarnedIds() {
   return earned;
 }
 
-function openEquipPicker() {
+window.openEquipPicker = function() {
   _equippedTemp = _equippedIds.slice();
   var earned = getEarnedIds();
   var grid = document.getElementById('equip-grid');
