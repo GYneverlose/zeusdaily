@@ -9,9 +9,10 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#0a0612;--bg2:#120a1e;--surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.07);
-  --border:rgba(184,150,74,0.2);--border2:rgba(184,150,74,0.4);
-  --gold:#b8964a;--gold2:#d4aa5a;--gold-bg:rgba(184,150,74,0.1);
+  --bg:#0a0612;--bg2:#120a1e;
+  --surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.07);
+  --border:rgba(184,150,74,0.2);
+  --gold:#b8964a;--gold-bg:rgba(184,150,74,0.1);
   --violet:#7b56b8;--purple:#5c3d8f;
   --text:#f0e8d8;--text2:#b8a8c8;--text3:#7a6a8a;
   --green:#3dba7a;--red:#e05555;
@@ -52,29 +53,23 @@ td{padding:12px 16px;font-size:13px;color:var(--text2);border-bottom:1px solid r
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:var(--surface2);}
 .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:1px;}
-.badge-gold{background:rgba(184,150,74,0.15);color:var(--gold);border:1px solid rgba(184,150,74,0.3);}
 .badge-violet{background:rgba(123,86,184,0.15);color:#a080e0;border:1px solid rgba(123,86,184,0.3);}
-.badge-green{background:rgba(61,186,122,0.12);color:var(--green);border:1px solid rgba(61,186,122,0.3);}
-.badge-red{background:rgba(224,85,85,0.12);color:var(--red);border:1px solid rgba(224,85,85,0.3);}
+.badge-gold{background:rgba(184,150,74,0.15);color:var(--gold);border:1px solid rgba(184,150,74,0.3);}
 .form-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:24px;}
 .form-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .form-group{display:flex;flex-direction:column;gap:6px;}
 .form-group.full{grid-column:1/-1;}
 label{font-size:10px;color:var(--text3);letter-spacing:1.5px;font-family:'DM Mono',monospace;}
-input,select,textarea{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border 0.2s;}
-input:focus,select:focus,textarea:focus{border-color:var(--gold);}
+input,select{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border 0.2s;}
+input:focus,select:focus{border-color:var(--gold);}
 select option{background:#1a0f2e;}
-textarea{resize:vertical;min-height:60px;}
 .btn{padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;}
 .btn-primary{background:linear-gradient(135deg,var(--purple),var(--violet));color:white;}
 .btn-primary:hover{opacity:0.85;}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
 .btn-danger{background:rgba(224,85,85,0.15);color:var(--red);border:1px solid rgba(224,85,85,0.3);}
-.btn-danger:hover{background:rgba(224,85,85,0.25);}
 .btn-sm{padding:5px 12px;font-size:11px;}
-.msg{padding:10px 14px;border-radius:6px;font-size:12px;margin-top:12px;display:none;}
-.msg-ok{background:rgba(61,186,122,0.12);color:var(--green);border:1px solid rgba(61,186,122,0.3);}
-.msg-err{background:rgba(224,85,85,0.12);color:var(--red);border:1px solid rgba(224,85,85,0.3);}
 #auth-wall{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg);}
 .auth-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:40px;width:340px;text-align:center;}
 .auth-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);margin-bottom:6px;}
@@ -88,31 +83,56 @@ textarea{resize:vertical;min-height:60px;}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);}
-.btn-exp{padding:3px 8px;font-size:11px;background:rgba(184,150,74,0.15);border:1px solid rgba(184,150,74,0.3);border-radius:4px;color:var(--gold);cursor:pointer;}
-.btn-exp:hover{background:rgba(184,150,74,0.28);}
-/* toast */
-#toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:8px;font-size:12px;font-family:'DM Mono',monospace;z-index:9999;display:none;pointer-events:none;}
-#toast.ok{background:rgba(61,186,122,0.9);color:#fff;}
-#toast.err{background:rgba(224,85,85,0.9);color:#fff;}
+/* Toast */
+#toast{position:fixed;bottom:28px;right:28px;padding:11px 20px;border-radius:8px;font-size:12px;font-family:'DM Mono',monospace;z-index:9999;display:none;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+#toast.ok{background:#1a3a2a;color:#4ade80;border:1px solid rgba(74,222,128,0.3);}
+#toast.err{background:#3a1a1a;color:#f87171;border:1px solid rgba(248,113,113,0.3);}
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:#1a1030;border:1px solid rgba(184,150,74,0.3);border-radius:14px;padding:28px;width:440px;max-width:94vw;}
+.modal-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(184,150,74,0.2);}
+.modal-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;color:var(--text3);border-bottom:1px solid rgba(255,255,255,0.04);}
+.modal-row:last-child{border-bottom:none;}
+.modal-row span{color:var(--text);}
+.exp-panel{margin-top:18px;padding:16px;background:rgba(184,150,74,0.06);border:1px solid rgba(184,150,74,0.2);border-radius:8px;}
+.exp-panel-title{font-size:10px;color:var(--gold);letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Mono',monospace;}
+.exp-row{display:flex;gap:8px;align-items:center;}
+.exp-row input{flex:1;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(184,150,74,0.35);border-radius:6px;color:var(--text);font-size:14px;font-family:'DM Mono',monospace;outline:none;}
+.exp-row input:focus{border-color:var(--gold);}
+.btn-add{padding:10px 18px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.4);border-radius:6px;color:#4ade80;cursor:pointer;font-size:20px;font-weight:700;line-height:1;transition:background 0.15s;}
+.btn-sub{padding:10px 18px;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.4);border-radius:6px;color:#f87171;cursor:pointer;font-size:20px;font-weight:700;line-height:1;transition:background 0.15s;}
+.btn-add:hover{background:rgba(74,222,128,0.3);}
+.btn-sub:hover{background:rgba(248,113,113,0.3);}
+.btn-add:disabled,.btn-sub:disabled{opacity:0.4;cursor:not-allowed;}
+.exp-hint{font-size:11px;color:var(--text3);margin-top:8px;line-height:1.7;}
+.exp-hint b{color:var(--gold);}
+#exp-feedback{font-size:11px;margin-top:10px;padding:8px 12px;border-radius:5px;display:none;line-height:1.5;}
+.fb-ok{background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.25);}
+.fb-err{background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.25);}
+.modal-close{margin-top:16px;width:100%;padding:10px;background:var(--violet);border:none;border-radius:8px;color:white;cursor:pointer;font-size:13px;}
+.modal-close:hover{opacity:0.85;}
+/* Publish log */
+#publish-log{margin-top:14px;font-family:'DM Mono',monospace;font-size:11px;display:none;max-height:160px;overflow-y:auto;padding:10px 12px;background:rgba(0,0,0,0.25);border-radius:6px;line-height:1.9;}
 </style>
 </head>
 <body>
 
 <div id="toast"></div>
 
-<!-- AUTH WALL -->
+<!-- AUTH -->
 <div id="auth-wall">
   <div class="auth-box">
     <div class="auth-title">ZEUS DAILY</div>
     <div class="auth-sub">Admin Access Only</div>
-    <input id="a-email" type="email" placeholder="Admin email">
-    <input id="a-pass" type="password" placeholder="Password">
+    <input id="a-email" type="email" placeholder="Admin email" autocomplete="username">
+    <input id="a-pass" type="password" placeholder="Password" autocomplete="current-password">
     <button class="btn btn-primary" onclick="doLogin()">进入后台</button>
-    <div id="auth-err">无权限或密码错误</div>
+    <div id="auth-err"></div>
   </div>
 </div>
 
-<!-- MAIN SHELL -->
+<!-- SHELL -->
 <div class="shell" id="app" style="display:none;">
   <div class="sidebar">
     <div class="sb-logo">
@@ -120,78 +140,71 @@ textarea{resize:vertical;min-height:60px;}
       <div class="sb-logo-sub">ADMIN CONSOLE</div>
     </div>
     <nav class="sb-nav">
-      <div class="sb-item active" onclick="showPage('overview',this)">
+      <div class="sb-item active" data-page="overview" onclick="showPage(this)">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
         总览
       </div>
-      <div class="sb-item" onclick="showPage('editions',this)">
+      <div class="sb-item" data-page="editions" onclick="showPage(this)">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 2h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         期刊管理
       </div>
-      <div class="sb-item" onclick="showPage('users',this)">
+      <div class="sb-item" data-page="users" onclick="showPage(this)">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M2 13c0-2.761 2.686-5 6-5s6 2.239 6 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         用户管理
       </div>
-      <div class="sb-item" onclick="showPage('checkins',this)">
+      <div class="sb-item" data-page="checkins" onclick="showPage(this)">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v4M11 1v4M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         签到统计
       </div>
     </nav>
     <div class="sb-footer">
-      <div class="sb-user"><span id="admin-name">—</span>Admin</div>
+      <div class="sb-user"><span id="admin-email-display">—</span>Admin</div>
       <div class="logout-btn" onclick="doLogout()">退出登录</div>
     </div>
   </div>
 
   <div class="main">
 
-    <!-- OVERVIEW -->
+    <!-- 总览 -->
     <div class="page active" id="page-overview">
       <div class="page-title">总览</div>
       <div class="page-sub">Zeus Daily 运营数据</div>
       <div class="stats-row">
         <div class="stat-card"><div class="stat-val" id="s-users">—</div><div class="stat-lbl">注册用户</div></div>
         <div class="stat-card"><div class="stat-val" id="s-editions">—</div><div class="stat-lbl">已发期数</div></div>
-        <div class="stat-card"><div class="stat-val" id="s-checkins">—</div><div class="stat-lbl">今日签到</div></div>
-        <div class="stat-card"><div class="stat-val" id="s-total-checkins">—</div><div class="stat-lbl">累计签到</div></div>
+        <div class="stat-card"><div class="stat-val" id="s-today">—</div><div class="stat-lbl">今日签到</div></div>
+        <div class="stat-card"><div class="stat-val" id="s-total">—</div><div class="stat-lbl">累计签到</div></div>
       </div>
       <div class="table-card">
         <div class="table-header"><div class="table-title">最近注册用户</div></div>
         <table>
-          <thead><tr><th>用户名</th><th>等级</th><th>EXP</th><th>连续天数</th><th>注册时间</th></tr></thead>
-          <tbody id="recent-users"><tr><td colspan="5" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
+          <thead><tr><th>邮箱</th><th>等级</th><th>EXP</th><th>连续天数</th><th>注册时间</th></tr></thead>
+          <tbody id="overview-users"><tr><td colspan="5" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
         </table>
       </div>
     </div>
 
-    <!-- EDITIONS -->
+    <!-- 期刊管理 -->
     <div class="page" id="page-editions">
       <div class="page-title">期刊管理</div>
-      <div class="page-sub">添加和管理每日期刊</div>
+      <div class="page-sub">发布每日期刊</div>
       <div class="form-card">
         <div class="form-title">上传新期日报</div>
-        <div id="drop-zone" style="border:2px dashed rgba(184,150,74,0.4);border-radius:10px;padding:32px;text-align:center;cursor:pointer;margin-bottom:20px;transition:all 0.2s;background:rgba(184,150,74,0.03);"
+        <div id="drop-zone"
+          style="border:2px dashed rgba(184,150,74,0.4);border-radius:10px;padding:32px;text-align:center;cursor:pointer;margin-bottom:20px;transition:all 0.2s;background:rgba(184,150,74,0.03);"
           ondragover="event.preventDefault();this.style.borderColor='#b8964a';this.style.background='rgba(184,150,74,0.08)'"
           ondragleave="this.style.borderColor='rgba(184,150,74,0.4)';this.style.background='rgba(184,150,74,0.03)'"
           ondrop="handleDrop(event)"
           onclick="document.getElementById('f-file').click()">
-          <div style="font-size:28px;margin-bottom:8px;">↑</div>
+          <div style="font-size:28px;margin-bottom:8px;color:var(--gold);">↑</div>
           <div style="color:var(--text3);font-size:13px;">拖拽 HTML 文件到此处，或 <span style="color:var(--gold);text-decoration:underline;">点击选择文件</span></div>
-          <div id="drop-filename" style="margin-top:10px;color:var(--gold);font-family:'DM Mono',monospace;font-size:12px;"></div>
+          <div id="drop-filename" style="margin-top:10px;color:var(--gold);font-family:'DM Mono',monospace;font-size:12px;min-height:18px;"></div>
         </div>
         <input type="file" id="f-file" accept=".html" style="display:none" onchange="handleFileSelect(this)">
         <div class="form-grid">
           <div class="form-group">
-            <label>期号 VOL.（可留空）</label>
-            <input id="f-vol" type="number" placeholder="留空则不记录期号" min="1">
-          </div>
-          <div class="form-group">
-            <label>日期 (YYYYMMDD)</label>
+            <label>日期 (YYYYMMDD) *</label>
             <input id="f-date" type="text" placeholder="20260315" maxlength="8">
-          </div>
-          <div class="form-group full">
-            <label>标题摘要（可选）</label>
-            <input id="f-title" type="text" placeholder="本期日报标题或简介">
           </div>
           <div class="form-group">
             <label>稀有度</label>
@@ -201,29 +214,32 @@ textarea{resize:vertical;min-height:60px;}
               <option value="legendary">Legendary</option>
             </select>
           </div>
+          <div class="form-group full">
+            <label>标题摘要（可选）</label>
+            <input id="f-title" type="text" placeholder="本期日报标题或简介">
+          </div>
         </div>
-        <div style="margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <div style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
           <button class="btn btn-primary" id="publish-btn" onclick="publishToGithub()">⚡ 发布到 GitHub</button>
-          <span id="token-status" style="font-size:11px;color:var(--text3);margin-left:8px;"></span>
-          <button onclick="localStorage.removeItem('gh_token');GITHUB_TOKEN='';document.getElementById('token-status').textContent='Token 已清除'" style="font-size:10px;padding:3px 8px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--text3);cursor:pointer;margin-left:4px;">重置 Token</button>
+          <span id="token-status" style="font-size:11px;color:var(--text3);"></span>
+          <button onclick="resetToken()" style="font-size:10px;padding:4px 10px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--text3);cursor:pointer;">重置 Token</button>
         </div>
-        <div id="publish-log" style="margin-top:16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);display:none;"></div>
-        <div class="msg msg-ok" id="ed-ok" style="display:none;">✓ 发布成功！</div>
-        <div class="msg msg-err" id="ed-err" style="display:none;"></div>
+        <div id="publish-log"></div>
+        <div id="pub-ok" style="display:none;margin-top:12px;padding:10px 14px;border-radius:6px;font-size:12px;background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.25);">✓ 发布成功！</div>
       </div>
       <div class="table-card">
         <div class="table-header"><div class="table-title">所有期刊</div></div>
         <table>
-          <thead><tr><th>日期</th><th>标题</th><th>稀有度</th><th>URL</th><th>操作</th></tr></thead>
+          <thead><tr><th>日期</th><th>标题</th><th>稀有度</th><th>链接</th><th>操作</th></tr></thead>
           <tbody id="editions-list"><tr><td colspan="5" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
         </table>
       </div>
     </div>
 
-    <!-- USERS -->
+    <!-- 用户管理 -->
     <div class="page" id="page-users">
       <div class="page-title">用户管理</div>
-      <div class="page-sub">所有注册用户</div>
+      <div class="page-sub">点「详情 / EXP」调整经验值</div>
       <div class="table-card">
         <div class="table-header">
           <div class="table-title">用户列表</div>
@@ -236,28 +252,7 @@ textarea{resize:vertical;min-height:60px;}
       </div>
     </div>
 
-    <!-- USER DETAIL MODAL -->
-    <div id="user-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center;">
-      <div style="background:#1a1030;border:1px solid rgba(184,150,74,0.3);border-radius:14px;padding:28px;min-width:380px;max-width:480px;position:relative;">
-        <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:6px;">用户详情</div>
-        <div style="height:1px;background:rgba(184,150,74,0.2);margin-bottom:16px;"></div>
-        <div id="modal-body" style="font-size:13px;line-height:2.2;color:var(--text3);"></div>
-        <div style="margin-top:16px;padding:16px;background:rgba(184,150,74,0.06);border:1px solid rgba(184,150,74,0.2);border-radius:8px;">
-          <div style="font-size:11px;color:var(--gold);letter-spacing:1.5px;margin-bottom:12px;font-family:'DM Mono',monospace;">手动调整 EXP</div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <input id="exp-delta" type="number" placeholder="正数加 / 负数减，例如 50 或 -30"
-              style="flex:1;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(184,150,74,0.3);border-radius:6px;color:var(--text);font-size:12px;outline:none;">
-            <button onclick="adjustExp(1)" style="padding:9px 14px;background:rgba(61,186,122,0.18);border:1px solid rgba(61,186,122,0.35);border-radius:6px;color:#4ade80;cursor:pointer;font-size:16px;font-weight:700;line-height:1;">+</button>
-            <button onclick="adjustExp(-1)" style="padding:9px 14px;background:rgba(248,113,113,0.18);border:1px solid rgba(248,113,113,0.35);border-radius:6px;color:#f87171;cursor:pointer;font-size:16px;font-weight:700;line-height:1;">−</button>
-          </div>
-          <div style="font-size:10px;color:var(--text3);margin-top:6px;">点 + 加 EXP，点 − 减 EXP。当前 EXP：<span id="modal-exp-val" style="color:var(--gold);">—</span></div>
-          <div id="exp-msg" style="font-size:11px;margin-top:8px;padding:6px 10px;border-radius:4px;display:none;"></div>
-        </div>
-        <button onclick="closeModal()" style="margin-top:16px;width:100%;padding:10px;background:var(--violet);border:none;border-radius:8px;color:white;cursor:pointer;font-size:13px;">关闭</button>
-      </div>
-    </div>
-
-    <!-- CHECKINS -->
+    <!-- 签到统计 -->
     <div class="page" id="page-checkins">
       <div class="page-title">签到统计</div>
       <div class="page-sub">每日签到数据</div>
@@ -267,10 +262,10 @@ textarea{resize:vertical;min-height:60px;}
         <div class="stat-card"><div class="stat-val" id="c-total">—</div><div class="stat-lbl">累计签到</div></div>
       </div>
       <div class="table-card">
-        <div class="table-header"><div class="table-title">最近签到记录</div></div>
+        <div class="table-header"><div class="table-title">最近 50 条记录</div></div>
         <table>
-          <thead><tr><th>用户邮箱</th><th>签到时间</th></tr></thead>
-          <tbody id="checkins-list"><tr><td colspan="2" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
+          <thead><tr><th>用户邮箱</th><th>签到时间 (UTC)</th><th>EXP</th></tr></thead>
+          <tbody id="checkins-list"><tr><td colspan="3" class="loading"><span class="dot">●</span> 加载中</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -278,355 +273,476 @@ textarea{resize:vertical;min-height:60px;}
   </div>
 </div>
 
+<!-- USER MODAL -->
+<div class="modal-overlay" id="user-modal">
+  <div class="modal-box">
+    <div class="modal-title">用户详情 / EXP 调整</div>
+    <div id="modal-info"></div>
+    <div class="exp-panel">
+      <div class="exp-panel-title">手动调整 EXP</div>
+      <div class="exp-row">
+        <input id="exp-input" type="number" placeholder="输入数值，如 50 或 200" min="1" onkeydown="handleExpKey(event)">
+        <button class="btn-add" id="btn-add" onclick="applyExp(1)">+</button>
+        <button class="btn-sub" id="btn-sub" onclick="applyExp(-1)">−</button>
+      </div>
+      <div class="exp-hint">
+        当前 EXP：<b id="current-exp-display">—</b>&nbsp;·&nbsp;输入正整数，点 <b style="color:#4ade80">+</b> 加，点 <b style="color:#f87171">−</b> 减
+      </div>
+      <div id="exp-feedback"></div>
+    </div>
+    <button class="modal-close" onclick="closeModal()">关闭</button>
+  </div>
+</div>
+
 <script>
+/* ══════════════════════════════════════════
+   CONSTANTS
+══════════════════════════════════════════ */
 var SUPABASE_URL  = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
 var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
-var GITHUB_TOKEN = localStorage.getItem('gh_token') || '';
-var GITHUB_REPO  = 'GYneverlose/zeusdaily';
-var GITHUB_PATH  = 'zeusdaily';
-var ADMIN_EMAIL  = 'thunderchic055@gmail.com';
+var GITHUB_REPO   = 'GYneverlose/zeusdaily';
+var GITHUB_DIR    = 'zeusdaily';
+var ADMIN_EMAIL   = 'thunderchic055@gmail.com';
+var LV_NAMES      = ['','Observer','Scholar','Prophet','Sage','Creator'];
 
-var _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-var _allUsers = [];
-var _userMap = {};
-var _currentModalUserId = null;
+var db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-// ── TOAST ──
+/* ══════════════════════════════════════════
+   STATE  — single source of truth, never re-fetch after EXP update
+══════════════════════════════════════════ */
+var S = {
+  users:       [],    // loaded once, mutated in-place
+  modalUserId: null,  // which user's modal is open
+};
+
+function findUser(id) {
+  for (var i = 0; i < S.users.length; i++) {
+    if (S.users[i].id === id) return S.users[i];
+  }
+  return null;
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+var _tt = null;
 function toast(msg, ok) {
   var el = document.getElementById('toast');
   el.textContent = msg;
   el.className = ok ? 'ok' : 'err';
   el.style.display = 'block';
-  setTimeout(function(){ el.style.display='none'; }, 3000);
+  if (_tt) clearTimeout(_tt);
+  _tt = setTimeout(function(){ el.style.display='none'; }, 3500);
 }
 
-// ── AUTH ──
-function doLogin(){
+/* ══════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════ */
+function doLogin() {
   var email = document.getElementById('a-email').value.trim();
   var pass  = document.getElementById('a-pass').value;
-  if(email !== ADMIN_EMAIL){ showAuthErr(); return; }
-  _sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
-    if(res.error){ showAuthErr(); return; }
-    bootAdmin(res.data.session.user);
+  if (email !== ADMIN_EMAIL) { authErr('此账号无管理员权限'); return; }
+  db.auth.signInWithPassword({ email: email, password: pass }).then(function(r) {
+    if (r.error) { authErr(r.error.message); return; }
+    bootAdmin(r.data.session.user);
   });
 }
-function showAuthErr(){ document.getElementById('auth-err').style.display='block'; }
-function bootAdmin(user){
-  GITHUB_TOKEN = localStorage.getItem('gh_token') || '';
-  var ts = document.getElementById('token-status');
-  if(ts) ts.textContent = GITHUB_TOKEN ? '✓ Token 已配置' : '⚠ 未配置 Token';
-  document.getElementById('auth-wall').style.display='none';
-  document.getElementById('app').style.display='flex';
-  document.getElementById('admin-name').textContent = user.email.split('@')[0] + ' · ';
+function authErr(msg) {
+  var el = document.getElementById('auth-err');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function doLogout() { db.auth.signOut().then(function(){ window.location.reload(); }); }
+function bootAdmin(user) {
+  document.getElementById('auth-wall').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('admin-email-display').textContent = user.email.split('@')[0] + ' · ';
+  refreshTokenStatus();
   loadAll();
 }
-function doLogout(){ _sb.auth.signOut().then(function(){ window.location.reload(); }); }
-_sb.auth.getSession().then(function(res){
-  if(res.data && res.data.session && res.data.session.user.email === ADMIN_EMAIL){
-    bootAdmin(res.data.session.user);
-  }
+db.auth.getSession().then(function(r) {
+  if (r.data && r.data.session && r.data.session.user.email === ADMIN_EMAIL) bootAdmin(r.data.session.user);
 });
-document.addEventListener('keydown',function(e){
-  if(e.key==='Enter' && document.getElementById('auth-wall').style.display!=='none') doLogin();
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('auth-wall').style.display !== 'none') doLogin();
 });
 
-// ── NAVIGATION ──
-function showPage(id, el){
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
-  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active');});
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+function showPage(el) {
+  var id = el.getAttribute('data-page');
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sb-item').forEach(function(i){ i.classList.remove('active'); });
   document.getElementById('page-'+id).classList.add('active');
-  if(el) el.classList.add('active');
+  el.classList.add('active');
 }
 
-// ── LOAD ALL ──
-function loadAll(){ loadOverview(); loadEditions(); loadUsers(); loadCheckins(); }
+/* ══════════════════════════════════════════
+   LOAD ALL
+══════════════════════════════════════════ */
+function loadAll() { loadOverview(); loadEditions(); loadUsers(); loadCheckins(); }
 
-function loadOverview(){
-  _sb.from('profiles').select('*',{count:'exact',head:true}).then(function(r){
+/* ══════════════════════════════════════════
+   OVERVIEW
+══════════════════════════════════════════ */
+function loadOverview() {
+  db.from('profiles').select('*',{count:'exact',head:true}).then(function(r){
     document.getElementById('s-users').textContent = r.count||0;
   });
-  _sb.from('editions').select('*',{count:'exact',head:true}).then(function(r){
+  db.from('editions').select('*',{count:'exact',head:true}).then(function(r){
     document.getElementById('s-editions').textContent = r.count||0;
   });
-
-  // FIX: use checked_at with date range (not checked_in_at)
   var today = new Date().toISOString().slice(0,10);
-  var todayStart = today+'T00:00:00Z';
-  var todayEnd   = today+'T23:59:59Z';
-  _sb.from('checkins').select('*',{count:'exact',head:true})
-    .gte('checked_at', todayStart).lte('checked_at', todayEnd)
-    .then(function(r){
-      document.getElementById('s-checkins').textContent = r.count||0;
-      document.getElementById('c-today').textContent   = r.count||0;
-    });
-
-  _sb.from('checkins').select('*',{count:'exact',head:true}).then(function(r){
-    document.getElementById('s-total-checkins').textContent = r.count||0;
-    document.getElementById('c-total').textContent          = r.count||0;
+  db.from('checkins').select('*',{count:'exact',head:true})
+    .gte('checked_at', today+'T00:00:00Z').lte('checked_at', today+'T23:59:59Z')
+    .then(function(r){ document.getElementById('s-today').textContent = r.count||0; });
+  db.from('checkins').select('*',{count:'exact',head:true}).then(function(r){
+    document.getElementById('s-total').textContent = r.count||0;
   });
-
-  var weekAgo = new Date(Date.now()-7*86400000).toISOString().slice(0,10)+'T00:00:00Z';
-  _sb.from('checkins').select('*',{count:'exact',head:true}).gte('checked_at', weekAgo).then(function(r){
-    document.getElementById('c-week').textContent = r.count||0;
-  });
-
-  _sb.from('profiles').select('display_name,level,exp,streak,joined_at')
+  db.from('profiles').select('email,display_name,level,exp,streak,joined_at')
     .order('joined_at',{ascending:false}).limit(8).then(function(r){
-      if(!r.data) return;
+      if (!r.data) return;
       var html = r.data.map(function(u){
-        return '<tr><td>'+(u.display_name||'—')+'</td>'
-          +'<td><span class="badge badge-violet">Lv.'+u.level+'</span></td>'
-          +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+u.exp+'</td>'
+        return '<tr>'
+          +'<td style="font-size:12px;font-family:\'DM Mono\',monospace;">'+(u.email||u.display_name||'—')+'</td>'
+          +'<td><span class="badge badge-violet">Lv.'+(u.level||1)+'</span></td>'
+          +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+(u.exp||0)+'</td>'
           +'<td>'+(u.streak||0)+' 天</td>'
-          +'<td style="color:var(--text3);font-size:11px;">'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</td></tr>';
+          +'<td style="color:var(--text3);font-size:11px;">'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</td>'
+          +'</tr>';
       }).join('');
-      document.getElementById('recent-users').innerHTML = html||'<tr><td colspan="5" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
+      document.getElementById('overview-users').innerHTML = html||noData(5);
     });
 }
 
-// ── EDITIONS ──
-function loadEditions(){
-  _sb.from('editions').select('*').order('date',{ascending:false}).then(function(r){
-    if(!r.data) return;
+/* ══════════════════════════════════════════
+   EDITIONS
+══════════════════════════════════════════ */
+function loadEditions() {
+  db.from('editions').select('*').order('date',{ascending:false}).then(function(r){
+    if (!r.data) return;
     var html = r.data.map(function(e){
-      var rb = e.rarity==='legendary'?'badge-gold':(e.rarity==='rare'?'badge-violet':'');
+      var rb = e.rarity==='legendary'?'<span class="badge badge-gold">legendary</span>'
+             : e.rarity==='rare'     ?'<span class="badge badge-violet">rare</span>'
+             : '<span style="font-size:11px;color:var(--text3);">standard</span>';
       return '<tr>'
-        +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+e.date+'</td>'
+        +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+(e.date||'—')+'</td>'
         +'<td>'+(e.title||'—')+'</td>'
-        +'<td>'+(rb?'<span class="badge '+rb+'">'+e.rarity+'</span>':e.rarity)+'</td>'
-        +'<td><a href="'+e.html_url+'" target="_blank" style="color:var(--violet);font-size:11px;">链接↗</a></td>'
-        +'<td><button class="btn btn-danger btn-sm" onclick="deleteEdition('+e.id+')">删除</button></td></tr>';
+        +'<td>'+rb+'</td>'
+        +'<td><a href="'+e.html_url+'" target="_blank" style="color:var(--violet);font-size:11px;">打开↗</a></td>'
+        +'<td><button class="btn btn-danger btn-sm" onclick="deleteEdition('+e.id+')">删除</button></td>'
+        +'</tr>';
     }).join('');
-    document.getElementById('editions-list').innerHTML = html||'<tr><td colspan="5" style="text-align:center;color:var(--text3);">暂无期刊</td></tr>';
+    document.getElementById('editions-list').innerHTML = html||noData(5);
+  });
+}
+function deleteEdition(id) {
+  if (!confirm('确认删除这期？')) return;
+  db.from('editions').delete().eq('id',id).then(function(r){
+    if (r.error){ toast('删除失败: '+r.error.message, false); return; }
+    toast('已删除', true); loadEditions(); loadOverview();
   });
 }
 
-function deleteEdition(id){
-  if(!confirm('确认删除这期？')) return;
-  _sb.from('editions').delete().eq('id',id).then(function(r){
-    if(!r.error){ loadEditions(); loadOverview(); toast('已删除',true); }
-    else toast('删除失败: '+r.error.message, false);
-  });
+/* ══════════════════════════════════════════
+   USERS  — load once into S.users, never re-fetch after EXP change
+══════════════════════════════════════════ */
+function calcLv(exp) {
+  exp = exp||0;
+  if (exp<300)  return 1;
+  if (exp<500)  return 2;
+  if (exp<1000) return 3;
+  if (exp<2000) return 4;
+  return 5;
 }
 
-// ── USERS ──
-function calcLv(exp){ exp=exp||0; if(exp<300)return 1; if(exp<500)return 2; if(exp<1000)return 3; if(exp<2000)return 4; return 5; }
-
-function loadUsers(){
-  _sb.from('profiles').select('id,display_name,email,level,exp,streak,last_checkin,joined_at')
-    .order('joined_at',{ascending:false}).then(function(r){
-      _allUsers = r.data||[];
-      _userMap = {};
-      _allUsers.forEach(function(u){ _userMap[u.id]=u; });
-      renderUsers(_allUsers);
+function loadUsers() {
+  db.from('profiles')
+    .select('id,email,display_name,level,exp,streak,joined_at')
+    .order('joined_at',{ascending:false})
+    .then(function(r){
+      S.users = r.data || [];
+      renderUsers(S.users);
     });
 }
 
-function renderUsers(users){
-  var LV = ['','Observer','Scholar','Prophet','Sage','Creator'];
-  var html = users.map(function(u){
-    var lv = calcLv(u.exp||0);
-    return '<tr>'
+function renderUsers(list) {
+  if (!list.length){ document.getElementById('users-list').innerHTML = noData(6); return; }
+  var html = list.map(function(u){
+    var lv = calcLv(u.exp);
+    return '<tr id="row-'+u.id+'">'
       +'<td style="font-size:12px;font-family:\'DM Mono\',monospace;">'+(u.email||u.display_name||'—')+'</td>'
       +'<td style="color:var(--text3);font-size:12px;">'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</td>'
       +'<td>'+(u.streak||0)+' 天</td>'
-      +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);" id="exp-cell-'+u.id+'">'+(u.exp||0)+'</td>'
-      +'<td><span class="badge badge-violet">Lv.'+lv+' · '+(LV[lv]||'')+'</span></td>'
-      +'<td style="white-space:nowrap;">'
-      +'<button onclick="showUserDetail(\''+u.id+'\')" style="padding:3px 10px;font-size:11px;background:var(--violet);border:none;border-radius:4px;color:white;cursor:pointer;margin-right:4px;">详情</button>'
-      +'<button onclick="quickExp(\''+u.id+'\',50)" style="padding:3px 8px;font-size:11px;background:rgba(61,186,122,0.18);border:1px solid rgba(61,186,122,0.3);border-radius:4px;color:#4ade80;cursor:pointer;margin-right:2px;">+50</button>'
-      +'<button onclick="quickExp(\''+u.id+'\',-50)" style="padding:3px 8px;font-size:11px;background:rgba(248,113,113,0.18);border:1px solid rgba(248,113,113,0.3);border-radius:4px;color:#f87171;cursor:pointer;margin-right:4px;">−50</button>'
-      +'<button onclick="if(confirm(\'确认删除?\'))deleteUser(\''+u.id+'\')" style="padding:3px 10px;font-size:11px;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.3);border-radius:4px;color:#f87171;cursor:pointer;">删除</button>'
-      +'</td>'
+      +'<td id="exp-'+u.id+'" style="font-family:\'DM Mono\',monospace;color:var(--gold);">'+(u.exp||0)+'</td>'
+      +'<td id="lv-'+u.id+'"><span class="badge badge-violet">Lv.'+lv+' · '+(LV_NAMES[lv]||'')+'</span></td>'
+      +'<td><button onclick="openModal(\''+u.id+'\')" style="padding:5px 14px;font-size:11px;background:var(--violet);border:none;border-radius:5px;color:white;cursor:pointer;white-space:nowrap;">详情 / EXP</button></td>'
       +'</tr>';
   }).join('');
-  document.getElementById('users-list').innerHTML = html||'<tr><td colspan="6" style="text-align:center;color:var(--text3);">暂无用户</td></tr>';
+  document.getElementById('users-list').innerHTML = html;
 }
 
-function deleteUser(id){
-  _sb.from('profiles').delete().eq('id',id).then(function(r){
-    if(!r.error){ toast('用户已删除',true); loadUsers(); }
-    else toast('删除失败: '+r.error.message, false);
+function filterUsers(q) {
+  var f = S.users.filter(function(u){
+    return !q||(u.email||u.display_name||'').toLowerCase().includes(q.toLowerCase());
   });
-}
-function filterUsers(q){
-  var f = _allUsers.filter(function(u){ return !q||(u.email||u.display_name||'').toLowerCase().includes(q.toLowerCase()); });
   renderUsers(f);
 }
 
-// ── QUICK EXP (table row +50 / -50) ──
-function quickExp(id, delta){
-  var u = _userMap[id];
-  if(!u){ toast('找不到用户', false); return; }
-  var newExp = Math.max(0, (u.exp||0) + delta);
-  var newLv  = calcLv(newExp);
-  _sb.from('profiles').update({exp: newExp, level: newLv}).eq('id', id).then(function(r){
-    if(r.error){
-      toast('更新失败: ' + r.error.message, false);
-    } else {
-      u.exp = newExp;
-      u.level = newLv;
-      // Update cell inline without full reload
-      var cell = document.getElementById('exp-cell-'+id);
-      if(cell) cell.textContent = newExp;
-      toast((delta > 0 ? '+' : '') + delta + ' EXP → ' + newExp, true);
-      // Reload to update level badge
-      loadUsers();
-    }
-  });
+/* ══════════════════════════════════════════
+   MODAL  — open / close
+══════════════════════════════════════════ */
+function openModal(userId) {
+  var u = findUser(userId);
+  if (!u) { toast('用户数据不存在，请刷新页面', false); return; }
+  S.modalUserId = userId;
+
+  var lv = calcLv(u.exp);
+  document.getElementById('modal-info').innerHTML =
+    '<div class="modal-row">邮箱<span>'+(u.email||'—')+'</span></div>'
+    +'<div class="modal-row">注册<span>'+(u.joined_at?u.joined_at.slice(0,10):'—')+'</span></div>'
+    +'<div class="modal-row">连续签到<span>'+(u.streak||0)+' 天</span></div>'
+    +'<div class="modal-row">当前等级<span>Lv.'+lv+' · '+(LV_NAMES[lv]||'')+'</span></div>';
+
+  document.getElementById('current-exp-display').textContent = (u.exp||0);
+  document.getElementById('exp-input').value = '';
+  setExpFeedback('', null);
+
+  document.getElementById('user-modal').classList.add('open');
+  setTimeout(function(){ document.getElementById('exp-input').focus(); }, 100);
 }
 
-// ── USER DETAIL MODAL ──
-function showUserDetail(id){
-  _currentModalUserId = id;
-  var u = _userMap[id]; if(!u) return;
-  var lv = calcLv(u.exp||0);
-  var LVN = ['','Observer','Scholar','Prophet','Sage','Creator'];
-  var joined = u.joined_at ? u.joined_at.slice(0,10) : '—';
-  var daysSince = u.joined_at ? Math.floor((Date.now()-new Date(u.joined_at))/86400000) : 0;
-  document.getElementById('modal-body').innerHTML =
-    '<div>邮箱：<span style="color:var(--text);">'+(u.email||'—')+'</span></div>'
-    +'<div>注册：<span style="color:var(--text);">'+joined+'（'+daysSince+' 天前）</span></div>'
-    +'<div>连续签到：<span style="color:var(--text);">'+(u.streak||0)+' 天</span></div>'
-    +'<div>EXP：<span style="color:var(--gold);" id="modal-exp-val">'+(u.exp||0)+'</span></div>'
-    +'<div>等级：<span style="color:#a080e0;">Lv.'+lv+' · '+LVN[lv]+'</span></div>'
-    +'<div style="font-size:10px;color:var(--text3);margin-top:4px;">ID：'+u.id+'</div>';
-  document.getElementById('exp-delta').value = '';
-  document.getElementById('exp-msg').style.display = 'none';
-  document.getElementById('user-modal').style.display = 'flex';
+function closeModal() {
+  document.getElementById('user-modal').classList.remove('open');
+  S.modalUserId = null;
 }
-function closeModal(){ document.getElementById('user-modal').style.display='none'; _currentModalUserId=null; }
 
-// ── EXP ADJUSTMENT (modal) ──
-function adjustExp(sign){
-  var id = _currentModalUserId; if(!id) return;
-  var u  = _userMap[id]; if(!u) return;
-  var raw = parseInt(document.getElementById('exp-delta').value);
-  var msgEl = document.getElementById('exp-msg');
-  if(isNaN(raw)||raw===0){
-    msgEl.style.display='block'; msgEl.style.background='rgba(248,113,113,0.12)';
-    msgEl.style.color='#f87171'; msgEl.textContent='请输入有效数值（非零）'; return;
+/* Close on backdrop click */
+document.getElementById('user-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+/* Enter key in input triggers + */
+function handleExpKey(e) { if (e.key === 'Enter') applyExp(1); }
+
+/* ══════════════════════════════════════════
+   APPLY EXP  — the fixed core logic
+   ✦ Mutates S.users in-place
+   ✦ Updates DOM cells directly  
+   ✦ Never calls loadUsers() → no race condition
+══════════════════════════════════════════ */
+function applyExp(sign) {
+  /* 1. Validate modal state */
+  var userId = S.modalUserId;
+  if (!userId) { setExpFeedback('错误：请关闭后重新打开', false); return; }
+
+  var u = findUser(userId);
+  if (!u) { setExpFeedback('找不到用户，请刷新页面', false); return; }
+
+  /* 2. Validate input */
+  var raw = parseInt(document.getElementById('exp-input').value, 10);
+  if (isNaN(raw) || raw <= 0) {
+    setExpFeedback('请输入有效的正整数，例如 50', false);
+    document.getElementById('exp-input').focus();
+    return;
   }
-  var delta  = Math.abs(raw) * sign;
+
+  /* 3. Compute new values */
+  var delta  = raw * sign;
   var newExp = Math.max(0, (u.exp||0) + delta);
   var newLv  = calcLv(newExp);
-  _sb.from('profiles').update({exp:newExp, level:newLv}).eq('id',id).then(function(r){
-    if(r.error){
-      msgEl.style.display='block'; msgEl.style.background='rgba(248,113,113,0.12)';
-      msgEl.style.color='#f87171'; msgEl.textContent='更新失败: '+r.error.message+' ('+r.error.code+')';
-    } else {
-      u.exp = newExp; u.level = newLv;
-      var ev = document.getElementById('modal-exp-val'); if(ev) ev.textContent = newExp;
-      msgEl.style.display='block'; msgEl.style.background='rgba(61,186,122,0.12)';
-      msgEl.style.color='#4ade80';
-      msgEl.textContent = '✓ '+(delta>0?'+':'')+delta+' EXP → 现为 '+newExp+' EXP（Lv.'+newLv+'）';
-      document.getElementById('exp-delta').value = '';
-      loadUsers();
-    }
-  });
+
+  /* 4. Lock buttons during request */
+  var btnAdd = document.getElementById('btn-add');
+  var btnSub = document.getElementById('btn-sub');
+  btnAdd.disabled = true;
+  btnSub.disabled = true;
+  setExpFeedback('更新中...', null);
+
+  /* 5. Single Supabase call */
+  db.from('profiles')
+    .update({ exp: newExp, level: newLv })
+    .eq('id', userId)
+    .then(function(r) {
+      btnAdd.disabled = false;
+      btnSub.disabled = false;
+
+      if (r.error) {
+        setExpFeedback('❌ 更新失败：' + r.error.message + (r.error.code ? ' ['+r.error.code+']' : ''), false);
+        return;
+      }
+
+      /* 6. SUCCESS — mutate local state (no reload) */
+      u.exp   = newExp;
+      u.level = newLv;
+
+      /* 7. Update modal header */
+      document.getElementById('current-exp-display').textContent = newExp;
+      document.getElementById('exp-input').value = '';
+      document.getElementById('exp-input').focus();
+
+      /* 8. Update table row cells in-place */
+      var expCell = document.getElementById('exp-'+userId);
+      var lvCell  = document.getElementById('lv-'+userId);
+      if (expCell) expCell.textContent = newExp;
+      if (lvCell)  lvCell.innerHTML = '<span class="badge badge-violet">Lv.'+newLv+' · '+(LV_NAMES[newLv]||'')+'</span>';
+
+      /* 9. Feedback */
+      var label = (delta>0?'+':'')+delta+' EXP → 现为 '+newExp+' EXP（Lv.'+newLv+'）';
+      setExpFeedback('✓ '+label, true);
+      toast(label, true);
+    });
 }
 
-// ── CHECKINS ──
-function loadCheckins(){
-  var today = new Date().toISOString().slice(0,10);
+function setExpFeedback(msg, ok) {
+  var el = document.getElementById('exp-feedback');
+  if (!msg) { el.style.display='none'; el.className=''; return; }
+  el.style.display = 'block';
+  el.textContent   = msg;
+  el.className     = ok===true ? 'fb-ok' : ok===false ? 'fb-err' : '';
+  if (ok===null) { el.style.color='var(--text3)'; el.style.background='transparent'; el.style.border='none'; }
+  else           { el.removeAttribute('style'); }
+}
+
+/* ══════════════════════════════════════════
+   CHECKINS
+══════════════════════════════════════════ */
+function loadCheckins() {
+  var today   = new Date().toISOString().slice(0,10);
   var weekAgo = new Date(Date.now()-7*86400000).toISOString().slice(0,10)+'T00:00:00Z';
 
-  // FIX: use checked_at (not checked_in_at)
-  _sb.from('checkins').select('checked_at, user_id')
-    .order('checked_at',{ascending:false}).limit(50).then(function(r){
-      if(!r.data) return;
-      var userIds = [];
-      r.data.forEach(function(c){ if(userIds.indexOf(c.user_id)<0) userIds.push(c.user_id); });
-      _sb.from('profiles').select('id,email,display_name').in('id',userIds).then(function(pr){
-        var nameMap = {};
-        (pr.data||[]).forEach(function(p){ nameMap[p.id] = p.email||p.display_name||p.id.slice(0,8); });
+  db.from('checkins').select('*',{count:'exact',head:true})
+    .gte('checked_at',today+'T00:00:00Z').lte('checked_at',today+'T23:59:59Z')
+    .then(function(r){ document.getElementById('c-today').textContent=r.count||0; });
+  db.from('checkins').select('*',{count:'exact',head:true})
+    .gte('checked_at',weekAgo)
+    .then(function(r){ document.getElementById('c-week').textContent=r.count||0; });
+  db.from('checkins').select('*',{count:'exact',head:true})
+    .then(function(r){ document.getElementById('c-total').textContent=r.count||0; });
+
+  db.from('checkins').select('user_id,checked_at,exp_earned')
+    .order('checked_at',{ascending:false}).limit(50)
+    .then(function(r){
+      if (!r.data) return;
+      var ids = [];
+      r.data.forEach(function(c){ if(ids.indexOf(c.user_id)<0) ids.push(c.user_id); });
+      db.from('profiles').select('id,email,display_name').in('id',ids).then(function(pr){
+        var map={};
+        (pr.data||[]).forEach(function(p){ map[p.id]=p.email||p.display_name||p.id.slice(0,8); });
         var html = r.data.map(function(c){
           var ts = c.checked_at ? c.checked_at.slice(0,16).replace('T',' ') : '—';
           return '<tr>'
-            +'<td style="font-family:\'DM Mono\',monospace;font-size:12px;">'+(nameMap[c.user_id]||c.user_id.slice(0,8)+'...')+'</td>'
-            +'<td style="font-family:\'DM Mono\',monospace;color:var(--text3);">'+ts+'</td></tr>';
+            +'<td style="font-family:\'DM Mono\',monospace;font-size:12px;">'+(map[c.user_id]||c.user_id.slice(0,8)+'...')+'</td>'
+            +'<td style="font-family:\'DM Mono\',monospace;color:var(--text3);">'+ts+'</td>'
+            +'<td style="font-family:\'DM Mono\',monospace;color:var(--gold);">+'+(c.exp_earned||0)+'</td>'
+            +'</tr>';
         }).join('');
-        document.getElementById('checkins-list').innerHTML = html||'<tr><td colspan="2" style="text-align:center;color:var(--text3);">暂无记录</td></tr>';
+        document.getElementById('checkins-list').innerHTML = html||noData(3);
       });
     });
 }
 
-// ── FILE HANDLING ──
-var _selectedFile = null;
-var _selectedFileContent = null;
+/* ══════════════════════════════════════════
+   FILE + GITHUB PUBLISH
+══════════════════════════════════════════ */
+var _file=null, _fileB64=null;
 
-function handleDrop(ev){
-  ev.preventDefault();
-  document.getElementById('drop-zone').style.borderColor='rgba(184,150,74,0.4)';
-  document.getElementById('drop-zone').style.background='rgba(184,150,74,0.03)';
-  var file = ev.dataTransfer.files[0]; if(file) processFile(file);
+function handleDrop(e){
+  e.preventDefault();
+  var dz=document.getElementById('drop-zone');
+  dz.style.borderColor='rgba(184,150,74,0.4)'; dz.style.background='rgba(184,150,74,0.03)';
+  if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
 }
-function handleFileSelect(input){ var file=input.files[0]; if(file) processFile(file); }
-function processFile(file){
-  _selectedFile = file;
-  document.getElementById('drop-filename').textContent = '✓ '+file.name;
-  var m = file.name.match(/(\d{8})/);
-  if(m){ document.getElementById('f-date').value = m[1]; }
-  var reader = new FileReader();
-  reader.onload = function(e){ _selectedFileContent = btoa(unescape(encodeURIComponent(e.target.result))); };
-  reader.readAsText(file,'UTF-8');
+function handleFileSelect(i){ if(i.files[0]) processFile(i.files[0]); }
+function processFile(f){
+  _file=f; _fileB64=null;
+  document.getElementById('drop-filename').textContent='✓ '+f.name;
+  var m=f.name.match(/(\d{8})/);
+  if(m) document.getElementById('f-date').value=m[1];
+  var reader=new FileReader();
+  reader.onload=function(e){ _fileB64=btoa(unescape(encodeURIComponent(e.target.result))); };
+  reader.readAsText(f,'UTF-8');
 }
-
-function log(msg, ok){
-  var el = document.getElementById('publish-log'); el.style.display='block';
-  var icon = ok===true?'✅':ok===false?'❌':'›';
-  el.innerHTML += '<div style="margin:3px 0;color:'+(ok===false?'#f87171':ok===true?'#4ade80':'var(--text3)')+'">'+icon+' '+msg+'</div>';
+function refreshTokenStatus(){
+  var t=localStorage.getItem('gh_token')||'';
+  document.getElementById('token-status').textContent=t?'✓ Token 已配置':'⚠ 未配置 Token';
+}
+function resetToken(){
+  localStorage.removeItem('gh_token');
+  document.getElementById('token-status').textContent='Token 已清除';
+}
+function plog(msg,ok){
+  var el=document.getElementById('publish-log');
+  el.style.display='block';
+  var c=ok===true?'#4ade80':ok===false?'#f87171':'var(--text3)';
+  var i=ok===true?'✅':ok===false?'❌':'›';
+  el.innerHTML+='<div style="color:'+c+'">'+i+' '+msg+'</div>';
+  el.scrollTop=el.scrollHeight;
 }
 
 async function publishToGithub(){
-  GITHUB_TOKEN = localStorage.getItem('gh_token')||'';
-  if(!GITHUB_TOKEN){ var t=prompt('请输入 GitHub Personal Access Token：'); if(!t) return; localStorage.setItem('gh_token',t.trim()); GITHUB_TOKEN=t.trim(); }
-  var dateStr = document.getElementById('f-date').value.trim();
-  var title   = document.getElementById('f-title').value.trim();
-  var rarity  = document.getElementById('f-rarity').value;
-  if(!_selectedFile||!_selectedFileContent){ alert('请先选择 HTML 文件'); return; }
-  if(!dateStr){ alert('请填写日期'); return; }
-  document.getElementById('publish-log').innerHTML = '';
-  document.getElementById('publish-log').style.display = 'block';
-  document.getElementById('ed-ok').style.display = 'none';
-  document.getElementById('ed-err').style.display = 'none';
-  document.getElementById('publish-btn').disabled = true;
-  var filename = _selectedFile.name;
-  var filePath = GITHUB_PATH+'/'+filename;
-  var htmlUrl  = 'https://zeusdaily.blog/'+filename;
-  var apiUrl   = 'https://api.github.com/repos/'+GITHUB_REPO+'/contents/'+filePath;
-  var isoDate  = dateStr.slice(0,4)+'-'+dateStr.slice(4,6)+'-'+dateStr.slice(6,8);
-  if(!title) title = 'Zeus Daily · '+isoDate;
-  log('检查文件是否已存在...');
-  var sha = null;
+  var token=localStorage.getItem('gh_token')||'';
+  if(!token){
+    var t=prompt('请输入 GitHub Personal Access Token：');
+    if(!t) return;
+    token=t.trim(); localStorage.setItem('gh_token',token); refreshTokenStatus();
+  }
+  var dateStr=document.getElementById('f-date').value.trim();
+  var title  =document.getElementById('f-title').value.trim();
+  var rarity =document.getElementById('f-rarity').value;
+  if(!_file)              { toast('请先选择 HTML 文件', false); return; }
+  if(!_fileB64)           { toast('文件读取中，请稍候', false); return; }
+  if(dateStr.length!==8)  { toast('日期格式错误，请填写 YYYYMMDD', false); return; }
+
+  document.getElementById('publish-log').innerHTML='';
+  document.getElementById('publish-log').style.display='block';
+  document.getElementById('pub-ok').style.display='none';
+  document.getElementById('publish-btn').disabled=true;
+
+  var filename=_file.name;
+  var filePath=GITHUB_DIR+'/'+filename;
+  var htmlUrl ='https://zeusdaily.blog/'+filename;
+  var apiUrl  ='https://api.github.com/repos/'+GITHUB_REPO+'/contents/'+filePath;
+  var isoDate =dateStr.slice(0,4)+'-'+dateStr.slice(4,6)+'-'+dateStr.slice(6,8);
+  if(!title) title='Zeus Daily · '+isoDate;
+
+  plog('检查文件是否已存在...');
+  var sha=null;
   try{
-    var chk = await fetch(apiUrl,{headers:{Authorization:'token '+GITHUB_TOKEN,Accept:'application/vnd.github.v3+json'}});
-    if(chk.ok){ var chkj=await chk.json(); sha=chkj.sha; log('文件已存在，将覆盖'); } else { log('新文件，将创建'); }
-  }catch(e){ log('新文件，将创建'); }
-  log('正在上传 HTML 到 GitHub...');
-  var body = {message:'Zeus Daily '+filename, content:_selectedFileContent, branch:'main'};
-  if(sha) body.sha = sha;
+    var ck=await fetch(apiUrl,{headers:{Authorization:'token '+token,Accept:'application/vnd.github.v3+json'}});
+    if(ck.ok){var cj=await ck.json();sha=cj.sha;plog('文件存在，将覆盖');}
+    else plog('新文件，将创建');
+  }catch(e){plog('新文件，将创建');}
+
+  plog('上传 HTML 到 GitHub...');
+  var body={message:'Zeus Daily '+filename,content:_fileB64,branch:'main'};
+  if(sha) body.sha=sha;
   try{
-    var res = await fetch(apiUrl,{method:'PUT',headers:{Authorization:'token '+GITHUB_TOKEN,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(!res.ok){ var e2=await res.json(); log('GitHub 上传失败: '+(e2.message||res.status),false); document.getElementById('publish-btn').disabled=false; return; }
-    log('HTML 文件已上传',true);
-  }catch(e){ log('上传失败: '+e.message,false); document.getElementById('publish-btn').disabled=false; return; }
-  log('正在写入 Supabase...');
-  // vol_number is optional now
-  var volRaw = parseInt(document.getElementById('f-vol').value);
-  var insertData = {date:isoDate, title:title, html_url:htmlUrl, rarity:rarity};
-  if(!isNaN(volRaw) && volRaw > 0) insertData.vol_number = volRaw;
-  var ins = await _sb.from('editions').insert(insertData);
-  if(ins.error){ log('Supabase 写入失败: '+ins.error.message,false); document.getElementById('publish-btn').disabled=false; return; }
-  log('editions 数据已写入',true);
-  document.getElementById('ed-ok').style.display='block';
+    var res=await fetch(apiUrl,{method:'PUT',headers:{Authorization:'token '+token,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!res.ok){var ej=await res.json();plog('GitHub 上传失败: '+(ej.message||res.status),false);document.getElementById('publish-btn').disabled=false;return;}
+    plog('HTML 上传成功',true);
+  }catch(e){plog('上传异常: '+e.message,false);document.getElementById('publish-btn').disabled=false;return;}
+
+  plog('写入 Supabase editions...');
+  var ins=await db.from('editions').insert({date:isoDate,title:title,html_url:htmlUrl,rarity:rarity});
+  if(ins.error){plog('Supabase 写入失败: '+ins.error.message,false);document.getElementById('publish-btn').disabled=false;return;}
+  plog('editions 写入成功',true);
+
+  document.getElementById('pub-ok').style.display='block';
   document.getElementById('publish-btn').disabled=false;
   toast('发布成功！',true);
-  _selectedFile=null; _selectedFileContent=null;
+  _file=null;_fileB64=null;
   document.getElementById('drop-filename').textContent='';
-  document.getElementById('f-vol').value=''; document.getElementById('f-date').value=''; document.getElementById('f-title').value='';
-  setTimeout(loadEditions,1500);
+  document.getElementById('f-date').value='';
+  document.getElementById('f-title').value='';
+  setTimeout(function(){loadEditions();loadOverview();},1500);
 }
+
+/* ══════════════════════════════════════════
+   UTIL
+══════════════════════════════════════════ */
+function noData(cols){ return '<tr><td colspan="'+cols+'" style="text-align:center;color:var(--text3);padding:20px;">暂无数据</td></tr>'; }
 </script>
 </body>
 </html>
