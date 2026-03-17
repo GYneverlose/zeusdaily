@@ -3,1144 +3,738 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZEUS DAILY · THE GOD'S EYE VIEW · Mar 17, 2026</title>
+<title>Zeus Daily · 2026-03-17 · THE GOD'S EYE VIEW</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --bg:#faf8f4;--bg2:#f2ede4;--text:#2c2420;--text2:#3d3530;--text3:#6b5e55;
-  --gold:#b8964a;--gold2:#8a6d2f;--gold-light:#d4af6e;
-  --purple:#5c3d8f;--purple2:#3d2470;--purple-light:#8b69c4;
-  --cream:#f5f0e8;--border:#ddd5c5;
-}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.7;font-size:15px;}
-.zh-only{display:block;}.en-only{display:none;}
-body.en-mode .zh-only{display:none;} body.en-mode .en-only{display:block;}
-
-/* HEADER */
-.header{background:linear-gradient(135deg,#0a0515 0%,#1a0a2e 40%,#2d1b4e 100%);padding:36px 24px 28px;text-align:center;position:relative;overflow:hidden;}
-.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(176,136,249,0.08) 0%,transparent 70%);}
-.header-brand{font-family:'Playfair Display',serif;color:#b8964a;font-size:11px;letter-spacing:6px;text-transform:uppercase;margin-bottom:12px;opacity:0.85;}
-.header-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#f5f0e8;letter-spacing:3px;line-height:1.2;margin:10px 0 6px;}
-.header-sub{font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);letter-spacing:4px;opacity:0.9;}
-.header-eye{margin:18px auto 12px;display:flex;justify-content:center;}
-.date-bar{font-size:12px;color:rgba(212,175,110,0.7);letter-spacing:2px;margin-top:10px;}
-.lang-btn{position:absolute;top:16px;right:16px;background:rgba(184,150,74,0.15);border:1px solid rgba(184,150,74,0.4);color:var(--gold);font-size:11px;letter-spacing:2px;padding:5px 12px;border-radius:20px;cursor:pointer;transition:all 0.3s;}
-.lang-btn:hover{background:rgba(184,150,74,0.25);}
-
-/* DASHBOARD */
-.dashboard{background:var(--bg2);border-top:2px solid var(--gold);border-bottom:1px solid var(--border);padding:20px 20px 16px;}
-.dash-title{font-family:'Playfair Display',serif;font-size:11px;letter-spacing:4px;color:var(--gold2);text-transform:uppercase;text-align:center;margin-bottom:14px;}
-.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-@media(max-width:600px){.dash-grid{grid-template-columns:repeat(2,1fr);}}
-.dash-cell{background:var(--cream);border:1px solid var(--border);border-radius:6px;padding:10px 12px;position:relative;}
-.dash-cell-label{font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:3px;}
-.dash-cell-value{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);line-height:1.2;}
-.dash-cell-change{font-size:10px;margin-top:2px;}
-.dash-cell-change.up{color:#2d7a4e;}
-.dash-cell-change.down{color:#c0392b;}
-.dash-cell-change.neutral{color:var(--text3);}
-.dash-cell-ts{font-size:8px;color:var(--text3);margin-top:4px;letter-spacing:0.5px;}
-.dash-bar{height:2px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden;}
-.dash-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));border-radius:2px;}
-
-/* SECTIONS */
-.container{max-width:760px;margin:0 auto;padding:0 16px;}
-.section{padding:28px 0 24px;border-bottom:1px solid var(--border);}
-.section-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
-.section-eye-wrap{flex-shrink:0;}
-.section-title-block{}
-.section-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);line-height:1.2;}
-.section-name-en{font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-top:1px;}
-.news-item{margin-bottom:20px;padding-bottom:20px;border-bottom:1px dashed var(--border);}
-.news-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
-.news-item-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
-.news-tag{display:inline-block;font-size:9px;letter-spacing:2px;padding:2px 8px;border-radius:20px;text-transform:uppercase;flex-shrink:0;margin-top:3px;}
-.tag-world{background:rgba(92,61,143,0.12);color:var(--purple);}
-.tag-power{background:rgba(184,150,74,0.12);color:var(--gold2);}
-.tag-ai{background:rgba(45,110,200,0.1);color:#1a5ab0;}
-.tag-crypto{background:rgba(234,140,40,0.1);color:#b35c00;}
-.tag-gold{background:rgba(184,150,74,0.12);color:var(--gold2);}
-.tag-my{background:rgba(30,130,70,0.1);color:#1a6b3c;}
-.tag-fun{background:rgba(180,50,100,0.1);color:#8a2040;}
-.news-headline{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text);line-height:1.4;}
-.news-ts{font-size:10px;color:var(--text3);margin-top:4px;letter-spacing:0.5px;}
-.news-body{font-size:14px;color:var(--text2);line-height:1.75;}
-.god-eye-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;color:var(--purple);font-weight:600;text-transform:uppercase;margin-top:8px;}
-.god-eye-badge::before{content:'◈';color:var(--purple);}
-.info-box{background:linear-gradient(135deg,rgba(92,61,143,0.07),rgba(92,61,143,0.03));border-left:3px solid var(--purple);padding:12px 16px;border-radius:0 6px 6px 0;margin-top:12px;font-size:13px;color:var(--text2);}
-.info-box .label{font-size:10px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;margin-bottom:4px;font-weight:600;}
-
-/* TOOLTIPS */
-.term{border-bottom:1px dotted var(--gold);color:var(--text);cursor:pointer;position:relative;}
+:root{--cream:#faf8f4;--cream2:#f0ebe2;--ink:#1a1410;--ink2:#3a2e22;--gold:#b8964a;--gold2:#8a6d2f;--purple:#5c3d8f;--purple2:#3d2060;--purple3:#8b5cf6;--rule:rgba(184,150,74,.35);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--ink);font-family:'EB Garamond','Noto Serif SC',serif;max-width:820px;margin:0 auto;padding:0 18px 60px;line-height:1.75;font-size:15.5px;}
+.lang-bar{display:flex;justify-content:flex-end;gap:6px;padding:10px 0 0;}
+.lang-btn{background:none;border:1px solid var(--gold);color:var(--gold2);font-family:inherit;font-size:11px;letter-spacing:2px;padding:3px 10px;cursor:pointer;border-radius:2px;}
+.lang-btn.active{background:var(--gold);color:#fff;}
+.en-only{display:none !important;}.zh-only{display:inline;}
+body.lang-en .en-only{display:inline !important;}body.lang-en .zh-only{display:none !important;}
+.masthead{text-align:center;padding:28px 0 12px;border-bottom:1.5px solid var(--gold);}
+.masthead-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:38px;letter-spacing:8px;color:var(--ink);line-height:1;text-transform:uppercase;}
+.masthead-sub{font-size:11px;letter-spacing:5px;color:var(--gold2);text-transform:uppercase;margin-top:4px;}
+.eye-wrap{display:flex;flex-direction:column;align-items:center;margin:18px 0 10px;}
+.date-bar{text-align:center;font-size:11px;letter-spacing:3px;color:var(--gold2);text-transform:uppercase;padding:8px 0 6px;border-bottom:1px solid var(--rule);}
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:14px 0 20px;font-family:'Space Mono',monospace;}
+.dash-cell{background:var(--cream);padding:9px 10px;text-align:center;}
+.dash-label{font-size:9px;letter-spacing:2.5px;color:var(--gold2);text-transform:uppercase;display:block;}
+.dash-value{font-size:17px;font-weight:700;color:var(--ink);display:block;line-height:1.2;}
+.dash-value.up{color:#1e7b3f;}.dash-value.down{color:#8b1a1a;}
+.dash-ts{font-size:8px;color:#888;display:block;margin-top:2px;}
+.section{margin:26px 0 0;padding-bottom:20px;border-bottom:1px solid var(--rule);}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.section-title{font-family:'Playfair Display',serif;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:var(--gold2);font-weight:700;}
+.section-rule{flex:1;height:1px;background:var(--rule);}
+.philo-text{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;line-height:1.7;color:var(--ink2);border-left:3px solid var(--gold);padding:8px 0 4px 18px;}
+.news-item{padding:12px 0;border-bottom:1px dotted var(--rule);}
+.news-item:last-child{border-bottom:none;}
+.news-ts{font-size:9px;letter-spacing:2px;color:var(--gold2);text-transform:uppercase;margin-bottom:4px;font-family:'Space Mono',monospace;}
+.news-hed{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;line-height:1.35;color:var(--ink);margin-bottom:5px;}
+.news-body{color:var(--ink2);font-size:14.5px;line-height:1.72;}
+.term{border-bottom:1px dashed var(--gold);cursor:pointer;color:inherit;}
 .term:hover{color:var(--gold2);}
-.tooltip-bubble{position:fixed;z-index:9999;background:linear-gradient(135deg,#1e1030,#140c24);border:1px solid var(--gold);border-top:2px solid var(--gold);border-radius:8px;padding:12px 14px;min-width:200px;max-width:280px;box-shadow:0 4px 20px rgba(92,61,143,0.4);display:none;pointer-events:none;}
-.tooltip-bubble.active{display:block;}
-.tt-title{font-size:10px;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:6px;border-bottom:1px solid rgba(184,150,74,0.3);padding-bottom:5px;}
-.tt-body{font-size:12px;color:#e0cfc0;line-height:1.75;}
-
-/* PHILOSOPHY */
-.philo-text{font-family:'Playfair Display',serif;font-size:17px;font-style:italic;color:var(--text);line-height:1.8;text-align:center;padding:24px 20px;border:1px solid var(--border);border-radius:8px;background:var(--cream);position:relative;}
-.philo-text::before{content:'"';font-size:48px;color:var(--gold);opacity:0.3;position:absolute;top:-10px;left:12px;font-family:Georgia,serif;line-height:1;}
-.philo-attr{font-size:11px;color:var(--gold);letter-spacing:2px;text-align:center;margin-top:8px;}
-
-/* GOD'S EYE SECTION */
-.god-section{background:linear-gradient(135deg,#08041a,#100828);border-radius:10px;padding:24px;color:#e0cfc0;margin:0;}
-.god-section-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold);letter-spacing:2px;margin-bottom:6px;}
-.god-section-subtitle{font-size:10px;letter-spacing:3px;color:rgba(184,150,74,0.6);text-transform:uppercase;margin-bottom:16px;}
-.god-insight{margin-bottom:14px;padding:12px 14px;background:rgba(255,255,255,0.04);border-radius:6px;border-left:2px solid var(--purple-light);}
-.god-insight-title{font-size:11px;letter-spacing:2px;color:var(--purple-light);text-transform:uppercase;font-weight:600;margin-bottom:6px;}
-.god-insight-body{font-size:13px;line-height:1.75;color:#d4c8bc;}
-.god-tag{display:inline-block;font-size:9px;letter-spacing:1px;padding:2px 7px;border-radius:10px;margin-right:4px;margin-bottom:4px;}
-.gt-misprice{background:rgba(176,136,249,0.15);color:#b088f9;}
-.gt-predict{background:rgba(184,150,74,0.15);color:var(--gold);}
-.gt-malaysia{background:rgba(30,200,100,0.1);color:#4dab6d;}
-
-/* CONSTELLATION */
-.star-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-@media(max-width:500px){.star-grid{grid-template-columns:repeat(2,1fr);}}
-.star-card{background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;}
-.star-sign{font-size:20px;margin-bottom:4px;}
-.star-name{font-size:11px;font-weight:600;color:var(--text);letter-spacing:1px;}
-.star-desc{font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5;}
-.star-rating{color:var(--gold);font-size:10px;margin-top:3px;}
-
-/* CHECK-IN */
-.checkin-box{background:linear-gradient(135deg,#08041a,#150a2a);border-radius:10px;padding:24px;text-align:center;color:#e0cfc0;}
-.checkin-eye{margin:0 auto 14px;display:flex;justify-content:center;}
-.checkin-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);margin-bottom:6px;}
-.checkin-sub{font-size:12px;color:rgba(224,207,192,0.6);margin-bottom:16px;}
-.checkin-btn{background:linear-gradient(135deg,var(--purple2),var(--purple));color:#f5f0e8;border:none;padding:10px 28px;border-radius:24px;font-size:13px;letter-spacing:1px;cursor:pointer;font-family:'Playfair Display',serif;transition:all 0.3s;}
-.checkin-btn:hover{opacity:0.9;transform:scale(1.02);}
-.checkin-stamp{font-size:12px;color:var(--gold);margin-top:10px;min-height:18px;letter-spacing:1px;}
-
-/* FOOTER */
-.footer{background:linear-gradient(135deg,#0a0515,#1a0a2e);text-align:center;padding:28px 20px;color:rgba(212,175,110,0.6);}
-.footer-brand{font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);letter-spacing:3px;margin-bottom:6px;}
-.footer-line{font-size:10px;letter-spacing:2px;}
-
-/* DIVIDER */
-.gold-div{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0;}
-
-/* FUN ITEMS */
-.fun-item{display:flex;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px dashed var(--border);}
-.fun-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
-.fun-num{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);opacity:0.5;flex-shrink:0;line-height:1;}
-.fun-text{font-size:14px;color:var(--text2);line-height:1.6;}
-.fun-text strong{color:var(--text);}
-
-/* CANVAS MINDMAP */
-#mindmapCanvas{border-radius:8px;max-width:100%;display:block;margin:16px auto;}
-
-/* CONCLUSION */
-.conclusion{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;color:var(--text2);line-height:1.8;text-align:center;padding:20px 16px;background:var(--cream);border-radius:8px;border:1px solid var(--border);}
+.tooltip-bubble{position:fixed;z-index:9999;min-width:200px;max-width:280px;background:linear-gradient(135deg,#1e1030,#140c24);border-top:2px solid #b8964a;border-radius:8px;padding:12px 14px;box-shadow:0 4px 24px rgba(92,61,143,.45);visibility:hidden;opacity:0;pointer-events:none;transition:opacity .15s;}
+.tooltip-bubble.visible{visibility:visible;opacity:1;}
+.tooltip-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#b8964a;font-weight:700;display:block;margin-bottom:5px;}
+.tooltip-divider{height:1px;background:rgba(184,150,74,.4);margin:4px 0 7px;}
+.tooltip-body{font-size:12px;line-height:1.75;color:#e0cfc0;}
+.tooltip-arrow{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid #1e1030;}
+.voice-quote{font-family:'Playfair Display',serif;font-size:17px;font-style:italic;border-left:3px solid var(--purple);padding-left:16px;color:var(--purple2);line-height:1.55;margin:4px 0 6px;}
+.voice-attr{font-size:10px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;padding-left:16px;font-family:'Space Mono',monospace;}
+.ai-card{background:linear-gradient(135deg,rgba(92,61,143,.05),rgba(184,150,74,.04));border:1px solid rgba(92,61,143,.2);border-radius:4px;padding:12px 14px;margin-bottom:10px;}
+.ai-card-label{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;font-family:'Space Mono',monospace;}
+.ai-card-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.crypto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 14px;}
+.crypto-cell{border:1px solid var(--rule);border-radius:3px;padding:8px 10px;text-align:center;background:var(--cream2);}
+.crypto-name{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);}
+.crypto-price{font-size:16px;font-weight:700;color:var(--ink);font-family:'Playfair Display',serif;}
+.crypto-change{font-size:11px;}
+.crypto-change.up{color:#1e7b3f;}.crypto-change.down{color:#8b1a1a;}
+.metals-row{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 12px;}
+.metal-tile{flex:1;min-width:160px;border:1px solid var(--gold);border-radius:3px;padding:10px 14px;background:linear-gradient(135deg,#fdf9f0,#f5ede0);}
+.metal-nm{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);display:block;}
+.metal-pr{font-size:22px;font-weight:900;font-family:'Playfair Display',serif;color:var(--gold2);display:block;}
+.metal-sub{font-size:11px;color:#888;}
+.msia-tag{display:inline-block;background:rgba(0,100,60,.08);color:#00643c;border:1px solid rgba(0,100,60,.25);border-radius:2px;font-size:8.5px;letter-spacing:2px;padding:1px 7px;text-transform:uppercase;margin-right:6px;vertical-align:middle;}
+.gods-eye-section{background:linear-gradient(160deg,#f5f0e8,#ede5d4);border:1px solid rgba(184,150,74,.35);border-top:3px solid var(--gold);border-radius:4px;padding:22px 20px;margin:26px 0 0;color:var(--ink2);}
+.gods-eye-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.gods-eye-title-block{display:flex;flex-direction:column;}
+.gods-eye-sup{font-size:8.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold2);opacity:.8;}
+.gods-eye-main-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--ink);}
+.gods-eye-rule{flex:1;height:1px;background:rgba(184,150,74,.3);}
+.analysis-item{padding:10px 0;border-bottom:1px solid rgba(184,150,74,.2);}
+.analysis-item:last-child{border-bottom:none;}
+.analysis-label{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:5px;font-family:'Space Mono',monospace;}
+.analysis-body{font-size:14.5px;line-height:1.75;color:var(--ink2);}
+.mispricing-box{background:#fff;border:1px solid rgba(184,150,74,.25);border-left:3px solid var(--gold);border-radius:3px;padding:14px 16px;margin:12px 0;font-size:14px;color:var(--ink2);line-height:1.78;box-shadow:0 1px 6px rgba(184,150,74,.08);}
+.mispricing-tag{display:inline-block;font-size:8px;letter-spacing:2px;text-transform:uppercase;background:rgba(184,150,74,.12);color:var(--gold2);border:1px solid rgba(184,150,74,.3);padding:2px 9px;border-radius:2px;margin-bottom:8px;}
+.mindmap-wrap{width:100%;max-width:640px;margin:18px auto 8px;border-radius:6px;overflow:hidden;border:1px solid rgba(184,150,74,.3);}
+#mindmapCanvas{width:100%;height:auto;display:block;}
+.fun-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px dotted var(--rule);font-size:14px;align-items:flex-start;}
+.fun-item:last-child{border-bottom:none;}
+.fun-num{color:var(--gold);font-family:'Playfair Display',serif;font-weight:700;font-size:13px;flex-shrink:0;min-width:20px;padding-top:1px;}
+.horo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.horo-cell{background:var(--cream2);border:1px solid var(--rule);border-radius:3px;padding:9px 10px;text-align:center;}
+.horo-sign{font-size:13px;margin-bottom:3px;}
+.horo-name{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);display:block;margin-bottom:4px;}
+.horo-text{font-size:11.5px;color:var(--ink2);line-height:1.5;}
+.closing-text{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;line-height:1.75;color:var(--ink2);text-align:center;padding:16px 0;}
+.checkin-section{display:flex;flex-direction:column;align-items:center;padding:20px 0 6px;border-top:1px solid var(--rule);margin-top:24px;}
+.checkin-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:10px;font-family:'Space Mono',monospace;}
+.stamp-btn{width:68px;height:68px;border-radius:50%;border:1.8px solid var(--purple3);background:var(--cream);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;position:relative;overflow:visible;gap:2px;}
+.stamp-btn:hover{box-shadow:0 0 16px rgba(139,92,246,.45);transform:scale(1.06);}
+.stamp-btn:hover .stamp-bolt{filter:drop-shadow(0 0 5px #c084fc);}
+.stamp-btn.stamped{border-color:var(--purple);cursor:default;background:rgba(92,61,143,.06);transform:scale(1)!important;}
+.stamp-bolt{transition:filter .2s;}
+.stamp-text{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold2);text-align:center;line-height:1;}
+.stamp-time{font-size:10px;color:var(--gold);font-family:'Space Mono',monospace;margin-top:7px;letter-spacing:.8px;min-height:16px;text-align:center;}
+.stamp-inner{display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;}
+.footer{text-align:center;padding:20px 0 8px;font-size:10px;letter-spacing:2.5px;color:#aaa;text-transform:uppercase;font-family:'Space Mono',monospace;}
+.footer a{color:var(--gold2);text-decoration:none;}
+@media(max-width:520px){.dashboard{grid-template-columns:repeat(2,1fr);}.crypto-grid{grid-template-columns:repeat(2,1fr);}.horo-grid{grid-template-columns:repeat(2,1fr);}.masthead-brand{font-size:26px;letter-spacing:4px;}}
 </style>
 </head>
 <body>
-
-<!-- Tooltip bubble -->
-<div class="tooltip-bubble" id="ttBubble">
-  <div class="tt-title" id="ttTitle"></div>
-  <div class="tt-body" id="ttBody"></div>
+<div id="tooltipBubble" class="tooltip-bubble"><span class="tooltip-title" id="tipTitle"></span><div class="tooltip-divider"></div><div class="tooltip-body" id="tipBody"></div><div class="tooltip-arrow" id="tipArrow"></div></div>
+<div class="lang-bar"><button class="lang-btn active" id="btnZh" onclick="setLang('zh')">&#x4E2D;</button><button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button></div>
+<div class="masthead"><div class="masthead-brand">ZEUS DAILY</div><div class="masthead-sub">THE GOD'S EYE VIEW</div></div>
+<div class="eye-wrap">
+<svg id="mainEye" viewBox="0 0 120 52" width="200" height="87" xmlns="http://www.w3.org/2000/svg" style="cursor:none;">
+<defs>
+<filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="irisGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<radialGradient id="nebulaGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient>
+<radialGradient id="pupilGrad" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#1a0a2e"/><stop offset="100%" stop-color="#0a0515"/></radialGradient>
+<clipPath id="eyeClip"><path id="eyeClipPath" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath>
+</defs>
+<path id="eyeOutline" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4" filter="url(#goldGlow)"/>
+<circle id="iris" cx="60" cy="26" r="14" fill="url(#nebulaGrad)" filter="url(#irisGlow)" clip-path="url(#eyeClip)"/>
+<circle id="pupil" cx="60" cy="26" r="6.5" fill="url(#pupilGrad)" clip-path="url(#eyeClip)"/>
+<circle cx="64" cy="22" r="2.2" fill="rgba(255,255,255,0.45)" clip-path="url(#eyeClip)"/>
+<circle cx="56" cy="28" r="1" fill="rgba(176,136,249,0.4)" clip-path="url(#eyeClip)"/>
+<circle cx="30" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+<circle cx="60" cy="8" r="0.7" fill="#b8964a" opacity="0.5"/>
+<circle cx="90" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+</svg>
 </div>
+<div class="date-bar"><span class="zh-only">2026&#x5E74;3&#x6708;17&#x65E5; &#xB7; &#x661F;&#x671F;&#x4E00; &#xB7; &#x5723;&#x5E15;&#x7279;&#x91CC;&#x514B;&#x8282; &#xB7; &#x4F0A;&#x6717;&#x6218;&#x4E89;&#x7B2C;18&#x5929;</span><span class="en-only">Monday, March 17, 2026 &#xB7; St. Patrick's Day &#xB7; Iran War Day 18</span></div>
 
-<!-- HEADER -->
-<div class="header">
-  <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
-  <div class="header-brand">A Zeus 9 Publication · zeus9.ai</div>
-  <!-- Main Eye -->
-  <div class="header-eye">
-    <svg id="mainEye" viewBox="0 0 120 52" width="200" height="87" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="1.5" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <filter id="irisGlow" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="2" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <radialGradient id="nebulaGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#b088f9"/>
-          <stop offset="52%" stop-color="#6b4c9a"/>
-          <stop offset="100%" stop-color="#2d1b4e"/>
-        </radialGradient>
-        <radialGradient id="pupilGrad" cx="40%" cy="35%" r="60%">
-          <stop offset="0%" stop-color="#1a0a2e"/>
-          <stop offset="100%" stop-color="#0a0515"/>
-        </radialGradient>
-        <clipPath id="eyeClip">
-          <path id="eyeClipPath" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/>
-        </clipPath>
-      </defs>
-      <!-- Background fill -->
-      <path id="eyeOutline" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4" filter="url(#goldGlow)"/>
-      <!-- Iris -->
-      <g clip-path="url(#eyeClip)">
-        <circle id="mainIris" cx="60" cy="26" r="14" fill="url(#nebulaGrad)" filter="url(#irisGlow)"/>
-        <!-- Pupil -->
-        <circle id="mainPupil" cx="60" cy="26" r="6.5" fill="url(#pupilGrad)"/>
-        <!-- Highlights -->
-        <circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/>
-        <circle cx="56" cy="28" r="1" fill="rgba(176,136,249,0.4)"/>
-      </g>
-      <!-- Lash dots -->
-      <circle cx="30" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
-      <circle cx="60" cy="8" r="0.7" fill="#b8964a" opacity="0.5"/>
-      <circle cx="90" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
-    </svg>
-  </div>
-  <div class="header-title zh-only">ZEUS DAILY</div>
-  <div class="header-title en-only">ZEUS DAILY</div>
-  <div class="header-sub zh-only">上帝之眼 · 每日洞察</div>
-  <div class="header-sub en-only">THE GOD'S EYE VIEW</div>
-  <div class="date-bar zh-only">2026年3月17日 · 星期二 · 斋月第27夜 · 圣帕特里克节</div>
-  <div class="date-bar en-only">Tuesday, March 17, 2026 · Laylat al-Qadr · St. Patrick's Day</div>
-</div>
-
-<!-- FINANCIAL DASHBOARD -->
 <div class="dashboard">
-  <div class="container">
-    <div class="dash-title zh-only">实时市场 · LIVE MARKETS</div>
-    <div class="dash-title en-only">LIVE MARKETS</div>
-    <div class="dash-grid">
-      <!-- BTC -->
-      <div class="dash-cell">
-        <div class="dash-cell-label">BTC</div>
-        <div class="dash-cell-value">$73,589</div>
-        <div class="dash-cell-change up">▲ +2.97%</div>
-        <div class="dash-bar"><div class="dash-bar-fill" style="width:72%"></div></div>
-        <div class="dash-cell-ts">Mar 17·01:29 UTC · Yahoo Finance</div>
-      </div>
-      <!-- ETH -->
-      <div class="dash-cell">
-        <div class="dash-cell-label">ETH</div>
-        <div class="dash-cell-value">$2,279</div>
-        <div class="dash-cell-change up">▲ +7.52%</div>
-        <div class="dash-bar"><div class="dash-bar-fill" style="width:58%"></div></div>
-        <div class="dash-cell-ts">Mar 17·实时 UTC · CoinMarketCap</div>
-      </div>
-      <!-- Gold -->
-      <div class="dash-cell">
-        <div class="dash-cell-label">黄金 / Gold</div>
-        <div class="dash-cell-value">$5,002</div>
-        <div class="dash-cell-change down">▼ -1.2%</div>
-        <div class="dash-bar"><div class="dash-bar-fill" style="width:88%;background:linear-gradient(90deg,#b8964a,#d4af6e)"></div></div>
-        <div class="dash-cell-ts">Mar 17·UTC · LiteFinance</div>
-      </div>
-      <!-- Silver -->
-      <div class="dash-cell">
-        <div class="dash-cell-label">白银 / Silver</div>
-        <div class="dash-cell-value">$81.42</div>
-        <div class="dash-cell-change neutral">→ +0.17%</div>
-        <div class="dash-bar"><div class="dash-bar-fill" style="width:78%;background:linear-gradient(90deg,#9e9e9e,#c8c8c8)"></div></div>
-        <div class="dash-cell-ts">Mar 16·23:31 UTC · JM Bullion</div>
-      </div>
-      <!-- WTI Oil -->
-      <div class="dash-cell">
-        <div class="dash-cell-label">WTI 原油</div>
-        <div class="dash-cell-value">$93.92</div>
-        <div class="dash-cell-change up">▲ +0.87%</div>
-        <div class="dash-bar"><div class="dash-bar-fill" style="width:65%;background:linear-gradient(90deg,#4a3010,#8a6030)"></div></div>
-        <div class="dash-cell-ts">Mar 16·UTC · Investing.com</div>
-      </div>
-      <!-- USD/MYR -->
-      <div class="dash-cell">
-        <div class="dash-cell-label">USD/MYR</div>
-        <div class="dash-cell-value">3.937</div>
-        <div class="dash-cell-change down">▼ 令吉走弱</div>
-        <div class="dash-bar"><div class="dash-bar-fill" style="width:45%;background:linear-gradient(90deg,#1a6b3c,#2d9a5a)"></div></div>
-        <div class="dash-cell-ts">Mar 17·UTC · Investing.com</div>
-      </div>
-      <!-- KLCI -->
-      <div class="dash-cell">
-        <div class="dash-cell-label">KLCI 综指</div>
-        <div class="dash-cell-value">1,696</div>
-        <div class="dash-cell-change down">▼ -0.13%</div>
-        <div class="dash-bar"><div class="dash-bar-fill" style="width:52%;background:linear-gradient(90deg,#1a3d6b,#2a5a9a)"></div></div>
-        <div class="dash-cell-ts">Mar 17·08:59 UTC · 收盘 Yahoo Finance</div>
-      </div>
-      <!-- Fear & Greed -->
-      <div class="dash-cell">
-        <div class="dash-cell-label">恐贪指数</div>
-        <div class="dash-cell-value">23</div>
-        <div class="dash-cell-change down">极度恐慌</div>
-        <div class="dash-bar"><div class="dash-bar-fill" style="width:23%;background:linear-gradient(90deg,#8b1a1a,#c0392b)"></div></div>
-        <div class="dash-cell-ts">Mar 17·UTC · feargreedmeter.com</div>
-      </div>
-    </div>
-  </div>
+<div class="dash-cell"><span class="dash-label">Gold</span><span class="dash-value">$5,018</span><span class="dash-ts">Mar 17 &#xB7; LiteFinance /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Silver</span><span class="dash-value up">$80.31</span><span class="dash-ts">Mar 17 &#xB7; +0.12% /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Bitcoin</span><span class="dash-value up">$74,339</span><span class="dash-ts">Mar 17 &#xB7; CoinGecko</span></div>
+<div class="dash-cell"><span class="dash-label">Ethereum</span><span class="dash-value up">$2,345</span><span class="dash-ts">Mar 17 &#xB7; +3.6% &#xB7; CoinGecko</span></div>
+<div class="dash-cell"><span class="dash-label">WTI Oil</span><span class="dash-value up">$93.50</span><span class="dash-ts">Mar 17 &#xB7; CNBC /bbl</span></div>
+<div class="dash-cell"><span class="dash-label">Brent</span><span class="dash-value up">$106</span><span class="dash-ts">Mar 17 &#xB7; Al Jazeera /bbl</span></div>
+<div class="dash-cell"><span class="dash-label">USD/MYR</span><span class="dash-value">3.9245</span><span class="dash-ts">Mar 17 &#xB7; Xe.com</span></div>
+<div class="dash-cell"><span class="dash-label"><span class="zh-only">&#x6050;&#x614C;&#x8D2A;&#x5A6A;</span><span class="en-only">Fear&amp;Greed</span></span><span class="dash-value down">23</span><span class="dash-ts">Mar 17 &#xB7; <span class="zh-only">&#x6781;&#x5EA6;&#x6050;&#x614C;</span><span class="en-only">Extreme Fear</span></span></div>
+<div class="dash-cell"><span class="dash-label">S&amp;P 500</span><span class="dash-value up">6,739</span><span class="dash-ts">Mar 17 &#xB7; +0.60%</span></div>
+<div class="dash-cell"><span class="dash-label">Platinum</span><span class="dash-value">$2,087</span><span class="dash-ts">Mar 17 /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Palladium</span><span class="dash-value">$1,538</span><span class="dash-ts">Mar 17 /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Dow</span><span class="dash-value up">47,188</span><span class="dash-ts">Mar 17 &#xB7; +0.52%</span></div>
 </div>
 
-<div class="gold-div"></div>
-
-<!-- MAIN CONTENT -->
-<div class="container">
-
-<!-- ① 哲思寄语 -->
+<!-- &#x54F2;&#x601D; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye1" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <clipPath id="eyeClip1"><path id="eyeClipPath1" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath>
-          <radialGradient id="ng1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient>
-        </defs>
-        <path id="eyeOutline1" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip1)">
-          <circle id="iris1" cx="60" cy="26" r="14" fill="url(#ng1)"/>
-          <circle id="pupil1" cx="60" cy="26" r="6.5" fill="#0a0515"/>
-          <circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/>
-        </g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">哲思寄语</div>
-      <div class="section-name en-only">Philosophical Reflection</div>
-      <div class="section-name-en">REFLECTIONS</div>
-    </div>
-  </div>
-  <div class="philo-text zh-only">
-    战争第18天，霍尔木兹还没开。美联储今天开会，明天给结论。黄金在$5,000挂着，没有方向。今夜是斋月第27夜。世界同时在等三件事的答案，而没有人知道哪一件会先来。<em>不确定性本身，也是一种信息。</em>
-  </div>
-  <div class="philo-text en-only">
-    Day 18 of the war. Hormuz still closed. The Fed meets today, answers tomorrow. Gold sits at $5,000, directionless. Tonight is Laylat al-Qadr. The world is waiting on three things at once, and no one knows which arrives first. <em>Uncertainty, too, is a form of signal.</em>
-  </div>
-  <div class="philo-attr zh-only">— ZEUS DAILY 上帝之眼 · 2026.03.17</div>
-  <div class="philo-attr en-only">— THE GOD'S EYE VIEW · 2026.03.17</div>
+<div class="section-header"><div class="section-title"><span class="zh-only">&#x54F2;&#x601D;</span><span class="en-only">REFLECTION</span></div><div class="section-rule"></div></div>
+<p class="philo-text zh-only">&#x4ECA;&#x5929;&#x662F;<span class="term" data-zh="&#x5723;&#x5E15;&#x7279;&#x91CC;&#x514B;&#x8282;&#xFF1A;&#x6BCF;&#x5E74;3&#x6708;17&#x65E5;&#xFF0C;&#x7EAA;&#x5FF5;&#x7231;&#x5C14;&#x5170;&#x5B88;&#x62A4;&#x5723;&#x4EBA;&#x5723;&#x5E15;&#x7279;&#x91CC;&#x514B;&#xFF0C;&#x5168;&#x7403;&#x4EE5;&#x7A7F;&#x7EFF;&#x8863;&#x3001;&#x996E;&#x7231;&#x5C14;&#x5170;&#x9152;&#x5E86;&#x795D;&#x3002;" data-en="St. Patrick's Day: March 17 annually, honoring Ireland's patron saint; celebrated worldwide with green attire and Irish festivities.">&#x5723;&#x5E15;&#x7279;&#x91CC;&#x514B;&#x8282;</span>&#x2014;&#x2014;&#x5168;&#x4E16;&#x754C;&#x7A7F;&#x7EFF;&#x8863;&#x4E3E;&#x676F;&#xFF0C;&#x800C;&#x6CE2;&#x65AF;&#x6E7E;&#x70E7;&#x7740;&#x9ED1;&#x70DF;&#x3002;<br>&#x6218;&#x4E89;&#x7B2C;18&#x5929;&#xFF1A;&#x7B2C;&#x4E00;&#x5468;&#x662F;&#x9707;&#x60CA;&#xFF0C;&#x7B2C;&#x4E8C;&#x5468;&#x662F;&#x9002;&#x5E94;&#xFF0C;&#x7B2C;&#x4E09;&#x5468;&#x2014;&#x2014;&#x771F;&#x6B63;&#x7684;&#x5F62;&#x6001;&#x5F00;&#x59CB;&#x663E;&#x9732;&#x3002;<br><span style="font-size:14px;font-style:normal;color:#888;display:block;margin-top:8px;">&#x2014;&#x2014;&#x8282;&#x65E5;&#x662F;&#x96C6;&#x4F53;&#x8BB0;&#x5FC6;&#x7684;&#x4EEA;&#x5F0F;&#xFF0C;&#x6218;&#x4E89;&#x662F;&#x96C6;&#x4F53;&#x5931;&#x5FC6;&#x7684;&#x8FC7;&#x7A0B;&#x3002;&#x5F53;&#x4E24;&#x8005;&#x540C;&#x65F6;&#x53D1;&#x751F;&#xFF0C;&#x6211;&#x4EEC;&#x770B;&#x89C1;&#x7684;&#x662F;&#x6587;&#x660E;&#x7684;&#x88C2;&#x7F1D;&#x3002;</span></p>
+<p class="philo-text en-only">Today is St. Patrick's Day &#x2014; the world wears green and raises glasses while the Persian Gulf burns black.<br>Day 18 of the war: the first week was shock, the second was adjustment, the third is when the real shape reveals itself.<br><span style="font-size:14px;font-style:normal;color:#888;display:block;margin-top:8px;">&#x2014; Holidays are rituals of collective memory; wars are processes of collective amnesia. When both happen at once, we see civilization's fractures.</span></p>
 </div>
 
-<!-- ② 世界要闻 -->
+<!-- &#x4E16;&#x754C;&#x8981;&#x95FB; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye2" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip2"><path id="eyeClipPath2" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline2" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip2)"><circle id="iris2" cx="60" cy="26" r="14" fill="url(#ng2)"/><circle id="pupil2" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">世界要闻</div>
-      <div class="section-name en-only">World News</div>
-      <div class="section-name-en">GLOBAL AFFAIRS</div>
-    </div>
-  </div>
+<div class="section-header"><div class="section-title"><span class="zh-only">&#x4E16;&#x754C;&#x8981;&#x95FB;</span><span class="en-only">WORLD NEWS</span></div><div class="section-rule"></div></div>
 
-  <!-- News 1: Iran War -->
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-world">战争</span>
-      <div>
-        <div class="news-headline zh-only">美伊战争第18天：<span class="term" data-title="霍尔木兹海峡" data-body="连接波斯湾与阿拉伯海的战略咽喉水道，全球约20%的石油经此输送。美伊冲突爆发后，伊朗宣布封锁该海峡，引发全球能源危机。">霍尔木兹</span>仍未解封，特朗普寻求多国舰队护航</div>
-        <div class="news-headline en-only">Day 18 of US-Iran War: Hormuz Remains Closed, Trump Seeks Multinational Fleet</div>
-        <div class="news-ts">Mar 16–17, 2026 · CNN / Al Jazeera</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      美以对伊朗的军事行动进入第18天，<span class="term" data-title="伊朗伊斯兰革命卫队 (IRGC)" data-body="伊朗精锐军事力量，负责守卫伊斯兰革命成果，直接向最高领袖负责。在本轮冲突中承担主要军事反击任务。">伊革卫</span>持续向以色列及波湾国家发射导弹与无人机。伊朗自称已发射逾700枚导弹、3600架无人机。<span class="term" data-title="迪拜国际机场" data-body="全球最繁忙的国际机场之一，2025年旅客吞吐量逾9000万人次。本次因无人机事件曾短暂停飞，阿联酋航空已基本恢复。">迪拜机场</span>因无人机袭击引发火灾而短暂停飞，此后恢复有限运营。死亡人数已超2300人，其中伊朗方面逾1300人。<span class="term" data-title="伊朗外长" data-body="伊朗现任外交部长，代表新最高领袖莫吉塔巴·哈梅内伊（阿里·哈梅内伊之子，于2026年2月28日父亲遇刺后继位）开展外交斡旋。">伊朗外长</span>表示德黑兰愿与希望安全通行的国家展开谈判，为潜在外交突破留下空间。<span class="term" data-title="北约 (NATO)" data-body="北大西洋公约组织，由32个民主国家组成的军事联盟。特朗普警告若盟友不参与霍尔木兹护航行动，北约将面临"非常糟糕的未来"。">北约</span>盟友迄今态度暧昧：澳大利亚和日本表示不会派舰，英国称将与盟友配合但未承诺具体行动，欧盟外长会议则否决了扩大地区海军行动的提案。
-    </div>
-    <div class="news-body en-only">
-      US-Israeli strikes on Iran entered Day 18, with the <span class="term" data-title="IRGC" data-body="Iran's Islamic Revolutionary Guard Corps — the elite military force reporting directly to the Supreme Leader. Established after the 1979 revolution, it operates independently from Iran's regular army and is the primary executor of retaliatory strikes.">IRGC</span> continuing missile and drone barrages. Iran claims to have fired over 700 missiles and 3,600 drones at US and Israeli targets. <span class="term" data-title="Dubai International Airport" data-body="One of the world's busiest airports with 90M+ annual passengers, a key hub for Emirates airline. Briefly suspended flights after a drone-related fire incident nearby. Limited operations resumed the same day.">Dubai Airport</span> briefly suspended flights following a drone incident. The death toll exceeded 2,300, with Iran accounting for over 1,300. <span class="term" data-title="Iran's Foreign Minister" data-body="Iran's top diplomat, representing new Supreme Leader Mojtaba Khamenei (who succeeded his father after the Feb 28 assassination). Signaled willingness for dialogue with countries seeking safe Strait of Hormuz access.">Iran's FM</span> signaled openness to talks — a potential diplomatic opening. <span class="term" data-title="NATO" data-body="North Atlantic Treaty Organization — a 32-nation military alliance. Trump warned NATO faces a 'very bad future' if allies refuse to send warships to secure the Strait of Hormuz.">NATO</span> allies remain noncommittal; Australia and Japan explicitly declined to send ships.
-    </div>
-  </div>
-
-  <!-- News 2: FOMC -->
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-world">金融</span>
-      <div>
-        <div class="news-headline zh-only"><span class="term" data-title="美联储 FOMC" data-body="联邦公开市场委员会，美联储负责制定货币政策的核心机构，由12名投票成员组成，每年召开8次会议决定联邦基金利率。当前利率区间为3.50%–3.75%。">美联储</span>3月17–18日会议召开：油价冲击下首次正式回应，市场押注按兵不动</div>
-        <div class="news-headline en-only">Fed March 17-18 FOMC Meeting Opens: Markets Price 92% Hold Amid Oil Shock</div>
-        <div class="news-ts">Mar 17, 2026 · Kiplinger / MEXC</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      美联储本年度第二次<span class="term" data-title="FOMC会议" data-body="联邦公开市场委员会例行政策会议，每次为期两天，第二天下午2点（美东时间）发布利率决议，随后举行新闻发布会。本次会议是季度性会议，附带经济预测与点阵图。">FOMC会议</span>今日在华盛顿开幕，明日（3月18日）公布决议。<span class="term" data-title="CME FedWatch" data-body="芝加哥商品交易所集团推出的工具，追踪市场对美联储利率决议的概率预测，基于联邦基金期货计算。">CME FedWatch</span>显示92%以上概率维持利率于3.50%–3.75%不变。此次会议的特殊性在于：这是美联储首次在<span class="term" data-title="核心PCE" data-body="个人消费支出价格指数（剔除食品和能源），美联储首选通胀指标。当前约为2.8%，仍高于2%目标。">核心PCE</span>仍高于目标的背景下，同时面对伊朗油价冲击与特朗普15%全球关税的双重压力，必须在季度<span class="term" data-title="点阵图 (Dot Plot)" data-body="美联储FOMC成员对未来利率路径的个人预测汇总图表，季度性会议时发布。被市场视为前瞻指引的核心参考，对资产价格影响往往大于利率决议本身。">点阵图</span>中给出正式回应。<span class="term" data-title="杰罗姆·鲍威尔" data-body="现任美联储主席，任期将于2026年5月15日届满。特朗普提名凯文·沃什接任。鲍威尔曾对白宫压力发出强硬声明，坚持独立制定货币政策。">鲍威尔</span>任期将于今年5月届满，一举一动均受到市场放大解读。
-    </div>
-    <div class="news-body en-only">
-      The <span class="term" data-title="Federal Reserve (FOMC)" data-body="The Federal Open Market Committee — the Fed's monetary policy body with 12 voting members. Meets 8 times a year to set the federal funds rate. Current target range: 3.50%–3.75%, held since January 2026.">Fed's</span> second meeting of 2026 opened today, with the rate decision due March 18 at 2:00 PM ET. <span class="term" data-title="CME FedWatch" data-body="A tool by CME Group tracking market-implied probabilities for Fed rate decisions, derived from federal funds futures contracts. Currently showing 92%+ probability of a hold.">Markets</span> price a 92%+ probability of a hold at 3.50%–3.75%. This is the first meeting where the Fed must formally address the <span class="term" data-title="Iran Oil Shock" data-body="The Strait of Hormuz closure since Feb 28 has removed ~7 million bpd of crude from global markets. WTI briefly hit $119/bbl. The shock is expected to lift US headline CPI to 2.6–2.9% in March.">Iran oil shock</span> and Trump's global tariffs in its quarterly <span class="term" data-title="Dot Plot" data-body="The Fed's Summary of Economic Projections — a chart showing where each of the 19 FOMC members individually expects interest rates to go over the next several years. Markets often react more to the dot plot than the rate decision itself.">dot plot</span> projections. Chair <span class="term" data-title="Jerome Powell" data-body="Current Federal Reserve Chair, whose term expires May 15, 2026. Trump has nominated Kevin Warsh as his replacement. Powell has resisted White House pressure to cut rates, citing above-target inflation.">Powell</span>'s term expires May 15, amplifying every forward signal from this meeting.
-    </div>
-  </div>
-
-  <!-- News 3: US-China Trade -->
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-world">外交</span>
-      <div>
-        <div class="news-headline zh-only">贝森特与中方副总理贸易谈判，<span class="term" data-title="特习峰会" data-body="预计于2026年3月下旬举行的特朗普与习近平双边峰会，中方尚未正式确认。若成行，将是两国领导人继2025年后的再次面对面会晤。">特习峰会</span>三月底或成行</div>
-        <div class="news-headline en-only">Bessent Holds Trade Talks with China VP, Trump-Xi Summit Eyed for Late March</div>
-        <div class="news-ts">Mar 16, 2026 · WORLD Radio / Reuters</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      <span class="term" data-title="斯科特·贝森特" data-body="美国现任财政部长，前对冲基金经理，特朗普第二任期内负责主导对华经贸政策谈判。">贝森特</span>周日与中国负责贸易事务的国务院副总理举行会谈，并定于周一继续磋商。白宫表示，此轮谈判旨在为三月底的<span class="term" data-title="特朗普" data-body="美国第47任总统，2025年1月重返白宫开始第二任期。现主导美以对伊朗的军事行动，同时推进与中国的贸易谈判。">特朗普</span>-习近平峰会铺路。中方尚未正式确认出席。在中东战争与全球关税并行的背景下，美中若能达成贸易谅解，将成为当前最具影响力的积极宏观信号。
-    </div>
-    <div class="news-body en-only">
-      <span class="term" data-title="Scott Bessent" data-body="US Treasury Secretary, former hedge fund manager who ran Key Square Group. The lead architect of Trump's trade negotiation strategy with China in the second term.">Treasury Secretary Bessent</span> met with China's <span class="term" data-title="China's Vice Premier (Trade)" data-body="The Chinese State Council official responsible for economic and trade affairs, the primary counterpart for US-China trade negotiations. These talks mark the highest-level economic contact between the two nations in months.">Vice Premier</span> Sunday and Monday, with the White House hoping to set the stage for a <span class="term" data-title="Trump-Xi Summit" data-body="An anticipated bilateral meeting between Trump and Chinese leader Xi Jinping, targeted for late March 2026. China has not officially confirmed. If held, it would be their first face-to-face since 2025.">Trump-Xi summit</span> in late March. China has not officially confirmed. A US-China trade understanding amid the <span class="term" data-title="15% Global Tariff" data-body="Trump's across-the-board 15% tariff applied to imports from most trading partners, enacted in early 2026. A major source of global inflation pressure and trade friction alongside the Middle East oil shock.">Middle East war and tariff pressures</span> would represent the most significant positive macro signal of the quarter.
-    </div>
-  </div>
+<div class="news-item">
+<div class="news-ts">Mar 16, 2026 &#xB7; NPR / Reuters</div>
+<div class="news-hed zh-only">&#x4F0A;&#x6717;&#x6218;&#x4E89;&#x7B2C;18&#x5929;&#xFF1A;&#x7279;&#x6717;&#x666E;&#x8981;&#x6C42;<span class="term" data-zh="&#x5317;&#x7EA6;&#xFF08;NATO&#xFF09;&#xFF1A;&#x5317;&#x5927;&#x897F;&#x6D0B;&#x516C;&#x7EA6;&#x7EC4;&#x7EC7;&#xFF0C;&#x7531;&#x7F8E;&#x56FD;&#x3001;&#x52A0;&#x62FF;&#x5927;&#x548C;&#x6B27;&#x6D32;30&#x56FD;&#x7EC4;&#x6210;&#x7684;&#x519B;&#x4E8B;&#x8054;&#x76DF;&#x3002;&#x7279;&#x6717;&#x666E;&#x8981;&#x6C42;&#x5176;&#x6210;&#x5458;&#x56FD;&#x6D3E;&#x519B;&#x8230;&#x5DE1;&#x903B;&#x970D;&#x5C14;&#x6728;&#x5179;&#x6D77;&#x5CE1;&#xFF0C;&#x906D;&#x5168;&#x9762;&#x62D2;&#x7EDD;&#x3002;" data-en="NATO: North Atlantic Treaty Organization, a 31-member military alliance. Trump demanded member states send warships to patrol the Strait of Hormuz; all refused.">&#x5317;&#x7EA6;</span>&#x4E0E;&#x4E2D;&#x56FD;&#x6D3E;&#x519B;&#x8230;&#x5DE1;&#x903B;&#x970D;&#x5C14;&#x6728;&#x5179;&#x2014;&#x2014;&#x5168;&#x90E8;&#x62D2;&#x7EDD;</div>
+<div class="news-hed en-only">Iran War Day 18: Trump Demands NATO &amp; China Police Strait of Hormuz &#x2014; All Refuse</div>
+<div class="news-body zh-only">&#x7279;&#x6717;&#x666E;&#x547C;&#x5401;&#x82F1;&#x3001;&#x6CD5;&#x3001;&#x5FB7;&#x3001;&#x65E5;&#x3001;&#x97E9;&#x3001;&#x4E2D;&#x56FD;&#x6D3E;&#x9063;&#x519B;&#x8230;&#x5DE1;&#x903B;<span class="term" data-zh="&#x970D;&#x5C14;&#x6728;&#x5179;&#x6D77;&#x5CE1;&#xFF1A;&#x4F0A;&#x6717;&#x4E0E;&#x963F;&#x66FC;&#x4E4B;&#x95F4;&#x7684;&#x8981;&#x9053;&#xFF0C;&#x5168;&#x7403;&#x7EA6;20%&#x77F3;&#x6CB9;&#x9014;&#x7ECF;&#x6B64;&#x5730;&#xFF0C;&#x76EE;&#x524D;&#x5B9E;&#x9645;&#x5C01;&#x9501;&#x3002;" data-en="Strait of Hormuz: Waterway between Iran and Oman through which ~20% of global oil transits; currently under effective blockade.">&#x970D;&#x5C14;&#x6728;&#x5179;&#x6D77;&#x5CE1;</span>&#x3002;&#x82F1;&#x56FD;&#x9996;&#x76F8;<span class="term" data-zh="&#x65AF;&#x5854;&#x9ED8;&#xFF08;Keir Starmer&#xFF09;&#xFF1A;&#x82F1;&#x56FD;&#x5DE5;&#x515A;&#x9996;&#x76F8;&#xFF0C;2024&#x5E74;&#x5C31;&#x4EFB;&#xFF0C;&#x62D2;&#x7EDD;&#x4ECB;&#x5165;&#x4F0A;&#x6717;&#x6218;&#x4E89;&#xFF0C;&#x79F0;&#x2018;&#x6211;&#x4EEC;&#x4E0D;&#x4F1A;&#x88AB;&#x62D6;&#x5165;&#x66F4;&#x5E7F;&#x6CDB;&#x7684;&#x6218;&#x4E89;&#x2019;&#x3002;" data-en="Keir Starmer: UK Labour Prime Minister since 2024; rejected involvement, stating 'we will not be drawn into the wider war.'">&#x65AF;&#x5854;&#x9ED8;</span>&#x62D2;&#x7EDD;&#xFF1A;&#x201C;&#x6211;&#x4EEC;&#x4E0D;&#x4F1A;&#x88AB;&#x62D6;&#x5165;&#x66F4;&#x5E7F;&#x6CDB;&#x7684;&#x6218;&#x4E89;&#x3002;&#x201D;&#x5FB7;&#x56FD;&#x8868;&#x793A;&#x201C;&#x53EA;&#x8981;&#x6218;&#x4E89;&#x7EE7;&#x7EED;&#xFF0C;&#x5C31;&#x4E0D;&#x4F1A;&#x53C2;&#x4E0E;&#x201D;&#x3002;&#x610F;&#x5927;&#x5229;&#x3001;&#x897F;&#x73ED;&#x7259;&#x5747;&#x5A49;&#x62D2;&#x3002;&#x4E2D;&#x56FD;&#x547C;&#x5401;&#x5404;&#x65B9;&#x964D;&#x6E29;&#x4F46;&#x672A;&#x505A;&#x4EFB;&#x4F55;&#x627F;&#x8BFA;&#x3002;&#x7F8E;&#x56FD;&#x5728;&#x8FD9;&#x573A;&#x6218;&#x4E89;&#x4E2D;&#x5DF2;&#x5B8C;&#x5168;<strong>&#x5916;&#x4EA4;&#x5B64;&#x7ACB;</strong>&#x2014;&#x2014;&#x6CA1;&#x6709;&#x8054;&#x76DF;&#xFF0C;&#x6CA1;&#x6709;&#x5408;&#x6CD5;&#x6027;&#x62A4;&#x76FE;&#x3002;</div>
+<div class="news-body en-only">Trump called on the UK, France, Germany, Japan, South Korea, and China to send warships to patrol the Strait of Hormuz. UK PM Starmer rejected: &#x201C;We will not be drawn into the wider war.&#x201D; Germany: &#x201C;As long as this war continues, there will be no involvement.&#x201D; Italy and Spain declined. China called for de-escalation but made no commitment. The US is now <strong>diplomatically isolated</strong> in this war &#x2014; no coalition, no legitimacy shield.</div>
 </div>
 
-<!-- ③ 权力之声 -->
+<div class="news-item">
+<div class="news-ts">Mar 15, 2026 &#xB7; CNBC</div>
+<div class="news-hed zh-only">&#x7279;&#x6717;&#x666E;&#x8003;&#x8651;&#x6253;&#x51FB;<span class="term" data-zh="&#x54C8;&#x5C14;&#x514B;&#x5C9B;&#xFF08;Kharg Island&#xFF09;&#xFF1A;&#x4F4D;&#x4E8E;&#x6CE2;&#x65AF;&#x6E7E;&#x5317;&#x90E8;&#x7684;&#x4F0A;&#x6717;&#x5C9B;&#x5C7F;&#xFF0C;&#x5904;&#x7406;&#x4F0A;&#x6717;90%&#x7684;&#x77F3;&#x6CB9;&#x51FA;&#x53E3;&#xFF0C;&#x662F;&#x4F0A;&#x6717;&#x7ECF;&#x6D4E;&#x547D;&#x8109;&#x3002;&#x82E5;&#x88AB;&#x6253;&#x51FB;&#xFF0C;&#x6CB9;&#x4EF7;&#x9884;&#x8BA1;&#x98D9;&#x5347;&#x81F3;$130-150/&#x6876;&#x3002;" data-en="Kharg Island: Iranian island in the northern Persian Gulf handling 90% of Iran's oil exports. A strike would spike oil to an estimated $130-150/barrel.">&#x54C8;&#x5C14;&#x514B;&#x5C9B;</span>&#x2014;&#x2014;&#x4F0A;&#x6717;&#x77F3;&#x6CB9;&#x547D;&#x8109;</div>
+<div class="news-hed en-only">Trump Considering Strikes on Kharg Island &#x2014; Iran's Critical Oil Hub</div>
+<div class="news-body zh-only">&#x7F8E;&#x56FD;&#x9A7B;&#x8054;&#x5408;&#x56FD;&#x5927;&#x4F7F;<span class="term" data-zh="&#x6C83;&#x5C14;&#x5179;&#xFF08;Mike Waltz&#xFF09;&#xFF1A;&#x7F8E;&#x56FD;&#x9A7B;&#x8054;&#x5408;&#x56FD;&#x5927;&#x4F7F;&#xFF0C;&#x786E;&#x8BA4;&#x7279;&#x6717;&#x666E;&#x6B63;&#x5728;&#x2018;&#x6743;&#x8861;&#x5404;&#x79CD;&#x9009;&#x9879;&#x2019;&#xFF0C;&#x5305;&#x62EC;&#x6253;&#x51FB;&#x54C8;&#x5C14;&#x514B;&#x5C9B;&#x3002;" data-en="Mike Waltz: US Ambassador to the UN; confirmed Trump is 'weighing options' including strikes on Kharg Island.">&#x6C83;&#x5C14;&#x5179;</span>&#x786E;&#x8BA4;&#x7279;&#x6717;&#x666E;&#x201C;&#x6B63;&#x5728;&#x6743;&#x8861;&#x5404;&#x79CD;&#x9009;&#x9879;&#x201D;&#x3002;&#x54C8;&#x5C14;&#x514B;&#x5C9B;&#x5904;&#x7406;&#x4F0A;&#x6717;90%&#x7684;&#x77F3;&#x6CB9;&#x51FA;&#x53E3;&#x3002;&#x6253;&#x51FB;&#x8BE5;&#x5C9B;&#x5C06;&#x5BFC;&#x81F4;&#x6CB9;&#x4EF7;&#x98D9;&#x5347;&#x81F3;$130-150/&#x6876;&#x2014;&#x2014;&#x8FD9;&#x5C06;&#x662F;&#x4ECE;&#x201C;&#x519B;&#x4E8B;&#x884C;&#x52A8;&#x201D;&#x5347;&#x7EA7;&#x4E3A;&#x201C;&#x7ECF;&#x6D4E;&#x6218;&#x4E89;&#x201D;&#x7684;&#x5206;&#x6C34;&#x5CAD;&#xFF0C;&#x76F4;&#x63A5;&#x51B2;&#x51FB;&#x5168;&#x7403;&#x901A;&#x80C0;&#x3002;</div>
+<div class="news-body en-only">UN Ambassador Waltz confirmed Trump is &#x201C;weighing options&#x201D; including strikes on Kharg Island, which handles 90% of Iran's oil exports. A strike would spike oil to $130-150/barrel &#x2014; a watershed escalation from military operations to economic warfare with direct global inflationary impact.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 16, 2026 &#xB7; Al Jazeera</div>
+<div class="news-hed zh-only">&#x7F8E;&#x519B;&#x5BA3;&#x79F0;&#x5DF2;&#x6467;&#x6BC1;&#x4F0A;&#x6717;70%&#x5BFC;&#x5F39;&#x53D1;&#x5C04;&#x67B6;&#x2014;&#x2014;&#x4F46;&#x4F0A;&#x6717;&#x4ECD;&#x5728;&#x6301;&#x7EED;&#x5F00;&#x706B;</div>
+<div class="news-hed en-only">US Claims 70% of Iran's Missile Launchers Destroyed &#x2014; But Iran Still Firing</div>
+<div class="news-body zh-only">&#x4F0A;&#x6717;&#x5DF2;&#x9002;&#x5E94;<span class="term" data-zh="&#x673A;&#x52A8;&#x53D1;&#x5C04;&#x67B6;&#xFF08;TEL&#xFF09;&#xFF1A;&#x53EF;&#x79FB;&#x52A8;&#x7684;&#x5BFC;&#x5F39;&#x53D1;&#x5C04;&#x8F66;&#x8F86;&#xFF0C;&#x4F0A;&#x6717;&#x5C06;&#x56FA;&#x5B9A;&#x53D1;&#x5C04;&#x9635;&#x5730;&#x8F6C;&#x4E3A;&#x5206;&#x6563;&#x5F0F;&#x673A;&#x52A8;&#x53D1;&#x5C04;&#xFF0C;&#x5927;&#x5E45;&#x63D0;&#x9AD8;&#x5B58;&#x6D3B;&#x7387;&#x3002;" data-en="TEL (Transporter Erector Launcher): Mobile missile launch vehicles. Iran shifted from fixed sites to dispersed mobile launchers, greatly improving survivability.">&#x673A;&#x52A8;&#x53D1;&#x5C04;&#x67B6;</span>&#x4E0E;&#x53BB;&#x4E2D;&#x5FC3;&#x5316;&#x6307;&#x6325;&#x4F53;&#x7CFB;&#x3002;&#x7B2C;1&#x5929;&#xFF1A;167&#x679A;&#x5BFC;&#x5F39;+541&#x67B6;&#x65E0;&#x4EBA;&#x673A;&#x3002;&#x7B2C;15&#x5929;&#xFF1A;4&#x679A;&#x5BFC;&#x5F39;+6&#x67B6;&#x65E0;&#x4EBA;&#x673A;&#x3002;&#x4F0A;&#x6717;&#x5DF2;&#x8F6C;&#x5165;&#x201C;&#x9A9A;&#x6270;&#x6027;&#x5F00;&#x706B;&#x201D;&#x6A21;&#x5F0F;&#xFF0C;&#x4EE5;<span class="term" data-zh="&#x6C99;&#x5E0C;&#x5FB7;-136&#xFF08;Shahed 136&#xFF09;&#xFF1A;&#x4F0A;&#x6717;&#x5EC9;&#x4EF7;&#x81EA;&#x6740;&#x5F0F;&#x65E0;&#x4EBA;&#x673A;&#xFF0C;&#x5355;&#x4EF7;&#x7EA6;$20,000-50,000&#xFF0C;&#x53EF;&#x5927;&#x89C4;&#x6A21;&#x91CF;&#x4EA7;&#xFF0C;&#x96BE;&#x4EE5;&#x6709;&#x6548;&#x62E6;&#x622A;&#x3002;" data-en="Shahed 136: Iranian low-cost kamikaze drone, ~$20K-50K each, mass-produced, difficult to intercept cost-effectively.">&#x6C99;&#x5E0C;&#x5FB7;-136&#x65E0;&#x4EBA;&#x673A;</span>&#x6253;&#x51FB;&#x6C11;&#x7528;&#x57FA;&#x7840;&#x8BBE;&#x65BD;&#x2014;&#x2014;&#x4FBF;&#x5B9C;&#x3001;&#x91CF;&#x4EA7;&#x3001;&#x96BE;&#x4EE5;&#x963B;&#x6B62;&#x3002;</div>
+<div class="news-body en-only">Iran adapted to mobile launchers and decentralized command. Day 1: 167 missiles + 541 drones. Day 15: 4 missiles + 6 drones. Iran switched to &#x201C;harassment fire&#x201D; mode targeting civilian infrastructure with Shahed 136 drones &#x2014; cheap, mass-produced, and hard to stop cost-effectively.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 16, 2026 &#xB7; Al Jazeera / NPR</div>
+<div class="news-hed zh-only">&#x5168;&#x7403;&#x7ECF;&#x6D4E;&#x51B2;&#x51FB;&#x6CE2;&#xFF1A;&#x5E03;&#x4F26;&#x7279;$106&#xFF0C;&#x4E9A;&#x6D32;&#x5E02;&#x573A;&#x91CD;&#x521B;&#xFF0C;&#x591A;&#x56FD;&#x542F;&#x52A8;&#x7D27;&#x6025;&#x8282;&#x80FD;</div>
+<div class="news-hed en-only">Global Economic Toll: Brent $106, Asian Markets Worst Hit, Emergency Energy Rationing</div>
+<div class="news-body zh-only"><span class="term" data-zh="&#x65E5;&#x7ECF;&#x6307;&#x6570;&#xFF08;Nikkei 225&#xFF09;&#xFF1A;&#x65E5;&#x672C;&#x4E1C;&#x4EAC;&#x8BC1;&#x4EA4;&#x6240;&#x57FA;&#x51C6;&#x6307;&#x6570;&#xFF0C;&#x56E0;&#x80FD;&#x6E90;&#x5371;&#x673A;&#x4E0E;&#x51FA;&#x53E3;&#x524D;&#x666F;&#x6076;&#x5316;&#x8DCC;11%&#x3002;" data-en="Nikkei 225: Tokyo Stock Exchange benchmark; down 11% on energy crisis and export outlook deterioration.">&#x65E5;&#x7ECF;</span>-11%&#xFF0C;&#x6C99;&#x7279;<span class="term" data-zh="&#x5854;&#x8FBE;&#x7EF4;&#x6307;&#x6570;&#xFF08;Tadawul&#xFF09;&#xFF1A;&#x6C99;&#x7279;&#x963F;&#x62C9;&#x4F2F;&#x8BC1;&#x5238;&#x4EA4;&#x6613;&#x6240;&#x57FA;&#x51C6;&#x6307;&#x6570;&#xFF0C;&#x53D7;&#x4F0A;&#x6717;&#x65E0;&#x4EBA;&#x673A;&#x88AD;&#x51FB;&#x4E0E;&#x533A;&#x57DF;&#x4E0D;&#x7A33;&#x5B9A;&#x5F71;&#x54CD;&#x8DCC;9.6%&#x3002;" data-en="Tadawul: Saudi Arabia's main stock index; down 9.6% from Iranian drone attacks and regional instability.">&#x5854;&#x8FBE;&#x7EF4;</span>-9.6%&#xFF0C;&#x5370;&#x5EA6;Nifty50 -7%&#xFF0C;&#x7EBD;&#x4EA4;&#x6240;-6%&#x3002;&#x5DF4;&#x57FA;&#x65AF;&#x5766;&#x3001;&#x83F2;&#x5F8B;&#x5BBE;&#x3001;&#x6CF0;&#x56FD;&#x5DF2;&#x5B9E;&#x65BD;<strong>&#x56DB;&#x5929;&#x5DE5;&#x4F5C;&#x5468;</strong>&#x3002;&#x7F05;&#x7538;&#x5B9E;&#x884C;&#x5355;&#x53CC;&#x53F7;&#x9650;&#x884C;&#x3002;<span class="term" data-zh="&#x822A;&#x7A7A;&#x7164;&#x6CB9;&#xFF08;Jet Fuel&#xFF09;&#xFF1A;&#x822A;&#x7A7A;&#x71C3;&#x6CB9;&#x4EF7;&#x683C;&#x4ECE;&#x6218;&#x524D;$85-90/&#x6876;&#x98D9;&#x5347;&#x81F3;$150-200/&#x6876;&#xFF0C;&#x591A;&#x5BB6;&#x822A;&#x7A7A;&#x516C;&#x53F8;&#x53D6;&#x6D88;&#x822A;&#x73ED;&#x3002;" data-en="Jet Fuel: Prices surged from pre-war $85-90/barrel to $150-200/barrel; multiple airlines cancelling flights.">&#x822A;&#x7A7A;&#x7164;&#x6CB9;</span>&#x4ECE;$85-90&#x98D9;&#x81F3;$150-200/&#x6876;&#x3002;<span class="term" data-zh="&#x56FD;&#x9645;&#x8D27;&#x5E01;&#x57FA;&#x91D1;&#x7EC4;&#x7EC7;&#xFF08;IMF&#xFF09;&#xFF1A;&#x603B;&#x90E8;&#x534E;&#x76DB;&#x987F;&#x7684;&#x56FD;&#x9645;&#x91D1;&#x878D;&#x673A;&#x6784;&#xFF0C;&#x8B66;&#x544A;&#x5168;&#x7403;&#x9762;&#x4E34;&#x6EDE;&#x80C0;&#x98CE;&#x9669;&#x3002;" data-en="IMF: International Monetary Fund, headquartered in Washington; warning of global stagflation risk.">IMF</span>&#x8B66;&#x544A;&#x5168;&#x7403;&#x9762;&#x4E34;&#x6EDE;&#x80C0;&#x98CE;&#x9669;&#x3002;</div>
+<div class="news-body en-only">Nikkei -11%, Saudi Tadawul -9.6%, Nifty50 -7%, NYSE -6%. Pakistan, Philippines, Thailand implementing 4-day work weeks. Myanmar: cars drive on alternate days only. Jet fuel surged from $85-90 to $150-200/barrel. The IMF warns of stagflation risk as the energy crisis deepens across Asia and emerging markets.</div>
+</div>
+</div>
+
+<!-- &#x91D1;&#x878D;&#x677F;&#x5757; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye3" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip3"><path id="eyeClipPath3" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline3" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip3)"><circle id="iris3" cx="60" cy="26" r="14" fill="url(#ng3)"/><circle id="pupil3" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">权力之声</div>
-      <div class="section-name en-only">Power & Politics</div>
-      <div class="section-name-en">TRUMP · MUSK · POWER</div>
-    </div>
-  </div>
+<div class="section-header"><div class="section-title"><span class="zh-only">&#x91D1;&#x878D;&#x5E02;&#x573A;</span><span class="en-only">FINANCE &amp; MARKETS</span></div><div class="section-rule"></div></div>
 
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-power">特朗普</span>
-      <div>
-        <div class="news-headline zh-only">特朗普：宣称已100%摧毁伊朗军事能力，呼吁中法日韩英派舰护航霍尔木兹</div>
-        <div class="news-headline en-only">Trump Claims 100% Destruction of Iran's Military, Calls on Allies to Send Warships to Hormuz</div>
-        <div class="news-ts">Mar 14–16, 2026 · Fox Business / CNN</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      特朗普通过<span class="term" data-title="Truth Social" data-body="特朗普于2022年创立的社交媒体平台，作为他发布政策声明、回应批评的主要阵地，替代了他此前被封禁的Twitter账户。">Truth Social</span>宣称美军已"100%摧毁伊朗军事实力"，同时警告仍存在无人机与水雷威胁，将继续轰炸霍尔木兹沿岸并射击伊朗船只。他公开呼吁中、法、日、韩、英派遣军舰协助确保海峡安全，并警告若北约盟友袖手旁观，同盟将面临"非常糟糕的未来"。批评方面，<span class="term" data-title="美国民主党" data-body="美国两大主要政党之一，目前为国会少数党。持续批评特朗普的伊朗战争为"选择性战争"，质疑其无明确退出战略。">民主党</span>持续将此定性为"无退出战略的选择性战争"。独立分析人士指出，<span class="term" data-title="DOGE（政府效率部）" data-body="特朗普第二任期成立的政府效率咨询机构，由马斯克主导。已于2025年5月完成主要使命，但其大规模裁员被批评严重削弱了美国政府在本次伊朗战争中的应急响应能力。">DOGE</span>大规模削减国务院及反伊朗反恐部门人员，正在制约美国的危机响应效率。
-    </div>
-    <div class="news-body en-only">
-      Trump declared on <span class="term" data-title="Truth Social" data-body="Trump's social media platform, launched in 2022 as an alternative to Twitter after his ban. Used as his primary channel for policy announcements, war updates, and political attacks.">Truth Social</span> that US forces have "destroyed 100%" of Iran's military capability while warning of remaining drone and mine threats. He called on China, France, Japan, South Korea, and the UK to send warships to secure <span class="term" data-title="Strait of Hormuz" data-body="The narrow waterway between Iran and the Arabian Peninsula, through which ~20% of the world's oil normally flows. Closed by Iran since Feb 28, triggering a global energy crisis and oil price surge above $100/bbl.">Hormuz</span>, warning <span class="term" data-title="NATO" data-body="North Atlantic Treaty Organization — 32-nation military alliance. Trump warned it faces a 'very bad future' if allies don't contribute to Hormuz security. Most European members and Japan have declined so far.">NATO</span> faces a "very bad" future if allies fail to assist. Critics note <span class="term" data-title="DOGE" data-body="Department of Government Efficiency — the advisory body led by Musk in Trump's second term. Its sweeping 2025 cuts to the State Department and counterterrorism units are now being blamed for hampering US crisis response in the Iran war.">DOGE</span>-era cuts to the <span class="term" data-title="State Department" data-body="The US federal agency responsible for foreign affairs and protecting Americans abroad. Lost over 25% of foreign service officers to DOGE-era cuts in 2025, with its counter-Iran terrorism office eliminated entirely.">State Department</span> are hampering crisis response capacity.
-    </div>
-  </div>
-
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-power">马斯克</span>
-      <div>
-        <div class="news-headline zh-only"><span class="term" data-title="特斯拉 Terafab 计划" data-body="马斯克于2026年3月15日宣布的特斯拉半导体自研制造项目，旨在打造用于自动驾驶和AI推理的专属AI芯片工厂，预计7天内正式启动。被视为特斯拉向Nvidia等芯片巨头发起的直接挑战。">Tesla Terafab</span>倒计时启动：马斯克进军AI芯片制造，特朗普拟借其开通伊朗星链</div>
-        <div class="news-headline en-only">Tesla Terafab Countdown Begins; Trump Eyes Musk's Starlink for Iran</div>
-        <div class="news-ts">Mar 15–16, 2026 · Fox Business / opentools.ai</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      <span class="term" data-title="埃隆·马斯克" data-body="特斯拉、SpaceX、xAI及X（前推特）的CEO，全球最富有的人之一。曾在特朗普第二任期内主导DOGE，2025年5月退出后双方关系经历波折，后于2025年底重新修好。">马斯克</span>3月15日宣布Tesla Terafab计划正式进入倒计时，即将启动特斯拉自研AI芯片的大规模制造。与此同时，特朗普称将致电马斯克，讨论通过<span class="term" data-title="Starlink（星链）" data-body="SpaceX旗下低轨道卫星互联网服务，覆盖全球。目前正被讨论用于为伊朗因政府封锁而断网的民众提供互联网接入，此前已向委内瑞拉免费提供服务。">Starlink</span>为被封锁互联网的伊朗民众提供网络接入的可行性，马斯克的记者已在德黑兰与使用Starlink的用户取得联系。特朗普-马斯克关系自2025年9月柯克纪念仪式后逐步修复，目前被视为盟友而非对手。
-    </div>
-    <div class="news-body en-only">
-      <span class="term" data-title="Elon Musk" data-body="CEO of Tesla, SpaceX, xAI, and X (formerly Twitter). Played a major role in Trump's second term via DOGE before stepping back in May 2025. Reconciled with Trump by late 2025 and remains a key ally.">Musk</span> launched a countdown for <span class="term" data-title="Tesla Terafab" data-body="Tesla's ambitious in-house AI chip manufacturing project announced March 15, 2026. Aims to produce custom AI chips for autonomous driving and inference at scale — a direct challenge to Nvidia's dominance in the AI chip market.">Tesla's Terafab</span> semiconductor project on March 15, signaling Tesla's push into AI chip manufacturing. Separately, Trump told reporters he plans to call Musk about providing <span class="term" data-title="Starlink" data-body="SpaceX's low-orbit satellite internet service with global coverage. Being discussed for deployment in Iran to provide internet access to civilians amid the government-imposed blackout. Previously offered free service to Venezuela.">Starlink</span> connectivity to Iranians amid government-imposed internet blackouts — Fox News reporters have already connected with Starlink users inside Tehran. The Trump-Musk relationship has steadily repaired since their <span class="term" data-title="September 2025 Reconciliation" data-body="Trump and Musk publicly reconciled at Charlie Kirk's memorial service in Glendale, Arizona, after months of public feuding over the 'One Big Beautiful Bill.' They were later seen together at a White House dinner in November.">September 2025 reconciliation</span>.
-    </div>
-  </div>
+<div class="news-item">
+<div class="news-ts">Mar 16, 2026 &#xB7; NPR</div>
+<div class="news-hed zh-only">&#x6CB9;&#x4EF7;&#xFF1A;WTI $93.50&#xFF0C;&#x5E03;&#x4F26;&#x7279;$106&#x2014;&#x2014;&#x6C7D;&#x6CB9;&#x4E00;&#x4E2A;&#x6708;&#x6DA8;80&#x7F8E;&#x5206;</div>
+<div class="news-hed en-only">Oil Prices: WTI $93.50, Brent $106 &#x2014; Gasoline Up 80 Cents in a Month</div>
+<div class="news-body zh-only">&#x6218;&#x524D;&#x6CB9;&#x4EF7;&#x7EA6;$70/&#x6876;&#x3002;<span class="term" data-zh="IEA&#xFF08;&#x56FD;&#x9645;&#x80FD;&#x6E90;&#x7F72;&#xFF09;&#xFF1A;&#x603B;&#x90E8;&#x5DF4;&#x9ECE;&#x7684;&#x653F;&#x5E9C;&#x95F4;&#x80FD;&#x6E90;&#x673A;&#x6784;&#xFF0C;&#x5DF2;&#x4ECE;&#x7F8E;&#x56FD;&#x6218;&#x7565;&#x77F3;&#x6CB9;&#x50A8;&#x5907;&#x91CA;&#x653E;1.72&#x4EBF;&#x6876;&#xFF0C;&#x4F46;&#x5BF9;&#x6CB9;&#x4EF7;&#x6BEB;&#x65E0;&#x538B;&#x5236;&#x6548;&#x679C;&#x3002;" data-en="IEA: International Energy Agency; released 172M barrels from the US Strategic Petroleum Reserve with no visible price effect.">IEA</span>&#x5DF2;&#x4ECE;&#x7F8E;&#x56FD;&#x6218;&#x7565;&#x77F3;&#x6CB9;&#x50A8;&#x5907;&#x91CA;&#x653E;1.72&#x4EBF;&#x6876;&#x2014;&#x2014;&#x6BEB;&#x65E0;&#x6548;&#x679C;&#x3002;&#x67F4;&#x6CB9;&#x5DF2;&#x63A5;&#x8FD1;$5/&#x52A0;&#x4ED1;&#xFF08;&#x6708;&#x6DA8;$1.34&#xFF09;&#xFF0C;&#x76F4;&#x63A5;&#x51B2;&#x51FB;&#x519C;&#x4E1A;&#x4E0E;&#x8FD0;&#x8F93;&#x6210;&#x672C;&#xFF0C;&#x4F20;&#x5BFC;&#x81F3;&#x98DF;&#x54C1;&#x4EF7;&#x683C;&#x3002;&#x666E;&#x901A;&#x7F8E;&#x56FD;&#x5BB6;&#x5EAD;&#x6BCF;&#x6708;&#x591A;&#x4ED8;&#x7EA6;$200&#x71C3;&#x6CB9;&#x8D39;&#x3002;</div>
+<div class="news-body en-only">Pre-war oil was ~$70/barrel. The IEA released 172M barrels from the US Strategic Petroleum Reserve &#x2014; with zero price effect. Diesel is nearly $5/gallon (+$1.34/month), hitting farms and transport directly, flowing through to food prices. The average American household is paying ~$200 more per month in fuel.</div>
 </div>
 
-<!-- ④ AI前沿 -->
+<div class="metals-row">
+<div class="metal-tile"><span class="metal-nm">Gold &#xB7; &#x9EC4;&#x91D1;</span><span class="metal-pr">$5,018</span><span class="metal-sub">/oz &#xB7; Mar 17 &#xB7; LiteFinance &#xB7; <span class="zh-only">&#x65E5;&#x5185;4,995-5,029</span><span class="en-only">Range 4,995-5,029</span></span></div>
+<div class="metal-tile"><span class="metal-nm">Silver &#xB7; &#x767D;&#x94F6;</span><span class="metal-pr">$80.31</span><span class="metal-sub">/oz &#xB7; Mar 17 &#xB7; +0.12% &#xB7; <span class="zh-only">&#x5E74;&#x6DA8;137%</span><span class="en-only">+137% YoY</span></span></div>
+<div class="metal-tile"><span class="metal-nm">Gold/Silver Ratio</span><span class="metal-pr">62.5:1</span><span class="metal-sub">Mar 17</span></div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 16, 2026 &#xB7; Fortune / LiteFinance</div>
+<div class="news-hed zh-only">&#x9EC4;&#x91D1;&#x6301;&#x7A33;$5,018&#xFF0C;&#x8DDD;&#x5386;&#x53F2;&#x9AD8;$5,595&#x56DE;&#x843D;&#x2014;&#x2014;&#x5927;&#x884C;&#x7EF4;&#x6301;$6,000+&#x76EE;&#x6807;</div>
+<div class="news-hed en-only">Gold Holds $5,018, Down from ATH $5,595 &#x2014; Banks Maintain $6,000+ Targets</div>
+<div class="news-body zh-only">&#x65E5;&#x5185;&#x6CE2;&#x5E45;$4,995&#x2013;$5,029&#x3002;&#x767D;&#x94F6;$80.31&#x2014;&#x2014;&#x540C;&#x6BD4;&#x4E0A;&#x6DA8;137%&#x3002;<span class="term" data-zh="&#x94C2;&#x91D1;&#xFF08;Platinum&#xFF09;&#xFF1A;&#x8D35;&#x91D1;&#x5C5E;&#xFF0C;&#x5DE5;&#x4E1A;&#x4E0E;&#x6295;&#x8D44;&#x53CC;&#x91CD;&#x7528;&#x9014;&#xFF0C;&#x5F53;&#x524D;$2,087/&#x76CE;&#x53F8;&#x3002;" data-en="Platinum: Precious metal with industrial and investment uses, currently at $2,087/oz.">&#x94C2;&#x91D1;</span>$2,087&#xFF0C;<span class="term" data-zh="&#x94AF;&#x91D1;&#xFF08;Palladium&#xFF09;&#xFF1A;&#x7A00;&#x6709;&#x8D35;&#x91D1;&#x5C5E;&#xFF0C;&#x4E3B;&#x8981;&#x7528;&#x4E8E;&#x6C7D;&#x8F66;&#x50AC;&#x5316;&#x8F6C;&#x6362;&#x5668;&#xFF0C;&#x5F53;&#x524D;$1,538/&#x76CE;&#x53F8;&#x3002;" data-en="Palladium: Rare precious metal primarily used in automotive catalytic converters, currently at $1,538/oz.">&#x94AF;&#x91D1;</span>$1,538&#x3002;&#x91D1;&#x94F6;&#x6BD4;62.5:1&#xFF0C;&#x53CD;&#x6620;&#x5DE5;&#x4E1A;&#x524D;&#x666F;&#x60B2;&#x89C2;&#x4E0E;&#x907F;&#x9669;&#x9700;&#x6C42;&#x7684;&#x62C9;&#x952F;&#x3002;&#x4E3B;&#x8981;&#x5927;&#x884C;&#x4ECD;&#x7EF4;&#x6301;$6,000+&#x76EE;&#x6807;&#x4EF7;&#x3002;</div>
+<div class="news-body en-only">Daily range: $4,995&#x2013;$5,029. Silver at $80.31 &#x2014; up 137% year-over-year. Platinum $2,087, Palladium $1,538. Gold/Silver ratio at 62.5:1, reflecting the tug-of-war between industrial pessimism and safe-haven demand. Major banks maintain $6,000+ gold targets.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 17, 2026 &#xB7; CNN / FearGreedMeter</div>
+<div class="news-hed zh-only"><span class="term" data-zh="&#x6807;&#x666E;500&#xFF08;S&amp;P 500&#xFF09;&#xFF1A;&#x7F8E;&#x56FD;&#x6700;&#x5177;&#x4EE3;&#x8868;&#x6027;&#x7684;500&#x53EA;&#x5927;&#x578B;&#x80A1;&#x6307;&#x6570;&#xFF0C;&#x53CD;&#x5F39;&#x81F3;6,739&#x70B9;&#x3002;" data-en="S&amp;P 500: The benchmark US large-cap stock index, rebounding to 6,739.">&#x6807;&#x666E;500</span>&#x53CD;&#x5F39;&#x81F3;6,739&#xFF08;+0.60%&#xFF09;&#xFF0C;&#x6050;&#x614C;&#x8D2A;&#x5A6A;&#x6307;&#x6570;23&#x2014;&#x2014;&#x6781;&#x5EA6;&#x6050;&#x614C;</div>
+<div class="news-hed en-only">S&amp;P 500 Rebounds to 6,739 (+0.60%), Fear &amp; Greed at 23 (Extreme Fear)</div>
+<div class="news-body zh-only"><span class="term" data-zh="&#x9053;&#x743C;&#x65AF;&#xFF08;Dow Jones&#xFF09;&#xFF1A;&#x7F8E;&#x56FD;30&#x53EA;&#x84DD;&#x7B79;&#x80A1;&#x6307;&#x6570;&#xFF0C;47,188&#x70B9;&#xFF08;+0.52%&#xFF09;&#x3002;" data-en="Dow Jones: US 30 blue-chip stock index, at 47,188 (+0.52%).">&#x9053;&#x6307;</span>47,188&#xFF08;+0.52%&#xFF09;&#xFF0C;<span class="term" data-zh="&#x7EB3;&#x65AF;&#x8FBE;&#x514B;&#xFF08;Nasdaq&#xFF09;&#xFF1A;&#x4EE5;&#x79D1;&#x6280;&#x80A1;&#x4E3A;&#x4E3B;&#x7684;&#x7F8E;&#x56FD;&#x80A1;&#x7968;&#x6307;&#x6570;&#xFF0C;22,520&#x70B9;&#xFF08;+0.65%&#xFF09;&#x3002;" data-en="Nasdaq: US tech-heavy stock index, at 22,520 (+0.65%).">&#x7EB3;&#x6307;</span>22,520&#xFF08;+0.65%&#xFF09;&#x3002;&#x6050;&#x614C;&#x8D2A;&#x5A6A;&#x6307;&#x6570;3&#x6708;&#x521D;&#x66FE;&#x8DCC;&#x81F3;&#x4E2A;&#x4F4D;&#x6570;&#x2014;&#x2014;&#x662F;4&#x6708;&#x4EE5;&#x6765;&#x9996;&#x6B21;&#x3002;&#x5E02;&#x573A;&#x60C5;&#x7EEA;&#x6781;&#x5EA6;&#x6050;&#x614C;&#xFF0C;&#x4F46;&#x6307;&#x6570;&#x5728;&#x5C0F;&#x5E45;&#x53CD;&#x5F39;&#xFF0C;&#x6697;&#x793A;&#x673A;&#x6784;&#x8D44;&#x91D1;&#x6B63;&#x5728;&#x5165;&#x573A;&#x3002;</div>
+<div class="news-body en-only">Dow 47,188 (+0.52%), Nasdaq 22,520 (+0.65%). Fear &amp; Greed hit single digits earlier in March &#x2014; first time since April. Market sentiment is at extreme fear levels, yet indices are bouncing, suggesting institutional capital is entering.</div>
+</div>
+</div>
+
+<!-- &#x5E01;&#x5708; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye4" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip4"><path id="eyeClipPath4" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng4" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline4" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip4)"><circle id="iris4" cx="60" cy="26" r="14" fill="url(#ng4)"/><circle id="pupil4" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">AI前沿</div>
-      <div class="section-name en-only">AI Frontier</div>
-      <div class="section-name-en">ARTIFICIAL INTELLIGENCE</div>
-    </div>
-  </div>
+<div class="section-header"><div class="section-title"><span class="zh-only">&#x5E01;&#x5708;</span><span class="en-only">CRYPTO</span></div><div class="section-rule"></div></div>
 
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-ai">基准测试</span>
-      <div>
-        <div class="news-headline zh-only">近千名专家联手打造"人类最后考卷"：2500道题让顶尖AI全面失手</div>
-        <div class="news-headline en-only">"Humanity's Last Exam": 1,000 Experts Create 2,500-Question AI Benchmark Frontier Models Fail</div>
-        <div class="news-ts">Mar 13, 2026 · ScienceDaily</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      随着<span class="term" data-title="大型语言模型 (LLM)" data-body="基于海量文本训练的AI语言系统，如GPT、Claude、Gemini等。在传统学术测试中已接近满分，促使研究者开发更难的评估工具。">大型语言模型</span>在传统学术测试中屡屡接近满分，近千名领域专家联合创建了"人类最后考卷"（Humanity's Last Exam）——一份涵盖2500道超专业题目的测试集，从深度数学到冷门历史无所不包。初步结果显示，包括<span class="term" data-title="Google Gemini 3.1 Pro" data-body="谷歌2026年2月19日发布的最新旗舰AI模型，在16项主要基准测试中领先13项，输入价格$2/百万tokens。">Gemini 3.1 Pro</span>、<span class="term" data-title="Claude Opus 4.6" data-body="Anthropic于2026年2月5日发布的旗舰大模型，引入努力控制（effort controls）和上下文压缩功能，已集成至微软PowerPoint和Excel。">Claude Opus 4.6</span>在内的前沿模型均无法达到人类专家水平，再次证明AI通用智能的上限仍有空间。
-    </div>
-    <div class="news-body en-only">
-      Nearly 1,000 domain experts created <span class="term" data-title="Humanity's Last Exam" data-body="A 2,500-question benchmark covering highly specialized topics — from advanced mathematics to obscure historical events — designed to test AI at the frontier of human expertise. Initial results show even top models fail to match human experts.">Humanity's Last Exam</span>, a challenge covering topics where <span class="term" data-title="Large Language Models (LLMs)" data-body="AI systems trained on vast text data, such as GPT, Claude, and Gemini. While they now score near-perfectly on traditional academic tests, this new benchmark was specifically designed to find their limits.">LLMs</span> had been approaching perfect scores on traditional tests. Initial results show frontier models including <span class="term" data-title="Google Gemini 3.1 Pro" data-body="Google's latest flagship AI model, released February 19, 2026. Leads 13 of 16 major benchmarks. Priced at $2 per million input tokens — frontier performance at commodity pricing.">Gemini 3.1 Pro</span> and <span class="term" data-title="Claude Opus 4.6" data-body="Anthropic's flagship model released February 5, 2026. Introduced effort controls (low/medium/high/max) and context compaction for longer tasks. Integrated into Microsoft PowerPoint and Excel.">Claude Opus 4.6</span> cannot reach human expert-level performance, demonstrating that the ceiling for AI general intelligence remains meaningfully above current capabilities.
-    </div>
-  </div>
+<div class="crypto-grid">
+<div class="crypto-cell"><div class="crypto-name">BTC</div><div class="crypto-price">$74,339</div><div class="crypto-change up">+1.6%</div></div>
+<div class="crypto-cell"><div class="crypto-name">ETH</div><div class="crypto-price">$2,345</div><div class="crypto-change up">+3.6%</div></div>
+<div class="crypto-cell"><div class="crypto-name">SOL</div><div class="crypto-price">$94.44</div><div class="crypto-change up">+1.8%</div></div>
+<div class="crypto-cell"><div class="crypto-name">XRP</div><div class="crypto-price">$1.51</div><div class="crypto-change up">+2.2%</div></div>
+</div>
+<div style="font-size:10px;color:#aaa;text-align:right;margin-top:-6px;margin-bottom:10px;">Mar 17 &#xB7; CoinGecko &#xB7; <span class="zh-only">&#x5168;&#x7403;&#x52A0;&#x5BC6;&#x5E02;&#x503C;$2.62&#x4E07;&#x4EBF; &#xB7; BTC&#x5360;&#x6BD4;56.7% &#xB7; &#x65E5;&#x6210;&#x4EA4;$1,375&#x4EBF;</span><span class="en-only">Global crypto cap $2.62T &#xB7; BTC dom 56.7% &#xB7; 24h vol $137.5B</span></div>
 
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-ai">行业竞争</span>
-      <div>
-        <div class="news-headline zh-only">中国AI军备竞赛白热化：<span class="term" data-title="MiniMax M2.5" data-body="中国AI公司MiniMax推出的大模型，被评为性能媲美Claude Opus 4.6，但成本显著更低。是2026年3月中国AI五大发布中的代表之作。">MiniMax M2.5</span>性价比媲美Claude，中国五款新模型集中亮相</div>
-        <div class="news-headline en-only">China AI Race Heats Up: MiniMax M2.5 Rivals Claude Opus 4.6 at Lower Cost; Five Models Launch</div>
-        <div class="news-ts">Mar 2026 · mean.ceo</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      2026年3月，腾讯、阿里巴巴、百度、字节跳动和MiniMax相继推出新模型，其中MiniMax M2.5被独立评测认为在多数任务上可媲美<span class="term" data-title="Anthropic" data-body="美国AI安全公司，总部位于旧金山，由前OpenAI研究人员达里奥·阿莫迪等人创立。旗下Claude系列模型是全球顶尖大模型之一。">Anthropic</span>的Claude Opus 4.6，但价格大幅更低。前沿AI每2–3周迭代一次的节奏，令2026年Q1成为AI历史上发布密度最高的季度之一。<span class="term" data-title="Nvidia GTC 大会" data-body="英伟达年度开发者大会，2026年预计展示Vera Rubin新一代GPU架构及AI基础设施路线图，为全球AI硬件投资定调。">Nvidia GTC</span>大会即将召开，市场等待新GPU架构发布。
-    </div>
-    <div class="news-body en-only">
-      In March 2026, Tencent, Alibaba, Baidu, ByteDance, and MiniMax launched new models. <span class="term" data-title="MiniMax M2.5" data-body="A Chinese large language model by MiniMax, rated by independent benchmarks to rival Anthropic's Claude Opus 4.6 on most tasks at significantly lower cost. One of five major Chinese AI releases in March 2026.">MiniMax M2.5</span> is rated to rival <span class="term" data-title="Anthropic" data-body="US AI safety company founded by Dario Amodei and former OpenAI researchers. Creator of the Claude model family. Competitor to OpenAI, Google DeepMind, and now increasingly, Chinese AI labs.">Anthropic</span>'s Claude Opus 4.6 at significantly lower cost — a signal that Chinese labs are closing the quality gap while maintaining a price advantage. The frontier AI release cadence of every 2–3 weeks makes Q1 2026 the highest-density quarter in AI history. The upcoming <span class="term" data-title="Nvidia GTC Conference" data-body="Nvidia's annual developer conference, expected to unveil the Vera Rubin GPU architecture — the successor to Blackwell. A defining event for global AI infrastructure investment and pricing.">Nvidia GTC</span> conference is expected to define the next GPU generation and set the tone for AI infrastructure spending through year-end.
-    </div>
-  </div>
+<div class="news-item">
+<div class="news-ts">Mar 17, 2026 &#xB7; CoinGecko</div>
+<div class="news-hed zh-only">BTC&#x53CD;&#x5F39;&#x81F3;$74,339&#xFF08;+1.6%&#xFF09;&#xFF0C;ETH&#x98D9;&#x5347;&#x81F3;$2,345&#xFF08;+3.6%&#xFF09;&#x2014;&#x2014;&#x201C;&#x6781;&#x5EA6;&#x6050;&#x614C;&#x201D;&#x4E2D;&#x7684;&#x9006;&#x52BF;&#x4E0A;&#x6DA8;</div>
+<div class="news-hed en-only">BTC Rallies to $74,339 (+1.6%), ETH Surges to $2,345 (+3.6%) &#x2014; Counter-Trend Rally in Extreme Fear</div>
+<div class="news-body zh-only">&#x5168;&#x7403;&#x52A0;&#x5BC6;&#x5E02;&#x573A;&#x603B;&#x5E02;&#x503C;$2.62&#x4E07;&#x4EBF;&#xFF08;+1.0%&#xFF09;&#x3002;<span class="term" data-zh="BTC&#x4E3B;&#x5BFC;&#x7387;&#xFF08;BTC Dominance&#xFF09;&#xFF1A;&#x6BD4;&#x7279;&#x5E01;&#x5E02;&#x503C;&#x5360;&#x5168;&#x7403;&#x52A0;&#x5BC6;&#x5E02;&#x573A;&#x603B;&#x5E02;&#x503C;&#x7684;&#x6BD4;&#x4F8B;&#xFF0C;&#x5F53;&#x524D;56.7%&#xFF0C;&#x5904;&#x4E8E;2021&#x5E74;&#x4EE5;&#x6765;&#x9AD8;&#x4F4D;&#xFF0C;&#x53CD;&#x6620;&#x907F;&#x9669;&#x8D44;&#x91D1;&#x96C6;&#x4E2D;&#x6D41;&#x5165;BTC&#x3002;" data-en="BTC Dominance: Bitcoin's share of total crypto market cap, currently 56.7% &#x2014; highest since 2021, reflecting flight-to-quality within crypto.">BTC&#x4E3B;&#x5BFC;&#x7387;</span>56.7%&#x3002;SOL $94.44&#xFF08;+1.8%&#xFF09;&#xFF0C;XRP $1.51&#xFF08;+2.2%&#xFF09;&#x3002;24&#x5C0F;&#x65F6;&#x603B;&#x6210;&#x4EA4;&#x91CF;$1,375&#x4EBF;&#x3002;&#x6050;&#x614C;&#x8D2A;&#x5A6A;&#x6307;&#x6570;&#x4EC5;23&#xFF0C;&#x4F46;&#x4EF7;&#x683C;&#x5728;&#x6DA8;&#x2014;&#x2014;&#x6563;&#x6237;&#x6050;&#x614C;&#x4E0E;&#x673A;&#x6784;&#x5E03;&#x5C40;&#x7684;&#x5206;&#x6B67;&#x6B63;&#x5728;&#x52A0;&#x5267;&#x3002;</div>
+<div class="news-body en-only">Global crypto market cap: $2.62 trillion (+1.0%). BTC dominance: 56.7%. SOL $94.44 (+1.8%), XRP $1.51 (+2.2%). Daily volume: $137.5 billion. Fear &amp; Greed at just 23 but prices rising &#x2014; the divergence between retail panic and institutional accumulation is widening.</div>
+</div>
 </div>
 
-<!-- ⑤ 币圈 -->
+<!-- &#x6743;&#x529B;&#x4E4B;&#x58F0; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye5" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip5"><path id="eyeClipPath5" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng5" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline5" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip5)"><circle id="iris5" cx="60" cy="26" r="14" fill="url(#ng5)"/><circle id="pupil5" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">币圈</div>
-      <div class="section-name en-only">Crypto</div>
-      <div class="section-name-en">CRYPTOCURRENCY</div>
-    </div>
-  </div>
+<div class="section-header"><div class="section-title"><span class="zh-only">&#x6743;&#x529B;&#x4E4B;&#x58F0;</span><span class="en-only">POWER WATCH</span></div><div class="section-rule"></div></div>
 
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-crypto">BTC</span>
-      <div>
-        <div class="news-headline zh-only">比特币反弹至$73,589：连续五日<span class="term" data-title="现货比特币ETF" data-body="在美国证交所上市的比特币交易所交易基金，投资者无需持有加密货币即可获得BTC价格敞口。贝莱德（BlackRock）旗下IBIT规模最大。2024年1月获批以来持续引发机构资金流入。">现货ETF</span>净流入，美联储决议前市场博弈激烈</div>
-        <div class="news-headline en-only">BTC Rebounds to $73,589: Five Consecutive Days of Spot ETF Inflows Ahead of FOMC</div>
-        <div class="news-ts">Mar 17, 2026 · Yahoo Finance / CoinDesk</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      比特币今日反弹至$73,589，24小时涨幅约2.97%，连续第五日录得现货ETF净流入。3月9日至13日，美国现货BTC ETF累计净流入约7.634亿美元，其中<span class="term" data-title="贝莱德 IBIT" data-body="贝莱德（BlackRock）旗下iShares Bitcoin Trust，全球最大比特币现货ETF，3月13日单日流入达1.436亿美元。贝莱德是全球最大资产管理公司，管理规模逾10万亿美元。">贝莱德IBIT</span>单日流入$1.436亿领跑。然而，<span class="term" data-title="恐贪指数 (Fear & Greed Index)" data-body="衡量加密市场情绪的综合指标，0为极度恐慌，100为极度贪婪。当前为23（极度恐慌），已连续38天以上处于极度恐慌区间，为2022年Terra崩盘以来持续时间最长的记录。">恐贪指数</span>仍处于23（极度恐慌），已连续38天以上处于恐慌区间。即将发布的美联储点阵图可能是决定BTC近期走向的关键变量。
-    </div>
-    <div class="news-body en-only">
-      Bitcoin rebounded to $73,589 today (+2.97%), with five consecutive days of <span class="term" data-title="Spot Bitcoin ETFs" data-body="US-listed exchange-traded funds that hold actual Bitcoin, allowing institutional investors to gain BTC exposure without holding crypto directly. BlackRock's IBIT is the largest, with $143.6M in inflows on March 13 alone.">spot ETF</span> inflows totaling ~$763M since March 9. <span class="term" data-title="BlackRock IBIT" data-body="iShares Bitcoin Trust — BlackRock's spot Bitcoin ETF and the world's largest by AUM. BlackRock manages over $10 trillion in assets globally. IBIT's consistent inflows are seen as a signal of sustained institutional demand.">BlackRock's IBIT</span> led with $143.6M on March 13. Despite the price rebound, the <span class="term" data-title="Fear & Greed Index" data-body="A 0–100 composite sentiment gauge for crypto markets. Currently at 23 (Extreme Fear), having remained below 25 for 38+ consecutive days — the longest sustained extreme fear streak since the Terra-Luna collapse of June 2022.">Fear & Greed Index</span> remains at 23 (Extreme Fear), sustaining the longest streak since the <span class="term" data-title="Terra-Luna Collapse (2022)" data-body="The May 2022 implosion of the Terra (LUNA) and TerraUSD (UST) algorithmic stablecoin ecosystem, which wiped out ~$60 billion in market value in days and triggered a crypto bear market lasting over a year.">Terra-Luna collapse</span>. The FOMC <span class="term" data-title="Dot Plot" data-body="The Fed's interest rate projection chart, released quarterly. If it signals fewer 2026 rate cuts than the market expects, BTC has historically dropped after 7 of 8 FOMC meetings — the so-called 'sell the news' pattern.">dot plot</span> tomorrow is the key variable for BTC's near-term trajectory.
-    </div>
-  </div>
-
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-crypto">TRUMP币</span>
-      <div>
-        <div class="news-headline zh-only">TRUMP <span class="term" data-title="Meme币 / 迷因币" data-body="以网络文化、政治人物或热点梗为主题的加密货币。通常高度投机、极度波动，与项目基本面关联有限。TRUMP币以特朗普头像为主题，由特朗普相关方于2025年发行。">迷因币</span>单日暴涨逾30%：前297名持有者受邀参加特朗普盛宴</div>
-        <div class="news-headline en-only">TRUMP Memecoin Surges 30%+ as Top 297 Holders Invited to Gala Lunch with Trump</div>
-        <div class="news-ts">Mar 13, 2026 · CoinDesk</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      TRUMP迷因币3月13日单日飙涨逾30%，此前官方宣布持有量排名前297位的代币持有者将受邀参加与特朗普本人的私密"盛宴午宴"。此事件再次引发外界对总统与加密代币利益交织的<span class="term" data-title="利益冲突" data-body="指持有某一职位者同时拥有可能影响其公正决策的个人财务利益。特朗普家族持有TRUMP币，其政治行为可能影响代币价格，由此引发伦理争议。">利益冲突</span>质疑。此外，AI概念代币<span class="term" data-title="TAO (Bittensor)" data-body="去中心化AI机器学习网络的原生代币，用于激励开发者贡献算力和模型。2026年AI热潮背景下走强。">TAO</span>与<span class="term" data-title="FET (人工超级智能联盟)" data-body="由Fetch.ai、SingularityNET和Ocean Protocol三大AI加密项目合并组成的代币，代表去中心化AI经济愿景。">FET</span>各涨约14%，反映市场对AI叙事的持续追捧。
-    </div>
-    <div class="news-body en-only">
-      The <span class="term" data-title="TRUMP Memecoin" data-body="A meme-themed cryptocurrency featuring Trump's imagery, launched by Trump-affiliated parties in 2025. Highly speculative and volatile. Its price is sensitive to Trump-related announcements, raising significant conflict-of-interest concerns.">TRUMP memecoin</span> surged over 30% after the announcement that the top 297 token holders by holdings would be invited to a private gala lunch with <span class="term" data-title="Donald Trump" data-body="47th US President, returned to office January 2025. The Trump family holds TRUMP tokens, creating an ethical conflict: political decisions can directly move the token's price, benefiting the President personally.">Trump</span>, reigniting <span class="term" data-title="Conflict of Interest" data-body="When a person in a position of power holds personal financial interests that could improperly influence their official decisions. The TRUMP token situation is widely cited as a textbook example given the President's simultaneous role as token-affiliated party and policymaker.">conflict-of-interest</span> concerns. AI tokens <span class="term" data-title="TAO (Bittensor)" data-body="Native token of the Bittensor decentralized AI machine-learning network, which incentivizes developers to contribute compute and model weights. Surged alongside broader AI narrative enthusiasm.">TAO</span> and <span class="term" data-title="FET (Artificial Superintelligence Alliance)" data-body="Token formed by the merger of Fetch.ai, SingularityNET, and Ocean Protocol — representing a vision of decentralized AI economies. Tracks AI market sentiment closely.">FET</span> each climbed ~14%, reflecting sustained market appetite for the AI narrative.
-    </div>
-  </div>
+<div class="news-item">
+<div class="news-ts">Mar 2026 &#xB7; ABC / CBS / The Hill</div>
+<div class="news-hed zh-only"><span class="term" data-zh="&#x9A6C;&#x65AF;&#x514B;&#xFF08;Elon Musk&#xFF09;&#xFF1A;Tesla CEO&#x3001;SpaceX&#x521B;&#x59CB;&#x4EBA;&#x3001;X&#x5E73;&#x53F0;&#x6240;&#x6709;&#x8005;&#x3002;2025&#x5E74;&#x4E2D;&#x56E0;One Big Beautiful Bill Act&#x4E0E;&#x7279;&#x6717;&#x666E;&#x51B3;&#x88C2;&#xFF0C;&#x79BB;&#x5F00;DOGE&#xFF1B;&#x540C;&#x5E74;9&#x6708;&#x5728;Charlie Kirk&#x8FFD;&#x60BC;&#x4F1A;&#x4E0A;&#x516C;&#x5F00;&#x548C;&#x89E3;&#x3002;" data-en="Elon Musk: CEO of Tesla, SpaceX founder, owner of X. Fell out with Trump mid-2025 over the One Big Beautiful Bill Act and left DOGE; publicly reconciled at Charlie Kirk's memorial service Sep 2025.">&#x9A6C;&#x65AF;&#x514B;</span>-&#x7279;&#x6717;&#x666E;&#x548C;&#x89E3;&#x5B8C;&#x6210;&#xFF1A;&#x9A6C;&#x65AF;&#x514B;&#x5168;&#x529B;&#x8D44;&#x52A9;&#x5171;&#x548C;&#x515A;&#x5907;&#x62182026&#x4E2D;&#x671F;&#x9009;&#x4E3E;</div>
+<div class="news-hed en-only">Musk-Trump Reconciliation Complete: Musk Backs GOP for 2026 Midterms</div>
+<p class="voice-quote zh-only">&#x201C;&#x5982;&#x679C;&#x6FC0;&#x8FDB;&#x5DE6;&#x7FFC;&#x8D62;&#x4E86;&#xFF0C;&#x7F8E;&#x56FD;&#x5C31;&#x5B8C;&#x4E86;&#x3002;&#x201D;</p>
+<p class="voice-quote en-only">&#x201C;America is toast if the radical left wins.&#x201D;</p>
+<p class="voice-attr">&#x9A6C;&#x65AF;&#x514B; &#xB7; Mar 2026</p>
+<div class="news-body zh-only" style="margin-top:8px;">2025&#x5E74;&#x4E2D;&#xFF0C;&#x9A6C;&#x65AF;&#x514B;&#x56E0;<span class="term" data-zh="One Big Beautiful Bill Act&#xFF1A;&#x7279;&#x6717;&#x666E;&#x653F;&#x5E9C;&#x63A8;&#x52A8;&#x7684;&#x7EFC;&#x5408;&#x7ACB;&#x6CD5;&#xFF0C;&#x56E0;&#x5176;&#x4E2D;&#x67D0;&#x4E9B;&#x6761;&#x6B3E;&#x4E0E;&#x9A6C;&#x65AF;&#x514B;&#x5229;&#x76CA;&#x51B2;&#x7A81;&#xFF0C;&#x5BFC;&#x81F4;&#x4E24;&#x4EBA;&#x516C;&#x5F00;&#x51B3;&#x88C2;&#x3002;" data-en="One Big Beautiful Bill Act: Omnibus legislation pushed by the Trump administration; certain provisions conflicted with Musk's interests, causing their public falling out.">One Big Beautiful Bill Act</span>&#x4E0E;&#x7279;&#x6717;&#x666E;&#x51B3;&#x88C2;&#xFF0C;&#x79BB;&#x5F00;<span class="term" data-zh="DOGE&#xFF08;&#x653F;&#x5E9C;&#x6548;&#x7387;&#x90E8;&#xFF09;&#xFF1A;&#x7279;&#x6717;&#x666E;&#x8BBE;&#x7ACB;&#x7684;&#x653F;&#x5E9C;&#x6548;&#x7387;&#x987E;&#x95EE;&#x673A;&#x6784;&#xFF0C;&#x9A6C;&#x65AF;&#x514B;&#x66FE;&#x4EFB;&#x8D1F;&#x8D23;&#x4EBA;&#xFF0C;2025&#x5E74;5&#x6708;&#x79BB;&#x4EFB;&#x3002;" data-en="DOGE (Department of Government Efficiency): Advisory body established by Trump; Musk served as head until May 2025.">DOGE</span>&#x3002;2025&#x5E74;9&#x6708;&#x5728;<span class="term" data-zh="Charlie Kirk&#xFF1A;&#x7F8E;&#x56FD;&#x4FDD;&#x5B88;&#x6D3E;&#x6D3B;&#x52A8;&#x5BB6;&#xFF0C;Turning Point USA&#x521B;&#x59CB;&#x4EBA;&#xFF0C;2025&#x5E74;&#x53BB;&#x4E16;&#x3002;&#x5176;&#x8FFD;&#x60BC;&#x4F1A;&#x6210;&#x4E3A;&#x9A6C;&#x65AF;&#x514B;&#x4E0E;&#x7279;&#x6717;&#x666E;&#x516C;&#x5F00;&#x548C;&#x89E3;&#x7684;&#x573A;&#x5408;&#x3002;" data-en="Charlie Kirk: US conservative activist, founder of Turning Point USA, died in 2025. His memorial service became the venue for the Musk-Trump public reconciliation.">Charlie Kirk&#x8FFD;&#x60BC;&#x4F1A;</span>&#x4E0A;&#x516C;&#x5F00;&#x548C;&#x89E3;&#x3002;&#x9A6C;&#x65AF;&#x514B;&#x73B0;&#x4E3A;&#x5171;&#x548C;&#x515A;&#x4E2D;&#x671F;&#x9009;&#x4E3E;&#x6700;&#x5927;&#x91D1;&#x4E3B;&#x3002;&#x540C;&#x65F6;&#xFF0C;<span class="term" data-zh="SpaceX-xAI&#x5408;&#x5E76;&#xFF1A;&#x9A6C;&#x65AF;&#x514B;&#x65D7;&#x4E0B;&#x4E24;&#x5BB6;&#x516C;&#x53F8;&#x6B63;&#x5728;&#x63A8;&#x8FDB;&#x5408;&#x5E76;&#xFF0C;&#x9884;&#x4F30;&#x5408;&#x5E76;&#x540E;&#x4F30;&#x503C;&#x8FBE;$1.25&#x4E07;&#x4EBF;&#x3002;" data-en="SpaceX-xAI Merger: Musk's two companies are pursuing a merger, with estimated combined valuation of $1.25 trillion.">SpaceX-xAI&#x5408;&#x5E76;</span>&#x63A8;&#x8FDB;&#x4E2D;&#xFF0C;&#x9884;&#x4F30;&#x5408;&#x5E76;&#x4F30;&#x503C;$1.25&#x4E07;&#x4EBF;&#x3002;</div>
+<div class="news-body en-only" style="margin-top:8px;">After their mid-2025 feud over the One Big Beautiful Bill Act, Musk left DOGE. Publicly reunited at Charlie Kirk's memorial service Sep 2025. Musk is now the largest donor to the Republican Party for the 2026 midterms. Meanwhile, the SpaceX-xAI merger is advancing with an estimated $1.25 trillion combined valuation.</div>
 </div>
 
-<!-- ⑥ 贵金属 -->
+<div class="news-item">
+<div class="news-ts">Mar 16, 2026 &#xB7; NPR</div>
+<div class="news-hed zh-only">&#x7279;&#x6717;&#x666E;&#x5A01;&#x80C1;&#x62D2;&#x7EDD;&#x5DE1;&#x903B;&#x970D;&#x5C14;&#x6728;&#x5179;&#x7684;&#x76DF;&#x53CB;&#xFF1A;&#x201C;&#x6211;&#x4EEC;&#x4F1A;&#x8BB0;&#x4F4F;&#x7684;&#x201D;</div>
+<div class="news-hed en-only">Trump Threatens Allies Who Refuse Hormuz Patrol: &#x201C;We Will Remember&#x201D;</div>
+<p class="voice-quote zh-only">&#x201C;&#x6211;&#x4EEC;&#x4F1A;&#x8BB0;&#x4F4F;&#x8C01;&#x5728;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x65F6;&#x7AD9;&#x5728;&#x4E86;&#x4E00;&#x8FB9;&#x3002;&#x201D;</p>
+<p class="voice-quote en-only">&#x201C;We will remember who stood aside when we needed them.&#x201D;</p>
+<p class="voice-attr">&#x7279;&#x6717;&#x666E; &#xB7; NPR &#xB7; Mar 16, 2026</p>
+<div class="news-body zh-only" style="margin-top:8px;"><span class="term" data-zh="&#x4EE5;&#x8272;&#x5217;&#xFF1A;&#x7F8E;&#x56FD;&#x5728;&#x4E2D;&#x4E1C;&#x6700;&#x4EB2;&#x5BC6;&#x7684;&#x76DF;&#x53CB;&#xFF0C;&#x9884;&#x8BA1;&#x8FD8;&#x9700;3&#x5468;&#x65F6;&#x95F4;&#x5B8C;&#x6210;&#x5BF9;&#x4F0A;&#x6717;&#x7684;&#x519B;&#x4E8B;&#x884C;&#x52A8;&#x3002;" data-en="Israel: The US's closest Middle East ally; expects 3 more weeks of operations against Iran.">&#x4EE5;&#x8272;&#x5217;</span>&#x9884;&#x8BA1;&#x8FD8;&#x9700;3&#x5468;&#x519B;&#x4E8B;&#x884C;&#x52A8;&#x3002;&#x7279;&#x6717;&#x666E;&#x7684;&#x201C;&#x6211;&#x4EEC;&#x4F1A;&#x8BB0;&#x4F4F;&#x201D;&#x662F;&#x5916;&#x4EA4;&#x5A01;&#x80C1;&#x7684;&#x7ECF;&#x5178;&#x8BDD;&#x672F;&#x2014;&#x2014;&#x4F46;&#x5F53;&#x6240;&#x6709;&#x76DF;&#x53CB;&#x540C;&#x65F6;&#x62D2;&#x7EDD;&#x65F6;&#xFF0C;&#x8FD9;&#x53E5;&#x8BDD;&#x7684;&#x542B;&#x4E49;&#x4ECE;&#x5A01;&#x6151;&#x53D8;&#x6210;&#x4E86;&#x7EDD;&#x671B;&#x3002;</div>
+<div class="news-body en-only" style="margin-top:8px;">Israel expects 3 more weeks of operations against Iran. Trump's &#x201C;we will remember&#x201D; is classic diplomatic coercion &#x2014; but when every ally refuses simultaneously, it shifts from deterrence to desperation.</div>
+</div>
+</div>
+
+<!-- AI&#x524D;&#x6CBF; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye6" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip6"><path id="eyeClipPath6" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng6" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline6" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip6)"><circle id="iris6" cx="60" cy="26" r="14" fill="url(#ng6)"/><circle id="pupil6" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">贵金属</div>
-      <div class="section-name en-only">Precious Metals</div>
-      <div class="section-name-en">GOLD · SILVER</div>
-    </div>
-  </div>
+<div class="section-header"><div class="section-title"><span class="zh-only">AI&#x524D;&#x6CBF;</span><span class="en-only">AI FRONTIER</span></div><div class="section-rule"></div></div>
 
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-gold">黄金</span>
-      <div>
-        <div class="news-headline zh-only">黄金在$5,000关键心理位震荡：美元走强与油价通胀预期双向博弈</div>
-        <div class="news-headline en-only">Gold Oscillates at $5,000 Psychological Level: Dollar Strength vs. Oil-Driven Inflation</div>
-        <div class="news-ts">Mar 16–17, 2026 · LiteFinance / USAGOLD</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      国际金价今日约$5,002，上周曾触及$5,418高位后回落，本周在$5,000整数关附近激烈争夺。美元指数（<span class="term" data-title="DXY 美元指数" data-body="追踪美元对六种主要货币（欧元、日元、英镑、加元、瑞典克朗、瑞士法郎）汇率的综合指数，DXY上涨意味着美元走强，通常对以美元计价的大宗商品构成压力。">DXY</span>）突破100引发短期获利了结压力，但中东地缘风险、央行持续购金以及<span class="term" data-title="美联储降息预期" data-body="市场对美联储削减联邦基金利率的概率预测。利率降低通常利好无息资产黄金，反之亦然。当前美联储面临油价带来的通胀压力，降息时间可能延后。">美联储降息预期受压</span>多重因素形成结构性支撑。中国<span class="term" data-title="中国人民银行 (PBoC)" data-body="中国中央银行，已连续15个月增持黄金储备，是当前全球央行购金的领头羊。持续购金行为被视为去美元化战略的组成部分。">人民银行</span>已连续15个月增持黄金，结构性需求牢固。<span class="term" data-title="金银比 (Gold-Silver Ratio)" data-body="以黄金价格除以白银价格，衡量两者相对价值。当前约62.3，历史平均值约60-70。比值越高表明白银相对黄金被低估。">金银比</span>当前约62.3，白银以$81.42现货价守稳，但较1月历史高位$121.67仍下跌逾33%。
-    </div>
-    <div class="news-body en-only">
-      Gold trades near $5,002 today, pulling back from last week's $5,418 high to contest the $5,000 psychological level. <span class="term" data-title="DXY (US Dollar Index)" data-body="Tracks the US dollar against a basket of six major currencies (EUR, JPY, GBP, CAD, SEK, CHF). DXY breaking above 100 typically pressures dollar-priced commodities like gold and silver by making them more expensive for foreign buyers.">Dollar strength (DXY above 100)</span> has generated profit-taking pressure, but structural supports remain: Middle East <span class="term" data-title="Safe-Haven Demand" data-body="Investor flows into assets perceived as stable stores of value during geopolitical or economic crises — typically gold, US Treasuries, and the Swiss franc. The Iran war has been a sustained driver of gold safe-haven buying.">safe-haven demand</span>, 15 consecutive months of <span class="term" data-title="PBoC Gold Purchases" data-body="The People's Bank of China has bought gold every month for 15 straight months as part of a de-dollarization strategy. China is the world's largest official-sector gold buyer, and its continued purchases provide a structural floor for prices.">PBoC gold purchases</span>, and delayed Fed rate cut expectations. The <span class="term" data-title="Gold-Silver Ratio" data-body="Gold price divided by silver price — currently 62.3. Historically averages 60–70. A higher ratio means silver is cheap relative to gold. When gold stabilizes, silver tends to outperform on the upside due to its higher beta.">gold-silver ratio</span> sits at 62.3, with silver at $81.42 — still 33%+ below its January ATH of $121.67 set on January 29, 2026.
-    </div>
-  </div>
+<div class="ai-card">
+<div class="ai-card-label">KEY STORY</div>
+<div class="ai-card-title zh-only">NVIDIA GTC 2026&#xFF1A;<span class="term" data-zh="Vera Rubin&#x5E73;&#x53F0;&#xFF1A;NVIDIA&#x4E0B;&#x4E00;&#x4EE3;&#x5168;&#x6808;AI&#x5E73;&#x53F0;&#xFF0C;&#x5305;&#x542B;7&#x6B3E;&#x82AF;&#x7247;&#x3001;5&#x4E2A;&#x673A;&#x67B6;&#x7EA7;&#x7CFB;&#x7EDF;&#x3001;1&#x53F0;&#x8D85;&#x7EA7;&#x8BA1;&#x7B97;&#x673A;&#xFF0C;&#x4EE5;&#x5929;&#x6587;&#x5B66;&#x5BB6;Vera Rubin&#x547D;&#x540D;&#x3002;" data-en="Vera Rubin Platform: NVIDIA's next-gen full-stack AI platform with 7 chips, 5 rack-scale systems, 1 supercomputer, named after astronomer Vera Rubin.">Vera Rubin</span>&#x5E73;&#x53F0;&#x53D1;&#x5E03;&#x2014;&#x2014;&#x9884;&#x8BA1;&#x5E26;&#x6765;$1&#x4E07;&#x4EBF;&#x8BA2;&#x5355;</div>
+<div class="ai-card-title en-only">NVIDIA GTC 2026: Vera Rubin Platform Unveiled &#x2014; $1 Trillion in Orders Expected</div>
+<div class="news-body zh-only" style="margin-top:8px;"><span class="term" data-zh="&#x9EC4;&#x4EC1;&#x52CB;&#xFF08;Jensen Huang&#xFF09;&#xFF1A;NVIDIA CEO&#x517C;&#x8054;&#x5408;&#x521B;&#x59CB;&#x4EBA;&#xFF0C;3&#x6708;16&#x65E5;&#x5728;&#x5723;&#x4F55;&#x585E;SAP&#x4E2D;&#x5FC3;&#x53D1;&#x8868;GTC&#x4E3B;&#x9898;&#x6F14;&#x8BB2;&#x3002;" data-en="Jensen Huang: NVIDIA CEO and co-founder; delivered GTC 2026 keynote March 16 at SAP Center, San Jose.">&#x9EC4;&#x4EC1;&#x52CB;</span>3&#x6708;16&#x65E5;&#x5728;&#x5723;&#x4F55;&#x585E;SAP&#x4E2D;&#x5FC3;&#x53D1;&#x8868;&#x4E3B;&#x9898;&#x6F14;&#x8BB2;&#x3002;Vera Rubin&#x5168;&#x6808;&#x5E73;&#x53F0;&#xFF1A;7&#x6B3E;&#x82AF;&#x7247;&#x3001;5&#x4E2A;&#x673A;&#x67B6;&#x7EA7;&#x7CFB;&#x7EDF;&#x3001;1&#x53F0;&#x8D85;&#x7EA7;&#x8BA1;&#x7B97;&#x673A;&#x3002;<span class="term" data-zh="DGX Station&#xFF1A;NVIDIA&#x9762;&#x5411;&#x4F01;&#x4E1A;&#x7684;&#x684C;&#x9762;&#x7EA7;AI&#x5DE5;&#x4F5C;&#x7AD9;&#xFF0C;&#x642D;&#x8F7D;GB300&#x82AF;&#x7247;&#xFF0C;748GB&#x5185;&#x5B58;&#xFF0C;20petaflops&#x7B97;&#x529B;&#xFF0C;&#x652F;&#x6301;1&#x4E07;&#x4EBF;&#x53C2;&#x6570;&#x6A21;&#x578B;&#x672C;&#x5730;&#x8FD0;&#x884C;&#x3002;" data-en="DGX Station: NVIDIA's desktop AI workstation with GB300 chip, 748GB memory, 20 petaflops, supports local 1-trillion parameter models.">DGX Station</span>&#x642D;&#x8F7D;GB300&#x82AF;&#x7247;&#xFF0C;748GB&#x5185;&#x5B58;&#xFF0C;20 petaflops&#x7B97;&#x529B;&#xFF0C;&#x652F;&#x6301;1&#x4E07;&#x4EBF;&#x53C2;&#x6570;&#x6A21;&#x578B;&#x3002;<span class="term" data-zh="DLSS 5&#xFF1A;NVIDIA&#x7B2C;5&#x4EE3;&#x6DF1;&#x5EA6;&#x5B66;&#x4E60;&#x8D85;&#x7EA7;&#x91C7;&#x6837;&#x6280;&#x672F;&#xFF0C;&#x4F7F;&#x7528;AI&#x795E;&#x7ECF;&#x6E32;&#x67D3;&#x5B9E;&#x73B0;&#x5B9E;&#x65F6;4K&#x7167;&#x7247;&#x7EA7;&#x753B;&#x8D28;&#x3002;" data-en="DLSS 5: NVIDIA's 5th-gen Deep Learning Super Sampling; uses AI neural rendering for real-time 4K photoreal quality.">DLSS 5</span>&#x5B9E;&#x73B0;&#x5B9E;&#x65F6;4K&#x7167;&#x7247;&#x7EA7;&#x753B;&#x8D28;&#x3002;<span class="term" data-zh="NemoClaw&#xFF1A;NVIDIA&#x5F00;&#x6E90;&#x5B89;&#x5168;&#x81EA;&#x4E3B;&#x4EE3;&#x7406;&#x6280;&#x672F;&#x6808;&#xFF0C;&#x8BA9;&#x4F01;&#x4E1A;&#x53EF;&#x6784;&#x5EFA;&#x6301;&#x7EED;&#x8FD0;&#x884C;&#x7684;&#x81EA;&#x4E3B;AI&#x52A9;&#x624B;&#x3002;" data-en="NemoClaw: NVIDIA's open-source secure autonomous agent stack for enterprise AI deployment.">NemoClaw</span>&#x5F00;&#x6E90;&#x5B89;&#x5168;&#x81EA;&#x4E3B;&#x4EE3;&#x7406;&#x6808;&#x3002;<span class="term" data-zh="Groq 3 LPU&#xFF1A;Groq&#x7B2C;&#x4E09;&#x4EE3;&#x8BED;&#x8A00;&#x5904;&#x7406;&#x5355;&#x5143;&#xFF0C;&#x662F;NVIDIA&#x4EE5;$200&#x4EBF;&#x6536;&#x8D2D;Groq&#x540E;&#x7684;&#x9996;&#x6B3E;&#x82AF;&#x7247;&#x4EA7;&#x54C1;&#xFF0C;&#x9884;&#x8BA1;Q3&#x51FA;&#x8D27;&#x3002;" data-en="Groq 3 LPU: Third-gen Language Processing Unit, the first chip from NVIDIA's $20B Groq acquisition, shipping Q3.">Groq 3 LPU</span>&#xFF1A;$200&#x4EBF;&#x6536;&#x8D2D;Groq&#x540E;&#x7684;&#x9996;&#x6B3E;&#x82AF;&#x7247;&#xFF0C;Q3&#x51FA;&#x8D27;&#x3002;&#x5408;&#x4F5C;&#x4F19;&#x4F34;&#xFF1A;AWS&#x90E8;&#x7F72;100&#x4E07;+NVIDIA GPU&#xFF0C;Azure&#x7387;&#x5148;&#x90E8;&#x7F72;Vera Rubin NVL72&#x3002;50+&#x91C7;&#x7528;&#x8005;&#xFF1A;&#x6BD4;&#x4E9A;&#x8FEA;&#x3001;&#x73B0;&#x4EE3;&#x3001;&#x4E09;&#x661F;&#x3001;&#x53F0;&#x79EF;&#x7535;&#x3001;&#x5F3A;&#x751F;&#x3001;ABB&#x7B49;&#x3002;<span class="term" data-zh="Space-1&#xFF1A;NVIDIA&#x8BA1;&#x5212;&#x5728;&#x8F68;&#x9053;&#x4E0A;&#x90E8;&#x7F72;&#x7684;AI&#x6570;&#x636E;&#x4E2D;&#x5FC3;&#x9879;&#x76EE;&#x3002;" data-en="Space-1: NVIDIA's planned orbital AI data center project.">Space-1</span>&#xFF1A;&#x8F68;&#x9053;AI&#x6570;&#x636E;&#x4E2D;&#x5FC3;&#x3002;&#x60CA;&#x559C;&#x7ED3;&#x5C3E;&#xFF1A;&#x8FEA;&#x58EB;&#x5C3C;&#x7684;<strong>Olaf&#x96EA;&#x5B9D;</strong>&#x901A;&#x8FC7;&#x7269;&#x7406;AI&#x6280;&#x672F;&#x6808;&#x8D70;&#x4E0A;&#x4E86;&#x821E;&#x53F0;&#x2014;&#x2014;&#x9EC4;&#x4EC1;&#x52CB;&#xFF1A;&#x201C;&#x5973;&#x58EB;&#x4EEC;&#x5148;&#x751F;&#x4EEC;&#xFF0C;&#x8FD9;&#x662F;Olaf&#x3002;&#x201D;</div>
+<div class="news-body en-only" style="margin-top:8px;">Jensen Huang keynote March 16 at SAP Center, San Jose. Vera Rubin: full-stack platform with 7 chips, 5 rack-scale systems, 1 supercomputer. DGX Station: GB300 chip, 748GB memory, 20 petaflops, supports 1T parameter models. DLSS 5: AI neural rendering for real-time 4K photoreal. NemoClaw: open-source secure autonomous agent stack. Groq 3 LPU: first chip from the $20B Groq acquisition, ships Q3. Partners: AWS deploying 1M+ NVIDIA GPUs, Azure first to deploy Vera Rubin NVL72. 50+ adopters: BYD, Hyundai, Samsung, TSMC, J&amp;J, ABB, etc. Space-1: AI data centers in orbit. Surprise ending: Disney's <strong>Olaf</strong> walked on stage via physical AI stack &#x2014; Jensen Huang: &#x201C;Ladies and gentlemen, Olaf.&#x201D;</div>
 </div>
 
-<!-- ⑦ 马来西亚 -->
+<div class="news-item">
+<div class="news-ts">Mar 12, 2026 &#xB7; Pew Research</div>
+<div class="news-hed zh-only">&#x76AE;&#x5C24;&#x8C03;&#x67E5;&#xFF1A;52%&#x7684;&#x7F8E;&#x56FD;&#x4EBA;&#x5BF9;AI&#x66F4;&#x62C5;&#x5FE7;&#x800C;&#x975E;&#x5174;&#x594B;</div>
+<div class="news-hed en-only">Pew Research: 52% of Americans More Concerned Than Excited About AI</div>
+<div class="news-body zh-only">&#x4EC5;10%&#x7684;&#x53D7;&#x8BBF;&#x8005;&#x8868;&#x793A;&#x5BF9;AI&#x66F4;&#x5174;&#x594B;&#x800C;&#x975E;&#x62C5;&#x5FE7;&#x3002;&#x516C;&#x4F17;&#x5BF9;AI&#x7684;&#x6001;&#x5EA6;&#x6301;&#x7EED;&#x504F;&#x5411;&#x5BA1;&#x614E;&#x2014;&#x2014;&#x5728;AI&#x8D44;&#x672C;&#x652F;&#x51FA;&#x521B;&#x7EAA;&#x5F55;&#x7684;&#x540C;&#x65F6;&#xFF0C;&#x793E;&#x4F1A;&#x63A5;&#x53D7;&#x5EA6;&#x5728;&#x4E0B;&#x964D;&#xFF0C;&#x4E24;&#x8005;&#x7684;&#x526A;&#x5200;&#x5DEE;&#x662F;2026&#x5E74;AI&#x53D9;&#x4E8B;&#x7684;&#x5173;&#x952E;&#x53D8;&#x91CF;&#x3002;</div>
+<div class="news-body en-only">Only 10% more excited than concerned. Public sentiment toward AI continues to trend cautious &#x2014; the scissors gap between record AI capex and declining social acceptance is a key narrative variable for 2026.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 2026 &#xB7; Various</div>
+<div class="news-hed zh-only">&#x4E2D;&#x56FD;AI&#x7206;&#x53D1;&#xFF1A;&#x672C;&#x6708;5&#x6B3E;&#x6A21;&#x578B;&#xFF0C;<span class="term" data-zh="MiniMax M2.5&#xFF1A;&#x4E2D;&#x56FD;AI&#x516C;&#x53F8;MiniMax&#x53D1;&#x5E03;&#x7684;&#x5927;&#x6A21;&#x578B;&#xFF0C;&#x5728;&#x591A;&#x9879;&#x57FA;&#x51C6;&#x6D4B;&#x8BD5;&#x4E2D;&#x63A5;&#x8FD1;Anthropic Claude Opus 4.6&#x7684;&#x8868;&#x73B0;&#x3002;" data-en="MiniMax M2.5: Large language model from Chinese AI company MiniMax, approaching Anthropic Claude Opus 4.6 on multiple benchmarks.">MiniMax M2.5</span>&#x903C;&#x8FD1;Claude Opus 4.6</div>
+<div class="news-hed en-only">China's AI Surge: 5 Models This Month, MiniMax M2.5 Rivals Claude Opus 4.6</div>
+<div class="news-body zh-only">Google <span class="term" data-zh="Gemini 3.1 Pro&#xFF1A;Google&#x6700;&#x65B0;&#x65D7;&#x8230;&#x6A21;&#x578B;&#xFF0C;&#x5728;16&#x9879;&#x57FA;&#x51C6;&#x6D4B;&#x8BD5;&#x4E2D;13&#x9879;&#x6392;&#x540D;&#x7B2C;&#x4E00;&#x3002;" data-en="Gemini 3.1 Pro: Google's latest flagship model, ranking #1 in 13 of 16 benchmarks.">Gemini 3.1 Pro</span>&#x5728;13/16&#x9879;&#x57FA;&#x51C6;&#x4E2D;&#x9886;&#x5148;&#x3002;Anthropic&#x53D1;&#x5E03;<span class="term" data-zh="Claude Opus 4.6&#xFF08;1M&#x4E0A;&#x4E0B;&#x6587;&#xFF09;&#xFF1A;Anthropic&#x6700;&#x65B0;&#x65D7;&#x8230;&#x6A21;&#x578B;&#xFF0C;&#x652F;&#x6301;100&#x4E07;token&#x4E0A;&#x4E0B;&#x6587;&#x7A97;&#x53E3;&#xFF0C;&#x4EE3;&#x8868;&#x5F53;&#x524D;&#x6700;&#x5F3A;&#x63A8;&#x7406;&#x80FD;&#x529B;&#x4E4B;&#x4E00;&#x3002;" data-en="Claude Opus 4.6 (1M context): Anthropic's latest flagship model with 1-million token context window, representing state-of-the-art reasoning.">Claude Opus 4.6</span>&#xFF08;1M&#x4E0A;&#x4E0B;&#x6587;&#xFF09;&#x4E0E;Sonnet 4.6&#x3002;AI&#x519B;&#x5907;&#x7ADE;&#x8D5B;&#x5DF2;&#x4ECE;&#x7F8E;&#x56FD;&#x4E24;&#x5F3A;&#x5BF9;&#x51B3;&#x6F14;&#x53D8;&#x4E3A;&#x4E2D;&#x7F8E;&#x591A;&#x65B9;&#x6DF7;&#x6218;&#x2014;&#x2014;&#x6A21;&#x578B;&#x80FD;&#x529B;&#x5DEE;&#x8DDD;&#x6B63;&#x5728;&#x6025;&#x5267;&#x7F29;&#x5C0F;&#x3002;</div>
+<div class="news-body en-only">Google Gemini 3.1 Pro dominates 13/16 benchmarks. Anthropic launched Claude Opus 4.6 (1M context) and Sonnet 4.6. The AI arms race has evolved from a US duopoly to a multi-front US-China battle &#x2014; capability gaps are shrinking rapidly.</div>
+</div>
+</div>
+
+<!-- &#x9A6C;&#x6765;&#x897F;&#x4E9A; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye7" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip7"><path id="eyeClipPath7" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng7" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline7" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip7)"><circle id="iris7" cx="60" cy="26" r="14" fill="url(#ng7)"/><circle id="pupil7" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">马来西亚</div>
-      <div class="section-name en-only">Malaysia</div>
-      <div class="section-name-en">MALAYSIA LOCAL</div>
-    </div>
-  </div>
+<div class="section-header"><div class="section-title"><span class="zh-only">&#x9A6C;&#x6765;&#x897F;&#x4E9A;</span><span class="en-only">MALAYSIA</span></div><div class="section-rule"></div></div>
 
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-my">旅游</span>
-      <div>
-        <div class="news-headline zh-only">TA研究：中东危机威胁<span class="term" data-title="大马旅游年2026 (VM2026)" data-body="马来西亚政府推出的旅游促进活动，目标吸引4700万国际游客，创造3290亿令吉旅游收入。中东战争引发的航线调整和旅行警告正对其构成压力。">大马旅游年2026</span>目标，4700万游客目标面临逆风</div>
-        <div class="news-headline en-only">TA Research: Middle East Crisis Threatens VM2026 Target; 47M Arrivals at Risk</div>
-        <div class="news-ts">Mar 16, 2026 · Free Malaysia Today</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      <span class="term" data-title="联昌证券研究 (CIMB Research)" data-body="马来西亚联昌集团旗下研究部门，定期发布马股及宏观经济研究报告，为本地机构投资者主要参考来源之一。">联昌证券研究</span>警告，中东冲突正对<span class="term" data-title="大马旅游年2026 (VM2026)" data-body="马来西亚政府旗舰旅游推广活动，目标4700万国际游客、3290亿令吉旅游收入。与2003年伊拉克战争期间相比，当年马来西亚录得17.4%旅游收入损失。">VM2026</span>构成逆风：航班机位减少、票价上涨，且政府已对7个中东国家发出非必要出行警告。区域近程市场预计提供缓冲，国内旅游则持续支撑整体。</div>
-    <div class="news-body en-only">
-      <span class="term" data-title="TA Research" data-body="TA Securities Research — a Malaysian investment bank research division, known for equity and sector analysis on Bursa Malaysia-listed companies. Published a note flagging VM2026 headwinds on March 16.">TA Research</span> warned that <span class="term" data-title="Visit Malaysia 2026 (VM2026)" data-body="The Malaysian government's flagship tourism campaign targeting 47 million international arrivals and RM329 billion in tourism receipts. The Middle East conflict is the biggest external headwind it has faced since launch.">VM2026</span>'s 47M international arrivals target faces headwinds from the Middle East conflict. Reduced seat capacity, rerouting costs, and travel advisories against 7 Middle Eastern countries are creating pressure, particularly for high-spending long-haul markets. Regional demand from <span class="term" data-title="Key Tourism Source Markets" data-body="Malaysia's primary regional feeder markets — Singapore (largest by arrivals), Thailand, Indonesia, China, and India — which together account for the majority of tourist arrivals and are largely insulated from the Middle East conflict.">Singapore, Thailand, Indonesia, China, and India</span> are expected to provide a buffer. In 2003, Malaysia saw a 17.4% loss in tourism receipts during the Iraq War, compounded by SARS — a cautionary historical parallel.
-    </div>
-  </div>
-
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-my">基础设施</span>
-      <div>
-        <div class="news-headline zh-only"><span class="term" data-title="东海岸铁路 (ECRL)" data-body="连接吉隆坡与马来西亚东海岸（哥打巴鲁）的高速铁路项目，由中国交通建设股份有限公司承建，总长665公里，预计2027年通车，预算约440亿令吉。">东海岸铁路</span>完工率达92.6%，仍按2027年通车时间表推进</div>
-        <div class="news-headline en-only">ECRL at 92.6% Completion, On Track for 2027 Launch</div>
-        <div class="news-ts">Mar 16, 2026 · The Sun Malaysia</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      大马东海岸铁路（ECRL）最新完工进度达92.6%，仍按计划于2027年正式通车。这条连接吉隆坡与哥打巴鲁的665公里干线预计将显著改善半岛东西海岸的货物与人员流通，亦是<span class="term" data-title="安华·依布拉欣" data-body="马来西亚现任首相，2022年就任，领导团结政府。积极推动本国在AI供应链及数据中心投资中的战略地位，同时维持与中美两国的外交平衡。">安华政府</span>重振经济走廊战略的核心项目。今日另获悉，所有滞留中东的马来西亚公民已全数撤回。
-    </div>
-    <div class="news-body en-only">
-      The <span class="term" data-title="ECRL (East Coast Rail Link)" data-body="A 665km railway connecting Kuala Lumpur to Kota Bharu on Malaysia's east coast, built by China Communications Construction Company. Total budget ~RM44 billion. Designed to reduce freight costs and integrate the east coast economy with the west.">East Coast Rail Link</span> hit 92.6% completion, remaining on schedule for a 2027 launch. The line connecting KL to <span class="term" data-title="Kota Bharu" data-body="Capital of Kelantan state on Malaysia's northeast coast, currently underserved by rail. ECRL will cut travel time from KL from ~6 hours by road to under 4 hours by rail, opening up the corridor for industrial and tourism development.">Kota Bharu</span> is a cornerstone of the <span class="term" data-title="PM Anwar Ibrahim" data-body="Malaysia's 10th Prime Minister, in office since November 2022, leading the Unity Government. Has championed Malaysia's AI supply chain positioning and data center investments while maintaining diplomatic balance between the US and China.">Anwar government</span>'s economic corridor revival strategy. Separately, Malaysia's Foreign Minister confirmed all Malaysians stranded in Middle East conflict zones have been successfully repatriated.
-    </div>
-  </div>
-
-  <div class="news-item">
-    <div class="news-item-top">
-      <span class="news-tag tag-my">贸易</span>
-      <div>
-        <div class="news-headline zh-only"><span class="term" data-title="美国最高法院" data-body="美国联邦最高法院，由9名大法官组成，是美国最高司法机构。此次裁定特朗普依据国际紧急经济权力法（IEEPA）单方面征收关税违宪，波及马来西亚等多个对美出口国。">美最高法院</span>裁定特朗普关税违宪，马来西亚贸易部长：相关协议即日作废</div>
-        <div class="news-headline en-only">US Supreme Court Strikes Down Trump Tariffs; Malaysia Trade Minister Declares Related Deal Null and Void</div>
-        <div class="news-ts">Mar 16, 2026 · Free Malaysia Today</div>
-      </div>
-    </div>
-    <div class="news-body zh-only">
-      美国最高法院裁定特朗普政府依据<span class="term" data-title="IEEPA（国际紧急经济权力法）" data-body="美国1977年立法，授权总统在国家紧急状态下对外国实体实施经济制裁或贸易限制。特朗普在第二任期内以此为法律依据单方面加征关税，此次被最高法院裁定违宪。">IEEPA</span>单方面加征的关税违宪，马来西亚<span class="term" data-title="马来西亚投资贸工部" data-body="负责制定和执行马来西亚投资、贸易及工业政策的联邦部门，现任部长为旺·祖海迪。">贸易部长</span>随即宣布此前基于这批关税达成的相关协议即日失效。裁决消息传出后，令吉短暂走强。分析师指出，若执行，这将显著改善马来西亚对美出口的电子与电器类产品（E&amp;E）成本结构。
-    </div>
-    <div class="news-body en-only">
-      The <span class="term" data-title="US Supreme Court" data-body="The highest court in the US federal judiciary, composed of 9 justices. Its ruling that Trump's unilateral tariffs under IEEPA are unconstitutional has immediate implications for all countries that had negotiated trade arrangements under that tariff framework.">US Supreme Court</span> ruled that Trump's <span class="term" data-title="IEEPA Tariffs" data-body="Tariffs imposed by Trump under the International Emergency Economic Powers Act (1977), which grants the president broad authority to regulate commerce with foreign nations during a declared national emergency. The Supreme Court ruled this application unconstitutional.">IEEPA-based tariffs</span> are unconstitutional. Malaysia's trade minister declared related agreements null and void, as the legal basis underpinning them no longer stands. The ringgit briefly strengthened on the news. Analysts note the ruling could meaningfully improve cost structures for Malaysia's <span class="term" data-title="E&E Sector" data-body="Electrical and Electronics — Malaysia's largest export category, accounting for roughly 40% of total exports. Key destination: the United States. Lower tariff costs would directly benefit major exporters including Intel, Western Digital, and local manufacturers in Penang.">electrical and electronics exports</span> to the US.
-    </div>
-  </div>
+<div class="news-item">
+<div class="news-ts">Mar 17, 2026 &#xB7; Xe.com</div>
+<div class="news-hed zh-only"><span class="msia-tag">&#x8D22;&#x7ECF;</span><span class="term" data-zh="&#x4EE4;&#x5409;&#xFF08;MYR&#xFF09;&#xFF1A;&#x9A6C;&#x6765;&#x897F;&#x4E9A;&#x6CD5;&#x5B9A;&#x8D27;&#x5E01;&#xFF0C;2025&#x5E74;&#x4E9A;&#x6D32;&#x8868;&#x73B0;&#x6700;&#x4F73;&#x8D27;&#x5E01;&#xFF0C;&#x5168;&#x5E74;&#x5347;&#x503C;&#x7EA6;11%&#x3002;" data-en="Malaysian Ringgit (MYR): Malaysia's national currency; 2025's best-performing Asian currency, up ~11% for the year.">&#x4EE4;&#x5409;</span>&#x5151;&#x7F8E;&#x5143;3.9245&#x2014;&#x2014;&#x6218;&#x4E89;&#x4E2D;&#x4FDD;&#x6301;&#x97E7;&#x6027;</div>
+<div class="news-hed en-only"><span class="msia-tag">FX</span>USD/MYR at 3.9245 &#x2014; Ringgit Remains Resilient Amid War</div>
+<div class="news-body zh-only">&#x4EE4;&#x5409;&#x5728;2025&#x5E74;&#x4E9A;&#x6D32;&#x8D27;&#x5E01;&#x4E2D;&#x8868;&#x73B0;&#x6700;&#x4F73;&#xFF08;+11%&#xFF09;&#xFF0C;&#x5F97;&#x76CA;&#x4E8E;AI&#x79D1;&#x6280;&#x51FA;&#x53E3;&#xFF08;&#x6570;&#x636E;&#x4E2D;&#x5FC3;&#x3001;&#x534A;&#x5BFC;&#x4F53;&#xFF09;&#x7684;&#x7F13;&#x51B2;&#x6548;&#x5E94;&#x3002;<span class="term" data-zh="&#x56FD;&#x5BB6;&#x77F3;&#x6CB9;&#xFF08;PETRONAS&#xFF09;&#xFF1A;&#x9A6C;&#x6765;&#x897F;&#x4E9A;&#x56FD;&#x5BB6;&#x77F3;&#x6CB9;&#x516C;&#x53F8;&#xFF0C;&#x5411;&#x8054;&#x90A6;&#x653F;&#x5E9C;&#x7F34;&#x7EB3;&#x5927;&#x91CF;&#x80A1;&#x606F;&#xFF0C;&#x6CB9;&#x4EF7;&#x9AD8;&#x4F4D;&#x5BF9;&#x5176;&#x8D22;&#x653F;&#x6709;&#x5229;&#x3002;" data-en="PETRONAS: Malaysia's national oil company; high oil prices boost its dividend payments to the federal government.">&#x56FD;&#x5BB6;&#x77F3;&#x6CB9;</span>&#x53D7;&#x76CA;&#x4E8E;&#x9AD8;&#x6CB9;&#x4EF7;&#x73AF;&#x5883;&#xFF0C;&#x4EE4;&#x5409;&#x5728;&#x533A;&#x57DF;&#x8D27;&#x5E01;&#x4E2D;&#x6297;&#x8DCC;&#x6027;&#x7A81;&#x51FA;&#x3002;</div>
+<div class="news-body en-only">Among Asia's best-performing currencies in 2025 (+11%), buffered by AI tech exports (data centers, semiconductors). PETRONAS is benefiting from elevated oil prices, keeping the ringgit resilient relative to regional peers.</div>
 </div>
 
-<!-- ⑧ GOD'S EYE ANALYSIS -->
+<div class="news-item">
+<div class="news-ts">Mar 16, 2026 &#xB7; Al Jazeera</div>
+<div class="news-hed zh-only"><span class="msia-tag">&#x80FD;&#x6E90;</span>&#x9A6C;&#x6765;&#x897F;&#x4E9A;&#x7684;&#x6218;&#x4E89;&#x6572;&#x53E3;&#xFF1A;<span class="term" data-zh="&#x970D;&#x5C14;&#x6728;&#x5179;&#x6D77;&#x5CE1;&#x539F;&#x6CB9;&#x6D41;&#x5411;&#xFF1A;&#x7ECF;&#x970D;&#x5C14;&#x6728;&#x5179;&#x8FD0;&#x8F93;&#x7684;&#x539F;&#x6CB9;&#x4E2D;84%&#x6D41;&#x5411;&#x4E9A;&#x6D32;&#x2014;&#x2014;&#x4E2D;&#x56FD;&#x3001;&#x5370;&#x5EA6;&#x3001;&#x65E5;&#x672C;&#x3001;&#x97E9;&#x56FD;&#x5360;&#x7EA6;70%&#x3002;" data-en="Hormuz crude flows: 84% of crude through the strait goes to Asia &#x2014; China, India, Japan, South Korea account for ~70%.">84%&#x7684;&#x970D;&#x5C14;&#x6728;&#x5179;&#x539F;&#x6CB9;</span>&#x8FD0;&#x5F80;&#x4E9A;&#x6D32;</div>
+<div class="news-hed en-only"><span class="msia-tag">ENERGY</span>Malaysia's War Exposure: 84% of Strait of Hormuz Crude Destined for Asia</div>
+<div class="news-body zh-only">&#x4E2D;&#x56FD;&#x3001;&#x5370;&#x5EA6;&#x3001;&#x65E5;&#x672C;&#x3001;&#x97E9;&#x56FD;&#x63A5;&#x6536;&#x7EA6;70%&#x7684;&#x6D77;&#x5CE1;&#x539F;&#x6CB9;&#x8FD0;&#x8F93;&#x91CF;&#x3002;&#x9A6C;&#x6765;&#x897F;&#x4E9A;&#x6D88;&#x8D39;&#x8005;&#x6B63;&#x5728;&#x627F;&#x53D7;&#x67F4;&#x6CB9;&#x4EF7;&#x683C;&#x98D9;&#x5347;&#x7684;&#x76F4;&#x63A5;&#x51B2;&#x51FB;&#x2014;&#x2014;&#x8FD0;&#x8F93;&#x6210;&#x672C;&#x4E0A;&#x6DA8;&#x4F20;&#x5BFC;&#x81F3;&#x65E5;&#x5E38;&#x98DF;&#x54C1;&#x4EF7;&#x683C;&#x3002;&#x9A6C;&#x6765;&#x897F;&#x4E9A;&#x867D;&#x662F;&#x51C0;&#x77F3;&#x6CB9;&#x51FA;&#x53E3;&#x56FD;&#xFF0C;&#x4F46;&#x56FD;&#x5185;&#x7CBE;&#x70BC;&#x4EA7;&#x80FD;&#x4E0D;&#x8DB3;&#x4F7F;&#x5176;&#x4ECD;&#x9700;&#x8FDB;&#x53E3;&#x6210;&#x54C1;&#x6CB9;&#x3002;</div>
+<div class="news-body en-only">China, India, Japan, South Korea receive ~70% of strait shipments. Malaysian consumers are feeling the diesel price surge directly &#x2014; transport cost increases are flowing through to daily food prices. Though Malaysia is a net oil exporter, insufficient domestic refining capacity means it still imports refined products.</div>
+</div>
+</div>
+
+<!-- &#x4E0A;&#x5E1D;&#x89C6;&#x89D2; -->
+<div class="gods-eye-section">
+<div class="gods-eye-header">
+<div class="gods-eye-title-block">
+<span class="gods-eye-sup"><span class="zh-only">&#x6838;&#x5FC3;&#x5DEE;&#x5F02;&#x5316;</span><span class="en-only">CORE DIFFERENTIATOR</span></span>
+<span class="gods-eye-main-title"><span class="zh-only">&#x4E0A;&#x5E1D;&#x89C6;&#x89D2;&#x5206;&#x6790;</span><span class="en-only">GOD'S EYE ANALYSIS</span></span>
+</div>
+<div class="gods-eye-rule"></div>
+</div>
+
+<div class="mindmap-wrap"><canvas id="mindmapCanvas" width="1280" height="760"></canvas></div>
+
+<div class="analysis-item">
+<div class="analysis-label"><span class="zh-only">&#x4FE1;&#x606F;&#x94FE;&#x6574;&#x5408;</span><span class="en-only">INTELLIGENCE CHAIN</span></div>
+<p class="analysis-body zh-only">&#x672C;&#x671F;&#x4E09;&#x6761;&#x770B;&#x4F3C;&#x65E0;&#x5173;&#x7684;&#x7EBF;&#x7D22;&#x5728;&#x4ECA;&#x5929;&#x5F62;&#x6210;&#x4EA4;&#x6C47;&#xFF1A;<strong>&#x2460;</strong> &#x7279;&#x6717;&#x666E;&#x8981;&#x6C42;&#x5168;&#x7403;&#x76DF;&#x53CB;&#x5DE1;&#x903B;&#x970D;&#x5C14;&#x6728;&#x5179;&#xFF0C;&#x5168;&#x90E8;&#x906D;&#x62D2;&#x2014;&#x2014;&#x7F8E;&#x56FD;&#x5916;&#x4EA4;&#x5B64;&#x7ACB;&#x3002;<strong>&#x2461;</strong> NVIDIA&#x5BA3;&#x5E03;&#x9884;&#x671F;$1&#x4E07;&#x4EBF;GPU&#x8BA2;&#x5355;&#xFF0C;&#x540C;&#x65E5;&#x591A;&#x4E2A;&#x4E9A;&#x6D32;&#x7ECF;&#x6D4E;&#x4F53;&#x5BA3;&#x5E03;&#x56DB;&#x5929;&#x5DE5;&#x4F5C;&#x5468;&#x5E94;&#x5BF9;&#x80FD;&#x6E90;&#x5371;&#x673A;&#x3002;<strong>&#x2462;</strong> BTC&#x5728;&#x6050;&#x614C;&#x8D2A;&#x5A6A;&#x4EC5;23&#x65F6;&#x4E0A;&#x6DA8;1.6%&#x2014;&#x2014;&#x60C5;&#x7EEA;&#x4E0E;&#x4EF7;&#x683C;&#x7684;&#x526A;&#x5200;&#x5DEE;&#x8FBE;2020&#x5E74;3&#x6708;&#x4EE5;&#x6765;&#x6700;&#x5927;&#x3002;&#x4E09;&#x8005;&#x5171;&#x540C;&#x6307;&#x5411;&#x540C;&#x4E00;&#x4E2A;&#x7ED3;&#x6784;&#x6027;&#x8F6C;&#x53D8;&#xFF1A;<strong style="color:#5c3d8f;">&#x8D44;&#x672C;&#x6B63;&#x4ECE;&#x5730;&#x7F18;&#x653F;&#x6CBB;&#x8D44;&#x4EA7;&#x8F6C;&#x5411;&#x6280;&#x672F;&#x4E3B;&#x6743;&#x6807;&#x7684;&#x3002;</strong></p>
+<p class="analysis-body en-only">Three seemingly unrelated data points converge today: <strong>&#x2460;</strong> Trump demands global allies patrol Hormuz &#x2014; all refuse, confirming US diplomatic isolation. <strong>&#x2461;</strong> NVIDIA announces $1T in expected GPU orders on the same day multiple Asian economies announce 4-day work weeks for energy rationing. <strong>&#x2462;</strong> BTC rises 1.6% while Fear &amp; Greed sits at 23 &#x2014; the widest sentiment-price divergence since March 2020. All three point to the same structural shift: <strong style="color:#5c3d8f;">capital is moving from geopolitical assets to technological sovereignty plays.</strong></p>
+</div>
+
+<div class="mispricing-box">
+<span class="mispricing-tag zh-only">&#x9519;&#x8BEF;&#x5B9A;&#x4EF7; #1 &#x2014; &#x201C;&#x76DF;&#x53CB;&#x4E0D;&#x5E2E;&#x5FD9;&#x201D;&#x4FE1;&#x53F7;</span>
+<span class="mispricing-tag en-only">MISPRICING #1 &#x2014; The &#x201C;Allies Won't Help&#x201D; Signal</span>
+<p class="zh-only">
+<strong style="color:#5c3d8f;">&#x5E02;&#x573A;&#x5171;&#x8BC6;&#xFF1A;</strong>&#x76DF;&#x53CB;&#x62D2;&#x7EDD;&#x662F;&#x5916;&#x4EA4;&#x59FF;&#x6001;&#xFF0C;&#x7F8E;&#x56FD;&#x5355;&#x65B9;&#x9762;&#x4E5F;&#x80FD;&#x63A7;&#x5236;&#x970D;&#x5C14;&#x6728;&#x5179;&#x3002;<br><br>
+<strong style="color:#7a4f1a;">&#x4E0A;&#x5E1D;&#x89C6;&#x89D2;&#xFF1A;</strong>&#x7279;&#x6717;&#x666E;&#x8981;&#x6C42;&#x5317;&#x7EA6;&#x5DE1;&#x903B;&#x970D;&#x5C14;&#x6728;&#x5179;&#x800C;<strong>&#x6240;&#x6709;&#x4EBA;&#x90FD;&#x62D2;&#x7EDD;</strong>&#x2014;&#x2014;&#x8FD9;&#x662F;&#x672C;&#x5468;&#x88AB;&#x4E25;&#x91CD;&#x4F4E;&#x4F30;&#x7684;&#x4FE1;&#x53F7;&#x3002;&#x6CA1;&#x6709;&#x8054;&#x76DF;=&#x6CA1;&#x6709;&#x5408;&#x6CD5;&#x6027;&#x62A4;&#x76FE;=&#x56FD;&#x5185;&#x653F;&#x6CBB;&#x538B;&#x529B;&#x52A0;&#x901F;&#x3002;2003&#x5E74;&#x4F0A;&#x62C9;&#x514B;&#x6218;&#x4E89;&#x81F3;&#x5C11;&#x6709;&#x201C;&#x5FD7;&#x613F;&#x8005;&#x8054;&#x76DF;&#x201D;&#x7684;&#x906E;&#x7F9E;&#x5E03;&#xFF1B;2026&#x5E74;&#x4F0A;&#x6717;&#x6218;&#x4E89;&#x8FDE;&#x906E;&#x7F9E;&#x5E03;&#x90FD;&#x6CA1;&#x6709;&#x3002;<br><br>
+<strong style="color:#1a1410;">&#x53EF;&#x64CD;&#x4F5C;&#x6D1E;&#x89C1;&#xFF1A;</strong>&#x9000;&#x51FA;&#x901A;&#x9053;&#x7684;&#x65F6;&#x95F4;&#x7EBF;&#x56E0;&#x6B64;&#x7F29;&#x77ED;&#x3002;&#x6CA1;&#x6709;&#x56FD;&#x9645;&#x652F;&#x6301;&#x7684;&#x6218;&#x4E89;&#x5728;&#x7F8E;&#x56FD;&#x5386;&#x53F2;&#x4E0A;&#x4ECE;&#x672A;&#x6301;&#x7EED;&#x8D85;&#x8FC7;6&#x4E2A;&#x6708;&#xFF08;&#x9664;&#x975E;&#x6709;&#x5F81;&#x5175;&#x5236;&#xFF09;&#x3002;&#x4E2D;&#x671F;&#x9009;&#x4E3E;&#x5728;11&#x6708;&#xFF0C;&#x7279;&#x6717;&#x666E;&#x9700;&#x8981;&#x5728;9&#x6708;&#x524D;&#x5C55;&#x793A;&#x201C;&#x80DC;&#x5229;&#x53D9;&#x4E8B;&#x201D;&#x3002;<strong>&#x5173;&#x952E;&#x7A97;&#x53E3;&#xFF1A;5-6&#x6708;&#x2014;&#x2014;&#x5982;&#x679C;&#x6CB9;&#x4EF7;&#x4E0D;&#x56DE;&#x843D;&#x81F3;$85&#x4EE5;&#x4E0B;&#xFF0C;&#x5171;&#x548C;&#x515A;&#x53C2;&#x8BAE;&#x5458;&#x5C06;&#x5F00;&#x59CB;&#x516C;&#x5F00;&#x53CD;&#x5BF9;&#x3002;</strong>
+</p>
+<p class="en-only">
+<strong style="color:#5c3d8f;">Market consensus:</strong> Allied refusal is diplomatic posturing; the US can control Hormuz unilaterally.<br><br>
+<strong style="color:#7a4f1a;">God's Eye:</strong> Trump demanding NATO patrol Hormuz and <strong>everyone refusing</strong> is the most underreported signal this week. No coalition = no legitimacy shield = domestic political pressure accelerates. The 2003 Iraq War at least had a &#x201C;coalition of the willing&#x201D; fig leaf; the 2026 Iran War has none.<br><br>
+<strong style="color:#1a1410;">Actionable insight:</strong> The exit ramp timeline just shortened. Wars without international support have never lasted more than 6 months in US history (without conscription). Midterms are in November; Trump needs a &#x201C;victory narrative&#x201D; by September. <strong>Key window: May-June &#x2014; if oil doesn't fall below $85, Republican senators will begin publicly opposing the war.</strong>
+</p>
+</div>
+
+<div class="mispricing-box">
+<span class="mispricing-tag zh-only">&#x9519;&#x8BEF;&#x5B9A;&#x4EF7; #2 &#x2014; NVIDIA&#x7684;$1&#x4E07;&#x4EBF;&#x8BA2;&#x5355; vs &#x6218;&#x4E89;&#x7ECF;&#x6D4E;</span>
+<span class="mispricing-tag en-only">MISPRICING #2 &#x2014; NVIDIA's $1T Orders vs War Economy</span>
+<p class="zh-only">
+<strong style="color:#5c3d8f;">&#x5E02;&#x573A;&#x5171;&#x8BC6;&#xFF1A;</strong>AI&#x8D44;&#x672C;&#x5F00;&#x652F;&#x4E0D;&#x53D7;&#x6218;&#x4E89;&#x5F71;&#x54CD;&#x2014;&#x2014;&#x79D1;&#x6280;&#x662F;&#x72EC;&#x7ACB;&#x8D5B;&#x9053;&#x3002;<br><br>
+<strong style="color:#7a4f1a;">&#x4E0A;&#x5E1D;&#x89C6;&#x89D2;&#xFF1A;</strong>&#x9EC4;&#x4EC1;&#x52CB;&#x5BA3;&#x5E03;&#x9884;&#x8BA1;&#x5230;2027&#x5E74;&#x7684;$1&#x4E07;&#x4EBF;GPU&#x8BA2;&#x5355;&#xFF0C;<strong>&#x540C;&#x4E00;&#x5929;</strong>&#x591A;&#x4E2A;&#x4E9A;&#x6D32;&#x7ECF;&#x6D4E;&#x4F53;&#x5BA3;&#x5E03;&#x56DB;&#x5929;&#x5DE5;&#x4F5C;&#x5468;&#x5E94;&#x5BF9;&#x80FD;&#x6E90;&#x5371;&#x673A;&#x3002;AI&#x8D44;&#x672C;&#x5F00;&#x652F;&#x4E0E;&#x80FD;&#x6E90;&#x5371;&#x673A;&#x6B63;&#x5728;&#x78B0;&#x649E;&#x8F68;&#x9053;&#x4E0A;&#x2014;&#x2014;&#x8C01;&#x5F97;&#x5230;&#x7535;&#x529B;&#xFF1F;&#x4E00;&#x4E2A;Vera Rubin NVL72&#x673A;&#x67B6;&#x7684;&#x529F;&#x8017;&#x76F8;&#x5F53;&#x4E8E;&#x4E00;&#x5EA7;&#x5C0F;&#x578B;&#x57CE;&#x9547;&#x3002;&#x5F53;&#x67F4;&#x6CB9;$5/&#x52A0;&#x4ED1;&#x3001;&#x822A;&#x7A7A;&#x7164;&#x6CB9;$200/&#x6876;&#x65F6;&#xFF0C;&#x6570;&#x636E;&#x4E2D;&#x5FC3;&#x7684;&#x7535;&#x8D39;&#x662F;&#x5426;&#x8FD8;&#x80FD;&#x7EF4;&#x6301;&#x5F53;&#x524D;&#x7684;&#x6269;&#x5F20;&#x901F;&#x5EA6;&#xFF1F;<br><br>
+<strong style="color:#1a1410;">&#x5173;&#x952E;&#x77DB;&#x76FE;&#xFF1A;</strong>NVIDIA&#x7684;&#x4F30;&#x503C;&#x5EFA;&#x7ACB;&#x5728;&#x201C;&#x65E0;&#x9650;&#x7535;&#x529B;&#x4F9B;&#x5E94;&#x201D;&#x7684;&#x9690;&#x542B;&#x5047;&#x8BBE;&#x4E4B;&#x4E0A;&#x3002;&#x5982;&#x679C;&#x54C8;&#x5C14;&#x514B;&#x5C9B;&#x88AB;&#x6253;&#x51FB;&#x3001;&#x6CB9;&#x4EF7;&#x51B2;$150&#xFF0C;&#x8FD9;&#x4E2A;&#x5047;&#x8BBE;&#x5C06;&#x9996;&#x6B21;&#x906D;&#x5230;&#x5B9E;&#x8D28;&#x6027;&#x6311;&#x6218;&#x3002;<strong>&#x89C2;&#x5BDF;&#x70B9;&#xFF1A;&#x5982;&#x679C;GTC&#x540E;NVIDIA&#x80A1;&#x4EF7;&#x4E0D;&#x521B;&#x65B0;&#x9AD8;&#xFF0C;&#x90A3;&#x5C31;&#x662F;AI&#x53D9;&#x4E8B;&#x9047;&#x5230;&#x80FD;&#x6E90;&#x5929;&#x82B1;&#x677F;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x4FE1;&#x53F7;&#x3002;</strong>
+</p>
+<p class="en-only">
+<strong style="color:#5c3d8f;">Market consensus:</strong> AI capex is war-proof &#x2014; tech is an independent lane.<br><br>
+<strong style="color:#7a4f1a;">God's Eye:</strong> Jensen Huang announced $1T in GPU orders through 2027 on the <strong>same day</strong> multiple Asian economies announced 4-day work weeks due to energy crisis. AI capex and the energy crisis are on a collision course &#x2014; who gets the electricity? A single Vera Rubin NVL72 rack draws power equivalent to a small town. When diesel is $5/gallon and jet fuel $200/barrel, can data center expansion sustain its current pace?<br><br>
+<strong style="color:#1a1410;">Key contradiction:</strong> NVIDIA's valuation is built on an implicit assumption of unlimited power supply. If Kharg Island is struck and oil hits $150, this assumption faces its first real-world challenge. <strong>Signal to watch: if NVIDIA doesn't make new highs post-GTC, that's the first signal AI narrative has hit an energy ceiling.</strong>
+</p>
+</div>
+
+<div class="mispricing-box">
+<span class="mispricing-tag zh-only">&#x9519;&#x8BEF;&#x5B9A;&#x4EF7; #3 &#x2014; &#x201C;&#x6781;&#x5EA6;&#x6050;&#x614C;&#x201D;&#x4E2D;&#x7684;BTC $74K</span>
+<span class="mispricing-tag en-only">MISPRICING #3 &#x2014; BTC at $74K During &#x201C;Extreme Fear&#x201D;</span>
+<p class="zh-only">
+<strong style="color:#5c3d8f;">&#x5E02;&#x573A;&#x5171;&#x8BC6;&#xFF1A;</strong>&#x6050;&#x614C;&#x8D2A;&#x5A6A;23=&#x5E94;&#x8BE5;&#x629B;&#x552E;&#x98CE;&#x9669;&#x8D44;&#x4EA7;&#x3002;<br><br>
+<strong style="color:#7a4f1a;">&#x4E0A;&#x5E1D;&#x89C6;&#x89D2;&#xFF1A;</strong>&#x6050;&#x614C;&#x8D2A;&#x5A6A;23&#x4F46;BTC&#x6DA8;1.6%&#x2014;&#x2014;&#x8FD9;&#x662F;&#x6563;&#x6237;&#x6050;&#x614C;&#x4E2D;&#x7684;&#x673A;&#x6784;&#x5438;&#x7B79;&#x3002;&#x60C5;&#x7EEA;&#x4E0E;&#x4EF7;&#x683C;&#x7684;&#x80CC;&#x79BB;&#x5E45;&#x5EA6;&#x662F;2020&#x5E74;3&#x6708;&#x4EE5;&#x6765;&#x6700;&#x5BBD;&#x3002;<strong>&#x5386;&#x53F2;&#x89C4;&#x5F8B;&#xFF1A;</strong>&#x5F53;&#x6050;&#x614C;&#x8D2A;&#x5A6A;&#x8FDE;&#x7EED;2&#x5468;&#x4EE5;&#x4E0A;&#x4F4E;&#x4E8E;25&#x3001;&#x4E14;BTC&#x7EF4;&#x6301;&#x5728;<span class="term" data-zh="200&#x65E5;&#x79FB;&#x52A8;&#x5E73;&#x5747;&#x7EBF;&#xFF1A;&#x6280;&#x672F;&#x5206;&#x6790;&#x4E2D;&#x8861;&#x91CF;&#x957F;&#x671F;&#x8D8B;&#x52BF;&#x7684;&#x5173;&#x952E;&#x6307;&#x6807;&#xFF0C;BTC&#x76EE;&#x524D;&#x4ECD;&#x5728;&#x5176;&#x4E0A;&#x65B9;&#x8FD0;&#x884C;&#x3002;" data-en="200-day Moving Average: Key technical indicator for long-term trends; BTC currently trading above it.">200&#x65E5;&#x5747;&#x7EBF;</span>&#x4E0A;&#x65B9;&#x65F6;&#xFF0C;3&#x4E2A;&#x6708;&#x8FDC;&#x671F;&#x56DE;&#x62A5;&#x7387;&#x5E73;&#x5747;+40%&#x3002;<br><br>
+<strong style="color:#1a1410;">&#x53EF;&#x64CD;&#x4F5C;&#x6D1E;&#x89C1;&#xFF1A;</strong>&#x8FD9;&#x4E0D;&#x662F;&#x201C;&#x6570;&#x5B57;&#x9EC4;&#x91D1;&#x201D;&#x53D9;&#x4E8B;&#x2014;&#x2014;&#x8FD9;&#x662F;&#x6D41;&#x52A8;&#x6027;&#x6EA2;&#x4EF7;&#x53D9;&#x4E8B;&#x3002;&#x5728;&#x5168;&#x7403;&#x8D44;&#x672C;&#x7BA1;&#x5236;&#x52A0;&#x5F3A;&#x3001;&#x591A;&#x56FD;&#x5B9E;&#x65BD;&#x56DB;&#x5929;&#x5DE5;&#x4F5C;&#x5468;&#x7684;&#x73AF;&#x5883;&#x4E0B;&#xFF0C;BTC&#x4F5C;&#x4E3A;24/7&#x65E0;&#x56FD;&#x754C;&#x6D41;&#x52A8;&#x6027;&#x5DE5;&#x5177;&#x7684;&#x4EF7;&#x503C;&#x6B63;&#x5728;&#x88AB;&#x673A;&#x6784;&#x91CD;&#x65B0;&#x5B9A;&#x4EF7;&#x3002;<strong>&#x9884;&#x6D4B;&#xFF1A;&#x82E5;&#x6050;&#x614C;&#x8D2A;&#x5A6A;&#x5728;25&#x4EE5;&#x4E0B;&#x518D;&#x6301;&#x7EED;1&#x5468;&#x800C;BTC&#x4E0D;&#x8DCC;&#x7834;$70K&#xFF0C;&#x4E0B;&#x4E00;&#x6CE2;&#x6DA8;&#x5E45;&#x7684;&#x76EE;&#x6807;&#x662F;$85K-90K&#x3002;</strong>
+</p>
+<p class="en-only">
+<strong style="color:#5c3d8f;">Market consensus:</strong> Fear &amp; Greed at 23 = sell risk assets.<br><br>
+<strong style="color:#7a4f1a;">God's Eye:</strong> Fear &amp; Greed at 23 but BTC up 1.6%. This is institutional accumulation during retail panic. The divergence between sentiment and price is the widest since March 2020. <strong>Historical pattern:</strong> when Fear &amp; Greed stays below 25 for 2+ weeks while BTC holds above its 200-day MA, the 3-month forward return averages +40%.<br><br>
+<strong style="color:#1a1410;">Actionable insight:</strong> This isn't a &#x201C;digital gold&#x201D; narrative &#x2014; it's a liquidity premium narrative. With capital controls tightening globally and multiple nations implementing 4-day work weeks, BTC's value as a 24/7 borderless liquidity instrument is being repriced by institutions. <strong>Prediction: if Fear &amp; Greed stays below 25 for another week while BTC holds above $70K, the next leg targets $85K-90K.</strong>
+</p>
+</div>
+
+<div class="analysis-item">
+<div class="analysis-label"><span class="zh-only">&#x672C;&#x671F;&#x6838;&#x5FC3;&#x8FDE;&#x7EBF;</span><span class="en-only">KEY NEXUS</span></div>
+<p class="analysis-body zh-only"><strong style="color:#5c3d8f;">&#x5916;&#x4EA4;&#x5B64;&#x7ACB; &#xD7; NVIDIA&#x4E07;&#x4EBF;&#x8D4C;&#x6CE8; &#xD7; BTC&#x6050;&#x614C;/&#x4EF7;&#x683C;&#x80CC;&#x79BB;</strong>&#x2014;&#x2014;&#x4E09;&#x8005;&#x540C;&#x65E5;&#x51FA;&#x73B0;&#xFF0C;&#x5171;&#x540C;&#x6307;&#x5411;&#x540C;&#x4E00;&#x4E2A;&#x7ED3;&#x6784;&#x6027;&#x8F6C;&#x53D8;&#xFF1A;<strong>&#x8D44;&#x672C;&#x6B63;&#x5728;&#x4ECE;&#x5730;&#x7F18;&#x653F;&#x6CBB;&#x8D44;&#x4EA7;&#x8F6C;&#x5411;&#x6280;&#x672F;&#x4E3B;&#x6743;&#x6807;&#x7684;&#x3002;</strong>&#x5F53;&#x6240;&#x6709;&#x76DF;&#x53CB;&#x62D2;&#x7EDD;&#x4E3A;&#x4F60;&#x7684;&#x6218;&#x4E89;&#x80CC;&#x4E66;&#xFF0C;&#x5F53;&#x80FD;&#x6E90;&#x5371;&#x673A;&#x4E0E;AI&#x6269;&#x5F20;&#x4E89;&#x593A;&#x540C;&#x4E00;&#x79CD;&#x8D44;&#x6E90;&#xFF08;&#x7535;&#x529B;&#xFF09;&#xFF0C;&#x5F53;&#x6563;&#x6237;&#x6050;&#x614C;&#x800C;&#x673A;&#x6784;&#x9006;&#x52BF;&#x4E70;&#x5165;&#x2014;&#x2014;&#x6211;&#x4EEC;&#x770B;&#x5230;&#x7684;&#x4E0D;&#x662F;&#x4E00;&#x573A;&#x6218;&#x4E89;&#x7684;&#x8D70;&#x5411;&#xFF0C;&#x800C;&#x662F;&#x5168;&#x7403;&#x8D44;&#x672C;&#x6D41;&#x52A8;&#x5E95;&#x5C42;&#x903B;&#x8F91;&#x7684;&#x91CD;&#x5199;&#x3002;&#x6218;&#x4E89;&#x4F1A;&#x7ED3;&#x675F;&#xFF0C;&#x4F46;&#x8FD9;&#x6B21;&#x8D44;&#x672C;&#x8FC1;&#x79FB;&#x4E0D;&#x4F1A;&#x9006;&#x8F6C;&#x3002;<br><br>
+&#x81EA;&#x8BC4;&#x6DF1;&#x5EA6;&#xFF1A;9/10&#x3002;&#x672C;&#x671F;&#x89C6;&#x89D2;&#xFF1A;&#x4ECE;&#x5916;&#x4EA4;&#x5B64;&#x7ACB;&#x2192;&#x9000;&#x51FA;&#x65F6;&#x95F4;&#x7EBF;&#x52A0;&#x901F;&#x2192;AI/&#x80FD;&#x6E90;&#x51B2;&#x7A81;&#x2192;&#x6D41;&#x52A8;&#x6027;&#x91CD;&#x65B0;&#x5B9A;&#x4EF7;&#x7684;&#x56DB;&#x7EF4;&#x63A8;&#x5BFC;&#x3002;</p>
+<p class="analysis-body en-only"><strong style="color:#5c3d8f;">Diplomatic Isolation &#xD7; NVIDIA's Trillion-Dollar Bet &#xD7; BTC Fear/Price Divergence</strong> &#x2014; all appearing on the same day, pointing to the same structural shift: <strong>capital is moving from geopolitical assets to technological sovereignty plays.</strong> When every ally refuses to endorse your war, when energy crisis and AI expansion compete for the same resource (electricity), when retail panics while institutions accumulate &#x2014; we're witnessing not just a war's trajectory, but a rewriting of global capital flow's underlying logic. The war will end, but this capital migration won't reverse.<br><br>
+Self-assessment depth: 9/10. This issue's framework: diplomatic isolation &#x2192; exit timeline acceleration &#x2192; AI/energy collision &#x2192; liquidity repricing &#x2014; a four-dimensional chain.</p>
+</div>
+</div>
+
+<!-- &#x8DA3;&#x95FB; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye8" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip8"><path id="eyeClipPath8" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng8" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline8" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip8)"><circle id="iris8" cx="60" cy="26" r="14" fill="url(#ng8)"/><circle id="pupil8" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only" style="color:var(--purple);">【上帝视角分析】</div>
-      <div class="section-name en-only" style="color:var(--purple);">God's Eye Analysis</div>
-      <div class="section-name-en">GOD'S EYE · INFORMATION EDGE</div>
-    </div>
-  </div>
+<div class="section-header"><div class="section-title"><span class="zh-only">&#x8DA3;&#x95FB;</span><span class="en-only">LIGHT NEWS</span></div><div class="section-rule"></div></div>
 
-  <div class="god-section">
-    <div class="god-section-title zh-only">信息差 · 预测 · 决策边界</div>
-    <div class="god-section-title en-only">Information Edge · Predictions · Decision Frontiers</div>
-    <div class="god-section-subtitle">ZEUS DAILY EXCLUSIVE ANALYSIS · MAR 17, 2026</div>
+<div class="fun-item"><div class="fun-num">1</div><div class="zh-only"><strong>&#x5723;&#x5E15;&#x7279;&#x91CC;&#x514B;&#x8282;&#x5168;&#x7403;&#x5E86;&#x795D;</strong>&#x2014;&#x2014;&#x4F46;&#x7231;&#x5C14;&#x5170;&#x603B;&#x7406;&#x547C;&#x5401;&#x5404;&#x56FD;&#x201C;&#x5728;&#x5168;&#x7403;&#x4E0D;&#x786E;&#x5B9A;&#x6027;&#x4E2D;&#x7406;&#x6027;&#x996E;&#x9152;&#x201D;&#x3002;&#x829D;&#x52A0;&#x54E5;&#x7167;&#x4F8B;&#x628A;&#x6CB3;&#x6C34;&#x67D3;&#x7EFF;&#xFF0C;&#x6089;&#x5C3C;&#x6B4C;&#x5267;&#x9662;&#x4EAE;&#x8D77;&#x7EFF;&#x706F;&#x3002;&#x8282;&#x65E5;&#x7167;&#x8FC7;&#xFF0C;&#x4E16;&#x754C;&#x7167;&#x4E71;&#x3002; <span style="color:#aaa;font-size:11px;">Mar 17</span></div><div class="en-only"><strong>St. Patrick's Day celebrated worldwide</strong> &#x2014; but the Irish PM asks nations to &#x201C;drink responsibly amid global uncertainty.&#x201D; Chicago dyed its river green as usual; Sydney Opera House lit up green. Holidays carry on; the world stays chaotic. <span style="color:#aaa;font-size:11px;">Mar 17</span></div></div>
 
-    <!-- Mind Map Canvas -->
-    <canvas id="mindmapCanvas" width="640" height="380"></canvas>
+<div class="fun-item"><div class="fun-num">2</div><div class="zh-only"><strong>&#x8FEA;&#x58EB;&#x5C3C;&#x96EA;&#x5B9D;Olaf&#x8D70;&#x4E0A;NVIDIA GTC&#x821E;&#x53F0;</strong>&#x2014;&#x2014;&#x901A;&#x8FC7;&#x7269;&#x7406;AI&#x6280;&#x672F;&#x6808;&#x5B9E;&#x73B0;&#x7684;&#x771F;&#x5B9E;&#x884C;&#x8D70;&#x673A;&#x5668;&#x4EBA;&#x3002;&#x9EC4;&#x4EC1;&#x52CB;&#xFF1A;&#x201C;&#x5973;&#x58EB;&#x4EEC;&#x5148;&#x751F;&#x4EEC;&#xFF0C;&#x8FD9;&#x662F;Olaf&#x3002;&#x201D;&#x5168;&#x573A;&#x8D77;&#x7ACB;&#x3002;&#x79D1;&#x5E7B;&#x7167;&#x8FDB;&#x73B0;&#x5B9E;&#x7684;&#x65F6;&#x523B;&#x3002; <span style="color:#aaa;font-size:11px;">NVIDIA &#xB7; Mar 16</span></div><div class="en-only"><strong>Disney's Olaf the snowman walked on stage at NVIDIA GTC</strong> &#x2014; a real walking robot powered by the physical AI stack. Jensen Huang: &#x201C;Ladies and gentlemen, Olaf.&#x201D; Standing ovation. The moment sci-fi became reality. <span style="color:#aaa;font-size:11px;">NVIDIA &#xB7; Mar 16</span></div></div>
 
-    <!-- Insight 1 -->
-    <div class="god-insight">
-      <div class="god-insight-title">
-        <span class="god-tag gt-misprice zh-only">信息差 #1</span>
-        <span class="god-tag gt-misprice en-only">MISPRICE #1</span>
-        市场在点阵图上犯了什么错
-      </div>
-      <div class="god-insight-body zh-only">
-        共识认为：美联储将"无聊地"维持利率不变，市场已完全消化。<strong>但这恰恰是最危险的盲区。</strong> 真正的博弈发生在明日的"点阵图"（Dot Plot）上——若FOMC将2026年预期降息次数从两次下调至一次（甚至零次），加密货币将在48小时内重演"卖出事实"的历史剧本（过去8次会议中7次如此）。黄金因具备战争通胀双重支撑，将成为唯一逆势受益的风险资产。<br><br>
-        <strong>具体预测：</strong> 若点阵图显示2026年仅预期1次降息，BTC将在72小时内回调至$68,000–$70,000区间，黄金反弹至$5,050–$5,100。
-      </div>
-      <div class="god-insight-body en-only">
-        Consensus: Fed will "boringly" hold as expected. <strong>This is exactly where the blind spot lies.</strong> The real action is in tomorrow's Dot Plot. If FOMC signals only 1 cut (vs. 2) in 2026, crypto will replay the "sell the news" script — 7 of the last 8 FOMC meetings caused BTC declines. Gold, with dual war + inflation support, becomes the sole risk asset that could benefit.<br><br>
-        <strong>Prediction:</strong> If dot plot shows 1 cut in 2026, BTC retraces to $68,000–$70,000 within 72 hours. Gold rebounds to $5,050–$5,100.
-      </div>
-    </div>
+<div class="fun-item"><div class="fun-num">3</div><div class="zh-only">&#x79D1;&#x5B66;&#x5BB6;&#x6210;&#x529F;&#x5728;<strong>&#x6A21;&#x62DF;&#x6708;&#x7403;&#x571F;&#x58E4;&#x4E2D;&#x79CD;&#x51FA;&#x9E70;&#x5634;&#x8C46;</strong>&#x2014;&#x2014;&#x5C06;&#x6708;&#x58E4;&#x3001;&#x8693;&#x8693;&#x5806;&#x80A5;&#x548C;&#x6297;&#x91CD;&#x91D1;&#x5C5E;&#x771F;&#x83CC;&#x6DF7;&#x5408;&#x540E;&#xFF0C;&#x8C46;&#x82D7;&#x987A;&#x5229;&#x53D1;&#x82BD;&#x3002;&#x4EBA;&#x7C7B;&#x7684;&#x6708;&#x7403;&#x519C;&#x573A;&#x68A6;&#x6BD4;&#x9884;&#x60F3;&#x4E2D;&#x66F4;&#x8FD1;&#x4E86;&#x3002; <span style="color:#aaa;font-size:11px;">ScienceDaily</span></div><div class="en-only">Scientists <strong>grew chickpeas in simulated lunar soil</strong> by mixing moon-like regolith with worm compost and metal-protecting fungi. A lunar farm is closer to reality than we thought. <span style="color:#aaa;font-size:11px;">ScienceDaily</span></div></div>
 
-    <!-- Insight 2 -->
-    <div class="god-insight">
-      <div class="god-insight-title">
-        <span class="god-tag gt-misprice zh-only">信息差 #2</span>
-        <span class="god-tag gt-misprice en-only">MISPRICE #2</span>
-        黄金$5,000下方的真实信号不是"跌破支撑"，而是白银
-      </div>
-      <div class="god-insight-body zh-only">
-        路透社和彭博社的主流叙事聚焦于"$5,000是黄金关键支撑"。<strong>但他们漏掉的是金银比。</strong> 当前金银比62.3，处于历史温和偏高位。根据2008年、2020年的先例，每当黄金在$5,000下方调整时，白银跌幅通常比黄金多出50%–80%（金银比扩至70+）。然而，若黄金在美联储决议后企稳并向上反攻，白银将成为更高弹性的受益资产（比值向55收敛）。<br><br>
-        <strong>具体预测：</strong> 若黄金48小时内站稳$5,000，白银将领涨回$85–$88，金银比收敛至59–60；若黄金跌破$4,980，白银将率先下探$77–$78。
-      </div>
-      <div class="god-insight-body en-only">
-        Bloomberg and Reuters focus on "$5,000 as critical gold support." <strong>What they miss: the gold-silver ratio at 62.3.</strong> Historical precedent (2008, 2020) shows that when gold corrects below key levels, silver falls 50-80% more (ratio widening to 70+). Conversely, if gold stabilizes post-FOMC, silver offers higher upside leverage back to ratio 55.<br><br>
-        <strong>Prediction:</strong> If gold holds $5,000 in 48 hours: silver leads to $85–$88, ratio convergence to 59–60. If gold breaks $4,980: silver tests $77–$78 first.
-      </div>
-    </div>
+<div class="fun-item"><div class="fun-num">4</div><div class="zh-only"><strong>&#x201C;&#x4EBA;&#x7C7B;&#x6700;&#x7EC8;&#x8003;&#x8BD5;&#x201D;</strong>&#xFF1A;1,000&#x540D;&#x9876;&#x5C16;&#x4E13;&#x5BB6;&#x8054;&#x5408;&#x51FA;&#x4E86;&#x4E00;&#x5957;2,500&#x9898;&#x7684;&#x6D4B;&#x8BD5;&#xFF0C;&#x76EE;&#x524D;&#x6240;&#x6709;AI&#x6A21;&#x578B;&#x90FD;&#x65E0;&#x6CD5;&#x901A;&#x8FC7;&#x3002;&#x4EBA;&#x7C7B;&#x7684;&#x9A84;&#x50B2;&#xFF0C;&#x6682;&#x65F6;&#x8FD8;&#x80FD;&#x4FDD;&#x4F4F;&#x3002; <span style="color:#aaa;font-size:11px;">Various &#xB7; Mar 2026</span></div><div class="en-only"><strong>Humanity's Last Exam</strong>: 1,000 experts created a 2,500-question test that stumps all AI models. Human pride survives &#x2014; for now. <span style="color:#aaa;font-size:11px;">Various &#xB7; Mar 2026</span></div></div>
 
-    <!-- Insight 3 -->
-    <div class="god-insight">
-      <div class="god-insight-title">
-        <span class="god-tag gt-misprice zh-only">信息差 #3</span>
-        <span class="god-tag gt-misprice en-only">GEOPOLITIC</span>
-        伊朗外长"愿意谈判"信号的时机不寻常——这是市场的机会窗口
-      </div>
-      <div class="god-insight-body zh-only">
-        被全球媒体轻描淡写的信号：伊朗外长在美联储开会同一天表态愿谈。<strong>这不是巧合。</strong> 伊朗深知：霍尔木兹长期封锁 → 油价高企 → 全球通胀 → 美联储鹰派 → 美元走强。但美元走强并不利于伊朗的战略目标（使美国陷入经济困境）。伊方的真实算计是：在美联储决议前释放谈判信号，压低油价期货，制造"战争即将结束"假象，为伊朗争取更多谈判筹码。<br><br>
-        <strong>可操作洞察：</strong> 此次谈判信号更可能是外交战术而非真诚意愿，霍尔木兹在4月前重新开放的概率不超过30%。若4月中下旬冲突仍未解决，WTI将重返$100–$105，届时将触发全球滞胀叙事，对马来西亚而言——油价高企使国家石油公司收益增加，可部分对冲旅游损失，但进口商品通胀将更快冲击中下阶层。
-      </div>
-      <div class="god-insight-body en-only">
-        The underreported signal: Iran's FM signals willingness to talk — on the exact same day as the FOMC meeting. <strong>This is not coincidence.</strong> Iran understands that prolonged Hormuz closure → high oil → global inflation → hawkish Fed → strong dollar — which actually contradicts Iran's strategic goals. The diplomatic signal is designed to suppress oil futures and create negotiating leverage, not signal genuine peace.<br><br>
-        <strong>Actionable insight:</strong> Probability of Hormuz reopening before April: under 30%. If conflict persists through mid-April, WTI returns to $100–$105, triggering stagflation narrative. For Malaysia: Petronas revenue gains partially offset tourism losses, but imported goods inflation hits middle/lower classes fastest.
-      </div>
-    </div>
-
-    <!-- Insight 4: Malaysia specific -->
-    <div class="god-insight">
-      <div class="god-insight-title">
-        <span class="god-tag gt-malaysia">马来西亚视角</span>
-        油价高企对马来西亚的净效应：两面刃，但主刃向上
-      </div>
-      <div class="god-insight-body zh-only">
-        主流分析集中于旅游业损失。<strong>但被忽略的是：马来西亚是净石油出口国。</strong> WTI在$90以上持续30天，<span class="term" data-title="国家石油公司 (Petronas)" data-body="马来西亚国有石油公司，是政府最重要的收入来源之一，负责向政府缴纳股息、税收和特许权使用费。油价上涨直接提高其盈利能力。">国家石油公司</span>股息及政府石油收入将较预算提升15–20%，为政府提供额外财政空间。令吉（USD/MYR现为3.937）在两股力量下拉锯：美元走强压低令吉，但高油价带来的经常账户改善又支撑令吉。<br><br>
-        <strong>净判断：</strong> 马来西亚在本轮地缘危机中比多数亚洲经济体更具韧性。若战争持续至Q2，政府有能力通过油气收益补贴燃料，防止通胀向民间剧烈传导。KLCI的风险更多来自外部情绪传染，而非本地基本面恶化。
-      </div>
-      <div class="god-insight-body en-only">
-        Mainstream analysis focuses on tourism losses. <strong>What's missed: Malaysia is a net oil exporter.</strong> WTI above $90 for 30+ days boosts Petronas dividends and government oil revenue by an estimated 15-20% above budget, creating fiscal headroom. The ringgit faces two opposing forces: dollar strength (negative) vs. current account improvement from high oil (positive).<br><br>
-        <strong>Net judgment:</strong> Malaysia is more resilient to this geopolitical crisis than most Asian economies. If conflict extends into Q2, the government can use oil revenues to subsidize fuel, limiting inflation pass-through. KLCI's risk comes more from external sentiment contagion than domestic fundamental deterioration.
-      </div>
-    </div>
-  </div>
+<div class="fun-item"><div class="fun-num">5</div><div class="zh-only">&#x591A;&#x4E2A;&#x4E9A;&#x6D32;&#x56FD;&#x5BB6;&#x56E0;&#x77F3;&#x6CB9;&#x5371;&#x673A;&#x5B9E;&#x65BD;<strong>&#x56DB;&#x5929;&#x5DE5;&#x4F5C;&#x5468;</strong>&#x548C;&#x5355;&#x53CC;&#x53F7;&#x9650;&#x884C;&#x2014;&#x2014;&#x610F;&#x60F3;&#x4E0D;&#x5230;&#x7684;&#x526F;&#x4F5C;&#x7528;&#xFF1A;&#x9A6C;&#x5C3C;&#x62C9;&#x548C;&#x66FC;&#x8C37;&#x7684;<strong>&#x7A7A;&#x6C14;&#x8D28;&#x91CF;&#x5927;&#x5E45;&#x6539;&#x5584;</strong>&#x3002;&#x6218;&#x4E89;&#x7684;&#x9ED1;&#x8272;&#x5E7D;&#x9ED8;&#xFF1A;&#x4EBA;&#x7C7B;&#x51CF;&#x5C11;&#x6D3B;&#x52A8;&#x540E;&#xFF0C;&#x5730;&#x7403;&#x677E;&#x4E86;&#x53E3;&#x6C14;&#x3002; <span style="color:#aaa;font-size:11px;">Al Jazeera / NPR &#xB7; Mar 16</span></div><div class="en-only">Multiple Asian governments implementing <strong>4-day work weeks</strong> and alternate-day car driving due to oil crisis &#x2014; unexpected upside: <strong>air quality improvement in Manila and Bangkok</strong>. War's dark irony: when humans slow down, the planet breathes easier. <span style="color:#aaa;font-size:11px;">Al Jazeera / NPR &#xB7; Mar 16</span></div></div>
 </div>
 
-<!-- ⑨ 轻松趣闻 -->
+<!-- &#x661F;&#x5EA7; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye9" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip9"><path id="eyeClipPath9" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng9" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline9" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip9)"><circle id="iris9" cx="60" cy="26" r="14" fill="url(#ng9)"/><circle id="pupil9" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">趣闻</div>
-      <div class="section-name en-only">Fun & Curiosities</div>
-      <div class="section-name-en">LIGHT NOTES</div>
-    </div>
-  </div>
-
-  <div class="fun-item">
-    <div class="fun-num">01</div>
-    <div class="fun-text zh-only">
-      <strong>第98届奥斯卡，Ryan Coogler的《罪人》包揽四项大奖</strong>——这部引发全球话题的惊悚片以3.65亿美元票房成为黑马，获最佳影片等四项大奖。<span class="term" data-title="蒂莫西·查拉梅" data-body="法裔美国演员，凭《沙丘》系列崛起。已连续多届奥斯卡陪跑，本届仍铩羽而归，网友调侃其为"奥斯卡恒久无缘"。">蒂莫西·查拉梅</span>继续与小金人擦肩，社交媒体集体哀嚎。典礼于3月15日（周日）在洛杉矶举行，<span class="term" data-title="奥斯卡 (Academy Awards)" data-body="由美国电影艺术与科学学院颁发的年度奖项，被视为电影界最高荣誉。第98届颁奖典礼于2026年3月15日举行。">奥斯卡</span>红毯被香奈儿与迪奥主导。
-    </div>
-    <div class="fun-text en-only">
-      <strong>98th Oscars: Ryan Coogler's "Sinners" wins four awards.</strong> The thriller with $365M box office swept four Oscars including Best Picture. Timothée Chalamet missed again, triggering social media grief. The March 15 ceremony saw Chanel and Dior dominate the red carpet.
-    </div>
-  </div>
-
-  <div class="fun-item">
-    <div class="fun-num">02</div>
-    <div class="fun-text zh-only">
-      <strong>78岁DoorDash外卖员被摄像头记录，网友集资近100万美元</strong>——一段门铃摄像头拍到78岁老人深夜送餐的视频在网上疯传，美国网友自发募款，最终筹集近100万美元赠予这位老人和他的妻子。这位老人表示从未想到会有如此回应，这笔钱将让他们不再需要为生计奔波。
-    </div>
-    <div class="fun-text en-only">
-      <strong>78-year-old DoorDash driver goes viral; strangers donate nearly $1 million.</strong> A Ring camera video of an elderly man delivering food went viral, prompting Americans to donate nearly $1M to him and his wife. The couple said they never expected such an outpouring.
-    </div>
-  </div>
-
-  <div class="fun-item">
-    <div class="fun-num">03</div>
-    <div class="fun-text zh-only">
-      <strong>马大（UPM）喷雾疫苗或改变全球山羊绵羊接种方式</strong>——<span class="term" data-title="马来西亚博特拉大学 (UPM)" data-body="马来西亚顶尖综合研究型大学，位于雪兰莪沙登，以农业和动物科学研究著称。">UPM</span>研究团队经数十年研究开发出一种喷雾型疫苗，有效替代传统针剂，据称可大幅降低畜牧业接种成本与动物应激反应。马来西亚科研成果再登国际舞台。
-    </div>
-    <div class="fun-text en-only">
-      <strong>UPM spray vaccine could transform global goat & sheep vaccination.</strong> Universiti Putra Malaysia's spray-type vaccine, developed over decades, could replace traditional injections, significantly reducing livestock vaccination costs and animal stress. Malaysian research gets global recognition.
-    </div>
-  </div>
-
-  <div class="fun-item">
-    <div class="fun-num">04</div>
-    <div class="fun-text zh-only">
-      <strong>比特币荣登"2026年初最差表现资产"——黄金和石油笑了</strong>——<span class="term" data-title="CoinGecko" data-body="全球领先的加密货币数据追踪平台，提供实时价格、市值及历史数据，无订阅费用。">CoinGecko</span>报告指出，2026年初黄金和原油以惊人涨幅领跑所有资产类别，而比特币成为同期表现最差的主要资产，年初至今跌幅一度超过23%。这种反差在2021年本是不可想象的场景。世道变了。
-    </div>
-    <div class="fun-text en-only">
-      <strong>Bitcoin crowned "worst performing major asset" of early 2026 as gold and oil lead all classes.</strong> CoinGecko data shows crude oil and gold leading all asset classes in early 2026, with BTC down over 23% YTD at its worst. A reversal of the 2021 narrative that would have seemed unimaginable just years ago.
-    </div>
-  </div>
-
-  <div class="fun-item">
-    <div class="fun-num">05</div>
-    <div class="fun-text zh-only">
-      <strong>伊朗互联网管控下，Starlink用户靠卫星信号与外界联系</strong>——伊朗政府在战争爆发后实施全面互联网封锁，但Fox News记者在推文发出后数分钟内便通过<span class="term" data-title="Starlink" data-body="SpaceX旗下低轨道卫星互联网服务。不依赖地面基础设施，理论上可绕过国家级网络封锁。此前曾为乌克兰战区和委内瑞拉提供服务。">Starlink</span>联系到德黑兰用户。讽刺的是：美国正在轰炸伊朗，同时美国公司的卫星正在帮伊朗人看轰炸新闻。
-    </div>
-    <div class="fun-text en-only">
-      <strong>Iran's internet is blacked out — but Starlink users are still online.</strong> Minutes after a Fox News reporter asked for Starlink contacts in Iran, users in Tehran and western Iran responded. The irony: US forces are bombing Iran while a US company's satellites are helping Iranians watch news of the bombing.
-    </div>
-  </div>
-
-  <div class="fun-item">
-    <div class="fun-num">06</div>
-    <div class="fun-text zh-only">
-      <strong>油价破百，韩国30年来首次对燃油设定价格上限</strong>——首尔汽油零售价上限定为每升1,724韩元（约$1.17），柴油1,713韩元，每两周根据国际市场重新计算一次。上一次韩国动用这项机制，还是1990年代亚洲金融危机期间。马来西亚的燃油补贴机制目前承受同方向的压力，只是还没到这一步。
-    </div>
-    <div class="fun-text en-only">
-      <strong>South Korea caps fuel prices for the first time since the 1990s.</strong> Gasoline capped at 1,724 KRW/litre (~$1.17), diesel at 1,713 KRW, recalculated every two weeks against international markets. The last time Seoul used this mechanism was the Asian Financial Crisis. Malaysia's fuel subsidy system is under the same directional pressure — just hasn't reached this point yet.
-    </div>
-  </div>
+<div class="section-header"><div class="section-title"><span class="zh-only">&#x661F;&#x5EA7;</span><span class="en-only">CELESTIAL</span></div><div class="section-rule"></div></div>
+<p style="font-size:11px;color:#aaa;margin-bottom:12px;"><span class="zh-only">&#x53CC;&#x9C7C;&#x5EA7;&#x5B63;&#x5C3E;&#x58F0;&#xFF08;2&#x6708;19&#x65E5;&#x2013;3&#x6708;20&#x65E5;&#xFF09;&#xB7; &#x767D;&#x7F8A;&#x5EA7;&#x80FD;&#x91CF;&#x6B63;&#x5728;&#x7D2F;&#x79EF; &#xB7; &#x5723;&#x5E15;&#x7279;&#x91CC;&#x514B;&#x8282;</span><span class="en-only">Pisces Season finale (Feb 19 &#x2013; Mar 20) &#xB7; Aries energy building &#xB7; St. Patrick's Day</span></p>
+<div class="horo-grid">
+<div class="horo-cell"><div class="horo-sign">&#x2648;</div><div class="horo-name"><span class="zh-only">&#x767D;&#x7F8A;</span><span class="en-only">Aries</span></div><div class="horo-text zh-only">&#x4F60;&#x7684;&#x5B63;&#x8282;&#x8FD1;&#x5728;&#x773C;&#x524D;&#x3002;&#x4ECA;&#x5929;&#x7684;&#x7EFF;&#x8272;&#x80FD;&#x91CF;&#x662F;&#x4F60;&#x7684;&#x4FE1;&#x53F7;&#x2014;&#x2014;&#x84C4;&#x52BF;&#x5F85;&#x53D1;&#xFF0C;&#x6625;&#x5206;&#x5373;&#x542F;&#x3002;</div><div class="horo-text en-only">Your season is days away. Today's green energy is your signal &#x2014; coiled and ready, the equinox launches you.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x2649;</div><div class="horo-name"><span class="zh-only">&#x91D1;&#x725B;</span><span class="en-only">Taurus</span></div><div class="horo-text zh-only">&#x9EC4;&#x91D1;&#x4E94;&#x5343;&#x7F8E;&#x5143;&#x7684;&#x4E16;&#x754C;&#x91CC;&#xFF0C;&#x4F60;&#x7684;&#x7A33;&#x5B9A;&#x5929;&#x8D4B;&#x4EF7;&#x503C;&#x500D;&#x589E;&#x3002;&#x522B;&#x6025;&#x7740;&#x52A8;&#xFF0C;&#x8BA9;&#x4EF7;&#x683C;&#x6765;&#x627E;&#x4F60;&#x3002;</div><div class="horo-text en-only">In a $5,000 gold world, your talent for stability doubles in value. Don't chase &#x2014; let price come to you.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x264A;</div><div class="horo-name"><span class="zh-only">&#x53CC;&#x5B50;</span><span class="en-only">Gemini</span></div><div class="horo-text zh-only">&#x4FE1;&#x606F;&#x8FC7;&#x8F7D;&#x662F;&#x4F60;&#x7684;&#x730E;&#x573A;&#x3002;&#x4ECA;&#x5929;&#x5168;&#x4E16;&#x754C;&#x7684;&#x77DB;&#x76FE;&#x4FE1;&#x53F7;&#x9700;&#x8981;&#x4F60;&#x6765;&#x6574;&#x7406;&#x3002;</div><div class="horo-text en-only">Information overload is your hunting ground. The world's contradictory signals need your sorting today.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x264B;</div><div class="horo-name"><span class="zh-only">&#x5DE8;&#x87F9;</span><span class="en-only">Cancer</span></div><div class="horo-text zh-only">&#x6218;&#x4E89;&#x8BA9;&#x4F60;&#x66F4;&#x60F3;&#x4FDD;&#x62A4;&#x5BB6;&#x4EBA;&#x3002;&#x8FD9;&#x79CD;&#x672C;&#x80FD;&#x662F;&#x5BF9;&#x7684;&#x2014;&#x2014;&#x4F46;&#x522B;&#x5FD8;&#x4E86;&#x4E5F;&#x4FDD;&#x62A4;&#x81EA;&#x5DF1;&#x7684;&#x60C5;&#x7EEA;&#x8FB9;&#x754C;&#x3002;</div><div class="horo-text en-only">War amplifies your protective instincts. Trust them &#x2014; but don't forget to guard your emotional boundaries too.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x264C;</div><div class="horo-name"><span class="zh-only">&#x72EE;&#x5B50;</span><span class="en-only">Leo</span></div><div class="horo-text zh-only">&#x805A;&#x5149;&#x706F;&#x4ECA;&#x5929;&#x5C5E;&#x4E8E;&#x7231;&#x5C14;&#x5170;&#x3002;&#x9000;&#x4E00;&#x6B65;&#xFF0C;&#x89C2;&#x5BDF;&#x8C01;&#x5728;&#x6050;&#x614C;&#x4E2D;&#x4FDD;&#x6301;&#x4E86;&#x98CE;&#x5EA6;&#x2014;&#x2014;&#x5B66;&#x4E60;&#x90A3;&#x4E2A;&#x3002;</div><div class="horo-text en-only">The spotlight belongs to Ireland today. Step back and observe who keeps composure in panic &#x2014; study that.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x264D;</div><div class="horo-name"><span class="zh-only">&#x5904;&#x5973;</span><span class="en-only">Virgo</span></div><div class="horo-text zh-only">&#x6DF7;&#x4E71;&#x4E2D;&#x627E;&#x79E9;&#x5E8F;&#x662F;&#x4F60;&#x7684;&#x672C;&#x80FD;&#x3002;&#x5F53;&#x4E16;&#x754C;&#x9700;&#x8981;&#x7CFB;&#x7EDF;&#x6027;&#x601D;&#x8003;&#x65F6;&#xFF0C;&#x4F60;&#x5C31;&#x662F;&#x6700;&#x7A00;&#x7F3A;&#x7684;&#x8D44;&#x6E90;&#x3002;</div><div class="horo-text en-only">Finding order in chaos is your gift. When the world needs systems thinking, you become the scarcest resource.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x264E;</div><div class="horo-name"><span class="zh-only">&#x5929;&#x79E4;</span><span class="en-only">Libra</span></div><div class="horo-text zh-only">&#x6240;&#x6709;&#x76DF;&#x53CB;&#x62D2;&#x7EDD;&#x7AD9;&#x961F;&#x2014;&#x2014;&#x8FD9;&#x662F;&#x4F60;&#x6700;&#x61C2;&#x7684;&#x5C40;&#x9762;&#x3002;&#x5E73;&#x8861;&#x4E0D;&#x662F;&#x4E2D;&#x7ACB;&#xFF0C;&#x662F;&#x770B;&#x6E05;&#x4E86;&#x53CC;&#x65B9;&#x540E;&#x7684;&#x9009;&#x62E9;&#x3002;</div><div class="horo-text en-only">Every ally refusing to take sides &#x2014; you understand this best. Balance isn't neutrality; it's choice after seeing both sides.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x264F;</div><div class="horo-name"><span class="zh-only">&#x5929;&#x880E;</span><span class="en-only">Scorpio</span></div><div class="horo-text zh-only">&#x6709;&#x771F;&#x76F8;&#x5728;&#x7B2C;&#x4E09;&#x5468;&#x6D6E;&#x51FA;&#x6C34;&#x9762;&#x3002;&#x4F60;&#x5DF2;&#x7ECF;&#x611F;&#x77E5;&#x5230;&#x4E86;&#x2014;&#x2014;&#x7B49;&#x5B83;&#x5B8C;&#x5168;&#x6210;&#x5F62;&#xFF0C;&#x529B;&#x91CF;&#x500D;&#x589E;&#x3002;</div><div class="horo-text en-only">Truth surfaces in the third week. You've already sensed it &#x2014; let it fully form and the power multiplies.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x2650;</div><div class="horo-name"><span class="zh-only">&#x5C04;&#x624B;</span><span class="en-only">Sagittarius</span></div><div class="horo-text zh-only">&#x822A;&#x7A7A;&#x7164;&#x6CB9;$200/&#x6876;&#x610F;&#x5473;&#x7740;&#x65C5;&#x884C;&#x53D8;&#x8D35;&#x4E86;&#x3002;&#x4F46;&#x4F60;&#x7684;&#x7CBE;&#x795E;&#x5192;&#x9669;&#x4E0D;&#x9700;&#x8981;&#x71C3;&#x6CB9;&#x2014;&#x2014;&#x4ECA;&#x5929;&#x8BFB;&#x4E00;&#x672C;&#x4E0D;&#x5728;&#x8212;&#x9002;&#x533A;&#x7684;&#x4E66;&#x3002;</div><div class="horo-text en-only">Jet fuel at $200/barrel makes travel expensive. But your spiritual adventures need no fuel &#x2014; read something outside your comfort zone today.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x2651;</div><div class="horo-name"><span class="zh-only">&#x6469;&#x7FAF;</span><span class="en-only">Capricorn</span></div><div class="horo-text zh-only">&#x5F53;&#x4E16;&#x754C;&#x88AB;&#x77ED;&#x7EBF;&#x60C5;&#x7EEA;&#x4E3B;&#x5BFC;&#xFF0C;&#x4F60;&#x770B;&#x89C1;&#x7684;&#x662F;&#x5341;&#x5E74;&#x540E;&#x7684;&#x683C;&#x5C40;&#x3002;&#x4FDD;&#x6301;&#x4F60;&#x7684;&#x8282;&#x594F;&#x3002;</div><div class="horo-text en-only">While the world trades on weekly sentiment, you see the decade ahead. Keep your rhythm.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x2652;</div><div class="horo-name"><span class="zh-only">&#x6C34;&#x74F6;</span><span class="en-only">Aquarius</span></div><div class="horo-text zh-only">NVIDIA&#x7684;&#x8F68;&#x9053;&#x6570;&#x636E;&#x4E2D;&#x5FC3;&#x3001;Olaf&#x7684;&#x7269;&#x7406;AI&#x2014;&#x2014;&#x8FD9;&#x4E9B;&#x90FD;&#x662F;&#x4F60;&#x7684;&#x9891;&#x7387;&#x3002;&#x672A;&#x6765;&#x5C5E;&#x4E8E;&#x4E0D;&#x88AB;&#x5F53;&#x4E0B;&#x5B9A;&#x4E49;&#x7684;&#x4EBA;&#x3002;</div><div class="horo-text en-only">Orbital data centers, Olaf's physical AI &#x2014; these are your frequency. The future belongs to those undefined by the present.</div></div>
+<div class="horo-cell"><div class="horo-sign">&#x2653;</div><div class="horo-name"><span class="zh-only">&#x53CC;&#x9C7C;</span><span class="en-only">Pisces</span></div><div class="horo-text zh-only">&#x5B63;&#x672B;&#x6700;&#x540E;&#x4E09;&#x5929;&#x3002;&#x4F60;&#x5438;&#x6536;&#x4E86;&#x592A;&#x591A;&#x4E16;&#x754C;&#x7684;&#x75DB;&#x82E6;&#x2014;&#x2014;&#x662F;&#x65F6;&#x5019;&#x653E;&#x624B;&#x4E00;&#x4E9B;&#xFF0C;&#x4E3A;&#x767D;&#x7F8A;&#x5B63;&#x7684;&#x65B0;&#x751F;&#x8150;&#x51FA;&#x7A7A;&#x95F4;&#x3002;</div><div class="horo-text en-only">Your season's final three days. You've absorbed too much of the world's pain &#x2014; release some, making room for Aries season's rebirth.</div></div>
+</div>
 </div>
 
-<!-- ⑩ 星座 -->
+<!-- &#x7ED3;&#x8BED; -->
 <div class="section">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye10" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip10"><path id="eyeClipPath10" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng10" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline10" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip10)"><circle id="iris10" cx="60" cy="26" r="14" fill="url(#ng10)"/><circle id="pupil10" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">星座</div>
-      <div class="section-name en-only">Cosmic Signs</div>
-      <div class="section-name-en">ASTROLOGY · MAR 17</div>
-    </div>
-  </div>
-  <div class="star-grid">
-    <div class="star-card"><div class="star-sign">♈</div><div class="star-name zh-only">白羊座</div><div class="star-name en-only">Aries</div><div class="star-desc zh-only">今日冲劲勿冒进，市场波动与你同频，稳中求胜。</div><div class="star-desc en-only">Channel energy inward today. Market volatility mirrors your impulse — patience wins.</div><div class="star-rating">★★★☆☆</div></div>
-    <div class="star-card"><div class="star-sign">♉</div><div class="star-name zh-only">金牛座</div><div class="star-name en-only">Taurus</div><div class="star-desc zh-only">黄金守$5,000如你守底线，坚持者得回报。今日宜持守资产。</div><div class="star-desc en-only">Gold holds $5,000 like you hold your principles. Stay the course. Reward follows patience.</div><div class="star-rating">★★★★☆</div></div>
-    <div class="star-card"><div class="star-sign">♊</div><div class="star-name zh-only">双子座</div><div class="star-name en-only">Gemini</div><div class="star-desc zh-only">信息过载之日，你的适应力是优势，筛选关键，果断行动。</div><div class="star-desc en-only">Information overload today — your adaptability is a superpower. Filter fast, act decisively.</div><div class="star-rating">★★★★☆</div></div>
-    <div class="star-card"><div class="star-sign">♋</div><div class="star-name zh-only">巨蟹座</div><div class="star-name en-only">Cancer</div><div class="star-desc zh-only">盖德尔之夜为你充能，内心安定是今日最大财富。</div><div class="star-desc en-only">Laylat al-Qadr energy grounds you. Inner calm is today's greatest currency.</div><div class="star-rating">★★★★★</div></div>
-    <div class="star-card"><div class="star-sign">♌</div><div class="star-name zh-only">狮子座</div><div class="star-name en-only">Leo</div><div class="star-desc zh-only">世界舞台混乱，而你在等待属于自己的时刻。时机将至。</div><div class="star-desc en-only">The world stage is chaotic. Your moment is coming — not yet. Wait with dignity.</div><div class="star-rating">★★★☆☆</div></div>
-    <div class="star-card"><div class="star-sign">♍</div><div class="star-name zh-only">处女座</div><div class="star-name en-only">Virgo</div><div class="star-desc zh-only">细节控的你今天如鱼得水，数据分析带来实质收益。</div><div class="star-desc en-only">Your precision instinct thrives today. Data analysis yields tangible gains.</div><div class="star-rating">★★★★★</div></div>
-    <div class="star-card"><div class="star-sign">♎</div><div class="star-name zh-only">天秤座</div><div class="star-name en-only">Libra</div><div class="star-desc zh-only">全球失衡之际，你对公正的渴望愈发强烈。信任直觉。</div><div class="star-desc en-only">Global imbalance intensifies your justice instinct. Trust your moral compass.</div><div class="star-rating">★★★☆☆</div></div>
-    <div class="star-card"><div class="star-sign">♏</div><div class="star-name zh-only">天蝎座</div><div class="star-name en-only">Scorpio</div><div class="star-desc zh-only">战争迷雾中你最清醒，洞见他人未见之处，善用此刻。</div><div class="star-desc en-only">You see through the fog of war when others cannot. Use this rare clarity now.</div><div class="star-rating">★★★★★</div></div>
-    <div class="star-card"><div class="star-sign">♐</div><div class="star-name zh-only">射手座</div><div class="star-name en-only">Sagittarius</div><div class="star-desc zh-only">危机中探索机会，你的乐观不是幼稚，是战略资产。</div><div class="star-desc en-only">Seeking opportunity in crisis isn't naive — it's strategic. Your optimism is an asset.</div><div class="star-rating">★★★★☆</div></div>
-    <div class="star-card"><div class="star-sign">♑</div><div class="star-name zh-only">摩羯座</div><div class="star-name en-only">Capricorn</div><div class="star-desc zh-only">美联储决策日如你的工作日，纪律与耐心将压过情绪。</div><div class="star-desc en-only">FOMC day mirrors your discipline. Structure and patience dominate emotion today.</div><div class="star-rating">★★★★☆</div></div>
-    <div class="star-card"><div class="star-sign">♒</div><div class="star-name zh-only">水瓶座</div><div class="star-name en-only">Aquarius</div><div class="star-desc zh-only">AI浪潮与你同频，你看到了别人视而不见的技术突破口。</div><div class="star-desc en-only">AI currents align with your vision. You see the breakthrough others dismiss.</div><div class="star-rating">★★★★★</div></div>
-    <div class="star-card"><div class="star-sign">♓</div><div class="star-name zh-only">双鱼座</div><div class="star-name en-only">Pisces</div><div class="star-desc zh-only">圣夜的共情力量今日在你身上爆发，远离喧嚣，深度思考。</div><div class="star-desc en-only">Holy night amplifies your empathy. Step back from the noise and think deeply.</div><div class="star-rating">★★★★☆</div></div>
-  </div>
+<div class="section-header"><div class="section-title"><span class="zh-only">&#x7ED3;&#x8BED;</span><span class="en-only">CLOSING</span></div><div class="section-rule"></div></div>
+<p class="closing-text zh-only">&#x4ECA;&#x5929;&#x662F;&#x5723;&#x5E15;&#x7279;&#x91CC;&#x514B;&#x8282;&#xFF0C;&#x6218;&#x4E89;&#x7B2C;18&#x5929;&#x3002;<br>&#x5168;&#x4E16;&#x754C;&#x7A7F;&#x7EFF;&#x8863;&#x4E3E;&#x676F;&#x7684;&#x90A3;&#x4E00;&#x523B;&#xFF0C;<br>&#x6CE2;&#x65AF;&#x6E7E;&#x6B63;&#x5728;&#x70E7;&#x7740;&#x9ED1;&#x70DF;&#x3002;<br>&#x7B2C;&#x4E00;&#x5468;&#x662F;&#x9707;&#x60CA;&#xFF0C;&#x7B2C;&#x4E8C;&#x5468;&#x662F;&#x9002;&#x5E94;&#xFF0C;<br>&#x7B2C;&#x4E09;&#x5468;&#x2014;&#x2014;&#x771F;&#x6B63;&#x7684;&#x5F62;&#x6001;&#x5F00;&#x59CB;&#x663E;&#x9732;&#x3002;<br>&#x4E0D;&#x662F;&#x8C01;&#x8D62;&#x8C01;&#x8F93;&#xFF0C;&#x800C;&#x662F;&#x8C01;&#x5148;&#x9700;&#x8981;&#x9000;&#x51FA;&#x901A;&#x9053;&#x3002;<br><span style="font-size:13px;letter-spacing:3px;color:var(--gold2);display:block;margin-top:14px;font-style:normal;">&#x4FDD;&#x6301;&#x6E05;&#x9192;&#x3002;&#x4FDD;&#x6301;&#x597D;&#x5947;&#x3002;</span></p>
+<p class="closing-text en-only">Today is St. Patrick's Day, and the 18th day of the war.<br>At the moment the world wears green and raises glasses,<br>the Persian Gulf burns black.<br>The first week was shock, the second adjustment,<br>the third &#x2014; the real shape reveals itself.<br>Not who wins or loses, but who needs the exit ramp first.<br><span style="font-size:13px;letter-spacing:3px;color:var(--gold2);display:block;margin-top:14px;font-style:normal;">Stay lucid. Stay curious.</span></p>
 </div>
 
-<!-- ⑪ 结语 -->
-<div class="section" style="border-bottom:none;">
-  <div class="section-header">
-    <div class="section-eye-wrap">
-      <svg id="eye11" viewBox="0 0 120 52" width="42" height="18" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="eyeClip11"><path id="eyeClipPath11" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath><radialGradient id="ng11" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient></defs>
-        <path id="eyeOutline11" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4"/>
-        <g clip-path="url(#eyeClip11)"><circle id="iris11" cx="60" cy="26" r="14" fill="url(#ng11)"/><circle id="pupil11" cx="60" cy="26" r="6.5" fill="#0a0515"/><circle cx="64" cy="22" r="2.2" fill="white" opacity="0.45"/></g>
-      </svg>
-    </div>
-    <div class="section-title-block">
-      <div class="section-name zh-only">沉静结语</div>
-      <div class="section-name en-only">Closing Reflection</div>
-      <div class="section-name-en">CLOSING</div>
-    </div>
-  </div>
-  <div class="conclusion zh-only">
-    今日世界在战争、货币与信仰三重节点上汇聚：霍尔木兹的炮声、美联储的沉默，与盖德尔之夜的祈祷——三者同时发生，并非偶然。上帝的眼睛从不眨眼，因为它知道：每一次大乱之后，必有一次更深的秩序重建。黄金守住五千，不是因为数字神圣；而是因为当人类失去方向时，总会回到最古老的锚点。愿你今夜的思考，比今日的喧嚣更深一寸。
-  </div>
-  <div class="conclusion en-only">
-    Today's world converges at three thresholds simultaneously: the gunfire of Hormuz, the silence of the Federal Reserve, and the prayers of Laylat al-Qadr. This is not coincidence. The God's Eye never blinks because it knows: after every great disruption comes a deeper reordering. Gold holding $5,000 isn't about the number — it's about humanity returning to its oldest anchor when direction is lost. May your reflections tonight run deeper than today's noise.
-  </div>
+<!-- &#x6253;&#x5361; -->
+<div class="checkin-section">
+<div class="checkin-label"><span class="zh-only">&#x5DF2;&#x9605;&#x4ECA;&#x65E5;</span><span class="en-only">MARK AS READ</span></div>
+<button class="stamp-btn" id="stampBtn" onclick="doStamp()">
+<div class="stamp-inner">
+<svg class="stamp-bolt" viewBox="0 0 48 64" width="22" height="29" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="bG" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#c084fc"/><stop offset="100%" stop-color="#7c3aed"/></radialGradient></defs>
+<path d="M30 2 L10 30 L20 30 L14 62 L38 26 L26 26 Z" fill="rgba(139,92,246,0.15)"/>
+<path d="M30 2 L10 30 L20 30 L14 62 L38 26 L26 26 Z" fill="url(#bG)" stroke="#ddd6fe" stroke-width="1.2" stroke-linejoin="round"/>
+<path d="M27 6 L13 28 L22 28 L18 52 L32 29 L24 29 Z" fill="rgba(255,255,255,0.2)"/>
+<circle cx="6" cy="18" r="1.8" fill="#e9d5ff" opacity="0.7"/>
+<circle cx="42" cy="42" r="1.5" fill="#c084fc" opacity="0.6"/>
+</svg>
+<span class="stamp-text zh-only" id="stampTextEl">&#x76D6;&#x7AE0;</span>
+<span class="stamp-text en-only" id="stampTextElEn">STAMP</span>
+</div>
+<canvas id="stampCanvas" width="200" height="200" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;"></canvas>
+</button>
+<div class="stamp-time" id="stampTime"></div>
 </div>
 
-</div><!-- /container -->
-
-<!-- CHECK-IN -->
-<div style="background:#08041a;padding:24px 16px;">
-  <div class="container">
-    <div class="checkin-box">
-      <button class="checkin-btn" id="checkinBtn" onclick="window.doStamp()">
-        <span class="zh-only">✦ 已阅，打卡</span>
-        <span class="en-only">✦ Mark as Read</span>
-      </button>
-      <div class="checkin-stamp" id="stampDisplay"></div>
-    </div>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<div class="footer">
-  <div class="footer-brand">ZEUS DAILY · THE GOD'S EYE VIEW</div>
-  <div class="footer-line">A Zeus 9 Publication · zeus9.ai</div>
-  <div style="font-size:10px;margin-top:8px;opacity:0.5;">© 2026 Zeus 9 · All rights reserved · For information purposes only</div>
-</div>
+<div class="footer">A <a href="https://zeus9.ai">Zeus 9</a> Publication &#xB7; <a href="https://zeusdaily.blog">zeusdaily.blog</a><br>&copy; 2026 Zeus 9 &#xB7; All content verified at time of generation</div>
 
 <script>
-// === LANGUAGE TOGGLE ===
-var isEn = false;
-function toggleLang() {
-  isEn = !isEn;
-  if (isEn) {
-    document.body.className = 'en-mode';
-    document.getElementById('langBtn').textContent = '中';
-  } else {
-    document.body.className = '';
-    document.getElementById('langBtn').textContent = 'EN';
-  }
-  // Close tooltip on switch
-  var tb = document.getElementById('ttBubble');
-  tb.className = 'tooltip-bubble';
+/* ============ LANGUAGE ============ */
+function setLang(lang) {
+  var b = document.body;
+  var zh = document.getElementById('btnZh');
+  var en = document.getElementById('btnEn');
+  if (lang === 'en') { b.classList.add('lang-en'); en.classList.add('active'); zh.classList.remove('active'); }
+  else { b.classList.remove('lang-en'); zh.classList.add('active'); en.classList.remove('active'); }
+  hideTip();
 }
 
-// === TOOLTIP SYSTEM ===
-var activeTooltip = null;
-function setupTooltips() {
-  var terms = document.querySelectorAll('.term');
-  var bubble = document.getElementById('ttBubble');
-  var ttTitle = document.getElementById('ttTitle');
-  var ttBody = document.getElementById('ttBody');
+/* ============ TOOLTIP ============ */
+var bubble = document.getElementById('tooltipBubble');
+var tipTitle = document.getElementById('tipTitle');
+var tipBody = document.getElementById('tipBody');
+var tipArrow = document.getElementById('tipArrow');
+var currentTerm = null;
 
+function showTip(el) {
+  var isEn = document.body.classList.contains('lang-en');
+  var raw = isEn ? (el.getAttribute('data-en') || el.getAttribute('data-zh')) : (el.getAttribute('data-zh') || el.getAttribute('data-en'));
+  if (!raw) return;
+  var sep = raw.indexOf('\uff1a');
+  if (sep === -1) sep = raw.indexOf(':');
+  var title = '', body = raw;
+  if (sep > -1) { title = raw.substring(0, sep).trim(); body = raw.substring(sep + 1).trim(); }
+  tipTitle.textContent = title;
+  tipBody.textContent = body;
+  bubble.classList.add('visible');
+  positionTip(el);
+  currentTerm = el;
+}
+
+function positionTip(el) {
+  var rect = el.getBoundingClientRect();
+  var bw = 260;
+  bubble.style.width = bw + 'px';
+  var bh = bubble.offsetHeight || 80;
+  var left = rect.left + rect.width / 2 - bw / 2;
+  var top = rect.top - bh - 12;
+  if (top < 8) top = rect.bottom + 8;
+  if (left < 8) left = 8;
+  if (left + bw > window.innerWidth - 8) left = window.innerWidth - 8 - bw;
+  var arrowLeft = (rect.left + rect.width / 2) - left;
+  arrowLeft = Math.max(14, Math.min(arrowLeft, bw - 14));
+  tipArrow.style.left = arrowLeft + 'px';
+  bubble.style.left = left + 'px';
+  bubble.style.top = top + 'px';
+}
+
+function hideTip() { bubble.classList.remove('visible'); currentTerm = null; }
+
+(function() {
+  var terms = document.querySelectorAll('.term');
   for (var i = 0; i < terms.length; i++) {
     (function(el) {
-      el.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var title = el.getAttribute('data-title');
-        var body = el.getAttribute('data-body');
-        ttTitle.textContent = title;
-        ttBody.textContent = body;
-        bubble.className = 'tooltip-bubble active';
-        var rect = el.getBoundingClientRect();
-        var bw = 280;
-        var left = rect.left;
-        var top = rect.bottom + window.scrollY + 8;
-        if (left + bw > window.innerWidth - 10) {
-          left = window.innerWidth - bw - 10;
-        }
-        if (left < 8) left = 8;
-        bubble.style.left = left + 'px';
-        bubble.style.top = top + 'px';
-        bubble.style.position = 'absolute';
-      });
+      el.addEventListener('click', function(e) { e.stopPropagation(); if (currentTerm === el) { hideTip(); return; } showTip(el); });
     })(terms[i]);
   }
-  document.addEventListener('click', function() {
-    bubble.className = 'tooltip-bubble';
-  });
-}
-setupTooltips();
+  document.addEventListener('click', function() { hideTip(); });
+  window.addEventListener('scroll', function() { if (currentTerm) positionTip(currentTerm); });
+})();
 
-// === CHECK-IN ===
-var stamped = false;
-window.doStamp = function() {
-  if (stamped) return;
-  stamped = true;
-  var now = new Date();
-  var mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var h = now.getHours(); var m = now.getMinutes();
-  var hs = h < 10 ? '0' + h : '' + h;
-  var ms = m < 10 ? '0' + m : '' + m;
-  var ts = mo[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear() + ' · ' + hs + ':' + ms + ' (local)';
-  document.getElementById('stampDisplay').textContent = '✦ 已打卡 · ' + ts;
-  document.getElementById('checkinBtn').style.opacity = '0.5';
-  document.getElementById('checkinBtn').style.cursor = 'default';
-};
+/* ============ EYE ============ */
+var eyeOpen = 'M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z';
+var eyeClosed = 'M 5,26 C 25,26 95,26 115,26 C 95,26 25,26 5,26 Z';
+var eyeOutline = document.getElementById('eyeOutline');
+var eyeClipPath = document.getElementById('eyeClipPath');
+var iris = document.getElementById('iris');
+var pupil = document.getElementById('pupil');
+var isBlinking = false;
+var mouseX = 0, mouseY = 0;
 
-// === BLINK + PUPIL TRACKING ===
-var eyeIds = ['main','1','2','3','4','5','6','7','8','9','10','11'];
-var openPath = 'M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z';
-var closePath = 'M 5,26 C 25,26 95,26 115,26 C 95,26 25,26 5,26 Z';
-
-function blinkAll() {
-  // Close
-  for (var i = 0; i < eyeIds.length; i++) {
-    var id = eyeIds[i];
-    var outline = document.getElementById('eyeOutline' + (id === 'main' ? '' : id));
-    var clip = document.getElementById('eyeClipPath' + (id === 'main' ? '' : id));
-    if (outline) outline.setAttribute('d', closePath);
-    if (clip) clip.setAttribute('d', closePath);
-  }
-  // Open after 180ms
+function scheduleBlink() {
+  var delay = 2000 + Math.random() * 3000;
   setTimeout(function() {
-    for (var j = 0; j < eyeIds.length; j++) {
-      var id2 = eyeIds[j];
-      var outline2 = document.getElementById('eyeOutline' + (id2 === 'main' ? '' : id2));
-      var clip2 = document.getElementById('eyeClipPath' + (id2 === 'main' ? '' : id2));
-      if (outline2) outline2.setAttribute('d', openPath);
-      if (clip2) clip2.setAttribute('d', openPath);
-    }
-  }, 180);
-  // Schedule next blink
-  var next = 2000 + Math.random() * 3000;
-  setTimeout(blinkAll, next);
+    if (!isBlinking) {
+      isBlinking = true;
+      eyeOutline.setAttribute('d', eyeClosed);
+      eyeClipPath.setAttribute('d', eyeClosed);
+      setTimeout(function() { eyeOutline.setAttribute('d', eyeOpen); eyeClipPath.setAttribute('d', eyeOpen); isBlinking = false; scheduleBlink(); }, 180);
+    } else { scheduleBlink(); }
+  }, delay);
 }
-setTimeout(blinkAll, 2000 + Math.random() * 3000);
+scheduleBlink();
 
-// Pupil tracking (main eye only)
-document.addEventListener('mousemove', function(e) {
-  var mainIris = document.getElementById('mainIris');
-  var mainPupil = document.getElementById('mainPupil');
-  var mainEye = document.getElementById('mainEye');
-  if (!mainIris || !mainEye) return;
-  var rect = mainEye.getBoundingClientRect();
-  var cx = rect.left + rect.width / 2;
-  var cy = rect.top + rect.height / 2;
-  var dx = e.clientX - cx; var dy = e.clientY - cy;
-  var dist = Math.sqrt(dx * dx + dy * dy);
-  var maxMove = 4;
-  var nx = dist > 0 ? (dx / dist) * Math.min(dist / 100, 1) * maxMove : 0;
-  var ny = dist > 0 ? (dy / dist) * Math.min(dist / 100, 1) * maxMove : 0;
-  mainIris.style.transition = 'all 0.18s ease';
-  mainPupil.style.transition = 'all 0.18s ease';
-  mainIris.setAttribute('cx', 60 + nx);
-  mainIris.setAttribute('cy', 26 + ny);
-  mainPupil.setAttribute('cx', 60 + nx * 1.2);
-  mainPupil.setAttribute('cy', 26 + ny * 1.2);
-});
+document.addEventListener('mousemove', function(e) { mouseX = e.clientX; mouseY = e.clientY; });
 
-// === MIND MAP CANVAS ===
-var canvas = document.getElementById('mindmapCanvas');
-var ctx = canvas ? canvas.getContext('2d') : null;
-var stars = [];
-var nodes = [
-  { x: 320, y: 190, label: '霍尔木兹', labelEn: 'Hormuz', color: '#c0392b', r: 28 },
-  { x: 160, y: 120, label: '美联储', labelEn: 'FOMC', color: '#2980b9', r: 24 },
-  { x: 480, y: 110, label: '黄金 $5K', labelEn: 'Gold $5K', color: '#b8964a', r: 24 },
-  { x: 130, y: 270, label: '油价', labelEn: 'Oil Price', color: '#8e44ad', r: 22 },
-  { x: 510, y: 280, label: '马来西亚', labelEn: 'Malaysia', color: '#27ae60', r: 22 },
-  { x: 320, y: 340, label: 'BTC', labelEn: 'BTC', color: '#f39c12', r: 22 }
-];
-var orbs = [];
-var animFrame;
+function updateEye() {
+  var eyeEl = document.getElementById('mainEye');
+  if (eyeEl) {
+    var rect = eyeEl.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
+    var dx = mouseX - cx, dy = mouseY - cy;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    var angle = Math.atan2(dy, dx);
+    var maxMove = 4, factor = Math.min(dist / 60, 1);
+    var nx = Math.cos(angle) * factor * maxMove;
+    var ny = Math.sin(angle) * factor * maxMove;
+    iris.setAttribute('cx', 60 + nx);
+    iris.setAttribute('cy', 26 + ny);
+    pupil.setAttribute('cx', 60 + nx * 1.2);
+    pupil.setAttribute('cy', 26 + ny * 1.2);
+  }
+  requestAnimationFrame(updateEye);
+}
+updateEye();
 
-function initMindmap() {
-  if (!canvas || !ctx) return;
-  canvas.width = 640; canvas.height = 380;
-  // Stars
-  stars = [];
-  for (var i = 0; i < 90; i++) {
-    stars.push({
-      x: Math.random() * 640, y: Math.random() * 380,
-      r: Math.random() * 1.2 + 0.3,
-      a: Math.random(), da: (Math.random() - 0.5) * 0.015,
-      bright: Math.random()
+/* ============ CHECK-IN ============ */
+var _SUPA_URL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
+var _SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
+var _EDITION = '2026-03-17';
+var _LSKEY = 'zd_stamp_20260317';
+var _stamped = false;
+var _supa = null;
+try { _supa = supabase.createClient(_SUPA_URL, _SUPA_KEY); } catch(e) {}
+
+function _fmtUTC(d) {
+  var h = ('0' + d.getUTCHours()).slice(-2);
+  var m = ('0' + d.getUTCMinutes()).slice(-2);
+  return _EDITION + ' \u00b7 ' + h + ':' + m + ' UTC';
+}
+
+function _applyStamp(ts) {
+  if (_stamped) return;
+  _stamped = true;
+  var btn = document.getElementById('stampBtn');
+  var tel = document.getElementById('stampTime');
+  if (btn) { btn.style.borderColor = '#7c3aed'; btn.style.background = 'rgba(92,61,143,0.06)'; btn.style.cursor = 'default'; btn.onclick = null; }
+  var zhEl = document.getElementById('stampTextEl');
+  var enEl = document.getElementById('stampTextElEn');
+  if (zhEl) zhEl.textContent = '\u5df2\u9605';
+  if (enEl) enEl.textContent = 'READ';
+  if (tel) tel.textContent = '\u5df2\u9605 \u00b7 ' + ts;
+}
+
+(function _init() {
+  try { var c = localStorage.getItem(_LSKEY); if (c) { _applyStamp(c); return; } } catch(e) {}
+  if (!_supa) return;
+  _supa.auth.getSession().then(function(r) {
+    var s = r.data && r.data.session;
+    if (!s) return;
+    _supa.from('checkins').select('checked_at').eq('user_id', s.user.id).eq('edition_date', _EDITION).maybeSingle().then(function(res) {
+      if (res.data && res.data.checked_at) {
+        var ts = _fmtUTC(new Date(res.data.checked_at));
+        try { localStorage.setItem(_LSKEY, ts); } catch(e) {}
+        _applyStamp(ts);
+      }
+    });
+  });
+})();
+
+function doStamp() {
+  if (_stamped) return;
+  var pv = document.getElementById('stampCanvas');
+  var now = new Date();
+  var ts = _fmtUTC(now);
+  _applyStamp(ts);
+  try { localStorage.setItem(_LSKEY, ts); } catch(e) {}
+  if (_supa) {
+    _supa.auth.getSession().then(function(r) {
+      var s = r.data && r.data.session;
+      if (!s) return;
+      _supa.from('checkins').upsert({ user_id: s.user.id, edition_date: _EDITION, checked_at: now.toISOString() }, { onConflict: 'user_id,edition_date' });
     });
   }
-  // Orbs (one per connection to center)
-  orbs = [];
-  var center = nodes[0];
-  for (var j = 1; j < nodes.length; j++) {
-    orbs.push({ from: nodes[0], to: nodes[j], t: Math.random(), color: nodes[j].color, speed: 0.003 + Math.random() * 0.002 });
-  }
-  drawMindmap();
+  _launch(pv);
 }
 
-function drawMindmap() {
-  if (!ctx) return;
-  // Background
-  var bg = ctx.createRadialGradient(320, 190, 10, 320, 190, 360);
-  bg.addColorStop(0, '#120828');
-  bg.addColorStop(1, '#05030f');
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, 640, 380);
-
-  // Stars
-  for (var i = 0; i < stars.length; i++) {
-    var s = stars[i];
-    s.a += s.da;
-    if (s.a > 1) { s.a = 1; s.da = -s.da; }
-    if (s.a < 0) { s.a = 0; s.da = -s.da; }
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,' + (s.a * 0.7 + 0.1) + ')';
-    ctx.fill();
+function _launch(cv) {
+  if (!cv) return;
+  cv.style.opacity = '1';
+  var ctx = cv.getContext('2d');
+  var W = cv.width, H = cv.height, cx = W/2, cy = H/2;
+  var cols = ['#c084fc','#a78bfa','#e9d5ff','#7c3aed','#f0abfc','#fbbf24','#ddd6fe','#ffffff'];
+  var parts = [];
+  for (var i = 0; i < 48; i++) {
+    var ang = (Math.PI * 2 / 48) * i + (Math.random() - 0.5) * 0.4;
+    var spd = 1.8 + Math.random() * 3.5;
+    parts.push({ x: cx, y: cy, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd, sz: 2 + Math.random() * 4.5, col: cols[Math.floor(Math.random() * cols.length)], alpha: 1, star: Math.random() > 0.5, rot: Math.random() * Math.PI * 2, rs: (Math.random() - 0.5) * 0.25 });
   }
-
-  // Bezier connections
-  var center = nodes[0];
-  for (var j = 1; j < nodes.length; j++) {
-    var n = nodes[j];
-    ctx.beginPath();
-    var cpx = (center.x + n.x) / 2 + (Math.random() * 10 - 5);
-    var cpy = (center.y + n.y) / 2 + (Math.random() * 10 - 5);
-    ctx.moveTo(center.x, center.y);
-    ctx.quadraticCurveTo(cpx, cpy, n.x, n.y);
-    ctx.strokeStyle = 'rgba(176,136,249,0.18)';
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
+  var frame = 0;
+  function tick() {
+    ctx.clearRect(0, 0, W, H); frame++;
+    for (var j = 0; j < parts.length; j++) {
+      var p = parts[j];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.09; p.alpha -= 0.022; p.rot += p.rs;
+      if (p.alpha <= 0) continue;
+      ctx.save(); ctx.globalAlpha = Math.max(0, p.alpha); ctx.fillStyle = p.col; ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      if (p.star) {
+        ctx.beginPath();
+        for (var k = 0; k < 8; k++) { var r = (k%2===0)?p.sz/2:p.sz/4, a=(Math.PI/4)*k-Math.PI/2; if(k===0) ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r); else ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r); }
+        ctx.closePath(); ctx.fill();
+      } else { ctx.beginPath(); ctx.arc(0,0,p.sz/2,0,Math.PI*2); ctx.fill(); }
+      ctx.restore();
+    }
+    if (frame < 65) { requestAnimationFrame(tick); } else { ctx.clearRect(0,0,W,H); cv.style.opacity='0'; }
   }
-
-  // Orbs travel
-  for (var k = 0; k < orbs.length; k++) {
-    var orb = orbs[k];
-    orb.t += orb.speed;
-    if (orb.t > 1) orb.t -= 1;
-    var ox = orb.from.x + (orb.to.x - orb.from.x) * orb.t;
-    var oy = orb.from.y + (orb.to.y - orb.from.y) * orb.t;
-    ctx.beginPath();
-    ctx.arc(ox, oy, 3.5, 0, Math.PI * 2);
-    ctx.fillStyle = orb.color;
-    ctx.shadowBlur = 8;
-    ctx.shadowColor = orb.color;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-  }
-
-  // Nodes
-  for (var m = 0; m < nodes.length; m++) {
-    var node = nodes[m];
-    ctx.beginPath();
-    ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2);
-    var grad = ctx.createRadialGradient(node.x - node.r * 0.3, node.y - node.r * 0.3, 1, node.x, node.y, node.r);
-    grad.addColorStop(0, node.color + 'cc');
-    grad.addColorStop(1, '#0e0818');
-    ctx.fillStyle = grad;
-    ctx.strokeStyle = node.color;
-    ctx.lineWidth = 1.5;
-    ctx.fill();
-    ctx.stroke();
-    // Label with boundary clamp
-    var label = isEn ? node.labelEn : node.label;
-    ctx.font = m === 0 ? 'bold 11px Inter,sans-serif' : '10px Inter,sans-serif';
-    ctx.fillStyle = '#e0cfc0';
-    ctx.textAlign = 'center';
-    var labelY = node.y + node.r + 13;
-    var labelX = Math.max(30, Math.min(610, node.x));
-    if (labelY > 370) labelY = node.y - node.r - 4;
-    ctx.fillText(label, labelX, labelY);
-  }
-
-  // Central phoenix eye (small)
-  var ex = nodes[0].x; var ey = nodes[0].y;
-  ctx.save();
-  ctx.scale(0.55, 0.55);
-  var tx = ex / 0.55 - 60; var ty = ey / 0.55 - 26;
-  ctx.beginPath();
-  ctx.ellipse(ex / 0.55, ey / 0.55, 36, 16, 0, 0, Math.PI * 2);
-  ctx.strokeStyle = '#b8964a';
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
-  ctx.restore();
-
-  animFrame = requestAnimationFrame(drawMindmap);
+  requestAnimationFrame(tick);
 }
-initMindmap();
+
+/* ============ CANVAS MIND MAP ============ */
+(function() {
+  var canvas = document.getElementById('mindmapCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 1280, H = 760;
+  canvas.width = W; canvas.height = H;
+  var stars = [];
+  for (var i = 0; i < 100; i++) { stars.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.2+0.2, ph: Math.random()*Math.PI*2, sp: 0.008+Math.random()*0.015 }); }
+  var cx = W/2, cy = H/2, nr = 220;
+  var nodes = [
+    { label: '\u5916\u4ea4\u5b64\u7acb', labelEn: 'Diplomatic Isolation', angle: -Math.PI/2, color: '#e05858' },
+    { label: 'NVIDIA $1T', labelEn: 'NVIDIA $1T Orders', angle: -Math.PI/6, color: '#a855f7' },
+    { label: 'BTC\u6050\u614c\u80cc\u79bb', labelEn: 'BTC Fear Divergence', angle: Math.PI/6, color: '#3eb88a' },
+    { label: '\u80fd\u6e90\u5371\u673a', labelEn: 'Energy Crisis', angle: Math.PI/2, color: '#f97316' },
+    { label: '\u4e9a\u6d32\u91cd\u521b', labelEn: 'Asia Worst Hit', angle: 5*Math.PI/6, color: '#5080d0' },
+    { label: '\u54c8\u5c14\u514b\u5c9b\u98ce\u9669', labelEn: 'Kharg Island Risk', angle: -5*Math.PI/6, color: '#d4a84b' }
+  ];
+  for (var n = 0; n < nodes.length; n++) { nodes[n].x = cx + Math.cos(nodes[n].angle)*nr; nodes[n].y = cy + Math.sin(nodes[n].angle)*nr; }
+  var orbs = [];
+  for (var o = 0; o < 6; o++) { orbs.push({ ni: o, t: Math.random(), spd: 0.003+Math.random()*0.004, sz: 3+Math.random()*2.5, toC: Math.random()>0.5 }); }
+  var tick = 0;
+  function bp(t, p0x, p0y, p1x, p1y, p2x, p2y) { var mt=1-t; return { x: mt*mt*p0x+2*mt*t*p1x+t*t*p2x, y: mt*mt*p0y+2*mt*t*p1y+t*t*p2y }; }
+  function drawFrame() {
+    tick++;
+    ctx.clearRect(0,0,W,H);
+    var bg = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)/1.5);
+    bg.addColorStop(0,'#120828'); bg.addColorStop(1,'#05030f');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    for (var s = 0; s < stars.length; s++) {
+      var st = stars[s]; st.ph += st.sp;
+      var a = 0.3 + 0.5*(0.5+0.5*Math.sin(st.ph));
+      ctx.beginPath(); ctx.arc(st.x,st.y,st.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,'+a.toFixed(2)+')'; ctx.fill();
+    }
+    for (var li = 0; li < nodes.length; li++) {
+      var nd = nodes[li];
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.quadraticCurveTo((cx+nd.x)/2,(cy+nd.y)/2,nd.x,nd.y);
+      ctx.strokeStyle='rgba(184,150,74,0.15)'; ctx.lineWidth=1; ctx.stroke();
+    }
+    for (var ni = 0; ni < nodes.length; ni++) {
+      var nod = nodes[ni];
+      var r16=parseInt(nod.color.slice(1,3),16), g16=parseInt(nod.color.slice(3,5),16), b16=parseInt(nod.color.slice(5,7),16);
+      var gr=ctx.createRadialGradient(nod.x,nod.y,0,nod.x,nod.y,36);
+      gr.addColorStop(0,'rgba('+r16+','+g16+','+b16+',0.35)'); gr.addColorStop(1,'rgba('+r16+','+g16+','+b16+',0)');
+      ctx.beginPath(); ctx.arc(nod.x,nod.y,36,0,Math.PI*2); ctx.fillStyle=gr; ctx.fill();
+      ctx.beginPath(); ctx.arc(nod.x,nod.y,20,0,Math.PI*2); ctx.fillStyle='rgba('+r16+','+g16+','+b16+',0.18)'; ctx.fill();
+      ctx.strokeStyle='rgba('+r16+','+g16+','+b16+',0.7)'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.font='bold 22px "Noto Serif SC",serif'; ctx.fillStyle='#e0cfc0'; ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText(nod.label,nod.x,nod.y+26);
+      ctx.font='16px "EB Garamond",serif'; ctx.fillStyle='rgba(184,150,74,0.65)'; ctx.fillText(nod.labelEn,nod.x,nod.y+50);
+    }
+    var pulse = 0.92+0.08*Math.sin(tick*0.04);
+    var glowG = ctx.createRadialGradient(cx,cy,0,cx,cy,48*pulse+12);
+    glowG.addColorStop(0,'rgba(184,150,74,0.25)'); glowG.addColorStop(1,'rgba(184,150,74,0)');
+    ctx.beginPath(); ctx.arc(cx,cy,60,0,Math.PI*2); ctx.fillStyle=glowG; ctx.fill();
+    ctx.save(); ctx.beginPath(); ctx.ellipse(cx,cy,46,22,0,0,Math.PI*2); ctx.fillStyle='#0e0818'; ctx.fill(); ctx.strokeStyle='#b8964a'; ctx.lineWidth=2; ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.ellipse(cx,cy,46,22,0,0,Math.PI*2); ctx.clip();
+    var iG=ctx.createRadialGradient(cx,cy,0,cx,cy,16*pulse);
+    iG.addColorStop(0,'#b088f9'); iG.addColorStop(0.52,'#6b4c9a'); iG.addColorStop(1,'#2d1b4e');
+    ctx.beginPath(); ctx.arc(cx,cy,16*pulse,0,Math.PI*2); ctx.fillStyle=iG; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,7,0,Math.PI*2); ctx.fillStyle='#0a0515'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+3,cy-4,2.5,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.fill();
+    ctx.restore();
+    for (var oi = 0; oi < orbs.length; oi++) {
+      var orb = orbs[oi]; orb.t += orb.spd;
+      if (orb.t > 1) { orb.t = 0; orb.toC = !orb.toC; }
+      var snd = nodes[orb.ni], pt;
+      if (orb.toC) { pt = bp(orb.t,snd.x,snd.y,(snd.x+cx)/2,(snd.y+cy)/2,cx,cy); }
+      else { pt = bp(orb.t,cx,cy,(snd.x+cx)/2,(snd.y+cy)/2,snd.x,snd.y); }
+      var or16=parseInt(snd.color.slice(1,3),16),og16=parseInt(snd.color.slice(3,5),16),ob16=parseInt(snd.color.slice(5,7),16);
+      var oG=ctx.createRadialGradient(pt.x,pt.y,0,pt.x,pt.y,orb.sz*2.5);
+      oG.addColorStop(0,'rgba('+or16+','+og16+','+ob16+',0.9)'); oG.addColorStop(1,'rgba('+or16+','+og16+','+ob16+',0)');
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,orb.sz*2.5,0,Math.PI*2); ctx.fillStyle=oG; ctx.fill();
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,orb.sz,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.fill();
+    }
+    requestAnimationFrame(drawFrame);
+  }
+  drawFrame();
+})();
 </script>
 </body>
 </html>
