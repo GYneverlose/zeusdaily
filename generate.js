@@ -28,10 +28,6 @@ while (volNumber.length < 3) volNumber = "0" + volNumber;
 
 console.log("Generating Zeus Daily Vol." + volNumber + " for " + dateStr + "...");
 
-function sleep(ms) {
-  return new Promise(function(resolve) { setTimeout(resolve, ms); });
-}
-
 var BOLT_CSS = [
   ".zeus-bolt { display:inline-block; vertical-align:middle; animation: boltFlash 2.5s ease-in-out infinite; filter: drop-shadow(0 0 6px #ffe066); }",
   "@keyframes boltFlash { 0%,100%{opacity:1;filter:drop-shadow(0 0 6px #ffe066);} 50%{opacity:0.6;filter:drop-shadow(0 0 14px #fff5c0);} }"
@@ -349,31 +345,48 @@ var HOME_BUTTON_HTML = [
 async function generate() {
   console.log("Searching for latest news (Haiku)...");
 
-  var searchResponse = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 2000,
-    tools: [{ type: "web_search_20250305", name: "web_search" }],
-    messages: [
-      {
-        role: "user",
-        content: "Search for today's major news for " + dateStr + ": world events, Trump/Musk updates, AI news, crypto prices (BTC ETH) with 7-day price trend, gold/silver prices in USD and MYR with 7-day trend, Malaysia news, fun/quirky stories. Give me 15-20 items total, brief summaries only.",
-      },
-    ],
-  });
+  var searchMessages = [
+    {
+      role: "user",
+      content: "Search for today's major news for " + dateStr + ": world events, Trump/Musk updates, AI news, crypto prices (BTC ETH) with 7-day price trend, gold/silver prices in USD and MYR with 7-day trend, Malaysia news, fun/quirky stories. Give me 15-20 items total, brief summaries only.",
+    },
+  ];
 
-  var searchContext = searchResponse.content
-    .map(function(b) {
-      if (b.type === "text") return b.text;
-      if (b.type === "tool_result") {
-        return (b.content || []).map(function(c) { return c.text || ""; }).join("\n");
-      }
-      return "";
-    })
-    .filter(Boolean)
-    .join("\n");
+  // Multi-turn loop: keep going while the model wants to use tools
+  var searchContext = "";
+  var maxTurns = 10;
+  for (var turn = 0; turn < maxTurns; turn++) {
+    var searchResponse = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 4000,
+      tools: [{ type: "web_search_20250305", name: "web_search" }],
+      messages: searchMessages,
+    });
 
-  if (searchContext.length > 6000) {
-    searchContext = searchContext.slice(0, 6000);
+    // Extract text from this response
+    var textParts = searchResponse.content
+      .filter(function(b) { return b.type === "text"; })
+      .map(function(b) { return b.text; });
+    if (textParts.length) {
+      searchContext += textParts.join("\n") + "\n";
+    }
+
+    // If stop_reason is not "tool_use", we're done
+    if (searchResponse.stop_reason !== "tool_use") break;
+
+    // Build tool_result messages for each tool_use block
+    searchMessages.push({ role: "assistant", content: searchResponse.content });
+    var toolResults = searchResponse.content
+      .filter(function(b) { return b.type === "tool_use"; })
+      .map(function(b) {
+        return { type: "tool_result", tool_use_id: b.id, content: "" };
+      });
+    searchMessages.push({ role: "user", content: toolResults });
+  }
+
+  searchContext = searchContext.trim();
+  if (searchContext.length > 8000) {
+    searchContext = searchContext.slice(0, 8000);
   }
 
   console.log("Search context length: " + searchContext.length + " chars");
@@ -536,16 +549,11 @@ async function generate() {
   fs.writeFileSync(filePath, html, "utf8");
   console.log("Saved: " + fileName);
 
-  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  var d = new Date(dateStr + "T00:00:00");
-  var summary = "Vol." + volNumber + " · " + months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
-
   editionsData.editions.push({
-    date: dateStr,
     vol: volNumber,
-    title: "Zeus Daily",
-    file: fileName,
-    summary: summary,
+    date: dateCompact,
+    filename: fileName,
+    title: "Zeus Daily Vol." + volNumber,
   });
 
   fs.writeFileSync(editionsPath, JSON.stringify(editionsData, null, 2), "utf8");

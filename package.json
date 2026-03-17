@@ -1,4 +1,9 @@
 {
+  "name": "zeus-daily",
+  "private": true,
+  "scripts": {
+    "generate": "node generate.js"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0"
   }
