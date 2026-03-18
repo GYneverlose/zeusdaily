@@ -1235,7 +1235,6 @@ window._creditCoin = function(size) {
       (function(btn) {
         btn.onclick = function(e) {
           e.stopPropagation();
-          alert('click: ' + btn.getAttribute('data-pid') + ' ' + btn.getAttribute('data-vote'));
           var pid = parseInt(btn.getAttribute('data-pid'));
           var v = btn.getAttribute('data-vote');
           if (pid && v) votePrediction(pid, v);
@@ -1246,12 +1245,11 @@ window._creditCoin = function(size) {
 
   window.votePrediction = function(predId, vote) {
     var user = window._currentUser;
-    if (!user) { console.warn('votePrediction: no user'); return; }
+    if (!user) return;
     var oldVote = _myVotes[predId];
-    console.log('votePrediction:', predId, vote, 'oldVote:', oldVote);
-    if (oldVote === vote) { console.log('votePrediction: same vote, skip'); return; }
+    if (oldVote === vote) return;
 
-    // Optimistic update
+    // Optimistic update for instant UI feedback
     _myVotes[predId] = vote;
     var pred = _preds.filter(function(p) { return p.id === predId; })[0];
     if (pred) {
@@ -1262,12 +1260,20 @@ window._creditCoin = function(size) {
     }
     renderPredictions();
 
-    // Upsert vote
-    _sb.from('prediction_votes').upsert({ prediction_id: predId, user_id: user.id, vote: vote }, { onConflict: 'prediction_id,user_id' }).then(function() {
-      // Update prediction counts
-      if (pred) {
-        _sb.from('predictions').update({ votes_agree: pred.votes_agree, votes_disagree: pred.votes_disagree }).eq('id', predId);
-      }
+    // Save vote to DB
+    _sb.from('prediction_votes').upsert({ prediction_id: predId, user_id: user.id, vote: vote }, { onConflict: 'prediction_id,user_id' }).then(function(r) {
+      if (r.error) { console.warn('vote save error:', r.error.message); return; }
+      // Recount votes from DB to ensure accuracy
+      _sb.from('prediction_votes').select('vote').eq('prediction_id', predId).then(function(vr) {
+        if (!vr.data || !pred) return;
+        var a = 0, d = 0;
+        vr.data.forEach(function(v) { if (v.vote === 'agree') a++; else d++; });
+        pred.votes_agree = a;
+        pred.votes_disagree = d;
+        // Update predictions table with correct counts
+        _sb.from('predictions').update({ votes_agree: a, votes_disagree: d }).eq('id', predId);
+        renderPredictions();
+      });
     });
   };
 })();
