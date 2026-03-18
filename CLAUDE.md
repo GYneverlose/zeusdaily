@@ -400,7 +400,15 @@ Teammate 2（数据官）──┘        ↑ 打回则返回对应 Teammate 修
 
 1. **Phase 1 — 采集**：Teammate 1 和 Teammate 2 并行执行 web search，输出 JSON
 2. **Phase 2 — 初审**：Teammate 3 读取 CLAUDE.md + review-log.md，逐项审核两位 Teammate 的产出。通过 → verified.json；不通过 → 打回修正
-3. **Phase 3 — 预测验证（自动）**：Lead 在组装前先 web search 验证上期预测条件是否达成，自动更新 Supabase `predictions` 表的 status 字段（pending → hit/miss/partial），并填写 `resolved_note`。验证逻辑：搜索预测条件中的关键数据点（如油价、股价、政策动向），与预测阈值比对，判定结果
+3. **Phase 3 — 预测验证 + Credits 发放（自动）**：Lead 在组装前执行以下步骤：
+   - Web search 验证上期预测条件是否达成
+   - 更新 Supabase `predictions` 表：status（pending → hit/miss/partial）+ resolved_note
+   - **发放 Zeus Credits**：查询 `prediction_votes` 表获取所有投票，按规则发放：
+     - hit → 投 agree 的用户 +3 credits
+     - miss → 投 disagree 的用户 +3 credits
+     - partial → 所有投票用户 +1 credit
+   - 更新对应用户的 `profiles.zeus_credits` 字段（当前值 + 奖励）
+   - API 操作使用 service_role key：`eyJhbG...GQMJ4NBQ...`
 4. **Phase 4 — 组装**：Lead 读取 verified.json，组装 HTML，撰写哲思/上帝视角/结语。God's Eye 中引用本期新预测 + 上期预测验证结果
 5. **Phase 5 — 终审**：Lead 将完整 HTML 提交审核官做最终检查。通过 → 发布；不通过 → Lead 修正后重新提交
 6. **Phase 6 — 发布**：发布文件 + 更新 Supabase editions 表 + 插入本期新预测至 predictions 表 + git push
