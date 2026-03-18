@@ -619,7 +619,10 @@ function doStamp() {
     _supa.auth.getSession().then(function(r) {
       var s = r.data && r.data.session;
       if (!s) return;
-      _supa.from('checkins').upsert({ user_id: s.user.id, edition_id: _EDITION_ID, checked_at: now.toISOString() }, { onConflict: 'user_id,edition_id' });
+      _supa.from('checkins').select('id').eq('user_id', s.user.id).eq('edition_id', _EDITION_ID).maybeSingle().then(function(chk) {
+        if (chk.data) return;
+        _supa.from('checkins').insert({ user_id: s.user.id, edition_id: _EDITION_ID, checked_at: now.toISOString() });
+      });
     });
   }
   _launch(pv);
