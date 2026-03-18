@@ -43,32 +43,74 @@ html,body{width:100%;height:100%;background:var(--purple-deep);overflow:hidden;f
 }
 @keyframes scroll-in{from{opacity:0;transform:translateY(24px) scale(0.97);}to{opacity:1;transform:none;}}
 
-/* ── ROD ── */
+/* ── WOODEN ROD ── */
 .rod{
-  width:100%;height:28px;
-  background:linear-gradient(180deg,#3a2a50 0%,#1c1228 40%,#040308 100%);
-  border-radius:14px;
-  display:flex;align-items:center;justify-content:space-between;padding:0 10px;
-  border-top:1px solid rgba(184,150,74,0.3);border-bottom:1px solid rgba(0,0,0,0.8);
+  width:calc(100% + 28px);margin-left:-14px;height:22px;
+  background:linear-gradient(180deg,#8b6b3d 0%,#6b4f2a 20%,#4a3518 50%,#6b4f2a 80%,#8b6b3d 100%);
+  border-radius:11px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 6px;
   position:relative;z-index:2;
+  box-shadow:0 3px 10px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,220,150,0.2);
 }
-.rod::before{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(184,150,74,0.4),transparent);}
-.rod::after{content:'';position:absolute;inset:6px 55px;background:repeating-linear-gradient(90deg,transparent 0px,transparent 8px,rgba(184,150,74,0.18) 8px,rgba(184,150,74,0.18) 9px);}
-.knob{width:46px;height:17px;background:linear-gradient(180deg,#3a2a50,#0c0818);border-radius:8.5px;border:1px solid rgba(184,150,74,0.25);flex-shrink:0;position:relative;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,0.6);}
-.knob::after{content:'';position:absolute;top:3px;left:8px;right:8px;height:1px;background:rgba(184,150,74,0.2);border-radius:1px;}
+/* Wood grain texture */
+.rod::before{content:'';position:absolute;inset:3px 20px;background:repeating-linear-gradient(90deg,transparent 0px,transparent 6px,rgba(0,0,0,0.06) 6px,rgba(0,0,0,0.06) 7px);border-radius:4px;}
+/* Gold trim line */
+.rod::after{content:'';position:absolute;left:15%;right:15%;top:50%;height:1px;background:linear-gradient(90deg,transparent,rgba(184,150,74,0.35),transparent);}
+.knob{width:32px;height:32px;background:radial-gradient(circle at 40% 35%,#8b6b3d,#4a3518 70%,#2a1e0e);border-radius:50%;border:2px solid rgba(184,150,74,0.4);flex-shrink:0;position:relative;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,220,150,0.15);margin-top:-5px;margin-bottom:-5px;}
+/* Gold ring on knob */
+.knob::after{content:'';position:absolute;inset:4px;border-radius:50%;border:1px solid rgba(184,150,74,0.3);}
+
+/* ── ROLLED EDGE (top) ── */
+.roll-top{
+  width:100%;height:18px;position:relative;z-index:1;
+  background:linear-gradient(180deg,
+    var(--parchment-dark) 0%,
+    #c4b48a 30%,
+    rgba(180,160,120,0.6) 60%,
+    transparent 100%
+  );
+  border-radius:0 0 50% 50% / 0 0 100% 100%;
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);
+}
+/* ── ROLLED EDGE (bottom) ── */
+.roll-bottom{
+  width:100%;height:18px;position:relative;z-index:1;
+  background:linear-gradient(0deg,
+    var(--parchment-dark) 0%,
+    #c4b48a 30%,
+    rgba(180,160,120,0.6) 60%,
+    transparent 100%
+  );
+  border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow:0 -2px 6px rgba(0,0,0,0.15);
+}
 
 /* ── PARCHMENT ── */
 .parchment{
   width:100%;will-change:auto;
-  background:linear-gradient(175deg,var(--parchment) 0%,#ece3cf 40%,var(--parchment-dark) 100%);
+  background:
+    /* Aged paper base */
+    linear-gradient(175deg,#f5eedc 0%,#ece3cf 30%,#e2d5b8 60%,#d8c9a5 100%);
   padding:28px 28px 24px;
   position:relative;overflow:hidden;
-  border-left:1px solid rgba(184,150,74,0.15);border-right:1px solid rgba(184,150,74,0.15);
+  border-left:1px solid rgba(160,130,80,0.2);border-right:1px solid rgba(160,130,80,0.2);
 }
+/* Aged stain patches */
 .parchment::before{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 15% 20%,rgba(139,90,20,0.07) 0%,transparent 50%),
-             radial-gradient(ellipse at 85% 75%,rgba(100,60,10,0.05) 0%,transparent 45%);
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(139,100,40,0.08) 0%,transparent 45%),
+    radial-gradient(ellipse at 88% 72%,rgba(120,80,20,0.06) 0%,transparent 40%),
+    radial-gradient(ellipse at 50% 95%,rgba(100,70,20,0.05) 0%,transparent 35%),
+    radial-gradient(ellipse at 75% 15%,rgba(160,120,50,0.04) 0%,transparent 30%);
+  pointer-events:none;
+}
+/* Worn edges effect */
+.parchment::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,rgba(160,130,80,0.08) 0%,transparent 8%,transparent 92%,rgba(160,130,80,0.08) 100%),
+    linear-gradient(180deg,rgba(160,130,80,0.06) 0%,transparent 5%,transparent 95%,rgba(160,130,80,0.06) 100%);
   pointer-events:none;
 }
 
@@ -226,6 +268,7 @@ html,body{width:100%;height:100%;background:var(--purple-deep);overflow:hidden;f
 <div id="scene">
   <div class="scroll-wrap">
     <div class="rod"><div class="knob"></div><div class="knob"></div></div>
+    <div class="roll-top"></div>
     <div class="parchment">
       <div class="lang-toggle">
         <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中</button>
@@ -297,6 +340,7 @@ html,body{width:100%;height:100%;background:var(--purple-deep);overflow:hidden;f
         <div style="font-family:'Playfair Display',serif;font-size:7px;letter-spacing:2px;color:rgba(42,26,72,0.3);text-transform:uppercase;">A Zeus 9 Publication</div>
       </div>
     </div>
+    <div class="roll-bottom"></div>
     <div class="rod"><div class="knob"></div><div class="knob"></div></div>
   </div>
 </div>
