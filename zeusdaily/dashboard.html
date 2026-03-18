@@ -1233,9 +1233,10 @@ window._creditCoin = function(size) {
 
   window.votePrediction = function(predId, vote) {
     var user = window._currentUser;
-    if (!user) return;
+    if (!user) { console.warn('votePrediction: no user'); return; }
     var oldVote = _myVotes[predId];
-    if (oldVote === vote) return; // Already voted same
+    console.log('votePrediction:', predId, vote, 'oldVote:', oldVote);
+    if (oldVote === vote) { console.log('votePrediction: same vote, skip'); return; }
 
     // Optimistic update
     _myVotes[predId] = vote;
