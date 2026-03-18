@@ -363,7 +363,7 @@ function switchTab(tab){
 
   // Redirect if already logged in
   _sb.auth.getSession().then(function(res){
-    if(res.data&&res.data.session) window.location.href='dashboard.html';
+    if(res.data&&res.data.session) window.location.href='/dashboard';
   });
 
   // Handle OAuth return (Google) + write invited_by if needed
@@ -382,7 +382,7 @@ function switchTab(tab){
         }
         setTimeout(tryUpdate,1000);
       }
-      window.location.href='dashboard.html';
+      window.location.href='/dashboard';
     }
   });
 
@@ -405,7 +405,7 @@ function switchTab(tab){
           var m=res.error.message||'';
           if(m.indexOf('Invalid')>=0||m.indexOf('credentials')>=0) m=L()==='zh'?'邮件或密码错误':'Invalid email or password';
           showErr('login-error',m);
-        } else { window.location.href='dashboard.html'; }
+        } else { window.location.href='/dashboard'; }
       });
     });
     ['login-email','login-password'].forEach(function(id){
@@ -423,7 +423,7 @@ function switchTab(tab){
       try{ if(refParam) localStorage.setItem('zeus-ref',refParam); }catch(e){}
       // Pass ref in redirect URL so it survives OAuth round-trip
       var savedRef=refParam; try{savedRef=savedRef||localStorage.getItem('zeus-ref')||'';}catch(e){}
-      var redirectUrl=window.location.origin+'/dashboard.html'+(savedRef?'?ref='+encodeURIComponent(savedRef):'');
+      var redirectUrl=window.location.origin+'/dashboard'+(savedRef?'?ref='+encodeURIComponent(savedRef):'');
       _sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:redirectUrl}}).then(function(res){
         if(res.error){setLoading(btnGoogle,false);showErr('login-error',res.error.message||(L()==='zh'?'Google 登录失败':'Google sign-in failed'));}
       });

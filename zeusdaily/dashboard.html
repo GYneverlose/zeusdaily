@@ -379,8 +379,8 @@ var LEVEL_DATA=[null,{name:'观察者',nameEn:'Observer',days:30,expNeeded:300},
 function getLvName(lv,lang){return lang==='zh'?(LEVEL_DATA[lv]||LEVEL_DATA[1]).name:(LEVEL_DATA[lv]||LEVEL_DATA[1]).nameEn;}
 function getLvExpNeeded(lv){return(LEVEL_DATA[lv]||LEVEL_DATA[1]).expNeeded;}
 function calcLevel(exp){if(exp>=2000)return 5;if(exp>=1000)return 4;if(exp>=500)return 3;if(exp>=300)return 2;return 1;}
-_sb.auth.getSession().then(function(res){if(!res.data||!res.data.session){window.location.href='index.html';return;}var user=res.data.session.user;window._currentUser=user;loadProfile(user.id);});
-_sb.auth.onAuthStateChange(function(event,session){if(event==='SIGNED_OUT')window.location.href='index.html';});
+_sb.auth.getSession().then(function(res){if(!res.data||!res.data.session){window.location.href='/login';return;}var user=res.data.session.user;window._currentUser=user;loadProfile(user.id);});
+_sb.auth.onAuthStateChange(function(event,session){if(event==='SIGNED_OUT')window.location.href='/login';});
 function loadProfile(userId){
   // Pick up ref from URL (survives OAuth redirect) or localStorage
   var urlRef='';try{urlRef=new URLSearchParams(window.location.search).get('ref')||'';}catch(e){}
@@ -420,7 +420,7 @@ function applyProfileToUI(p){var lang=getLang?getLang():'zh';var name=p.display_
 function loadIssuesReadStat(userId){_sb.from('editions').select('*',{count:'exact',head:true}).then(function(r){var cnt=r.count||0;var el=document.getElementById('issues-read-count');if(el)el.textContent=cnt;var note=document.getElementById('issues-read-note');if(note&&cnt>0)note.textContent='Vol.001–'+String(cnt).padStart(3,'0');});}
 function checkTodayCheckin(userId,profile){var today=new Date().toISOString().slice(0,10);_sb.from('checkins').select('id').eq('user_id',userId).eq('checked_at',today).single().then(function(res){if(res.data){var btn=document.getElementById('checkin-btn');if(btn&&!btn.classList.contains('done')){btn.classList.add('done');var lbl=document.getElementById('checkin-label');if(lbl)lbl.innerHTML='<span class="zh-only">&#10003; 今日已签到</span><span class="en-only">&#10003; Checked In</span>';var timeEl=document.getElementById('checkin-time');if(timeEl)timeEl.textContent='今日 ✓';if(window.applyLang)applyLang(getLang());}}});}
 window.doCheckin=function(){var btn=document.getElementById('checkin-btn');if(!btn||btn.classList.contains('done'))return;var user=window._currentUser;var profile=window._profile;if(!user||!profile)return;var today=new Date().toISOString().slice(0,10);_sb.from('checkins').insert({user_id:user.id,checked_at:today}).then(function(res){if(res.error&&res.error.code!=='23505')return;var yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);var wasYesterday=profile.last_checkin===yesterday||profile.last_checkin===today;var newStreak=wasYesterday?(profile.streak||0)+1:1;var newExp=(profile.exp||0)+10;var newLevel=calcLevel(newExp);_sb.from('profiles').update({streak:newStreak,exp:newExp,level:newLevel,last_checkin:today}).eq('id',user.id).then(function(){profile.streak=newStreak;profile.exp=newExp;profile.level=newLevel;profile.last_checkin=today;applyProfileToUI(profile);});btn.classList.add('done');var d=new Date();var ts=(d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes()+' MYT';var timeEl=document.getElementById('checkin-time');if(timeEl)timeEl.textContent=ts;var lbl=document.getElementById('checkin-label');if(lbl)lbl.innerHTML='<span class="zh-only">&#10003; 今日已签到</span><span class="en-only">&#10003; Checked In</span>';if(window.applyLang)applyLang(getLang());});};
-window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.href='index.html';});};
+window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.href='/login';});};
 </script>
 </head>
 <body>
