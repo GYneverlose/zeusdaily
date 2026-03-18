@@ -1219,9 +1219,9 @@ window._creditCoin = function(size) {
       }
 
       html += '<div class="pred-votes">'
-        + '<button class="vote-btn' + agreeClass + '" onclick="console.log(\'click agree '+p.id+'\');votePrediction(' + p.id + ',\'agree\')"' + (p.status !== 'pending' ? ' disabled' : '') + '><span class="zh-only">&#x2713; &#x540C;&#x610F;</span><span class="en-only">&#x2713; Agree</span> <span style="opacity:0.6">' + (p.votes_agree || 0) + '</span></button>'
+        + '<button class="vote-btn' + agreeClass + '" data-pid="' + p.id + '" data-vote="agree"' + (p.status !== 'pending' ? ' disabled' : '') + '><span class="zh-only">&#x2713; &#x540C;&#x610F;</span><span class="en-only">&#x2713; Agree</span> <span style="opacity:0.6">' + (p.votes_agree || 0) + '</span></button>'
         + '<div class="vote-bar"><div class="vote-bar-fill" style="width:' + agreePercent + '%"></div></div>'
-        + '<button class="vote-btn' + disagreeClass + '" onclick="console.log(\'click disagree '+p.id+'\');votePrediction(' + p.id + ',\'disagree\')"' + (p.status !== 'pending' ? ' disabled' : '') + '><span class="zh-only">&#x2717; &#x4E0D;&#x540C;&#x610F;</span><span class="en-only">&#x2717; Disagree</span> <span style="opacity:0.6">' + (p.votes_disagree || 0) + '</span></button>'
+        + '<button class="vote-btn' + disagreeClass + '" data-pid="' + p.id + '" data-vote="disagree"' + (p.status !== 'pending' ? ' disabled' : '') + '><span class="zh-only">&#x2717; &#x4E0D;&#x540C;&#x610F;</span><span class="en-only">&#x2717; Disagree</span> <span style="opacity:0.6">' + (p.votes_disagree || 0) + '</span></button>'
         + '</div>'
         + creditHtml
         + '</div>';
@@ -1229,6 +1229,15 @@ window._creditCoin = function(size) {
 
     list.innerHTML = html;
     if (window.applyLang) applyLang(getLang());
+    // Bind vote buttons via event delegation (onclick in innerHTML can fail)
+    list.querySelectorAll('.vote-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var pid = parseInt(btn.getAttribute('data-pid'));
+        var v = btn.getAttribute('data-vote');
+        if (pid && v) votePrediction(pid, v);
+      });
+    });
   }
 
   window.votePrediction = function(predId, vote) {
