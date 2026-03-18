@@ -1,7 +1,7 @@
-var CACHE_NAME = 'zeus-daily-v1';
+var CACHE_NAME = 'zeus-daily-v2';
 var STATIC_ASSETS = [
-  '/dashboard.html',
-  '/index.html',
+  '/dashboard',
+  '/login',
   '/manifest.json'
 ];
 
