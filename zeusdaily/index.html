@@ -400,8 +400,12 @@ function switchTab(tab){
   if(btnGoogle){
     btnGoogle.addEventListener('click',function(){
       setLoading(btnGoogle,true);
-var refParam=new URLSearchParams(window.location.search).get('ref');if(refParam)localStorage.setItem('zeus-ref',refParam);
-      _sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/dashboard.html'}}).then(function(res){
+      var refParam=new URLSearchParams(window.location.search).get('ref')||'';
+      try{ if(refParam) localStorage.setItem('zeus-ref',refParam); }catch(e){}
+      // Pass ref in redirect URL so it survives OAuth round-trip
+      var savedRef=refParam; try{savedRef=savedRef||localStorage.getItem('zeus-ref')||'';}catch(e){}
+      var redirectUrl=window.location.origin+'/dashboard.html'+(savedRef?'?ref='+encodeURIComponent(savedRef):'');
+      _sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:redirectUrl}}).then(function(res){
         if(res.error){setLoading(btnGoogle,false);showErr('login-error',res.error.message||(L()==='zh'?'Google 登录失败':'Google sign-in failed'));}
       });
     });
