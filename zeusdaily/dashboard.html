@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a0a2e">
+<link rel="manifest" href="/manifest.json">
 <title>Zeus Daily · Dashboard</title>
 <meta property="og:type"        content="website"/>
 <meta property="og:site_name"   content="Zeus Daily"/>
@@ -175,14 +177,31 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
   #heroEye{width:120px !important;height:52px !important;}
   .stat-card{padding:14px 12px;}
   .stat-value{font-size:22px;}
-  .checkin-btn{padding:10px 14px;}
+  .checkin-btn{padding:10px 14px;min-height:44px;}
   #checkin-label{font-size:12px;}
   .grid-2{grid-template-columns:1fr !important;}
   .profile-grid{grid-template-columns:1fr !important;}
   .issue-title{font-size:12px;white-space:normal;word-break:break-word;}
   .topbar-date{display:none;}
-  /* show settings block inside profile page on mobile */
   .mobile-settings{display:block;}
+  /* Touch-friendly tap targets */
+  .topbar-icon{min-width:44px;min-height:44px;}
+  .lang-btn{min-height:36px;min-width:36px;padding:6px 10px;}
+  .pg-btn{min-height:40px;min-width:40px;padding:8px 12px;}
+  .nav-item{min-height:44px;}
+  .hero-btn{min-height:44px;}
+  .issue-row{min-height:56px;}
+  .equip-choice{min-height:64px;padding:12px 8px;}
+}
+@media(max-width:480px){
+  .grid-4{grid-template-columns:1fr !important;}
+  .col-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr)) !important;}
+  .ach-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr)) !important;}
+  .equip-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr)) !important;}
+  #content{padding:10px;}
+  .hero-title{font-size:16px;}
+  .stat-value{font-size:20px;}
+  .friend-card{padding:10px;}
 }
 .bn-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1;cursor:pointer;padding:6px 4px 10px;color:var(--text4);transition:color 0.15s;position:relative;border:none;background:none;outline:none;}
 .bn-item.active{color:var(--purple);}
@@ -342,6 +361,7 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
       <div class="nav-item" data-page="issues"><div class="nav-icon"><svg fill="none" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div><span class="nav-text zh-only">日报</span><span class="nav-text en-only">Issues</span><span class="nav-badge" id="nav-issues-badge" style="display:none;"></span></div>
       <div class="nav-item" data-page="collection"><div class="nav-icon"><svg fill="none" viewBox="0 0 16 16"><path d="M3 3h10v9.5l-5-2.5-5 2.5V3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div><span class="nav-text zh-only">收藏</span><span class="nav-text en-only">Collection</span></div>
       <div class="nav-item" data-page="friends"><div class="nav-icon"><svg fill="none" viewBox="0 0 16 16"><circle cx="5.5" cy="5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 13c0-2.5 2-3.5 4.5-3.5S10 10.5 10 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M11 7.5c1 0 2.5.5 2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="11.5" cy="5" r="1.5" stroke="currentColor" stroke-width="1.3"/></svg></div><span class="nav-text zh-only">好友</span><span class="nav-text en-only">Friends</span></div>
+      <div class="nav-item" data-page="predictions"><div class="nav-icon"><svg fill="none" viewBox="0 0 16 16"><path d="M8 2l1.5 3.5L13 6l-2.5 2.5.5 3.5L8 10.5 4.5 12l.5-3.5L2.5 6l3.5-.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div><span class="nav-text zh-only">预测追踪</span><span class="nav-text en-only">Predictions</span></div>
     </div>
     <div class="nav-section">
       <div class="nav-label zh-only">账户</div><div class="nav-label en-only">ACCOUNT</div>
@@ -537,6 +557,35 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
       <div class="section-head"><div class="section-title zh-only">通知</div><div class="section-title en-only">Notifications</div><div class="section-line"></div></div>
       <div class="card"><div id="notif-list"></div></div>
     </div>
+    <!-- PREDICTIONS -->
+    <div class="page" id="page-predictions">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+        <div class="section-title zh-only" style="font-size:18px;">God's Eye &#x9884;&#x6D4B;&#x8FFD;&#x8E2A;</div>
+        <div class="section-title en-only" style="font-size:18px;">God's Eye Predictions</div>
+        <div style="height:1px;flex:1;background:linear-gradient(90deg,rgba(184,150,74,0.35),transparent);"></div>
+      </div>
+      <!-- Stats -->
+      <div class="grid-4" style="margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-value" id="pred-total">0</div><div class="stat-label"><span class="zh-only">&#x603B;&#x9884;&#x6D4B;</span><span class="en-only">Total</span></div></div>
+        <div class="stat-card"><div class="stat-value" style="color:#2e7d5a;" id="pred-hit">0</div><div class="stat-label"><span class="zh-only">&#x547D;&#x4E2D;</span><span class="en-only">Hit</span></div></div>
+        <div class="stat-card"><div class="stat-value" style="color:#8b3a2a;" id="pred-miss">0</div><div class="stat-label"><span class="zh-only">&#x672A;&#x4E2D;</span><span class="en-only">Miss</span></div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--gold);" id="pred-pending">0</div><div class="stat-label"><span class="zh-only">&#x5F85;&#x9A8C;&#x8BC1;</span><span class="en-only">Pending</span></div></div>
+      </div>
+      <!-- Hit Rate Bar -->
+      <div class="card" style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;"><span class="zh-only">&#x547D;&#x4E2D;&#x7387;</span><span class="en-only">Hit Rate</span></span>
+          <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--gold);" id="pred-rate">—</span>
+        </div>
+        <div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;">
+          <div id="pred-rate-bar" style="height:100%;background:linear-gradient(90deg,#2e7d5a,var(--gold));border-radius:4px;width:0%;transition:width 0.6s;"></div>
+        </div>
+      </div>
+      <!-- Prediction List -->
+      <div id="pred-list" style="display:flex;flex-direction:column;gap:10px;">
+        <div style="padding:40px;text-align:center;color:var(--text4);font-family:'DM Mono',monospace;font-size:11px;"><span class="zh-only">&#x52A0;&#x8F7D;&#x4E2D;&#x2026;</span><span class="en-only">Loading...</span></div>
+      </div>
+    </div>
     <!-- FRIENDS -->
     <div class="page" id="page-friends">
       <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,#fdfbff,#f5f0fc);border-color:rgba(123,86,184,0.25);">
@@ -658,7 +707,7 @@ document.addEventListener('click',function(ev){
   function applyFilter(){var q=(document.getElementById('issue-search')||{value:''}).value.toLowerCase();var yr=(document.getElementById('issue-year')||{value:''}).value;filtered=ISSUES.filter(function(iss){var matchQ=!q||String(iss.num).indexOf(q)>=0||iss.title.toLowerCase().indexOf(q)>=0||(iss.titleEn&&iss.titleEn.toLowerCase().indexOf(q)>=0);var matchY=!yr||iss.date.indexOf(yr)===0;return matchQ&&matchY;});currentPage=1;render();}
   function initIssues(){var s=document.getElementById('issue-search');var y=document.getElementById('issue-year');if(s&&!s._bound){s.addEventListener('input',applyFilter);s._bound=true;}if(y&&!y._bound){y.addEventListener('change',applyFilter);y._bound=true;}loadIssues();}
   var _origGoPage=window.goPage;
-  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile')setTimeout(loadProfilePage,0);if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);}};
+  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile')setTimeout(loadProfilePage,0);if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);}if(id==='predictions'){setTimeout(loadPredictions,0);}};
   window.addEventListener('load',function(){var ap=document.querySelector('.page.active');if(ap&&ap.id==='page-issues')initIssues();setTimeout(loadNotifications,1000);setTimeout(loadHomePage,500);});
   window._renderIssues=render;
 })();
@@ -978,6 +1027,125 @@ window.renderFriends = function() {
 })();
 
 
+// ── PREDICTIONS TRACKER ──
+(function(){
+  var _preds = [];
+  var _myVotes = {};
+
+  window.loadPredictions = function() {
+    _sb.from('predictions').select('*').order('edition_vol',{ascending:false}).then(function(r) {
+      _preds = r.data || [];
+      // Load user votes
+      var user = window._currentUser;
+      if (user) {
+        _sb.from('prediction_votes').select('prediction_id,vote').eq('user_id', user.id).then(function(vr) {
+          _myVotes = {};
+          (vr.data || []).forEach(function(v) { _myVotes[v.prediction_id] = v.vote; });
+          renderPredictions();
+        });
+      } else { renderPredictions(); }
+    });
+  };
+
+  function renderPredictions() {
+    var lang = getLang();
+    var list = document.getElementById('pred-list');
+    if (!list) return;
+
+    // Stats
+    var total = _preds.length, hits = 0, misses = 0, pending = 0, partial = 0;
+    _preds.forEach(function(p) {
+      if (p.status === 'hit') hits++;
+      else if (p.status === 'miss') misses++;
+      else if (p.status === 'partial') partial++;
+      else pending++;
+    });
+    var resolved = hits + misses + partial;
+    var rate = resolved > 0 ? Math.round((hits + partial * 0.5) / resolved * 100) : 0;
+
+    var el;
+    el = document.getElementById('pred-total'); if (el) el.textContent = total;
+    el = document.getElementById('pred-hit'); if (el) el.textContent = hits;
+    el = document.getElementById('pred-miss'); if (el) el.textContent = misses;
+    el = document.getElementById('pred-pending'); if (el) el.textContent = pending;
+    el = document.getElementById('pred-rate'); if (el) el.textContent = resolved > 0 ? rate + '%' : '—';
+    el = document.getElementById('pred-rate-bar'); if (el) el.style.width = rate + '%';
+
+    if (!_preds.length) {
+      list.innerHTML = '<div style="padding:48px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;">' + (lang === 'zh' ? '暂无预测记录' : 'No predictions yet') + '</div>';
+      return;
+    }
+
+    var statusMap = {
+      pending: { zh: '待验证', en: 'PENDING', color: 'var(--gold)', bg: 'rgba(184,150,74,0.1)', border: 'rgba(184,150,74,0.3)' },
+      hit: { zh: '命中', en: 'HIT', color: '#2e7d5a', bg: 'rgba(46,125,90,0.08)', border: 'rgba(46,125,90,0.3)' },
+      miss: { zh: '未中', en: 'MISS', color: '#8b3a2a', bg: 'rgba(139,58,42,0.08)', border: 'rgba(139,58,42,0.3)' },
+      partial: { zh: '部分命中', en: 'PARTIAL', color: '#7b56b8', bg: 'rgba(123,86,184,0.08)', border: 'rgba(123,86,184,0.3)' }
+    };
+
+    var html = '';
+    _preds.forEach(function(p) {
+      var s = statusMap[p.status] || statusMap.pending;
+      var text = lang === 'zh' ? p.prediction_zh : p.prediction_en;
+      var statusLabel = lang === 'zh' ? s.zh : s.en;
+      var myVote = _myVotes[p.id] || null;
+      var agreeActive = myVote === 'agree' ? 'font-weight:700;color:#2e7d5a;' : '';
+      var disagreeActive = myVote === 'disagree' ? 'font-weight:700;color:#8b3a2a;' : '';
+      var totalVotes = (p.votes_agree || 0) + (p.votes_disagree || 0);
+      var agreePercent = totalVotes > 0 ? Math.round((p.votes_agree || 0) / totalVotes * 100) : 50;
+
+      html += '<div class="card" style="padding:14px 16px;">'
+        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
+        + '<span style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:2px;color:var(--text4);">VOL.' + String(p.edition_vol).padStart(3, '0') + '</span>'
+        + '<span style="font-size:8px;letter-spacing:1.5px;padding:2px 8px;border-radius:3px;background:' + s.bg + ';border:1px solid ' + s.border + ';color:' + s.color + ';font-family:\'DM Mono\',monospace;text-transform:uppercase;">' + statusLabel + '</span>'
+        + '<span style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--text4);margin-left:auto;">' + (p.category || '') + '</span>'
+        + '</div>'
+        + '<div style="font-size:13.5px;line-height:1.7;color:var(--text);margin-bottom:10px;">' + text + '</div>';
+
+      // Resolved note
+      if (p.resolved_note) {
+        html += '<div style="font-size:11px;color:var(--text3);padding:8px 10px;background:var(--bg2);border-radius:4px;margin-bottom:10px;line-height:1.6;">' + p.resolved_note + '</div>';
+      }
+
+      // Vote bar + buttons
+      html += '<div style="display:flex;align-items:center;gap:10px;">'
+        + '<button onclick="votePrediction(' + p.id + ',\'agree\')" style="border:none;background:none;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:10px;padding:4px 8px;border-radius:4px;border:1px solid var(--border);' + agreeActive + '" title="Agree"><span class="zh-only">&#x2713; &#x540C;&#x610F;</span><span class="en-only">&#x2713; Agree</span> <span style="opacity:0.6;">' + (p.votes_agree || 0) + '</span></button>'
+        + '<div style="flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;"><div style="height:100%;width:' + agreePercent + '%;background:linear-gradient(90deg,#2e7d5a,var(--gold));border-radius:3px;transition:width 0.3s;"></div></div>'
+        + '<button onclick="votePrediction(' + p.id + ',\'disagree\')" style="border:none;background:none;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:10px;padding:4px 8px;border-radius:4px;border:1px solid var(--border);' + disagreeActive + '" title="Disagree"><span class="zh-only">&#x2717; &#x4E0D;&#x540C;&#x610F;</span><span class="en-only">&#x2717; Disagree</span> <span style="opacity:0.6;">' + (p.votes_disagree || 0) + '</span></button>'
+        + '</div></div>';
+    });
+
+    list.innerHTML = html;
+    if (window.applyLang) applyLang(getLang());
+  }
+
+  window.votePrediction = function(predId, vote) {
+    var user = window._currentUser;
+    if (!user) return;
+    var oldVote = _myVotes[predId];
+    if (oldVote === vote) return; // Already voted same
+
+    // Optimistic update
+    _myVotes[predId] = vote;
+    var pred = _preds.filter(function(p) { return p.id === predId; })[0];
+    if (pred) {
+      if (oldVote === 'agree') pred.votes_agree = Math.max(0, (pred.votes_agree || 0) - 1);
+      if (oldVote === 'disagree') pred.votes_disagree = Math.max(0, (pred.votes_disagree || 0) - 1);
+      if (vote === 'agree') pred.votes_agree = (pred.votes_agree || 0) + 1;
+      if (vote === 'disagree') pred.votes_disagree = (pred.votes_disagree || 0) + 1;
+    }
+    renderPredictions();
+
+    // Upsert vote
+    _sb.from('prediction_votes').upsert({ prediction_id: predId, user_id: user.id, vote: vote }, { onConflict: 'prediction_id,user_id' }).then(function() {
+      // Update prediction counts
+      if (pred) {
+        _sb.from('predictions').update({ votes_agree: pred.votes_agree, votes_disagree: pred.votes_disagree }).eq('id', predId);
+      }
+    });
+  };
+})();
+
 // ── ACHIEVEMENT BADGE SVG GENERATOR ──
 window._achBadge = function(id, size) {
   var s = size || 52;
@@ -1243,5 +1411,6 @@ applyLang(getLang());
     </div>
   </div>
 </div>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}</script>
 </body>
 </html>
