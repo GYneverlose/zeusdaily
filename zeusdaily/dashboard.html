@@ -112,6 +112,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 .pred-credit-miss{margin-top:var(--sp-sm);font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:1px;color:var(--text4);padding:var(--sp-xs) var(--sp-sm);background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);display:inline-block;}
 /* Disabled vote buttons */
 .vote-btn:disabled{opacity:0.5;cursor:default;pointer-events:none;}
+.vote-btn.vote-hidden{opacity:0.25;pointer-events:none;}
 /* Zeus Credit Coin */
 @keyframes purpleSilver{0%,100%{fill:#3d2060;}25%{fill:#7c3aed;}50%{fill:#d0d0d8;}75%{fill:#8a8a96;}}
 .bolt-sv{animation:purpleSilver 3s ease-in-out infinite;}
@@ -1218,10 +1219,11 @@ window._creditCoin = function(size) {
         html += '<div class="pred-note">' + p.resolved_note + '</div>';
       }
 
+      var locked = !!myVote || p.status !== 'pending';
       html += '<div class="pred-votes">'
-        + '<button class="vote-btn' + agreeClass + '" data-pid="' + p.id + '" data-vote="agree"' + (p.status !== 'pending' ? ' disabled' : '') + '><span class="zh-only">&#x2713; &#x540C;&#x610F;</span><span class="en-only">&#x2713; Agree</span> <span style="opacity:0.6">' + (p.votes_agree || 0) + '</span></button>'
+        + '<button class="vote-btn' + agreeClass + (locked && myVote !== 'agree' ? ' vote-hidden' : '') + '" data-pid="' + p.id + '" data-vote="agree"' + (locked ? ' disabled' : '') + '><span class="zh-only">&#x2713; &#x540C;&#x610F;</span><span class="en-only">&#x2713; Agree</span> <span style="opacity:0.6">' + (p.votes_agree || 0) + '</span></button>'
         + '<div class="vote-bar"><div class="vote-bar-fill" style="width:' + agreePercent + '%"></div></div>'
-        + '<button class="vote-btn' + disagreeClass + '" data-pid="' + p.id + '" data-vote="disagree"' + (p.status !== 'pending' ? ' disabled' : '') + '><span class="zh-only">&#x2717; &#x4E0D;&#x540C;&#x610F;</span><span class="en-only">&#x2717; Disagree</span> <span style="opacity:0.6">' + (p.votes_disagree || 0) + '</span></button>'
+        + '<button class="vote-btn' + disagreeClass + (locked && myVote !== 'disagree' ? ' vote-hidden' : '') + '" data-pid="' + p.id + '" data-vote="disagree"' + (locked ? ' disabled' : '') + '><span class="zh-only">&#x2717; &#x4E0D;&#x540C;&#x610F;</span><span class="en-only">&#x2717; Disagree</span> <span style="opacity:0.6">' + (p.votes_disagree || 0) + '</span></button>'
         + '</div>'
         + creditHtml
         + '</div>';
@@ -1247,7 +1249,7 @@ window._creditCoin = function(size) {
     var user = window._currentUser;
     if (!user) return;
     var oldVote = _myVotes[predId];
-    if (oldVote === vote) return;
+    if (oldVote) return; // Already voted, locked
 
     // Optimistic update for instant UI feedback
     _myVotes[predId] = vote;
