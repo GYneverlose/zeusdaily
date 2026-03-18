@@ -567,6 +567,7 @@ updateEye();
 var _SUPA_URL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
 var _SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCxvksWbbpLw';
 var _EDITION = '2026-03-17';
+var _EDITION_ID = 11;
 var _LSKEY = 'zd_stamp_20260317';
 var _stamped = false;
 var _supa = null;
@@ -597,7 +598,7 @@ function _applyStamp(ts) {
   _supa.auth.getSession().then(function(r) {
     var s = r.data && r.data.session;
     if (!s) return;
-    _supa.from('checkins').select('checked_at').eq('user_id', s.user.id).eq('edition_date', _EDITION).maybeSingle().then(function(res) {
+    _supa.from('checkins').select('checked_at').eq('user_id', s.user.id).eq('edition_id', _EDITION_ID).maybeSingle().then(function(res) {
       if (res.data && res.data.checked_at) {
         var ts = _fmtUTC(new Date(res.data.checked_at));
         try { localStorage.setItem(_LSKEY, ts); } catch(e) {}
@@ -618,7 +619,7 @@ function doStamp() {
     _supa.auth.getSession().then(function(r) {
       var s = r.data && r.data.session;
       if (!s) return;
-      _supa.from('checkins').upsert({ user_id: s.user.id, edition_date: _EDITION, checked_at: now.toISOString() }, { onConflict: 'user_id,edition_date' });
+      _supa.from('checkins').upsert({ user_id: s.user.id, edition_id: _EDITION_ID, checked_at: now.toISOString() }, { onConflict: 'user_id,edition_id' });
     });
   }
   _launch(pv);
