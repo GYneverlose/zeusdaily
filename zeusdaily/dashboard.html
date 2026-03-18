@@ -22,6 +22,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
+  /* Colors */
   --bg:#faf8f4;--bg2:#f4f0e8;--bg3:#ede7d9;
   --surface:#ffffff;--surface2:#f9f6ef;
   --border:rgba(184,150,74,0.18);--border2:rgba(184,150,74,0.35);--border3:rgba(42,26,72,0.1);
@@ -29,9 +30,58 @@
   --purple:#5c3d8f;--purple2:#3a1f6e;--violet:#7b56b8;
   --text:#1e1530;--text2:#4a3a6a;--text3:#8a7a9a;--text4:#b8a8c8;
   --green:#2e7d5a;--green-bg:rgba(46,125,90,0.08);
-  --red:#8b3a2a;
+  --red:#8b3a2a;--red-bg:rgba(139,58,42,0.08);
   --sidebar-w:230px;
+  /* Spacing scale */
+  --sp-xs:4px;--sp-sm:8px;--sp-md:14px;--sp-lg:20px;--sp-xl:28px;--sp-2xl:36px;
+  /* Font scale */
+  --fs-xs:9px;--fs-sm:11px;--fs-base:13px;--fs-md:15px;--fs-lg:18px;--fs-xl:22px;--fs-2xl:30px;
+  /* Radius scale */
+  --r-sm:6px;--r-md:10px;--r-lg:12px;--r-xl:16px;--r-full:50%;
+  /* Shadows */
+  --shadow-sm:0 2px 8px rgba(42,26,72,0.04);--shadow-md:0 4px 16px rgba(42,26,72,0.06);--shadow-lg:0 8px 28px rgba(42,26,72,0.10);
+  --shadow-gold:0 4px 20px rgba(184,150,74,0.08);--shadow-purple:0 4px 16px rgba(92,61,143,0.15);
+  /* Transitions */
+  --ease:0.15s ease;
 }
+/* ── Design System Components ── */
+.ds-label{font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:2px;color:var(--text4);text-transform:uppercase;}
+.ds-mono{font-family:'DM Mono',monospace;}
+.ds-serif{font-family:'Playfair Display',serif;}
+.ds-heading{font-family:'Playfair Display',serif;font-weight:700;color:var(--text);}
+.ds-meta{font-family:'DM Mono',monospace;font-size:var(--fs-sm);color:var(--text4);letter-spacing:0.5px;}
+.ds-body{font-size:var(--fs-base);color:var(--text2);line-height:1.7;}
+/* Status badges */
+.status-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:2px 8px;border-radius:3px;text-transform:uppercase;}
+.status-pending{background:var(--gold-bg);border:1px solid var(--border2);color:var(--gold2);}
+.status-hit{background:var(--green-bg);border:1px solid rgba(46,125,90,0.3);color:var(--green);}
+.status-miss{background:var(--red-bg);border:1px solid rgba(139,58,42,0.3);color:var(--red);}
+.status-partial{background:rgba(123,86,184,0.08);border:1px solid rgba(123,86,184,0.3);color:var(--violet);}
+/* Vote buttons */
+.vote-btn{border:1px solid var(--border);background:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;padding:var(--sp-xs) var(--sp-sm);border-radius:var(--r-sm);transition:all var(--ease);color:var(--text3);}
+.vote-btn:hover{border-color:var(--border2);background:var(--gold-bg);}
+.vote-btn.active-agree{font-weight:700;color:var(--green);border-color:rgba(46,125,90,0.3);background:var(--green-bg);}
+.vote-btn.active-disagree{font-weight:700;color:var(--red);border-color:rgba(139,58,42,0.3);background:var(--red-bg);}
+/* Prediction card */
+.pred-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-md) 16px;transition:border-color var(--ease),box-shadow var(--ease);}
+.pred-card:hover{border-color:var(--border2);box-shadow:var(--shadow-sm);}
+.pred-header{display:flex;align-items:center;gap:var(--sp-sm);margin-bottom:var(--sp-sm);}
+.pred-vol{font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:2px;color:var(--text4);}
+.pred-category{font-family:'DM Mono',monospace;font-size:var(--fs-xs);color:var(--text4);margin-left:auto;}
+.pred-text{font-size:13.5px;line-height:1.7;color:var(--text);margin-bottom:var(--sp-md);}
+.pred-note{font-size:var(--fs-sm);color:var(--text3);padding:var(--sp-sm) var(--sp-md);background:var(--bg2);border-radius:var(--r-sm);margin-bottom:var(--sp-md);line-height:1.6;}
+.pred-votes{display:flex;align-items:center;gap:var(--sp-md);}
+.vote-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.vote-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:3px;transition:width 0.3s;}
+/* Quick access card */
+.quick-card{cursor:pointer;background:linear-gradient(135deg,var(--surface),var(--bg2));border:1px solid var(--border);border-radius:var(--r-lg);padding:16px var(--sp-lg);transition:all var(--ease);}
+.quick-card:hover{border-color:var(--border2);box-shadow:var(--shadow-gold);transform:translateY(-1px);}
+/* Empty / Loading states */
+.empty-state{padding:var(--sp-2xl) var(--sp-lg);text-align:center;color:var(--text4);font-family:'DM Mono',monospace;font-size:var(--fs-sm);letter-spacing:1px;}
+.loading-state{padding:var(--sp-xl);text-align:center;color:var(--text4);font-family:'DM Mono',monospace;font-size:var(--fs-sm);}
+/* Focus states */
+input:focus,select:focus{border-color:var(--border2) !important;outline:none;box-shadow:0 0 0 3px rgba(184,150,74,0.1);}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;overflow:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 60%,rgba(42,26,72,0.04) 100%);pointer-events:none;z-index:0;}
@@ -447,14 +497,14 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
         </div>
       </div>
       <!-- Predictions Quick Access -->
-      <div class="card" style="margin-top:16px;cursor:pointer;background:linear-gradient(135deg,#fdfbff,#f5f0e8);border-color:rgba(184,150,74,0.25);" onclick="goPage('predictions')">
-        <div style="display:flex;align-items:center;gap:14px;">
-          <svg fill="none" viewBox="0 0 16 16" width="28" height="28" style="flex-shrink:0;"><path d="M8 2l1.5 3.5L13 6l-2.5 2.5.5 3.5L8 10.5 4.5 12l.5-3.5L2.5 6l3.5-.5z" stroke="#b8964a" stroke-width="1.2" stroke-linejoin="round"/></svg>
-          <div style="flex:1;">
-            <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--text);"><span class="zh-only">God's Eye &#x9884;&#x6D4B;&#x8FFD;&#x8E2A;</span><span class="en-only">God's Eye Predictions</span></div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px;"><span class="zh-only">&#x67E5;&#x770B;&#x5386;&#x53F2;&#x9884;&#x6D4B;&#x547D;&#x4E2D;&#x7387; · &#x53C2;&#x4E0E;&#x6295;&#x7968;</span><span class="en-only">Track hit rate · Cast your vote</span></div>
+      <div class="quick-card" onclick="goPage('predictions')" style="margin-top:16px">
+        <div style="display:flex;align-items:center;gap:var(--sp-md)">
+          <svg fill="none" viewBox="0 0 16 16" width="28" height="28" style="flex-shrink:0"><path d="M8 2l1.5 3.5L13 6l-2.5 2.5.5 3.5L8 10.5 4.5 12l.5-3.5L2.5 6l3.5-.5z" stroke="var(--gold)" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          <div style="flex:1">
+            <div class="ds-heading" style="font-size:var(--fs-md)"><span class="zh-only">God's Eye &#x9884;&#x6D4B;&#x8FFD;&#x8E2A;</span><span class="en-only">God's Eye Predictions</span></div>
+            <div class="ds-meta" style="margin-top:2px"><span class="zh-only">&#x67E5;&#x770B;&#x5386;&#x53F2;&#x9884;&#x6D4B;&#x547D;&#x4E2D;&#x7387; · &#x53C2;&#x4E0E;&#x6295;&#x7968;</span><span class="en-only">Track hit rate · Cast your vote</span></div>
           </div>
-          <svg width="14" height="14" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;"><path d="M4 2l4 4-4 4" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="14" height="14" viewBox="0 0 12 12" fill="none" style="flex-shrink:0"><path d="M4 2l4 4-4 4" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
       </div>
     </div>
@@ -464,7 +514,7 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
         <div class="section-title zh-only" style="font-size:18px;">所有期数</div>
         <div class="section-title en-only" style="font-size:18px;">All Issues</div>
         <div style="height:1px;flex:1;background:linear-gradient(90deg,rgba(184,150,74,0.35),transparent);margin:0 8px;"></div>
-        <div style="position:relative;"><input id="issue-search" type="text" placeholder="搜索期号或标题…" style="font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 12px 7px 32px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);width:200px;outline:none;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--border2)'" onblur="this.style.borderColor='var(--border)'"/><svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="5" r="3.5" stroke="#b8a8c8" stroke-width="1.2"/><path d="M8 8l2.5 2.5" stroke="#b8a8c8" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div style="position:relative"><input id="issue-search" type="text" placeholder="搜索期号或标题…" style="font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 12px 7px 32px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);width:200px;transition:border-color var(--ease)"/><svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none" width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="5" r="3.5" stroke="var(--text4)" stroke-width="1.2"/><path d="M8 8l2.5 2.5" stroke="var(--text4)" stroke-width="1.2" stroke-linecap="round"/></svg></div>
         <select id="issue-year" style="font-family:'DM Mono',monospace;font-size:11px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text3);outline:none;cursor:pointer;"><option value="">全部年份</option><option value="2026" selected>2026</option><option value="2027">2027</option></select>
         <div id="issue-count" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text4);white-space:nowrap;"></div>
       </div>
@@ -570,31 +620,25 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
     </div>
     <!-- PREDICTIONS -->
     <div class="page" id="page-predictions">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-        <div class="section-title zh-only" style="font-size:18px;">God's Eye &#x9884;&#x6D4B;&#x8FFD;&#x8E2A;</div>
-        <div class="section-title en-only" style="font-size:18px;">God's Eye Predictions</div>
-        <div style="height:1px;flex:1;background:linear-gradient(90deg,rgba(184,150,74,0.35),transparent);"></div>
+      <div class="section-head">
+        <div class="section-title"><span class="zh-only">God's Eye &#x9884;&#x6D4B;&#x8FFD;&#x8E2A;</span><span class="en-only">God's Eye Predictions</span></div>
+        <div class="section-line"></div>
       </div>
-      <!-- Stats -->
-      <div class="grid-4" style="margin-bottom:20px;">
-        <div class="stat-card"><div class="stat-value" id="pred-total">0</div><div class="stat-label"><span class="zh-only">&#x603B;&#x9884;&#x6D4B;</span><span class="en-only">Total</span></div></div>
-        <div class="stat-card"><div class="stat-value" style="color:#2e7d5a;" id="pred-hit">0</div><div class="stat-label"><span class="zh-only">&#x547D;&#x4E2D;</span><span class="en-only">Hit</span></div></div>
-        <div class="stat-card"><div class="stat-value" style="color:#8b3a2a;" id="pred-miss">0</div><div class="stat-label"><span class="zh-only">&#x672A;&#x4E2D;</span><span class="en-only">Miss</span></div></div>
-        <div class="stat-card"><div class="stat-value" style="color:var(--gold);" id="pred-pending">0</div><div class="stat-label"><span class="zh-only">&#x5F85;&#x9A8C;&#x8BC1;</span><span class="en-only">Pending</span></div></div>
+      <div class="grid-4">
+        <div class="stat-card" style="--accent:var(--violet)"><div class="stat-label"><span class="zh-only">&#x603B;&#x9884;&#x6D4B;</span><span class="en-only">Total</span></div><div class="stat-value" id="pred-total">0</div></div>
+        <div class="stat-card" style="--accent:var(--green)"><div class="stat-label"><span class="zh-only">&#x547D;&#x4E2D;</span><span class="en-only">Hit</span></div><div class="stat-value up" id="pred-hit">0</div></div>
+        <div class="stat-card" style="--accent:var(--red)"><div class="stat-label"><span class="zh-only">&#x672A;&#x4E2D;</span><span class="en-only">Miss</span></div><div class="stat-value" style="color:var(--red)" id="pred-miss">0</div></div>
+        <div class="stat-card" style="--accent:var(--gold)"><div class="stat-label"><span class="zh-only">&#x5F85;&#x9A8C;&#x8BC1;</span><span class="en-only">Pending</span></div><div class="stat-value" style="color:var(--gold)" id="pred-pending">0</div></div>
       </div>
-      <!-- Hit Rate Bar -->
-      <div class="card" style="margin-bottom:20px;">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-          <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;"><span class="zh-only">&#x547D;&#x4E2D;&#x7387;</span><span class="en-only">Hit Rate</span></span>
-          <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--gold);" id="pred-rate">—</span>
+      <div class="card" style="margin-bottom:var(--sp-lg)">
+        <div style="display:flex;align-items:center;gap:var(--sp-md);margin-bottom:var(--sp-md)">
+          <span class="ds-heading" style="font-size:var(--fs-md)"><span class="zh-only">&#x547D;&#x4E2D;&#x7387;</span><span class="en-only">Hit Rate</span></span>
+          <span class="ds-mono" style="font-size:var(--fs-lg);font-weight:700;color:var(--gold)" id="pred-rate">—</span>
         </div>
-        <div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;">
-          <div id="pred-rate-bar" style="height:100%;background:linear-gradient(90deg,#2e7d5a,var(--gold));border-radius:4px;width:0%;transition:width 0.6s;"></div>
-        </div>
+        <div class="prog-bar" style="height:8px"><div id="pred-rate-bar" class="prog-fill" style="width:0%"></div></div>
       </div>
-      <!-- Prediction List -->
-      <div id="pred-list" style="display:flex;flex-direction:column;gap:10px;">
-        <div style="padding:40px;text-align:center;color:var(--text4);font-family:'DM Mono',monospace;font-size:11px;"><span class="zh-only">&#x52A0;&#x8F7D;&#x4E2D;&#x2026;</span><span class="en-only">Loading...</span></div>
+      <div id="pred-list" style="display:flex;flex-direction:column;gap:var(--sp-md)">
+        <div class="loading-state"><span class="zh-only">&#x52A0;&#x8F7D;&#x4E2D;&#x2026;</span><span class="en-only">Loading...</span></div>
       </div>
     </div>
     <!-- FRIENDS -->
@@ -1091,46 +1135,40 @@ window.renderFriends = function() {
     el = document.getElementById('pred-rate-bar'); if (el) el.style.width = rate + '%';
 
     if (!_preds.length) {
-      list.innerHTML = '<div style="padding:48px;text-align:center;color:var(--text4);font-family:\'DM Mono\',monospace;font-size:11px;">' + (lang === 'zh' ? '暂无预测记录' : 'No predictions yet') + '</div>';
+      list.innerHTML = '<div class="empty-state">' + (lang === 'zh' ? '暂无预测记录' : 'No predictions yet') + '</div>';
       return;
     }
 
-    var statusMap = {
-      pending: { zh: '待验证', en: 'PENDING', color: 'var(--gold)', bg: 'rgba(184,150,74,0.1)', border: 'rgba(184,150,74,0.3)' },
-      hit: { zh: '命中', en: 'HIT', color: '#2e7d5a', bg: 'rgba(46,125,90,0.08)', border: 'rgba(46,125,90,0.3)' },
-      miss: { zh: '未中', en: 'MISS', color: '#8b3a2a', bg: 'rgba(139,58,42,0.08)', border: 'rgba(139,58,42,0.3)' },
-      partial: { zh: '部分命中', en: 'PARTIAL', color: '#7b56b8', bg: 'rgba(123,86,184,0.08)', border: 'rgba(123,86,184,0.3)' }
-    };
+    var statusClassMap = { pending: 'status-pending', hit: 'status-hit', miss: 'status-miss', partial: 'status-partial' };
+    var statusLabelMap = { pending: { zh: '待验证', en: 'PENDING' }, hit: { zh: '命中', en: 'HIT' }, miss: { zh: '未中', en: 'MISS' }, partial: { zh: '部分命中', en: 'PARTIAL' } };
 
     var html = '';
     _preds.forEach(function(p) {
-      var s = statusMap[p.status] || statusMap.pending;
+      var sc = statusClassMap[p.status] || 'status-pending';
+      var sl = statusLabelMap[p.status] || statusLabelMap.pending;
       var text = lang === 'zh' ? p.prediction_zh : p.prediction_en;
-      var statusLabel = lang === 'zh' ? s.zh : s.en;
       var myVote = _myVotes[p.id] || null;
-      var agreeActive = myVote === 'agree' ? 'font-weight:700;color:#2e7d5a;' : '';
-      var disagreeActive = myVote === 'disagree' ? 'font-weight:700;color:#8b3a2a;' : '';
+      var agreeClass = myVote === 'agree' ? ' active-agree' : '';
+      var disagreeClass = myVote === 'disagree' ? ' active-disagree' : '';
       var totalVotes = (p.votes_agree || 0) + (p.votes_disagree || 0);
       var agreePercent = totalVotes > 0 ? Math.round((p.votes_agree || 0) / totalVotes * 100) : 50;
 
-      html += '<div class="card" style="padding:14px 16px;">'
-        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
-        + '<span style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:2px;color:var(--text4);">VOL.' + String(p.edition_vol).padStart(3, '0') + '</span>'
-        + '<span style="font-size:8px;letter-spacing:1.5px;padding:2px 8px;border-radius:3px;background:' + s.bg + ';border:1px solid ' + s.border + ';color:' + s.color + ';font-family:\'DM Mono\',monospace;text-transform:uppercase;">' + statusLabel + '</span>'
-        + '<span style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--text4);margin-left:auto;">' + (p.category || '') + '</span>'
+      html += '<div class="pred-card">'
+        + '<div class="pred-header">'
+        + '<span class="pred-vol">VOL.' + String(p.edition_vol).padStart(3, '0') + '</span>'
+        + '<span class="status-badge ' + sc + '">' + (lang === 'zh' ? sl.zh : sl.en) + '</span>'
+        + '<span class="pred-category">' + (p.category || '') + '</span>'
         + '</div>'
-        + '<div style="font-size:13.5px;line-height:1.7;color:var(--text);margin-bottom:10px;">' + text + '</div>';
+        + '<div class="pred-text">' + text + '</div>';
 
-      // Resolved note
       if (p.resolved_note) {
-        html += '<div style="font-size:11px;color:var(--text3);padding:8px 10px;background:var(--bg2);border-radius:4px;margin-bottom:10px;line-height:1.6;">' + p.resolved_note + '</div>';
+        html += '<div class="pred-note">' + p.resolved_note + '</div>';
       }
 
-      // Vote bar + buttons
-      html += '<div style="display:flex;align-items:center;gap:10px;">'
-        + '<button onclick="votePrediction(' + p.id + ',\'agree\')" style="border:none;background:none;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:10px;padding:4px 8px;border-radius:4px;border:1px solid var(--border);' + agreeActive + '" title="Agree"><span class="zh-only">&#x2713; &#x540C;&#x610F;</span><span class="en-only">&#x2713; Agree</span> <span style="opacity:0.6;">' + (p.votes_agree || 0) + '</span></button>'
-        + '<div style="flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;"><div style="height:100%;width:' + agreePercent + '%;background:linear-gradient(90deg,#2e7d5a,var(--gold));border-radius:3px;transition:width 0.3s;"></div></div>'
-        + '<button onclick="votePrediction(' + p.id + ',\'disagree\')" style="border:none;background:none;cursor:pointer;font-family:\'DM Mono\',monospace;font-size:10px;padding:4px 8px;border-radius:4px;border:1px solid var(--border);' + disagreeActive + '" title="Disagree"><span class="zh-only">&#x2717; &#x4E0D;&#x540C;&#x610F;</span><span class="en-only">&#x2717; Disagree</span> <span style="opacity:0.6;">' + (p.votes_disagree || 0) + '</span></button>'
+      html += '<div class="pred-votes">'
+        + '<button class="vote-btn' + agreeClass + '" onclick="votePrediction(' + p.id + ',\'agree\')"><span class="zh-only">&#x2713; &#x540C;&#x610F;</span><span class="en-only">&#x2713; Agree</span> <span style="opacity:0.6">' + (p.votes_agree || 0) + '</span></button>'
+        + '<div class="vote-bar"><div class="vote-bar-fill" style="width:' + agreePercent + '%"></div></div>'
+        + '<button class="vote-btn' + disagreeClass + '" onclick="votePrediction(' + p.id + ',\'disagree\')"><span class="zh-only">&#x2717; &#x4E0D;&#x540C;&#x610F;</span><span class="en-only">&#x2717; Disagree</span> <span style="opacity:0.6">' + (p.votes_disagree || 0) + '</span></button>'
         + '</div></div>';
     });
 
