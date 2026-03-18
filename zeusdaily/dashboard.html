@@ -1229,15 +1229,19 @@ window._creditCoin = function(size) {
 
     list.innerHTML = html;
     if (window.applyLang) applyLang(getLang());
-    // Bind vote buttons via event delegation (onclick in innerHTML can fail)
-    list.querySelectorAll('.vote-btn').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var pid = parseInt(btn.getAttribute('data-pid'));
-        var v = btn.getAttribute('data-vote');
-        if (pid && v) votePrediction(pid, v);
-      });
-    });
+    // Bind vote buttons
+    var btns = list.getElementsByClassName('vote-btn');
+    for (var bi = 0; bi < btns.length; bi++) {
+      (function(btn) {
+        btn.onclick = function(e) {
+          e.stopPropagation();
+          alert('click: ' + btn.getAttribute('data-pid') + ' ' + btn.getAttribute('data-vote'));
+          var pid = parseInt(btn.getAttribute('data-pid'));
+          var v = btn.getAttribute('data-vote');
+          if (pid && v) votePrediction(pid, v);
+        };
+      })(btns[bi]);
+    }
   }
 
   window.votePrediction = function(predId, vote) {
