@@ -94,6 +94,17 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 .friend-joined{font-size:var(--fs-xs);color:var(--text4);font-family:'DM Mono',monospace;margin-top:var(--sp-xs);}
 .friend-active{font-size:var(--fs-xs);color:var(--green);font-family:'DM Mono',monospace;letter-spacing:1px;margin-top:var(--sp-xs);}
 .friend-inactive{font-size:var(--fs-xs);color:var(--text4);font-family:'DM Mono',monospace;letter-spacing:1px;margin-top:var(--sp-xs);}
+/* Profile components */
+.prof-header{display:flex;align-items:center;gap:var(--sp-lg);margin-bottom:var(--sp-lg);}
+.prof-avatar{width:54px;height:54px;border-radius:var(--r-full);background:linear-gradient(135deg,var(--purple),var(--violet));border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:white;flex-shrink:0;}
+.prof-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-md);}
+.prof-stat-box{text-align:center;padding:var(--sp-md);background:var(--bg2);border-radius:var(--r-sm);border:1px solid var(--border);}
+.prof-stat-value{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;margin-bottom:3px;}
+/* Settings card (mobile + desktop) */
+.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
+.settings-card .setting-row{padding:var(--sp-md) 16px;}
+.setting-logout{cursor:pointer;display:flex;align-items:center;gap:var(--sp-md);transition:background var(--ease);}
+.setting-logout:hover{background:var(--red-bg);}
 html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;overflow:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 60%,rgba(42,26,72,0.04) 100%);pointer-events:none;z-index:0;}
@@ -535,79 +546,61 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
     </div>
     <!-- COLLECTION -->
     <div class="page" id="page-collection">
-      <div class="section-head"><div class="section-title zh-only">我的收藏</div><div class="section-title en-only">My Collection</div><div class="section-line"></div><div class="section-sub" id="col-count-text"><span class="zh-only">加载中</span></div></div>
+      <div class="section-head"><div class="section-title"><span class="zh-only">我的收藏</span><span class="en-only">My Collection</span></div><div class="section-line"></div><div class="section-sub" id="col-count-text"><span class="zh-only">加载中</span><span class="en-only">Loading</span></div></div>
       <div class="col-grid" id="collection-grid"><div class="loading-state" style="grid-column:1/-1"><span class="zh-only">加载中…</span><span class="en-only">Loading...</span></div></div>
     </div>
     <!-- PROFILE -->
     <div class="page" id="page-profile">
       <div class="grid-2">
         <div class="card">
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
-            <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--violet));border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:white;flex-shrink:0;" id="prof-avatar">Z</div>
+          <div class="prof-header">
+            <div class="prof-avatar" id="prof-avatar">Z</div>
             <div>
-              <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;" id="prof-name">Zeus Reader</div>
-              <div style="font-size:11px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:2px;" id="prof-email"></div>
+              <div class="ds-heading" style="font-size:var(--fs-lg)" id="prof-name">Zeus Reader</div>
+              <div class="ds-meta" style="margin-top:2px" id="prof-email"></div>
               <div class="equipped-row" id="equipped-display"></div>
               <button class="equip-btn" onclick="openEquipPicker()"><span class="zh-only">装备徽章</span><span class="en-only">Equip Badges</span></button>
             </div>
           </div>
-          <div class="level-pill lv2" id="prof-pill" style="margin-bottom:16px;"><span id="prof-pill-text">—</span></div>
+          <div class="level-pill lv2" id="prof-pill" style="margin-bottom:var(--sp-lg)"><span id="prof-pill-text">—</span></div>
           <div class="divider"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--border);"><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--gold2);" id="prof-streak">—</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:3px;font-family:'DM Mono',monospace;"><span class="zh-only">连续天数</span><span class="en-only">STREAK</span></div></div>
-            <div style="text-align:center;padding:14px;background:var(--bg2);border-radius:8px;border:1px solid var(--border);"><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--violet);" id="prof-exp2">—</div><div style="font-size:9px;letter-spacing:1.5px;color:var(--text4);margin-top:3px;font-family:'DM Mono',monospace;">EXP</div></div>
+          <div class="prof-stats-grid">
+            <div class="prof-stat-box"><div class="prof-stat-value" style="color:var(--gold2)" id="prof-streak">—</div><div class="ds-label"><span class="zh-only">连续天数</span><span class="en-only">STREAK</span></div></div>
+            <div class="prof-stat-box"><div class="prof-stat-value" style="color:var(--violet)" id="prof-exp2">—</div><div class="ds-label">EXP</div></div>
           </div>
         </div>
         <div class="card">
-          <div class="section-head" style="margin-bottom:16px;"><div class="section-title" style="font-size:15px;"><span class="zh-only">等级路线</span><span class="en-only">Level Path</span></div></div>
+          <div class="section-head" style="margin-bottom:var(--sp-lg)"><div class="section-title" style="font-size:var(--fs-md)"><span class="zh-only">等级路线</span><span class="en-only">Level Path</span></div></div>
           <div id="lv-roadmap-list"></div>
         </div>
       </div>
-        <div class="card" style="margin-top:16px;">
-          <div class="section-head" style="margin-bottom:8px;"><div class="section-title" style="font-size:15px;"><span class="zh-only">成就徽章</span><span class="en-only">Achievements</span></div></div>
+        <div class="card" style="margin-top:var(--sp-lg)">
+          <div class="section-head" style="margin-bottom:var(--sp-sm)"><div class="section-title" style="font-size:var(--fs-md)"><span class="zh-only">成就徽章</span><span class="en-only">Achievements</span></div></div>
           <div class="ach-grid" id="ach-grid-inner"></div>
         </div>
-      <!-- MOBILE SETTINGS BLOCK — only visible on mobile (sidebar hidden) -->
-      <div class="mobile-settings" style="margin-top:8px;">
-        <div style="font-size:9px;letter-spacing:2.5px;color:var(--text4);text-transform:uppercase;padding:16px 2px 10px;font-family:'DM Mono',monospace;"><span class="zh-only">设置</span><span class="en-only">Settings</span></div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);">
-            <div><div style="font-size:13px;font-weight:500;color:var(--text);"><span class="zh-only">显示语言</span><span class="en-only">Language</span></div><div style="font-size:11px;color:var(--text4);margin-top:2px;"><span class="zh-only">界面与内容语言</span><span class="en-only">Interface &amp; content</span></div></div>
-            <div class="lang-toggle"><button class="lang-btn" id="mob-btn-zh" data-lang="zh">中文</button><button class="lang-btn" id="mob-btn-en" data-lang="en">EN</button></div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);">
-            <div style="font-size:13px;font-weight:500;color:var(--text);"><span class="zh-only">每日通知</span><span class="en-only">Daily Notification</span></div>
-            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);">
-            <div style="font-size:13px;font-weight:500;color:var(--text);"><span class="zh-only">签到提醒</span><span class="en-only">Check-in Reminder</span></div>
-            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);">
-            <div style="font-size:13px;font-weight:500;color:var(--text);"><span class="zh-only">减弱动效</span><span class="en-only">Reduce Motion</span></div>
-            <div class="toggle" onclick="this.classList.toggle('on')"></div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);">
-            <div style="font-size:13px;color:var(--text2);">Zeus Daily</div>
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text4);">v1.0.3</div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);">
-            <div style="font-size:13px;color:var(--text2);">Zeus 9</div>
-            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--gold2);">zeus9.ai</div>
-          </div>
-          <div onclick="if(window.doLogout)window.doLogout();" style="display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;active:opacity(0.7);">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M10 11l3-3-3-3M13 8H6" stroke="#c0392b" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <div style="font-size:13px;font-weight:500;color:#c0392b;"><span class="zh-only">退出登录</span><span class="en-only">Sign out</span></div>
+      <!-- MOBILE SETTINGS BLOCK -->
+      <div class="mobile-settings" style="margin-top:var(--sp-sm)">
+        <div class="ds-label" style="padding:var(--sp-lg) 2px var(--sp-md)"><span class="zh-only">设置</span><span class="en-only">Settings</span></div>
+        <div class="settings-card">
+          <div class="setting-row"><div><div class="setting-label"><span class="zh-only">显示语言</span><span class="en-only">Language</span></div><div class="setting-desc"><span class="zh-only">界面与内容语言</span><span class="en-only">Interface &amp; content</span></div></div><div class="lang-toggle"><button class="lang-btn" id="mob-btn-zh" data-lang="zh">中文</button><button class="lang-btn" id="mob-btn-en" data-lang="en">EN</button></div></div>
+          <div class="setting-row"><div class="setting-label"><span class="zh-only">每日通知</span><span class="en-only">Daily Notification</span></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><div class="setting-label"><span class="zh-only">签到提醒</span><span class="en-only">Check-in Reminder</span></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><div class="setting-label"><span class="zh-only">减弱动效</span><span class="en-only">Reduce Motion</span></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><div class="ds-body">Zeus Daily</div><div class="ds-meta">v1.0.3</div></div>
+          <div class="setting-row"><div class="ds-body">Zeus 9</div><div class="ds-meta" style="color:var(--gold2)">zeus9.ai</div></div>
+          <div class="setting-row setting-logout" data-action="logout" onclick="if(window.doLogout)window.doLogout()">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M10 11l3-3-3-3M13 8H6" stroke="var(--red)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="color:var(--red);font-weight:500"><span class="zh-only">退出登录</span><span class="en-only">Sign out</span></span>
           </div>
         </div>
-        <div style="text-align:center;padding:16px 0 8px;font-family:'DM Mono',monospace;font-size:9px;color:var(--text4);letter-spacing:1.5px;">A Zeus 9 Publication · zeus9.ai</div>
+        <div class="ds-label" style="text-align:center;padding:var(--sp-lg) 0 var(--sp-sm)">A Zeus 9 Publication · zeus9.ai</div>
       </div>
     </div>
     <!-- SETTINGS -->
     <div class="page" id="page-settings">
       <div class="grid-2">
         <div class="card">
-          <div class="section-head" style="margin-bottom:16px;"><div class="section-title" style="font-size:15px;"><span class="zh-only">偏好设置</span><span class="en-only">Preferences</span></div></div>
+          <div class="section-head" style="margin-bottom:var(--sp-lg)"><div class="section-title" style="font-size:var(--fs-md)"><span class="zh-only">偏好设置</span><span class="en-only">Preferences</span></div></div>
           <div class="setting-row"><div><div class="setting-label zh-only">显示语言</div><div class="setting-label en-only">Language</div><div class="setting-desc zh-only">界面与内容语言</div><div class="setting-desc en-only">Interface &amp; content</div></div><div class="lang-toggle"><button class="lang-btn" id="set-btn-zh" data-lang="zh">中文</button><button class="lang-btn" id="set-btn-en" data-lang="en">EN</button></div></div>
           <div class="setting-row"><div><div class="setting-label zh-only">每日通知</div><div class="setting-label en-only">Daily Notification</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
           <div class="setting-row"><div><div class="setting-label zh-only">签到提醒</div><div class="setting-label en-only">Check-in Reminder</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
