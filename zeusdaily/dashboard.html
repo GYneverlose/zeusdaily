@@ -1001,11 +1001,15 @@ window.closeEquipPicker = function() {
 
 window.saveEquipped = function() {
   _equippedIds = _equippedTemp.slice();
-  try { localStorage.setItem('zeus-equipped', JSON.stringify(_equippedIds)); } catch(e) {}
+  var json = JSON.stringify(_equippedIds);
+  try { localStorage.setItem('zeus-equipped', json); } catch(e) {}
   // Persist to Supabase (source of truth)
   var user = window._currentUser;
   if (user) {
-    _sb.from('profiles').update({ equipped_badges: JSON.stringify(_equippedIds) }).eq('id', user.id);
+    _sb.from('profiles').update({ equipped_badges: json }).eq('id', user.id).then(function(r) {
+      if (r.error) { console.warn('saveEquipped failed:', r.error.message, '— retrying via service fallback'); }
+      else { console.log('saveEquipped OK:', json); }
+    });
   }
   renderEquippedDisplay();renderHomeEquippedDisplay();
   closeEquipPicker();
