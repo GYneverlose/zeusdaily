@@ -112,6 +112,33 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 .pred-credit-miss{margin-top:var(--sp-sm);font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:1px;color:var(--text4);padding:var(--sp-xs) var(--sp-sm);background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);display:inline-block;}
 /* Disabled vote buttons */
 .vote-btn:disabled{opacity:0.5;cursor:default;pointer-events:none;}
+/* ── Prediction Tabs ── */
+.pred-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:var(--sp-lg);}
+.pred-tab{flex:1;padding:var(--sp-sm) var(--sp-md);font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:1.5px;text-transform:uppercase;text-align:center;cursor:pointer;background:var(--surface);color:var(--text3);border:none;transition:all var(--ease);position:relative;}
+.pred-tab:not(:last-child){border-right:1px solid var(--border);}
+.pred-tab:hover{background:var(--bg2);}
+.pred-tab.active{background:var(--gold-bg2);color:var(--gold2);font-weight:700;}
+.pred-tab .tab-count{display:inline-block;min-width:16px;height:16px;line-height:16px;border-radius:8px;background:var(--bg3);color:var(--text4);font-size:8px;font-weight:700;text-align:center;margin-left:4px;vertical-align:middle;}
+.pred-tab.active .tab-count{background:var(--gold);color:white;}
+/* ── Edition Group Headers ── */
+.pred-group{margin-bottom:var(--sp-lg);}
+.pred-group-header{display:flex;align-items:center;gap:var(--sp-sm);margin-bottom:var(--sp-sm);padding-bottom:var(--sp-xs);border-bottom:1px solid var(--border);}
+.pred-group-vol{font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;font-weight:700;}
+.pred-group-date{font-family:'DM Mono',monospace;font-size:var(--fs-xs);color:var(--text4);margin-left:auto;}
+/* ── Resolved card compact mode ── */
+.pred-card.resolved{opacity:0.85;border-left:3px solid var(--border);}
+.pred-card.resolved.status-hit{border-left-color:var(--green);}
+.pred-card.resolved.status-miss{border-left-color:var(--red);}
+.pred-card.resolved.status-partial{border-left-color:var(--violet);}
+.pred-note{font-size:var(--fs-sm);color:var(--text3);padding:var(--sp-sm) var(--sp-md);background:var(--bg2);border-radius:var(--r-sm);margin-bottom:var(--sp-md);line-height:1.6;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease,margin 0.3s ease;padding:0 var(--sp-md);margin:0;}
+.pred-note.expanded{max-height:300px;padding:var(--sp-sm) var(--sp-md);margin-bottom:var(--sp-md);}
+.pred-expand-btn{font-family:'DM Mono',monospace;font-size:var(--fs-xs);color:var(--text4);cursor:pointer;background:none;border:none;padding:2px 0;letter-spacing:1px;transition:color var(--ease);}
+.pred-expand-btn:hover{color:var(--gold);}
+/* ── Your prediction stats summary ── */
+.pred-my-stats{display:flex;gap:var(--sp-md);margin-bottom:var(--sp-lg);flex-wrap:wrap;}
+.pred-my-stat{flex:1;min-width:100px;text-align:center;padding:var(--sp-sm) var(--sp-md);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);}
+.pred-my-stat .pms-val{font-family:'Playfair Display',serif;font-size:var(--fs-lg);font-weight:900;}
+.pred-my-stat .pms-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--text4);text-transform:uppercase;margin-top:2px;}
 .vote-btn.vote-hidden{opacity:0.25;pointer-events:none;}
 /* Zeus Credit Coin */
 @keyframes purpleSilver{0%,100%{fill:#3d2060;}25%{fill:#7c3aed;}50%{fill:#d0d0d8;}75%{fill:#8a8a96;}}
@@ -640,24 +667,32 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
     <!-- PREDICTIONS -->
     <div class="page" id="page-predictions">
       <div class="section-head">
-        <div class="section-title"><span class="zh-only">God's Eye &#x9884;&#x6D4B;&#x8FFD;&#x8E2A;</span><span class="en-only">God's Eye Predictions</span></div>
+        <div class="section-title"><span class="zh-only">God's Eye 预测追踪</span><span class="en-only">God's Eye Predictions</span></div>
         <div class="section-line"></div>
       </div>
       <div class="grid-4">
-        <div class="stat-card" style="--accent:var(--violet)"><div class="stat-label"><span class="zh-only">&#x603B;&#x9884;&#x6D4B;</span><span class="en-only">Total</span></div><div class="stat-value" id="pred-total">0</div></div>
-        <div class="stat-card" style="--accent:var(--green)"><div class="stat-label"><span class="zh-only">&#x547D;&#x4E2D;</span><span class="en-only">Hit</span></div><div class="stat-value up" id="pred-hit">0</div></div>
-        <div class="stat-card" style="--accent:var(--red)"><div class="stat-label"><span class="zh-only">&#x672A;&#x4E2D;</span><span class="en-only">Miss</span></div><div class="stat-value" style="color:var(--red)" id="pred-miss">0</div></div>
-        <div class="stat-card" style="--accent:var(--gold)"><div class="stat-label"><span class="zh-only">&#x5F85;&#x9A8C;&#x8BC1;</span><span class="en-only">Pending</span></div><div class="stat-value" style="color:var(--gold)" id="pred-pending">0</div></div>
+        <div class="stat-card" style="--accent:var(--violet)"><div class="stat-label"><span class="zh-only">总预测</span><span class="en-only">Total</span></div><div class="stat-value" id="pred-total">0</div></div>
+        <div class="stat-card" style="--accent:var(--green)"><div class="stat-label"><span class="zh-only">命中</span><span class="en-only">Hit</span></div><div class="stat-value up" id="pred-hit">0</div></div>
+        <div class="stat-card" style="--accent:var(--red)"><div class="stat-label"><span class="zh-only">未中</span><span class="en-only">Miss</span></div><div class="stat-value" style="color:var(--red)" id="pred-miss">0</div></div>
+        <div class="stat-card" style="--accent:var(--gold)"><div class="stat-label"><span class="zh-only">待验证</span><span class="en-only">Pending</span></div><div class="stat-value" style="color:var(--gold)" id="pred-pending">0</div></div>
       </div>
       <div class="card" style="margin-bottom:var(--sp-lg)">
         <div style="display:flex;align-items:center;gap:var(--sp-md);margin-bottom:var(--sp-md)">
-          <span class="ds-heading" style="font-size:var(--fs-md)"><span class="zh-only">&#x547D;&#x4E2D;&#x7387;</span><span class="en-only">Hit Rate</span></span>
+          <span class="ds-heading" style="font-size:var(--fs-md)"><span class="zh-only">命中率</span><span class="en-only">Hit Rate</span></span>
           <span class="ds-mono" style="font-size:var(--fs-lg);font-weight:700;color:var(--gold)" id="pred-rate">—</span>
         </div>
         <div class="prog-bar" style="height:8px"><div id="pred-rate-bar" class="prog-fill" style="width:0%"></div></div>
       </div>
+      <div id="pred-my-stats" class="pred-my-stats"></div>
+      <div class="pred-tabs" id="pred-tabs">
+        <button class="pred-tab active" data-filter="all"><span class="zh-only">全部</span><span class="en-only">All</span> <span class="tab-count" id="tab-all">0</span></button>
+        <button class="pred-tab" data-filter="pending"><span class="zh-only">待验证</span><span class="en-only">Pending</span> <span class="tab-count" id="tab-pending">0</span></button>
+        <button class="pred-tab" data-filter="hit"><span class="zh-only">命中</span><span class="en-only">Hit</span> <span class="tab-count" id="tab-hit">0</span></button>
+        <button class="pred-tab" data-filter="miss"><span class="zh-only">未中</span><span class="en-only">Miss</span> <span class="tab-count" id="tab-miss">0</span></button>
+        <button class="pred-tab" data-filter="partial"><span class="zh-only">部分</span><span class="en-only">Partial</span> <span class="tab-count" id="tab-partial">0</span></button>
+      </div>
       <div id="pred-list" style="display:flex;flex-direction:column;gap:var(--sp-md)">
-        <div class="loading-state"><span class="zh-only">&#x52A0;&#x8F7D;&#x4E2D;&#x2026;</span><span class="en-only">Loading...</span></div>
+        <div class="loading-state"><span class="zh-only">加载中…</span><span class="en-only">Loading...</span></div>
       </div>
     </div>
     <!-- FRIENDS -->
@@ -1151,86 +1186,165 @@ window._creditCoin = function(size) {
     });
   };
 
+  var _predFilter = 'all';
   window._predsRender = renderPredictions;
+
+  // Tab click handler
+  (function(){
+    var tabs = document.getElementById('pred-tabs');
+    if (tabs) tabs.addEventListener('click', function(e) {
+      var tab = e.target.closest('.pred-tab');
+      if (!tab) return;
+      _predFilter = tab.getAttribute('data-filter') || 'all';
+      tabs.querySelectorAll('.pred-tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      renderPredictions();
+    });
+  })();
+
   function renderPredictions() {
     var lang = getLang();
     var list = document.getElementById('pred-list');
     if (!list) return;
 
     // Stats
-    var total = _preds.length, hits = 0, misses = 0, pending = 0, partial = 0;
+    var total = _preds.length, hits = 0, misses = 0, pendingCount = 0, partialCount = 0;
+    var myCorrect = 0, myTotal = 0, myCredits = 0;
     _preds.forEach(function(p) {
       if (p.status === 'hit') hits++;
       else if (p.status === 'miss') misses++;
-      else if (p.status === 'partial') partial++;
-      else pending++;
+      else if (p.status === 'partial') partialCount++;
+      else pendingCount++;
+      var mv = _myVotes[p.id];
+      if (mv && p.status !== 'pending') {
+        myTotal++;
+        if ((p.status === 'hit' && mv === 'agree') || (p.status === 'miss' && mv === 'disagree')) { myCorrect++; myCredits += 3; }
+        else if (p.status === 'partial') { myCredits += 1; }
+      }
     });
-    var resolved = hits + misses + partial;
-    var rate = resolved > 0 ? Math.round((hits + partial * 0.5) / resolved * 100) : 0;
+    var resolved = hits + misses + partialCount;
+    var rate = resolved > 0 ? Math.round((hits + partialCount * 0.5) / resolved * 100) : 0;
 
     var el;
     el = document.getElementById('pred-total'); if (el) el.textContent = total;
     el = document.getElementById('pred-hit'); if (el) el.textContent = hits;
     el = document.getElementById('pred-miss'); if (el) el.textContent = misses;
-    el = document.getElementById('pred-pending'); if (el) el.textContent = pending;
-    el = document.getElementById('pred-rate'); if (el) el.textContent = resolved > 0 ? rate + '%' : '—';
+    el = document.getElementById('pred-pending'); if (el) el.textContent = pendingCount;
+    el = document.getElementById('pred-rate'); if (el) el.textContent = resolved > 0 ? rate + '%' : '\u2014';
     el = document.getElementById('pred-rate-bar'); if (el) el.style.width = rate + '%';
 
-    if (!_preds.length) {
-      list.innerHTML = '<div class="empty-state">' + (lang === 'zh' ? '暂无预测记录' : 'No predictions yet') + '</div>';
+    // Tab counts
+    el = document.getElementById('tab-all'); if (el) el.textContent = total;
+    el = document.getElementById('tab-pending'); if (el) el.textContent = pendingCount;
+    el = document.getElementById('tab-hit'); if (el) el.textContent = hits;
+    el = document.getElementById('tab-miss'); if (el) el.textContent = misses;
+    el = document.getElementById('tab-partial'); if (el) el.textContent = partialCount;
+
+    // My stats
+    var msEl = document.getElementById('pred-my-stats');
+    if (msEl && myTotal > 0) {
+      var myRate = myTotal > 0 ? Math.round(myCorrect / myTotal * 100) : 0;
+      msEl.innerHTML = '<div class="pred-my-stat"><div class="pms-val" style="color:var(--green)">' + myCorrect + '/' + myTotal + '</div><div class="pms-label"><span class="zh-only">\u6211\u7684\u6B63\u786E</span><span class="en-only">My Correct</span></div></div>'
+        + '<div class="pred-my-stat"><div class="pms-val" style="color:var(--gold)">' + myRate + '%</div><div class="pms-label"><span class="zh-only">\u6211\u7684\u51C6\u786E\u7387</span><span class="en-only">My Accuracy</span></div></div>'
+        + '<div class="pred-my-stat"><div class="pms-val" style="color:var(--violet)">' + myCredits + '</div><div class="pms-label"><span class="zh-only">\u8D5A\u53D6 Credits</span><span class="en-only">Credits Earned</span></div></div>';
+    } else if (msEl) { msEl.innerHTML = ''; }
+
+    // Filter
+    var filtered = _preds.filter(function(p) {
+      if (_predFilter === 'all') return true;
+      return p.status === _predFilter;
+    });
+
+    if (!filtered.length) {
+      list.innerHTML = '<div class="empty-state">' + (lang === 'zh' ? '\u6682\u65E0\u8BB0\u5F55' : 'No predictions found') + '</div>';
+      if (window.applyLang) applyLang(getLang());
       return;
     }
 
+    // Group by edition_vol (descending)
+    var groups = {};
+    filtered.forEach(function(p) {
+      var vol = p.edition_vol || 0;
+      if (!groups[vol]) groups[vol] = [];
+      groups[vol].push(p);
+    });
+    var volKeys = Object.keys(groups).sort(function(a, b) { return parseInt(b) - parseInt(a); });
+
     var statusClassMap = { pending: 'status-pending', hit: 'status-hit', miss: 'status-miss', partial: 'status-partial' };
-    var statusLabelMap = { pending: { zh: '待验证', en: 'PENDING' }, hit: { zh: '命中', en: 'HIT' }, miss: { zh: '未中', en: 'MISS' }, partial: { zh: '部分命中', en: 'PARTIAL' } };
+    var statusLabelMap = { pending: { zh: '\u5F85\u9A8C\u8BC1', en: 'PENDING' }, hit: { zh: '\u547D\u4E2D', en: 'HIT' }, miss: { zh: '\u672A\u4E2D', en: 'MISS' }, partial: { zh: '\u90E8\u5206\u547D\u4E2D', en: 'PARTIAL' } };
+    var catLabelMap = { geopolitics: { zh: '\u5730\u7F18', en: 'GEO' }, markets: { zh: '\u5E02\u573A', en: 'MKT' }, crypto: { zh: '\u5E01\u5708', en: 'CRYPTO' } };
 
     var html = '';
-    _preds.forEach(function(p) {
-      var sc = statusClassMap[p.status] || 'status-pending';
-      var sl = statusLabelMap[p.status] || statusLabelMap.pending;
-      var text = lang === 'zh' ? p.prediction_zh : p.prediction_en;
-      var myVote = _myVotes[p.id] || null;
-      var agreeClass = myVote === 'agree' ? ' active-agree' : '';
-      var disagreeClass = myVote === 'disagree' ? ' active-disagree' : '';
-      var totalVotes = (p.votes_agree || 0) + (p.votes_disagree || 0);
-      var agreePercent = totalVotes > 0 ? Math.round((p.votes_agree || 0) / totalVotes * 100) : 50;
+    volKeys.forEach(function(vol) {
+      var items = groups[vol];
+      // Sort: pending first, then by id desc
+      items.sort(function(a, b) {
+        if (a.status === 'pending' && b.status !== 'pending') return -1;
+        if (a.status !== 'pending' && b.status === 'pending') return 1;
+        return b.id - a.id;
+      });
 
-      // Credit reward info
-      var creditHtml = '';
-      if (p.status === 'pending') {
-        creditHtml = '<div class="pred-credit-badge">' + (window._creditCoin ? window._creditCoin(14) : '') + ' <span class="zh-only">&#x6295;&#x7968;&#x53EF;&#x8D62; +3 Credits</span><span class="en-only">Vote to earn +3 Credits</span></div>';
-      } else if (myVote) {
-        var won = (p.status === 'hit' && myVote === 'agree') || (p.status === 'miss' && myVote === 'disagree');
-        var partial = p.status === 'partial';
-        if (won) creditHtml = '<div class="pred-credit-won">' + (window._creditCoin ? window._creditCoin(14) : '') + ' <span class="zh-only">&#x2713; +3 Credits</span><span class="en-only">&#x2713; +3 Credits</span></div>';
-        else if (partial) creditHtml = '<div class="pred-credit-partial">' + (window._creditCoin ? window._creditCoin(14) : '') + ' <span class="zh-only">~ +1 Credit</span><span class="en-only">~ +1 Credit</span></div>';
-        else if (p.status !== 'pending') creditHtml = '<div class="pred-credit-miss"><span class="zh-only">&#x2717; 0 Credits</span><span class="en-only">&#x2717; 0 Credits</span></div>';
+      html += '<div class="pred-group">';
+      html += '<div class="pred-group-header"><span class="pred-group-vol">VOL.' + String(vol).padStart(3, '0') + '</span>';
+      if (items[0] && items[0].created_at) {
+        var cd = new Date(items[0].created_at);
+        var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        html += '<span class="pred-group-date">' + MONTHS[cd.getMonth()] + ' ' + cd.getDate() + ', ' + cd.getFullYear() + '</span>';
       }
+      html += '</div>';
 
-      html += '<div class="pred-card">'
-        + '<div class="pred-header">'
-        + '<span class="pred-vol">VOL.' + String(p.edition_vol).padStart(3, '0') + '</span>'
-        + '<span class="status-badge ' + sc + '">' + (lang === 'zh' ? sl.zh : sl.en) + '</span>'
-        + '<span class="pred-category">' + (p.category || '') + '</span>'
-        + '</div>'
-        + '<div class="pred-text">' + text + '</div>';
+      items.forEach(function(p) {
+        var sc = statusClassMap[p.status] || 'status-pending';
+        var sl = statusLabelMap[p.status] || statusLabelMap.pending;
+        var cl = catLabelMap[p.category] || { zh: p.category || '', en: p.category || '' };
+        var text = lang === 'zh' ? p.prediction_zh : p.prediction_en;
+        var myVote = _myVotes[p.id] || null;
+        var agreeClass = myVote === 'agree' ? ' active-agree' : '';
+        var disagreeClass = myVote === 'disagree' ? ' active-disagree' : '';
+        var totalVotes = (p.votes_agree || 0) + (p.votes_disagree || 0);
+        var agreePercent = totalVotes > 0 ? Math.round((p.votes_agree || 0) / totalVotes * 100) : 50;
+        var isResolved = p.status !== 'pending';
+        var cardClass = 'pred-card' + (isResolved ? ' resolved status-' + p.status : '');
 
-      if (p.resolved_note) {
-        html += '<div class="pred-note">' + p.resolved_note + '</div>';
-      }
+        var creditHtml = '';
+        if (p.status === 'pending') {
+          creditHtml = '<div class="pred-credit-badge">' + (window._creditCoin ? window._creditCoin(14) : '') + ' <span class="zh-only">\u6295\u7968\u53EF\u8D62 +3 Credits</span><span class="en-only">Vote to earn +3 Credits</span></div>';
+        } else if (myVote) {
+          var won = (p.status === 'hit' && myVote === 'agree') || (p.status === 'miss' && myVote === 'disagree');
+          var isPartial = p.status === 'partial';
+          if (won) creditHtml = '<div class="pred-credit-won">' + (window._creditCoin ? window._creditCoin(14) : '') + ' <span class="zh-only">\u2713 +3 Credits</span><span class="en-only">\u2713 +3 Credits</span></div>';
+          else if (isPartial) creditHtml = '<div class="pred-credit-partial">' + (window._creditCoin ? window._creditCoin(14) : '') + ' <span class="zh-only">~ +1 Credit</span><span class="en-only">~ +1 Credit</span></div>';
+          else creditHtml = '<div class="pred-credit-miss"><span class="zh-only">\u2717 0 Credits</span><span class="en-only">\u2717 0 Credits</span></div>';
+        }
 
-      var locked = !!myVote || p.status !== 'pending';
-      html += '<div class="pred-votes">'
-        + '<button class="vote-btn' + agreeClass + (locked && myVote !== 'agree' ? ' vote-hidden' : '') + '" data-pid="' + p.id + '" data-vote="agree"' + (locked ? ' disabled' : '') + '><span class="zh-only">&#x2713; &#x540C;&#x610F;</span><span class="en-only">&#x2713; Agree</span> <span style="opacity:0.6">' + (p.votes_agree || 0) + '</span></button>'
-        + '<div class="vote-bar"><div class="vote-bar-fill" style="width:' + agreePercent + '%"></div></div>'
-        + '<button class="vote-btn' + disagreeClass + (locked && myVote !== 'disagree' ? ' vote-hidden' : '') + '" data-pid="' + p.id + '" data-vote="disagree"' + (locked ? ' disabled' : '') + '><span class="zh-only">&#x2717; &#x4E0D;&#x540C;&#x610F;</span><span class="en-only">&#x2717; Disagree</span> <span style="opacity:0.6">' + (p.votes_disagree || 0) + '</span></button>'
-        + '</div>'
-        + creditHtml
-        + '</div>';
+        html += '<div class="' + cardClass + '">'
+          + '<div class="pred-header">'
+          + '<span class="status-badge ' + sc + '">' + (lang === 'zh' ? sl.zh : sl.en) + '</span>'
+          + '<span class="pred-category">' + (lang === 'zh' ? cl.zh : cl.en) + '</span>'
+          + '</div>'
+          + '<div class="pred-text">' + text + '</div>';
+
+        if (p.resolved_note) {
+          var noteId = 'pred-note-' + p.id;
+          html += '<button class="pred-expand-btn" data-note="' + noteId + '"><span class="zh-only">\u5C55\u5F00\u9A8C\u8BC1\u7ED3\u679C \u25BE</span><span class="en-only">Show result \u25BE</span></button>';
+          html += '<div class="pred-note" id="' + noteId + '">' + p.resolved_note + '</div>';
+        }
+
+        var locked = !!myVote || isResolved;
+        html += '<div class="pred-votes">'
+          + '<button class="vote-btn' + agreeClass + (locked && myVote !== 'agree' ? ' vote-hidden' : '') + '" data-pid="' + p.id + '" data-vote="agree"' + (locked ? ' disabled' : '') + '><span class="zh-only">\u2713 \u540C\u610F</span><span class="en-only">\u2713 Agree</span> <span style="opacity:0.6">' + (p.votes_agree || 0) + '</span></button>'
+          + '<div class="vote-bar"><div class="vote-bar-fill" style="width:' + agreePercent + '%"></div></div>'
+          + '<button class="vote-btn' + disagreeClass + (locked && myVote !== 'disagree' ? ' vote-hidden' : '') + '" data-pid="' + p.id + '" data-vote="disagree"' + (locked ? ' disabled' : '') + '><span class="zh-only">\u2717 \u4E0D\u540C\u610F</span><span class="en-only">\u2717 Disagree</span> <span style="opacity:0.6">' + (p.votes_disagree || 0) + '</span></button>'
+          + '</div>'
+          + creditHtml
+          + '</div>';
+      });
+      html += '</div>';
     });
 
     list.innerHTML = html;
     if (window.applyLang) applyLang(getLang());
+
     // Bind vote buttons
     var btns = list.getElementsByClassName('vote-btn');
     for (var bi = 0; bi < btns.length; bi++) {
@@ -1242,6 +1356,25 @@ window._creditCoin = function(size) {
           if (pid && v) votePrediction(pid, v);
         };
       })(btns[bi]);
+    }
+
+    // Bind expand buttons for resolved notes
+    var expBtns = list.getElementsByClassName('pred-expand-btn');
+    for (var ei = 0; ei < expBtns.length; ei++) {
+      (function(btn) {
+        btn.onclick = function() {
+          var noteId = btn.getAttribute('data-note');
+          var note = document.getElementById(noteId);
+          if (note) {
+            var isOpen = note.classList.contains('expanded');
+            note.classList.toggle('expanded');
+            var zhLabel = isOpen ? '\u5C55\u5F00\u9A8C\u8BC1\u7ED3\u679C \u25BE' : '\u6536\u8D77 \u25B4';
+            var enLabel = isOpen ? 'Show result \u25BE' : 'Hide \u25B4';
+            btn.innerHTML = '<span class="zh-only">' + zhLabel + '</span><span class="en-only">' + enLabel + '</span>';
+            if (window.applyLang) applyLang(getLang());
+          }
+        };
+      })(expBtns[ei]);
     }
   }
 
