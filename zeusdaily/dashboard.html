@@ -123,6 +123,29 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 /* ── Prediction pagination ── */
 .pred-load-more{display:block;width:100%;padding:var(--sp-md);font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);cursor:pointer;text-align:center;transition:all var(--ease);margin-top:var(--sp-md);}
 .pred-load-more:hover{border-color:var(--border2);background:var(--bg2);color:var(--gold);}
+/* ── Zeus Credits Leaderboard ── */
+.lb-wrap{margin-bottom:var(--sp-lg);}
+.lb-card{background:linear-gradient(160deg,#0e0818,#1a0e2e);border:1px solid rgba(184,150,74,0.25);border-radius:var(--r-lg);padding:0;overflow:hidden;}
+.lb-header{padding:16px 18px 10px;display:flex;align-items:center;gap:var(--sp-sm);}
+.lb-title{font-family:'Playfair Display',serif;font-size:var(--fs-md);font-weight:900;color:#e0cfc0;letter-spacing:1px;}
+.lb-subtitle{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2.5px;color:rgba(184,150,74,0.6);text-transform:uppercase;}
+.lb-row{display:flex;align-items:center;gap:12px;padding:10px 18px;border-top:1px solid rgba(184,150,74,0.1);transition:background 0.15s;}
+.lb-row:hover{background:rgba(184,150,74,0.04);}
+.lb-row.lb-me{background:rgba(184,150,74,0.08);border-left:3px solid var(--gold);}
+.lb-rank{font-family:'Playfair Display',serif;font-size:var(--fs-lg);font-weight:900;min-width:28px;text-align:center;}
+.lb-rank-1{color:#d4a84b;}
+.lb-rank-2{color:#9b6ddb;}
+.lb-rank-3{color:#4a9fd4;}
+.lb-rank-other{color:rgba(224,207,192,0.3);}
+.lb-avatar{width:32px;height:32px;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:900;color:white;flex-shrink:0;}
+.lb-name{font-size:var(--fs-base);color:#e0cfc0;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.lb-tag{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;padding:2px 8px;border-radius:10px;text-transform:uppercase;white-space:nowrap;}
+.lb-tag-1{background:rgba(212,168,75,0.15);color:#d4a84b;border:1px solid rgba(212,168,75,0.3);}
+.lb-tag-2{background:rgba(155,109,219,0.12);color:#9b6ddb;border:1px solid rgba(155,109,219,0.25);}
+.lb-tag-3{background:rgba(74,159,212,0.1);color:#4a9fd4;border:1px solid rgba(74,159,212,0.2);}
+.lb-credits{font-family:'DM Mono',monospace;font-size:var(--fs-sm);color:var(--gold);font-weight:700;letter-spacing:0.5px;display:flex;align-items:center;gap:4px;}
+.lb-empty{padding:28px;text-align:center;color:rgba(224,207,192,0.3);font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:1px;}
+@keyframes lb-glow{0%,100%{box-shadow:0 0 8px rgba(212,168,75,0.2);}50%{box-shadow:0 0 20px rgba(212,168,75,0.4);}}
 /* ── Edition Group Headers ── */
 .pred-group{margin-bottom:var(--sp-lg);}
 .pred-group-header{display:flex;align-items:center;gap:var(--sp-sm);margin-bottom:var(--sp-sm);padding-bottom:var(--sp-xs);border-bottom:1px solid var(--border);}
@@ -719,6 +742,19 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
         </div>
         <div id="copy-toast" style="display:none;margin-top:10px;font-size:11px;color:var(--violet);font-family:'DM Mono',monospace;letter-spacing:0.5px;">✓ <span class="zh-only">链接已复制到剪贴板</span><span class="en-only">Link copied to clipboard</span></div>
       </div>
+      <div class="lb-wrap">
+        <div class="lb-card">
+          <div class="lb-header">
+            <div>
+              <div class="lb-title"><span class="zh-only">Zeus Credits 排行榜</span><span class="en-only">Zeus Credits Leaderboard</span></div>
+              <div class="lb-subtitle"><span class="zh-only">预测之眼 · 天体排名</span><span class="en-only">God's Eye · Celestial Ranking</span></div>
+            </div>
+          </div>
+          <div id="lb-list">
+            <div class="lb-empty"><span class="zh-only">加载中…</span><span class="en-only">Loading...</span></div>
+          </div>
+        </div>
+      </div>
       <div class="section-head" style="margin-bottom:16px;"><div class="section-title" style="font-size:16px;"><span class="zh-only">好友列表</span><span class="en-only">Friend List</span></div><div class="section-line"></div><div class="section-sub" id="friends-count">0 <span class="zh-only">位好友</span><span class="en-only">friends</span></div></div>
       <div id="friends-list"></div>
     </div>
@@ -757,6 +793,7 @@ window.setLang=function(lang){try{localStorage.setItem('zeus-lang',lang);}catch(
   if(window.loadHomePage)setTimeout(loadHomePage,0);
   if(window.loadCollection)setTimeout(loadCollection,0);
   if(window.loadNotifications)setTimeout(loadNotifications,0);
+  if(window.loadLeaderboard)setTimeout(loadLeaderboard,0);
 };
 (function(){var d=new Date();var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];var el=document.getElementById('page-date');if(el)el.textContent=months[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear()+' · '+days[d.getDay()];})();
 (function(){try{var s=localStorage.getItem('zeus-checkin-'+new Date().toDateString());if(s){var btn=document.getElementById('checkin-btn');if(btn)btn.classList.add('done');var te=document.getElementById('checkin-time');if(te)te.textContent=s;var lbl=document.getElementById('checkin-label');if(lbl)lbl.innerHTML='<span class="zh-only">&#10003; 今日已签到</span><span class="en-only">&#10003; Checked In</span>';}}catch(e){}})();
@@ -828,7 +865,7 @@ document.addEventListener('click',function(ev){
   function applyFilter(){var q=(document.getElementById('issue-search')||{value:''}).value.toLowerCase();var yr=(document.getElementById('issue-year')||{value:''}).value;filtered=ISSUES.filter(function(iss){var matchQ=!q||String(iss.num).indexOf(q)>=0||iss.title.toLowerCase().indexOf(q)>=0||(iss.titleEn&&iss.titleEn.toLowerCase().indexOf(q)>=0);var matchY=!yr||iss.date.indexOf(yr)===0;return matchQ&&matchY;});currentPage=1;render();}
   function initIssues(){var s=document.getElementById('issue-search');var y=document.getElementById('issue-year');if(s&&!s._bound){s.addEventListener('input',applyFilter);s._bound=true;}if(y&&!y._bound){y.addEventListener('change',applyFilter);y._bound=true;}loadIssues();}
   var _origGoPage=window.goPage;
-  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile')setTimeout(loadProfilePage,0);if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);}if(id==='predictions'){setTimeout(loadPredictions,0);}};
+  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile')setTimeout(loadProfilePage,0);if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);setTimeout(loadLeaderboard,0);}if(id==='predictions'){setTimeout(loadPredictions,0);}};
   window.addEventListener('load',function(){var ap=document.querySelector('.page.active');if(ap&&ap.id==='page-issues')initIssues();setTimeout(loadNotifications,1000);setTimeout(loadHomePage,500);
     // Render credit coins
     var coinHome=document.getElementById('credit-coin-home');if(coinHome&&window._creditCoin)coinHome.innerHTML=window._creditCoin(28);
@@ -1115,6 +1152,51 @@ window.loadFriends = function() {
     if(res[0].data && !res[0].error) FRIENDS.push(buildFriend(res[0].data, getLang()==='zh'?'引路人':'MENTOR'));
     (res[1].data||[]).forEach(function(u){ FRIENDS.push(buildFriend(u)); });
     window.renderFriends();
+  });
+};
+
+// ── ZEUS CREDITS LEADERBOARD ──
+window.loadLeaderboard = function() {
+  var lbList = document.getElementById('lb-list');
+  if (!lbList) return;
+  var lang = getLang();
+  _sb.from('profiles').select('id,display_name,zeus_credits').order('zeus_credits', {ascending: false}).limit(20).then(function(r) {
+    if (!r.data || !r.data.length) {
+      lbList.innerHTML = '<div class="lb-empty">' + (lang === 'zh' ? '\u6682\u65E0\u6570\u636E' : 'No data yet') + '</div>';
+      return;
+    }
+    var RANK_TAGS = {
+      1: { zh: 'SUPERNOVA \u00b7 \u8D85\u65B0\u661F', en: 'SUPERNOVA', cls: 'lb-tag-1' },
+      2: { zh: 'PULSAR \u00b7 \u8109\u51B2\u661F', en: 'PULSAR', cls: 'lb-tag-2' },
+      3: { zh: 'QUASAR \u00b7 \u7C7B\u661F\u4F53', en: 'QUASAR', cls: 'lb-tag-3' }
+    };
+    var COLORS = ['#d4a84b', '#9b6ddb', '#4a9fd4', '#6b7a8a', '#6b7a8a'];
+    var currentUser = window._currentUser;
+    var html = '';
+    var rank = 0;
+    var prevCredits = -1;
+    for (var i = 0; i < r.data.length; i++) {
+      var u = r.data[i];
+      if (u.zeus_credits !== prevCredits) { rank = i + 1; prevCredits = u.zeus_credits; }
+      if (u.zeus_credits <= 0 && rank > 3) continue;
+      var isMe = currentUser && u.id === currentUser.id;
+      var rankCls = rank <= 3 ? 'lb-rank-' + rank : 'lb-rank-other';
+      var avatarColor = COLORS[Math.min(rank - 1, COLORS.length - 1)];
+      var initial = (u.display_name || '?').charAt(0).toUpperCase();
+      var tagInfo = RANK_TAGS[rank];
+      var tagHtml = tagInfo ? '<span class="lb-tag ' + tagInfo.cls + '">' + (lang === 'zh' ? tagInfo.zh : tagInfo.en) + '</span>' : '';
+
+      html += '<div class="lb-row' + (isMe ? ' lb-me' : '') + '">'
+        + '<div class="lb-rank ' + rankCls + '">' + rank + '</div>'
+        + '<div class="lb-avatar" style="background:' + avatarColor + '">' + initial + '</div>'
+        + '<div class="lb-name">' + (u.display_name || 'Anonymous') + (isMe ? ' <span style="font-size:9px;color:var(--gold);font-family:\'DM Mono\',monospace;">' + (lang === 'zh' ? '(\u6211)' : '(you)') + '</span>' : '') + '</div>'
+        + tagHtml
+        + '<div class="lb-credits">' + (window._creditCoin ? window._creditCoin(14) : '') + ' ' + (u.zeus_credits || 0) + '</div>'
+        + '</div>';
+    }
+    if (!html) html = '<div class="lb-empty">' + (lang === 'zh' ? '\u6682\u65E0\u6570\u636E' : 'No data yet') + '</div>';
+    lbList.innerHTML = html;
+    if (window.applyLang) applyLang(getLang());
   });
 };
 
