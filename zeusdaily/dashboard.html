@@ -118,8 +118,11 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 .pred-tab:not(:last-child){border-right:1px solid var(--border);}
 .pred-tab:hover{background:var(--bg2);}
 .pred-tab.active{background:var(--gold-bg2);color:var(--gold2);font-weight:700;}
-.pred-tab .tab-count{display:inline-block;min-width:16px;height:16px;line-height:16px;border-radius:8px;background:var(--bg3);color:var(--text4);font-size:8px;font-weight:700;text-align:center;margin-left:4px;vertical-align:middle;}
-.pred-tab.active .tab-count{background:var(--gold);color:white;}
+.pred-tab .tab-count{display:inline-block;font-size:8px;font-weight:700;color:var(--text4);margin-left:2px;vertical-align:middle;}
+.pred-tab.active .tab-count{color:var(--gold2);}
+/* ── Prediction pagination ── */
+.pred-load-more{display:block;width:100%;padding:var(--sp-md);font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);cursor:pointer;text-align:center;transition:all var(--ease);margin-top:var(--sp-md);}
+.pred-load-more:hover{border-color:var(--border2);background:var(--bg2);color:var(--gold);}
 /* ── Edition Group Headers ── */
 .pred-group{margin-bottom:var(--sp-lg);}
 .pred-group-header{display:flex;align-items:center;gap:var(--sp-sm);margin-bottom:var(--sp-sm);padding-bottom:var(--sp-xs);border-bottom:1px solid var(--border);}
@@ -1187,6 +1190,8 @@ window._creditCoin = function(size) {
   };
 
   var _predFilter = 'all';
+  var _predPageSize = 6;
+  var _predShowCount = 6;
   window._predsRender = renderPredictions;
 
   // Tab click handler
@@ -1196,6 +1201,7 @@ window._creditCoin = function(size) {
       var tab = e.target.closest('.pred-tab');
       if (!tab) return;
       _predFilter = tab.getAttribute('data-filter') || 'all';
+      _predShowCount = _predPageSize;
       tabs.querySelectorAll('.pred-tab').forEach(function(t) { t.classList.remove('active'); });
       tab.classList.add('active');
       renderPredictions();
@@ -1250,16 +1256,20 @@ window._creditCoin = function(size) {
     } else if (msEl) { msEl.innerHTML = ''; }
 
     // Filter
-    var filtered = _preds.filter(function(p) {
+    var allFiltered = _preds.filter(function(p) {
       if (_predFilter === 'all') return true;
       return p.status === _predFilter;
     });
 
-    if (!filtered.length) {
+    if (!allFiltered.length) {
       list.innerHTML = '<div class="empty-state">' + (lang === 'zh' ? '\u6682\u65E0\u8BB0\u5F55' : 'No predictions found') + '</div>';
       if (window.applyLang) applyLang(getLang());
       return;
     }
+
+    // Paginate
+    var filtered = allFiltered.slice(0, _predShowCount);
+    var hasMore = allFiltered.length > _predShowCount;
 
     // Group by edition_vol (descending)
     var groups = {};
@@ -1342,8 +1352,25 @@ window._creditCoin = function(size) {
       html += '</div>';
     });
 
+    // Load more button
+    if (hasMore) {
+      var remaining = allFiltered.length - _predShowCount;
+      html += '<button class="pred-load-more" id="pred-load-more-btn">'
+        + '<span class="zh-only">\u52A0\u8F7D\u66F4\u591A (' + remaining + ')</span>'
+        + '<span class="en-only">Load more (' + remaining + ')</span></button>';
+    }
+
     list.innerHTML = html;
     if (window.applyLang) applyLang(getLang());
+
+    // Bind load more
+    var lmBtn = document.getElementById('pred-load-more-btn');
+    if (lmBtn) {
+      lmBtn.onclick = function() {
+        _predShowCount += _predPageSize;
+        renderPredictions();
+      };
+    }
 
     // Bind vote buttons
     var btns = list.getElementsByClassName('vote-btn');
