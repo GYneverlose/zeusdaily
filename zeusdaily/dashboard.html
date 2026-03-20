@@ -301,14 +301,14 @@ nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .notif-body{flex:1;}
 .notif-text{font-size:12px;color:var(--text);line-height:1.6;}
 .notif-time{font-size:10px;color:var(--text4);font-family:'DM Mono',monospace;margin-top:3px;}
-.col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:12px;}
-.col-card{aspect-ratio:0.65;background:#ffffff;border:1.5px solid rgba(216,180,230,0.45);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:all 0.22s;padding:12px 10px;position:relative;overflow:hidden;box-shadow:0 2px 14px rgba(200,140,220,0.08);}
+.col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;}
+.col-card{aspect-ratio:0.75;background:#ffffff;border:1.5px solid rgba(216,180,230,0.45);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:all 0.22s;padding:8px 6px;position:relative;overflow:hidden;box-shadow:0 2px 14px rgba(200,140,220,0.08);}
 .col-card::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1.5px;background:linear-gradient(90deg,transparent,rgba(216,180,240,0.7),transparent);border-radius:2px;}
 .col-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -10%,rgba(240,210,255,0.18) 0%,transparent 60%);pointer-events:none;}
 .col-card:hover{border-color:rgba(180,136,249,0.55);transform:translateY(-5px);box-shadow:0 12px 28px rgba(180,136,249,0.14),0 0 0 1px rgba(216,180,240,0.25);}
-.col-card .vol{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:3px;color:rgba(155,114,212,0.7);text-transform:uppercase;}
-.col-card .col-title{font-family:'Playfair Display',serif;font-size:10px;font-weight:700;color:#3a2550;text-align:center;line-height:1.5;}
-.col-card .col-date{font-size:8px;color:rgba(180,136,249,0.55);font-family:'DM Mono',monospace;text-align:center;letter-spacing:0.5px;}
+.col-card .vol{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:2px;color:rgba(155,114,212,0.7);text-transform:uppercase;}
+.col-card .col-title{font-family:'Playfair Display',serif;font-size:9px;font-weight:700;color:#3a2550;text-align:center;line-height:1.35;}
+.col-card .col-date{font-size:7px;color:rgba(180,136,249,0.55);font-family:'DM Mono',monospace;text-align:center;letter-spacing:0.5px;}
 .col-card .badge{border-color:rgba(180,136,249,0.3);color:#9b72d4;background:rgba(180,136,249,0.07);}
 .lv-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;border:1px solid var(--border);margin-bottom:8px;}
 .lv-row.current{background:rgba(123,86,184,0.06);border-color:rgba(123,86,184,0.3);}
