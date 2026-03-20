@@ -661,6 +661,32 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
           <div class="section-head" style="margin-bottom:var(--sp-sm)"><div class="section-title" style="font-size:var(--fs-md)"><span class="zh-only">成就徽章</span><span class="en-only">Achievements</span></div></div>
           <div class="ach-grid" id="ach-grid-inner"></div>
         </div>
+      <!-- CREDITS TRANSFER -->
+      <div class="card" style="margin-top:var(--sp-lg)">
+        <div class="section-head" style="margin-bottom:var(--sp-md)"><div class="section-title" style="font-size:var(--fs-md)"><span class="zh-only">Credits 转账</span><span class="en-only">Transfer Credits</span></div></div>
+        <div style="font-size:var(--fs-sm);color:var(--text3);margin-bottom:var(--sp-md);line-height:1.6;">
+          <span class="zh-only">注册赠送的 Credits 为泥码，仅可用于预测投票。通过预测赢取的 Credits 为活码，可自由转账。</span>
+          <span class="en-only">Sign-up bonus Credits are dead chips — prediction voting only. Credits won from predictions are live chips — freely transferable.</span>
+        </div>
+        <div style="display:flex;gap:var(--sp-sm);margin-bottom:var(--sp-sm);font-family:'DM Mono',monospace;font-size:var(--fs-xs);color:var(--text3);">
+          <span><span class="zh-only">总计</span><span class="en-only">Total</span>: <strong id="xfer-total" style="color:var(--gold2)">0</strong></span>
+          <span>·</span>
+          <span><span class="zh-only">泥码</span><span class="en-only">Dead</span>: <strong id="xfer-bonus" style="color:var(--text4)">0</strong></span>
+          <span>·</span>
+          <span><span class="zh-only">可转</span><span class="en-only">Live</span>: <strong id="xfer-live" style="color:var(--green)">0</strong></span>
+        </div>
+        <div style="margin-bottom:var(--sp-sm);">
+          <div class="ds-label"><span class="zh-only">收款人 ID</span><span class="en-only">RECIPIENT USER ID</span></div>
+          <input id="xfer-to-id" type="text" class="xfer-input" placeholder="e.g. 228a1bc7-3507-485a-..." style="font-size:12px;"/>
+        </div>
+        <div style="margin-bottom:var(--sp-sm);">
+          <div class="ds-label"><span class="zh-only">金额</span><span class="en-only">AMOUNT</span></div>
+          <input id="xfer-amount-profile" type="number" min="1" class="xfer-input" placeholder="1"/>
+        </div>
+        <button class="xfer-btn" onclick="doProfileTransfer()"><span class="zh-only">发送转账</span><span class="en-only">Send Transfer</span></button>
+        <div id="xfer-msg-profile" class="xfer-msg"></div>
+        <div id="xfer-log-profile" style="margin-top:var(--sp-md)"></div>
+      </div>
       <!-- MOBILE SETTINGS BLOCK -->
       <div class="mobile-settings" style="margin-top:var(--sp-sm)">
         <div class="ds-label" style="padding:var(--sp-lg) 2px var(--sp-md)"><span class="zh-only">设置</span><span class="en-only">Settings</span></div>
@@ -759,32 +785,6 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
       </div>
       <div class="section-head" style="margin-bottom:16px;"><div class="section-title" style="font-size:16px;"><span class="zh-only">好友列表</span><span class="en-only">Friend List</span></div><div class="section-line"></div><div class="section-sub" id="friends-count">0 <span class="zh-only">位好友</span><span class="en-only">friends</span></div></div>
       <div id="friends-list"></div>
-      <!-- ZEUS CREDITS ECONOMY -->
-      <div class="section-head" style="margin-top:28px;margin-bottom:16px;"><div class="section-title" style="font-size:16px;"><span class="zh-only">Zeus Credits</span><span class="en-only">Zeus Credits</span></div><div class="section-line"></div></div>
-      <div class="xfer-grid">
-        <div class="card">
-          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:var(--sp-md);"><span class="zh-only">转账</span><span class="en-only">Transfer</span></div>
-          <div style="margin-bottom:var(--sp-sm);"><div class="ds-label"><span class="zh-only">收款人</span><span class="en-only">TO</span></div><select id="xfer-to" class="xfer-select"></select></div>
-          <div><div class="ds-label"><span class="zh-only">金额</span><span class="en-only">AMOUNT</span></div><input id="xfer-amount" type="number" min="1" class="xfer-input" placeholder="1"/></div>
-          <button class="xfer-btn" onclick="doTransfer('transfer')"><span class="zh-only">发送</span><span class="en-only">Send</span></button>
-          <div id="xfer-msg" class="xfer-msg"></div>
-        </div>
-        <div class="card">
-          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:var(--sp-md);"><span class="zh-only">借出</span><span class="en-only">Lend</span></div>
-          <div style="margin-bottom:var(--sp-sm);"><div class="ds-label"><span class="zh-only">借给谁</span><span class="en-only">TO</span></div><select id="lend-to" class="xfer-select"></select></div>
-          <div><div class="ds-label"><span class="zh-only">金额</span><span class="en-only">AMOUNT</span></div><input id="lend-amount" type="number" min="1" class="xfer-input" placeholder="1"/></div>
-          <button class="xfer-btn" onclick="doTransfer('loan')"><span class="zh-only">借出</span><span class="en-only">Lend</span></button>
-          <div id="lend-msg" class="xfer-msg"></div>
-        </div>
-      </div>
-      <div class="card" id="loans-card" style="margin-top:var(--sp-md);display:none;">
-        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:var(--sp-md);"><span class="zh-only">活跃贷款</span><span class="en-only">Active Loans</span></div>
-        <div id="loans-list"></div>
-      </div>
-      <div class="card" id="xfer-log-card" style="margin-top:var(--sp-md);display:none;">
-        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:var(--sp-md);"><span class="zh-only">交易记录</span><span class="en-only">Transaction Log</span></div>
-        <div id="xfer-log"></div>
-      </div>
     </div>
   </div>
 </div>
@@ -893,7 +893,7 @@ document.addEventListener('click',function(ev){
   function applyFilter(){var q=(document.getElementById('issue-search')||{value:''}).value.toLowerCase();var yr=(document.getElementById('issue-year')||{value:''}).value;filtered=ISSUES.filter(function(iss){var matchQ=!q||String(iss.num).indexOf(q)>=0||iss.title.toLowerCase().indexOf(q)>=0||(iss.titleEn&&iss.titleEn.toLowerCase().indexOf(q)>=0);var matchY=!yr||iss.date.indexOf(yr)===0;return matchQ&&matchY;});currentPage=1;render();}
   function initIssues(){var s=document.getElementById('issue-search');var y=document.getElementById('issue-year');if(s&&!s._bound){s.addEventListener('input',applyFilter);s._bound=true;}if(y&&!y._bound){y.addEventListener('change',applyFilter);y._bound=true;}loadIssues();}
   var _origGoPage=window.goPage;
-  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile')setTimeout(loadProfilePage,0);if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);setTimeout(loadLeaderboard,0);setTimeout(loadCreditsEconomy,0);}if(id==='predictions'){setTimeout(loadPredictions,0);}};
+  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile'){setTimeout(loadProfilePage,0);setTimeout(loadTransferUI,0);}if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);setTimeout(loadLeaderboard,0);}if(id==='predictions'){setTimeout(loadPredictions,0);}};
   window.addEventListener('load',function(){var ap=document.querySelector('.page.active');if(ap&&ap.id==='page-issues')initIssues();setTimeout(loadNotifications,1000);setTimeout(loadHomePage,500);
     // Render credit coins
     var coinHome=document.getElementById('credit-coin-home');if(coinHome&&window._creditCoin)coinHome.innerHTML=window._creditCoin(28);
@@ -1583,157 +1583,81 @@ window._creditCoin = function(size) {
   };
 })();
 
-// ── ZEUS CREDITS ECONOMY ──
+// ── ZEUS CREDITS TRANSFER ──
 (function() {
   var _allUsers = [];
 
-  window.loadCreditsEconomy = function() {
-    // Load all users for dropdowns
-    _sb.from('profiles').select('id,display_name,zeus_credits').then(function(r) {
-      _allUsers = r.data || [];
-      _populateSelects();
-      loadLoans();
-      loadTransferLog();
-    });
-  };
-
-  function _populateSelects() {
+  window.loadTransferUI = function() {
     var user = window._currentUser;
     if (!user) return;
-    var html = '';
-    _allUsers.forEach(function(u) {
-      if (u.id === user.id) return;
-      html += '<option value="' + u.id + '">' + (u.display_name || u.id.substring(0, 8)) + ' (' + (u.zeus_credits || 0) + ' credits)</option>';
-    });
-    var xferTo = document.getElementById('xfer-to'); if (xferTo) xferTo.innerHTML = html;
-    var lendTo = document.getElementById('lend-to'); if (lendTo) lendTo.innerHTML = html;
-  }
-
-  window.doTransfer = function(type) {
-    var user = window._currentUser;
-    if (!user) return;
-    var toEl = document.getElementById(type === 'loan' ? 'lend-to' : 'xfer-to');
-    var amtEl = document.getElementById(type === 'loan' ? 'lend-amount' : 'xfer-amount');
-    var msgEl = document.getElementById(type === 'loan' ? 'lend-msg' : 'xfer-msg');
-    if (!toEl || !amtEl) return;
-    var toId = toEl.value;
-    var amount = parseInt(amtEl.value);
-    if (!toId || !amount || amount < 1) {
-      _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u8bf7\u586b\u5199\u6709\u6548\u91d1\u989d' : 'Enter a valid amount');
-      return;
-    }
-    var credits = (window._profile && window._profile.zeus_credits) || 0;
-    if (amount > credits) {
-      _showMsg(msgEl, 'err', getLang() === 'zh' ? 'Credits \u4e0d\u8db3' : 'Insufficient credits');
-      return;
-    }
-
-    _sb.rpc('transfer_credits', { p_from: user.id, p_to: toId, p_amount: amount, p_type: type }).then(function(r) {
-      if (r.error) {
-        _showMsg(msgEl, 'err', r.error.message);
-        return;
-      }
-      if (r.data && !r.data.ok) {
-        _showMsg(msgEl, 'err', r.data.error || 'Failed');
-        return;
-      }
-      var label = type === 'loan' ? (getLang() === 'zh' ? '\u501f\u51fa\u6210\u529f' : 'Loan sent') : (getLang() === 'zh' ? '\u8f6c\u8d26\u6210\u529f' : 'Transfer sent');
-      _showMsg(msgEl, 'ok', label + ' \u2713');
-      amtEl.value = '';
-      // Update local credits
-      if (window._profile) window._profile.zeus_credits = Math.max(0, credits - amount);
+    // Update credit breakdown display
+    _sb.from('profiles').select('zeus_credits,bonus_credits').eq('id', user.id).single().then(function(r) {
+      if (!r.data) return;
+      var total = r.data.zeus_credits || 0;
+      var bonus = r.data.bonus_credits || 0;
+      var live = Math.max(0, total - bonus);
+      if (window._profile) { window._profile.zeus_credits = total; window._profile.bonus_credits = bonus; }
+      var el1 = document.getElementById('xfer-total'); if (el1) el1.textContent = total;
+      var el2 = document.getElementById('xfer-bonus'); if (el2) el2.textContent = bonus;
+      var el3 = document.getElementById('xfer-live'); if (el3) el3.textContent = live;
       _refreshCreditsUI();
-      // Refresh data
-      loadCreditsEconomy();
-      if (type === 'loan') loadLoans();
-      loadTransferLog();
+    });
+    // Load all users for name lookup
+    _sb.from('profiles').select('id,display_name').then(function(r) { _allUsers = r.data || []; });
+    // Load transfer log
+    _loadProfileLog();
+  };
+
+  window.doProfileTransfer = function() {
+    var user = window._currentUser;
+    if (!user) return;
+    var toId = (document.getElementById('xfer-to-id').value || '').trim();
+    var amount = parseInt(document.getElementById('xfer-amount-profile').value);
+    var msgEl = document.getElementById('xfer-msg-profile');
+    if (!toId) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u8bf7\u8f93\u5165\u6536\u6b3e\u4eba ID' : 'Enter recipient ID'); return; }
+    if (!amount || amount < 1) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u8bf7\u8f93\u5165\u6709\u6548\u91d1\u989d' : 'Enter valid amount'); return; }
+    if (toId === user.id) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u4e0d\u80fd\u8f6c\u7ed9\u81ea\u5df1' : 'Cannot transfer to yourself'); return; }
+    var total = (window._profile && window._profile.zeus_credits) || 0;
+    var bonus = (window._profile && window._profile.bonus_credits) || 0;
+    var live = Math.max(0, total - bonus);
+    if (amount > live) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u53ef\u8f6c\u8d26 Credits \u4e0d\u8db3\uff08\u6ce5\u7801\u4e0d\u53ef\u8f6c\uff09' : 'Not enough live credits (dead chips cannot be transferred)'); return; }
+
+    _sb.rpc('transfer_credits', { p_from: user.id, p_to: toId, p_amount: amount, p_type: 'transfer' }).then(function(r) {
+      if (r.error) { _showMsg(msgEl, 'err', r.error.message); return; }
+      if (r.data && !r.data.ok) { _showMsg(msgEl, 'err', r.data.error || 'Failed'); return; }
+      _showMsg(msgEl, 'ok', (getLang() === 'zh' ? '\u8f6c\u8d26\u6210\u529f' : 'Transfer sent') + ' \u2713');
+      document.getElementById('xfer-amount-profile').value = '';
+      loadTransferUI();
     });
   };
 
-  function loadLoans() {
+  function _loadProfileLog() {
     var user = window._currentUser;
     if (!user) return;
-    _sb.from('credit_transfers').select('id,from_user_id,to_user_id,amount,type,loan_status,created_at').eq('type', 'loan').eq('loan_status', 'active').then(function(r) {
-      var loans = (r.data || []).filter(function(l) { return l.from_user_id === user.id || l.to_user_id === user.id; });
-      var card = document.getElementById('loans-card');
-      var list = document.getElementById('loans-list');
-      if (!card || !list) return;
-      if (!loans.length) { card.style.display = 'none'; return; }
-      card.style.display = 'block';
-      var html = '';
-      loans.forEach(function(l) {
-        var isBorrower = l.to_user_id === user.id;
-        var otherUser = _findUser(isBorrower ? l.from_user_id : l.to_user_id);
-        var otherName = otherUser ? otherUser.display_name : '???';
-        var roleLabel = isBorrower
-          ? (getLang() === 'zh' ? '\u6b20 ' + otherName : 'Owe ' + otherName)
-          : (getLang() === 'zh' ? '\u501f\u7ed9 ' + otherName : 'Lent to ' + otherName);
-        html += '<div class="loan-row"><span>' + roleLabel + ': <strong>' + l.amount + ' Credits</strong></span>';
-        if (isBorrower) {
-          html += '<button class="repay-btn" onclick="doRepay(' + l.id + ')"><span class="zh-only">\u8fd8\u6b3e</span><span class="en-only">Repay</span></button>';
-        }
-        html += '</div>';
-      });
-      list.innerHTML = html;
-      if (window.applyLang) applyLang(getLang());
-    });
-  }
-
-  window.doRepay = function(loanId) {
-    var user = window._currentUser;
-    if (!user) return;
-    _sb.rpc('repay_loan', { p_loan_id: loanId, p_borrower: user.id }).then(function(r) {
-      if (r.error || (r.data && !r.data.ok)) {
-        alert((r.data && r.data.error) || (r.error && r.error.message) || 'Repay failed');
-        return;
-      }
-      // Refresh
-      _sb.from('profiles').select('zeus_credits').eq('id', user.id).single().then(function(pr) {
-        if (pr.data && window._profile) { window._profile.zeus_credits = pr.data.zeus_credits; _refreshCreditsUI(); }
-      });
-      loadLoans();
-      loadTransferLog();
-      loadCreditsEconomy();
-    });
-  };
-
-  function loadTransferLog() {
-    var user = window._currentUser;
-    if (!user) return;
-    _sb.from('credit_transfers').select('id,from_user_id,to_user_id,amount,type,loan_status,created_at').order('created_at', { ascending: false }).limit(20).then(function(r) {
+    _sb.from('credit_transfers').select('*').order('created_at', { ascending: false }).limit(10).then(function(r) {
       var txns = (r.data || []).filter(function(t) { return t.from_user_id === user.id || t.to_user_id === user.id; });
-      var card = document.getElementById('xfer-log-card');
-      var logEl = document.getElementById('xfer-log');
-      if (!card || !logEl) return;
-      if (!txns.length) { card.style.display = 'none'; return; }
-      card.style.display = 'block';
-      var html = '';
+      var logEl = document.getElementById('xfer-log-profile');
+      if (!logEl) return;
+      if (!txns.length) { logEl.innerHTML = ''; return; }
+      var html = '<div class="ds-label" style="margin-bottom:var(--sp-sm)"><span class="zh-only">\u4ea4\u6613\u8bb0\u5f55</span><span class="en-only">TRANSACTION LOG</span></div>';
       txns.forEach(function(t) {
         var isSender = t.from_user_id === user.id;
-        var otherUser = _findUser(isSender ? t.to_user_id : t.from_user_id);
-        var otherName = otherUser ? otherUser.display_name : '???';
-        var typeLabel = t.type === 'loan' ? (getLang() === 'zh' ? '\u501f' : 'Loan') : (getLang() === 'zh' ? '\u8f6c' : 'Xfer');
+        var otherName = _findName(isSender ? t.to_user_id : t.from_user_id);
         var arrow = isSender ? '\u2192' : '\u2190';
         var sign = isSender ? '-' : '+';
         var color = isSender ? 'var(--red)' : 'var(--green)';
-        var statusTag = '';
-        if (t.type === 'loan') {
-          statusTag = t.loan_status === 'repaid'
-            ? ' <span style="color:var(--green);font-size:9px;">\u2713</span>'
-            : ' <span style="color:var(--gold);font-size:9px;">\u25cf</span>';
-        }
         var d = new Date(t.created_at);
         var dateStr = (d.getMonth() + 1) + '/' + d.getDate();
-        html += '<div class="xlog-row"><span>[' + typeLabel + '] ' + arrow + ' ' + otherName + statusTag + '</span><span style="color:' + color + ';font-weight:700;">' + sign + t.amount + '</span><span style="color:var(--text4);font-size:10px;">' + dateStr + '</span></div>';
+        html += '<div class="xlog-row"><span>' + arrow + ' ' + otherName + '</span><span style="color:' + color + ';font-weight:700;">' + sign + t.amount + '</span><span style="color:var(--text4);font-size:10px;">' + dateStr + '</span></div>';
       });
       logEl.innerHTML = html;
       if (window.applyLang) applyLang(getLang());
     });
   }
 
-  function _findUser(id) {
-    for (var i = 0; i < _allUsers.length; i++) { if (_allUsers[i].id === id) return _allUsers[i]; }
-    return null;
+  function _findName(id) {
+    for (var i = 0; i < _allUsers.length; i++) { if (_allUsers[i].id === id) return _allUsers[i].display_name || id.substring(0, 8); }
+    return id ? id.substring(0, 8) : '???';
   }
 
   function _showMsg(el, type, text) {
@@ -1741,7 +1665,7 @@ window._creditCoin = function(size) {
     el.className = 'xfer-msg ' + type;
     el.textContent = text;
     el.style.display = 'block';
-    setTimeout(function() { el.style.display = 'none'; }, 3000);
+    setTimeout(function() { el.style.display = 'none'; }, 4000);
   }
 
   window._refreshCreditsUI = function() {
@@ -1749,7 +1673,7 @@ window._creditCoin = function(size) {
     var el = document.getElementById('stat-credits'); if (el) el.textContent = c;
     var el2 = document.getElementById('prof-credits'); if (el2) el2.textContent = c;
     var el3 = document.getElementById('home-credits'); if (el3) el3.textContent = c;
-  }
+  };
 })();
 
 // ── ACHIEVEMENT BADGE SVG GENERATOR ──
