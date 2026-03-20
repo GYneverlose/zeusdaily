@@ -649,7 +649,33 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
           <div class="prof-stats-grid">
             <div class="prof-stat-box"><div class="prof-stat-value" style="color:var(--gold2)" id="prof-streak">—</div><div class="ds-label"><span class="zh-only">连续天数</span><span class="en-only">STREAK</span></div></div>
             <div class="prof-stat-box"><div class="prof-stat-value" style="color:var(--violet)" id="prof-exp2">—</div><div class="ds-label">EXP</div></div>
-            <div class="prof-stat-box" style="grid-column:1/-1"><div id="prof-credit-coin" style="margin-bottom:4px"></div><div class="prof-stat-value" style="color:var(--gold)" id="prof-credits">0</div><div class="ds-label">ZEUS CREDITS</div></div>
+            <div class="prof-stat-box" style="grid-column:1/-1;position:relative;">
+              <div id="prof-credit-coin" style="margin-bottom:4px"></div>
+              <div class="prof-stat-value" style="color:var(--gold)" id="prof-credits">0</div>
+              <div class="ds-label">ZEUS CREDITS</div>
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:4px;"><span class="zh-only">可用余额</span><span class="en-only">Available</span>: <strong id="prof-available" style="color:var(--green)">0</strong></div>
+              <button id="xfer-toggle-btn" onclick="toggleTransferPanel()" style="position:absolute;top:10px;right:10px;background:none;border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 7px;cursor:pointer;color:var(--gold2);transition:all 0.15s;" title="Transfer">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5l4-3v2h8v2H6v2L2 5z" fill="currentColor" opacity="0.6"/><path d="M14 11l-4 3v-2H2V10h8V8l4 3z" fill="currentColor" opacity="0.6"/></svg>
+              </button>
+              <!-- INLINE TRANSFER PANEL -->
+              <div id="xfer-panel" style="display:none;margin-top:var(--sp-md);padding-top:var(--sp-md);border-top:1px solid var(--border);text-align:left;">
+                <div style="margin-bottom:var(--sp-sm);position:relative;">
+                  <div class="ds-label" style="margin-bottom:3px;"><span class="zh-only">收款人</span><span class="en-only">RECIPIENT</span></div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <input id="xfer-name-input" type="text" class="xfer-input" style="flex:1;font-size:12px;margin-top:0;" placeholder="display name" oninput="validateRecipient()"/>
+                    <div id="xfer-status-dot" style="width:10px;height:10px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background 0.2s;"></div>
+                  </div>
+                  <div id="xfer-name-hint" style="font-size:9px;font-family:'DM Mono',monospace;margin-top:3px;min-height:14px;color:var(--text4);"></div>
+                </div>
+                <div style="margin-bottom:var(--sp-sm);">
+                  <div class="ds-label" style="margin-bottom:3px;"><span class="zh-only">金额</span><span class="en-only">AMOUNT</span></div>
+                  <input id="xfer-amount-inline" type="number" min="1" class="xfer-input" style="font-size:13px;margin-top:0;" placeholder="1"/>
+                </div>
+                <button class="xfer-btn" onclick="doProfileTransfer()"><span class="zh-only">确认转账</span><span class="en-only">Confirm Transfer</span></button>
+                <div id="xfer-msg-profile" class="xfer-msg"></div>
+                <div id="xfer-log-profile" style="margin-top:var(--sp-md)"></div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="card">
@@ -661,32 +687,7 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
           <div class="section-head" style="margin-bottom:var(--sp-sm)"><div class="section-title" style="font-size:var(--fs-md)"><span class="zh-only">成就徽章</span><span class="en-only">Achievements</span></div></div>
           <div class="ach-grid" id="ach-grid-inner"></div>
         </div>
-      <!-- CREDITS TRANSFER -->
-      <div class="card" style="margin-top:var(--sp-lg)">
-        <div class="section-head" style="margin-bottom:var(--sp-md)"><div class="section-title" style="font-size:var(--fs-md)"><span class="zh-only">Credits 转账</span><span class="en-only">Transfer Credits</span></div></div>
-        <div style="font-size:var(--fs-sm);color:var(--text3);margin-bottom:var(--sp-md);line-height:1.6;">
-          <span class="zh-only">注册赠送的 Credits 为泥码，仅可用于预测投票。通过预测赢取的 Credits 为活码，可自由转账。</span>
-          <span class="en-only">Sign-up bonus Credits are dead chips — prediction voting only. Credits won from predictions are live chips — freely transferable.</span>
-        </div>
-        <div style="display:flex;gap:var(--sp-sm);margin-bottom:var(--sp-sm);font-family:'DM Mono',monospace;font-size:var(--fs-xs);color:var(--text3);">
-          <span><span class="zh-only">总计</span><span class="en-only">Total</span>: <strong id="xfer-total" style="color:var(--gold2)">0</strong></span>
-          <span>·</span>
-          <span><span class="zh-only">泥码</span><span class="en-only">Dead</span>: <strong id="xfer-bonus" style="color:var(--text4)">0</strong></span>
-          <span>·</span>
-          <span><span class="zh-only">可转</span><span class="en-only">Live</span>: <strong id="xfer-live" style="color:var(--green)">0</strong></span>
-        </div>
-        <div style="margin-bottom:var(--sp-sm);">
-          <div class="ds-label"><span class="zh-only">收款人 ID</span><span class="en-only">RECIPIENT USER ID</span></div>
-          <input id="xfer-to-id" type="text" class="xfer-input" placeholder="e.g. 228a1bc7-3507-485a-..." style="font-size:12px;"/>
-        </div>
-        <div style="margin-bottom:var(--sp-sm);">
-          <div class="ds-label"><span class="zh-only">金额</span><span class="en-only">AMOUNT</span></div>
-          <input id="xfer-amount-profile" type="number" min="1" class="xfer-input" placeholder="1"/>
-        </div>
-        <button class="xfer-btn" onclick="doProfileTransfer()"><span class="zh-only">发送转账</span><span class="en-only">Send Transfer</span></button>
-        <div id="xfer-msg-profile" class="xfer-msg"></div>
-        <div id="xfer-log-profile" style="margin-top:var(--sp-md)"></div>
-      </div>
+      <!-- old transfer card removed, now inline in credits box -->
       <!-- MOBILE SETTINGS BLOCK -->
       <div class="mobile-settings" style="margin-top:var(--sp-sm)">
         <div class="ds-label" style="padding:var(--sp-lg) 2px var(--sp-md)"><span class="zh-only">设置</span><span class="en-only">Settings</span></div>
@@ -1586,47 +1587,92 @@ window._creditCoin = function(size) {
 // ── ZEUS CREDITS TRANSFER ──
 (function() {
   var _allUsers = [];
+  var _resolvedRecipient = null;
+  var _validateTimer = null;
 
   window.loadTransferUI = function() {
     var user = window._currentUser;
     if (!user) return;
-    // Update credit breakdown display
     _sb.from('profiles').select('zeus_credits,bonus_credits').eq('id', user.id).single().then(function(r) {
       if (!r.data) return;
       var total = r.data.zeus_credits || 0;
       var bonus = r.data.bonus_credits || 0;
-      var live = Math.max(0, total - bonus);
+      var avail = Math.max(0, total - bonus);
       if (window._profile) { window._profile.zeus_credits = total; window._profile.bonus_credits = bonus; }
-      var el1 = document.getElementById('xfer-total'); if (el1) el1.textContent = total;
-      var el2 = document.getElementById('xfer-bonus'); if (el2) el2.textContent = bonus;
-      var el3 = document.getElementById('xfer-live'); if (el3) el3.textContent = live;
       _refreshCreditsUI();
+      var ae = document.getElementById('prof-available'); if (ae) ae.textContent = avail;
     });
-    // Load all users for name lookup
     _sb.from('profiles').select('id,display_name').then(function(r) { _allUsers = r.data || []; });
-    // Load transfer log
     _loadProfileLog();
+  };
+
+  window.toggleTransferPanel = function() {
+    var panel = document.getElementById('xfer-panel');
+    if (!panel) return;
+    var isOpen = panel.style.display !== 'none';
+    panel.style.display = isOpen ? 'none' : 'block';
+    var btn = document.getElementById('xfer-toggle-btn');
+    if (btn) btn.style.borderColor = isOpen ? 'var(--border)' : 'var(--gold)';
+  };
+
+  window.validateRecipient = function() {
+    var input = document.getElementById('xfer-name-input');
+    var dot = document.getElementById('xfer-status-dot');
+    var hint = document.getElementById('xfer-name-hint');
+    if (!input || !dot || !hint) return;
+    var val = (input.value || '').trim();
+    _resolvedRecipient = null;
+    if (!val) { dot.style.background = 'var(--border)'; hint.textContent = ''; return; }
+    if (_validateTimer) clearTimeout(_validateTimer);
+    dot.style.background = '#d4a84b';
+    hint.textContent = '...';
+    _validateTimer = setTimeout(function() {
+      var user = window._currentUser;
+      // Search by display_name (case-insensitive via ilike)
+      _sb.from('profiles').select('id,display_name').ilike('display_name', val).then(function(r) {
+        var matches = (r.data || []).filter(function(u) { return user && u.id !== user.id; });
+        if (matches.length === 1) {
+          _resolvedRecipient = matches[0];
+          dot.style.background = '#2e7d5a';
+          hint.style.color = 'var(--green)';
+          hint.textContent = '\u2713 ' + matches[0].display_name;
+        } else if (matches.length > 1) {
+          _resolvedRecipient = null;
+          dot.style.background = '#d4a84b';
+          hint.style.color = 'var(--gold)';
+          var names = matches.map(function(m) { return m.display_name; }).join(', ');
+          hint.textContent = matches.length + ' matches: ' + names;
+        } else {
+          _resolvedRecipient = null;
+          dot.style.background = '#8b3a2a';
+          hint.style.color = 'var(--red)';
+          hint.textContent = getLang() === 'zh' ? '\u627e\u4e0d\u5230\u7528\u6237' : 'User not found';
+        }
+      });
+    }, 400);
   };
 
   window.doProfileTransfer = function() {
     var user = window._currentUser;
     if (!user) return;
-    var toId = (document.getElementById('xfer-to-id').value || '').trim();
-    var amount = parseInt(document.getElementById('xfer-amount-profile').value);
     var msgEl = document.getElementById('xfer-msg-profile');
-    if (!toId) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u8bf7\u8f93\u5165\u6536\u6b3e\u4eba ID' : 'Enter recipient ID'); return; }
+    if (!_resolvedRecipient) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u8bf7\u8f93\u5165\u6709\u6548\u7528\u6237\u540d' : 'Enter a valid username'); return; }
+    var amount = parseInt(document.getElementById('xfer-amount-inline').value);
     if (!amount || amount < 1) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u8bf7\u8f93\u5165\u6709\u6548\u91d1\u989d' : 'Enter valid amount'); return; }
-    if (toId === user.id) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u4e0d\u80fd\u8f6c\u7ed9\u81ea\u5df1' : 'Cannot transfer to yourself'); return; }
     var total = (window._profile && window._profile.zeus_credits) || 0;
     var bonus = (window._profile && window._profile.bonus_credits) || 0;
-    var live = Math.max(0, total - bonus);
-    if (amount > live) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u53ef\u8f6c\u8d26 Credits \u4e0d\u8db3\uff08\u6ce5\u7801\u4e0d\u53ef\u8f6c\uff09' : 'Not enough live credits (dead chips cannot be transferred)'); return; }
+    var avail = Math.max(0, total - bonus);
+    if (amount > avail) { _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u53ef\u7528\u4f59\u989d\u4e0d\u8db3\uff08Starter Credits \u4e0d\u53ef\u8f6c\uff09' : 'Insufficient available balance (Starter Credits not transferable)'); return; }
 
-    _sb.rpc('transfer_credits', { p_from: user.id, p_to: toId, p_amount: amount, p_type: 'transfer' }).then(function(r) {
+    _sb.rpc('transfer_credits', { p_from: user.id, p_to: _resolvedRecipient.id, p_amount: amount, p_type: 'transfer' }).then(function(r) {
       if (r.error) { _showMsg(msgEl, 'err', r.error.message); return; }
       if (r.data && !r.data.ok) { _showMsg(msgEl, 'err', r.data.error || 'Failed'); return; }
-      _showMsg(msgEl, 'ok', (getLang() === 'zh' ? '\u8f6c\u8d26\u6210\u529f' : 'Transfer sent') + ' \u2713');
-      document.getElementById('xfer-amount-profile').value = '';
+      _showMsg(msgEl, 'ok', (getLang() === 'zh' ? '\u5df2\u8f6c ' + amount + ' Credits \u7ed9 ' : 'Sent ' + amount + ' Credits to ') + _resolvedRecipient.display_name + ' \u2713');
+      document.getElementById('xfer-amount-inline').value = '';
+      document.getElementById('xfer-name-input').value = '';
+      _resolvedRecipient = null;
+      var dot = document.getElementById('xfer-status-dot'); if (dot) dot.style.background = 'var(--border)';
+      var hint = document.getElementById('xfer-name-hint'); if (hint) hint.textContent = '';
       loadTransferUI();
     });
   };
@@ -1670,9 +1716,11 @@ window._creditCoin = function(size) {
 
   window._refreshCreditsUI = function() {
     var c = (window._profile && window._profile.zeus_credits) || 0;
+    var b = (window._profile && window._profile.bonus_credits) || 0;
     var el = document.getElementById('stat-credits'); if (el) el.textContent = c;
     var el2 = document.getElementById('prof-credits'); if (el2) el2.textContent = c;
     var el3 = document.getElementById('home-credits'); if (el3) el3.textContent = c;
+    var el4 = document.getElementById('prof-available'); if (el4) el4.textContent = Math.max(0, c - b);
   };
 })();
 
