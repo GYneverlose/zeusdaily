@@ -1628,20 +1628,17 @@ window._creditCoin = function(size) {
     hint.textContent = '...';
     _validateTimer = setTimeout(function() {
       var user = window._currentUser;
-      // Search by display_name (case-insensitive via ilike)
-      _sb.from('profiles').select('id,display_name').ilike('display_name', val).then(function(r) {
-        var matches = (r.data || []).filter(function(u) { return user && u.id !== user.id; });
-        if (matches.length === 1) {
-          _resolvedRecipient = matches[0];
+      _sb.from('profiles').select('id,display_name').ilike('display_name', val).single().then(function(r) {
+        if (r.data && user && r.data.id !== user.id) {
+          _resolvedRecipient = r.data;
           dot.style.background = '#2e7d5a';
           hint.style.color = 'var(--green)';
-          hint.textContent = '\u2713 ' + matches[0].display_name;
-        } else if (matches.length > 1) {
+          hint.textContent = '\u2713 ' + r.data.display_name;
+        } else if (r.data && user && r.data.id === user.id) {
           _resolvedRecipient = null;
-          dot.style.background = '#d4a84b';
-          hint.style.color = 'var(--gold)';
-          var names = matches.map(function(m) { return m.display_name; }).join(', ');
-          hint.textContent = matches.length + ' matches: ' + names;
+          dot.style.background = '#8b3a2a';
+          hint.style.color = 'var(--red)';
+          hint.textContent = getLang() === 'zh' ? '\u4e0d\u80fd\u8f6c\u7ed9\u81ea\u5df1' : 'Cannot transfer to yourself';
         } else {
           _resolvedRecipient = null;
           dot.style.background = '#8b3a2a';
