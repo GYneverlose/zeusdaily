@@ -1862,7 +1862,7 @@ window.renderAchievements = function(profile) {
 
   // Compute which are earned
   var streak = p ? (p.streak || 0) : 0;
-  var friendCount = FRIENDS.length;
+  var friendCount = FRIENDS.filter(function(f){ return f.tag !== '\u5f15\u8def\u4eba' && f.tag !== 'MENTOR'; }).length;
   var colCount = window._collectedSet ? window._collectedSet.size : 0;
 
   var earned = {};
