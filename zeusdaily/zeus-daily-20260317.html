@@ -514,7 +514,8 @@ function hideTip() { bubble.classList.remove('visible'); currentTerm = null; }
     })(terms[i]);
   }
   document.addEventListener('click', function() { hideTip(); });
-  window.addEventListener('scroll', function() { if (currentTerm) positionTip(currentTerm); });
+  window.addEventListener('scroll', function() { hideTip(); }, {passive: true});
+  window.addEventListener('touchmove', function() { hideTip(); }, {passive: true});
 })();
 
 /* ============ EYE ============ */

@@ -510,6 +510,8 @@ function setLang(lang) {
     var t = e.target.closest('.term');
     if (t) { show(t); e.preventDefault(); } else { hide(); }
   });
+  window.addEventListener('scroll', hide, {passive: true});
+  window.addEventListener('touchmove', hide, {passive: true});
 })();
 
 /* ============ EYE TRACKING + BLINK ============ */
