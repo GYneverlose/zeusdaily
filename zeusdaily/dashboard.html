@@ -1246,15 +1246,29 @@ window._creditCoin = function(size) {
   window.loadPredictions = function() {
     _sb.from('predictions').select('*').order('edition_vol',{ascending:false}).then(function(r) {
       _preds = r.data || [];
-      // Load user votes
-      var user = window._currentUser;
-      if (user) {
-        _sb.from('prediction_votes').select('prediction_id,vote').eq('user_id', user.id).then(function(vr) {
-          _myVotes = {};
-          (vr.data || []).forEach(function(v) { _myVotes[v.prediction_id] = v.vote; });
-          renderPredictions();
+      // Load ALL votes to compute real counts (predictions table counts may be stale)
+      _sb.from('prediction_votes').select('prediction_id,vote').then(function(allVr) {
+        var voteCounts = {};
+        (allVr.data || []).forEach(function(v) {
+          if (!voteCounts[v.prediction_id]) voteCounts[v.prediction_id] = { agree: 0, disagree: 0 };
+          if (v.vote === 'agree') voteCounts[v.prediction_id].agree++;
+          else voteCounts[v.prediction_id].disagree++;
         });
-      } else { renderPredictions(); }
+        // Patch predictions with real counts
+        _preds.forEach(function(p) {
+          var vc = voteCounts[p.id];
+          if (vc) { p.votes_agree = vc.agree; p.votes_disagree = vc.disagree; }
+        });
+        // Load current user's votes
+        var user = window._currentUser;
+        if (user) {
+          _sb.from('prediction_votes').select('prediction_id,vote').eq('user_id', user.id).then(function(vr) {
+            _myVotes = {};
+            (vr.data || []).forEach(function(v) { _myVotes[v.prediction_id] = v.vote; });
+            renderPredictions();
+          });
+        } else { renderPredictions(); }
+      });
     });
   };
 
@@ -1501,8 +1515,6 @@ window._creditCoin = function(size) {
         vr.data.forEach(function(v) { if (v.vote === 'agree') a++; else d++; });
         pred.votes_agree = a;
         pred.votes_disagree = d;
-        // Update predictions table with correct counts
-        _sb.from('predictions').update({ votes_agree: a, votes_disagree: d }).eq('id', predId);
         renderPredictions();
       });
     });
