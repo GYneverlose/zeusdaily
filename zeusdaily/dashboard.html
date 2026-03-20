@@ -112,6 +112,21 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 .pred-credit-miss{margin-top:var(--sp-sm);font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:1px;color:var(--text4);padding:var(--sp-xs) var(--sp-sm);background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);display:inline-block;}
 /* Disabled vote buttons */
 .vote-btn:disabled{opacity:0.5;cursor:default;pointer-events:none;}
+/* Credits economy */
+.xfer-select,.xfer-input{width:100%;padding:var(--sp-sm) var(--sp-md);border:1px solid var(--border);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:var(--fs-base);background:var(--surface);color:var(--text);margin-top:var(--sp-xs);}
+.xfer-btn{width:100%;padding:var(--sp-sm) var(--sp-md);border-radius:var(--r-sm);background:linear-gradient(135deg,var(--purple),var(--violet));border:none;color:white;font-family:'DM Mono',monospace;font-size:var(--fs-sm);letter-spacing:1px;cursor:pointer;transition:all var(--ease);margin-top:var(--sp-sm);}
+.xfer-btn:hover{box-shadow:var(--shadow-purple);}.xfer-btn:disabled{opacity:0.5;cursor:default;}
+.xfer-msg{font-family:'DM Mono',monospace;font-size:var(--fs-xs);padding:var(--sp-sm);border-radius:var(--r-sm);margin-top:var(--sp-sm);display:none;}
+.xfer-msg.ok{color:var(--green);background:var(--green-bg);display:block;}.xfer-msg.err{color:var(--red);background:var(--red-bg);display:block;}
+.loan-row{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-md);padding:var(--sp-sm) 0;border-bottom:1px solid var(--border);font-size:var(--fs-base);}
+.loan-row:last-child{border-bottom:none;}
+.repay-btn{padding:var(--sp-xs) var(--sp-sm);border-radius:var(--r-sm);background:var(--gold-bg);border:1px solid var(--border2);color:var(--gold2);font-family:'DM Mono',monospace;font-size:var(--fs-xs);cursor:pointer;transition:all var(--ease);}
+.repay-btn:hover{background:var(--gold-bg2);}
+.xfer-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-md);}
+@media(max-width:600px){.xfer-grid{grid-template-columns:1fr;}}
+.vote-cost{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:0.5px;margin-left:4px;}
+.xlog-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:var(--fs-sm);color:var(--text2);}
+.xlog-row:last-child{border-bottom:none;}
 /* ── Prediction Tabs ── */
 .pred-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:var(--sp-lg);}
 .pred-tab{flex:1;padding:var(--sp-sm) var(--sp-md);font-family:'DM Mono',monospace;font-size:var(--fs-xs);letter-spacing:1.5px;text-transform:uppercase;text-align:center;cursor:pointer;background:var(--surface);color:var(--text3);border:none;transition:all var(--ease);position:relative;}
@@ -744,6 +759,32 @@ window.doLogout=function(){_sb.auth.signOut().then(function(){window.location.hr
       </div>
       <div class="section-head" style="margin-bottom:16px;"><div class="section-title" style="font-size:16px;"><span class="zh-only">好友列表</span><span class="en-only">Friend List</span></div><div class="section-line"></div><div class="section-sub" id="friends-count">0 <span class="zh-only">位好友</span><span class="en-only">friends</span></div></div>
       <div id="friends-list"></div>
+      <!-- ZEUS CREDITS ECONOMY -->
+      <div class="section-head" style="margin-top:28px;margin-bottom:16px;"><div class="section-title" style="font-size:16px;"><span class="zh-only">Zeus Credits</span><span class="en-only">Zeus Credits</span></div><div class="section-line"></div></div>
+      <div class="xfer-grid">
+        <div class="card">
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:var(--sp-md);"><span class="zh-only">转账</span><span class="en-only">Transfer</span></div>
+          <div style="margin-bottom:var(--sp-sm);"><div class="ds-label"><span class="zh-only">收款人</span><span class="en-only">TO</span></div><select id="xfer-to" class="xfer-select"></select></div>
+          <div><div class="ds-label"><span class="zh-only">金额</span><span class="en-only">AMOUNT</span></div><input id="xfer-amount" type="number" min="1" class="xfer-input" placeholder="1"/></div>
+          <button class="xfer-btn" onclick="doTransfer('transfer')"><span class="zh-only">发送</span><span class="en-only">Send</span></button>
+          <div id="xfer-msg" class="xfer-msg"></div>
+        </div>
+        <div class="card">
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:var(--sp-md);"><span class="zh-only">借出</span><span class="en-only">Lend</span></div>
+          <div style="margin-bottom:var(--sp-sm);"><div class="ds-label"><span class="zh-only">借给谁</span><span class="en-only">TO</span></div><select id="lend-to" class="xfer-select"></select></div>
+          <div><div class="ds-label"><span class="zh-only">金额</span><span class="en-only">AMOUNT</span></div><input id="lend-amount" type="number" min="1" class="xfer-input" placeholder="1"/></div>
+          <button class="xfer-btn" onclick="doTransfer('loan')"><span class="zh-only">借出</span><span class="en-only">Lend</span></button>
+          <div id="lend-msg" class="xfer-msg"></div>
+        </div>
+      </div>
+      <div class="card" id="loans-card" style="margin-top:var(--sp-md);display:none;">
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:var(--sp-md);"><span class="zh-only">活跃贷款</span><span class="en-only">Active Loans</span></div>
+        <div id="loans-list"></div>
+      </div>
+      <div class="card" id="xfer-log-card" style="margin-top:var(--sp-md);display:none;">
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:var(--sp-md);"><span class="zh-only">交易记录</span><span class="en-only">Transaction Log</span></div>
+        <div id="xfer-log"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -852,7 +893,7 @@ document.addEventListener('click',function(ev){
   function applyFilter(){var q=(document.getElementById('issue-search')||{value:''}).value.toLowerCase();var yr=(document.getElementById('issue-year')||{value:''}).value;filtered=ISSUES.filter(function(iss){var matchQ=!q||String(iss.num).indexOf(q)>=0||iss.title.toLowerCase().indexOf(q)>=0||(iss.titleEn&&iss.titleEn.toLowerCase().indexOf(q)>=0);var matchY=!yr||iss.date.indexOf(yr)===0;return matchQ&&matchY;});currentPage=1;render();}
   function initIssues(){var s=document.getElementById('issue-search');var y=document.getElementById('issue-year');if(s&&!s._bound){s.addEventListener('input',applyFilter);s._bound=true;}if(y&&!y._bound){y.addEventListener('change',applyFilter);y._bound=true;}loadIssues();}
   var _origGoPage=window.goPage;
-  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile')setTimeout(loadProfilePage,0);if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);setTimeout(loadLeaderboard,0);}if(id==='predictions'){setTimeout(loadPredictions,0);}};
+  window.goPage=function(id){_origGoPage(id);if(id==='issues')setTimeout(initIssues,0);if(id==='home')setTimeout(loadHomePage,0);if(id==='profile')setTimeout(loadProfilePage,0);if(id==='collection')setTimeout(loadCollection,0);if(id==='notifications')setTimeout(loadNotifications,0);if(id==='friends'){setTimeout(loadFriends,0);setTimeout(loadLeaderboard,0);setTimeout(loadCreditsEconomy,0);}if(id==='predictions'){setTimeout(loadPredictions,0);}};
   window.addEventListener('load',function(){var ap=document.querySelector('.page.active');if(ap&&ap.id==='page-issues')initIssues();setTimeout(loadNotifications,1000);setTimeout(loadHomePage,500);
     // Render credit coins
     var coinHome=document.getElementById('credit-coin-home');if(coinHome&&window._creditCoin)coinHome.innerHTML=window._creditCoin(28);
@@ -1401,7 +1442,7 @@ window._creditCoin = function(size) {
 
         var creditHtml = '';
         if (p.status === 'pending') {
-          creditHtml = '<div class="pred-credit-badge">' + (window._creditCoin ? window._creditCoin(14) : '') + ' <span class="zh-only">\u6295\u7968\u53EF\u8D62 +3 Credits</span><span class="en-only">Vote to earn +3 Credits</span></div>';
+          creditHtml = '<div class="pred-credit-badge">' + (window._creditCoin ? window._creditCoin(14) : '') + ' <span class="zh-only">\u82b1\u8d39 1 Credit \u6295\u7968 \u00b7 \u731c\u5bf9\u8d5a +3</span><span class="en-only">Cost 1 Credit \u00b7 Win +3</span></div>';
         } else if (myVote) {
           var won = (p.status === 'hit' && myVote === 'agree') || (p.status === 'miss' && myVote === 'disagree');
           var isPartial = p.status === 'partial';
@@ -1494,21 +1535,42 @@ window._creditCoin = function(size) {
     var oldVote = _myVotes[predId];
     if (oldVote) return; // Already voted, locked
 
+    // Check credits >= 1
+    var credits = (window._profile && window._profile.zeus_credits) || 0;
+    if (credits < 1) {
+      alert(getLang() === 'zh' ? '\u9700\u8981 1 Zeus Credit \u624d\u80fd\u6295\u7968' : 'You need 1 Zeus Credit to vote');
+      return;
+    }
+
     // Optimistic update for instant UI feedback
     _myVotes[predId] = vote;
     var pred = _preds.filter(function(p) { return p.id === predId; })[0];
     if (pred) {
-      if (oldVote === 'agree') pred.votes_agree = Math.max(0, (pred.votes_agree || 0) - 1);
-      if (oldVote === 'disagree') pred.votes_disagree = Math.max(0, (pred.votes_disagree || 0) - 1);
       if (vote === 'agree') pred.votes_agree = (pred.votes_agree || 0) + 1;
       if (vote === 'disagree') pred.votes_disagree = (pred.votes_disagree || 0) + 1;
     }
+    if (window._profile) window._profile.zeus_credits = Math.max(0, credits - 1);
     renderPredictions();
+    _refreshCreditsUI();
 
-    // Save vote to DB
-    _sb.from('prediction_votes').upsert({ prediction_id: predId, user_id: user.id, vote: vote }, { onConflict: 'prediction_id,user_id' }).then(function(r) {
-      if (r.error) { console.warn('vote save error:', r.error.message); return; }
-      // Recount votes from DB to ensure accuracy
+    // Use RPC for atomic vote + credit deduction
+    _sb.rpc('vote_prediction', { p_user_id: user.id, p_prediction_id: predId, p_vote: vote }).then(function(r) {
+      if (r.error || (r.data && !r.data.ok)) {
+        // Revert optimistic update
+        delete _myVotes[predId];
+        if (pred) {
+          if (vote === 'agree') pred.votes_agree = Math.max(0, (pred.votes_agree || 0) - 1);
+          if (vote === 'disagree') pred.votes_disagree = Math.max(0, (pred.votes_disagree || 0) - 1);
+        }
+        if (window._profile) window._profile.zeus_credits = credits;
+        renderPredictions();
+        _refreshCreditsUI();
+        var errMsg = (r.data && r.data.error) || (r.error && r.error.message) || 'Error';
+        if (errMsg === 'No credits') alert(getLang() === 'zh' ? 'Zeus Credit \u4e0d\u8db3' : 'Not enough Zeus Credits');
+        else console.warn('vote error:', errMsg);
+        return;
+      }
+      // Recount votes from DB
       _sb.from('prediction_votes').select('vote').eq('prediction_id', predId).then(function(vr) {
         if (!vr.data || !pred) return;
         var a = 0, d = 0;
@@ -1519,6 +1581,175 @@ window._creditCoin = function(size) {
       });
     });
   };
+})();
+
+// ── ZEUS CREDITS ECONOMY ──
+(function() {
+  var _allUsers = [];
+
+  window.loadCreditsEconomy = function() {
+    // Load all users for dropdowns
+    _sb.from('profiles').select('id,display_name,zeus_credits').then(function(r) {
+      _allUsers = r.data || [];
+      _populateSelects();
+      loadLoans();
+      loadTransferLog();
+    });
+  };
+
+  function _populateSelects() {
+    var user = window._currentUser;
+    if (!user) return;
+    var html = '';
+    _allUsers.forEach(function(u) {
+      if (u.id === user.id) return;
+      html += '<option value="' + u.id + '">' + (u.display_name || u.id.substring(0, 8)) + ' (' + (u.zeus_credits || 0) + ' credits)</option>';
+    });
+    var xferTo = document.getElementById('xfer-to'); if (xferTo) xferTo.innerHTML = html;
+    var lendTo = document.getElementById('lend-to'); if (lendTo) lendTo.innerHTML = html;
+  }
+
+  window.doTransfer = function(type) {
+    var user = window._currentUser;
+    if (!user) return;
+    var toEl = document.getElementById(type === 'loan' ? 'lend-to' : 'xfer-to');
+    var amtEl = document.getElementById(type === 'loan' ? 'lend-amount' : 'xfer-amount');
+    var msgEl = document.getElementById(type === 'loan' ? 'lend-msg' : 'xfer-msg');
+    if (!toEl || !amtEl) return;
+    var toId = toEl.value;
+    var amount = parseInt(amtEl.value);
+    if (!toId || !amount || amount < 1) {
+      _showMsg(msgEl, 'err', getLang() === 'zh' ? '\u8bf7\u586b\u5199\u6709\u6548\u91d1\u989d' : 'Enter a valid amount');
+      return;
+    }
+    var credits = (window._profile && window._profile.zeus_credits) || 0;
+    if (amount > credits) {
+      _showMsg(msgEl, 'err', getLang() === 'zh' ? 'Credits \u4e0d\u8db3' : 'Insufficient credits');
+      return;
+    }
+
+    _sb.rpc('transfer_credits', { p_from: user.id, p_to: toId, p_amount: amount, p_type: type }).then(function(r) {
+      if (r.error) {
+        _showMsg(msgEl, 'err', r.error.message);
+        return;
+      }
+      if (r.data && !r.data.ok) {
+        _showMsg(msgEl, 'err', r.data.error || 'Failed');
+        return;
+      }
+      var label = type === 'loan' ? (getLang() === 'zh' ? '\u501f\u51fa\u6210\u529f' : 'Loan sent') : (getLang() === 'zh' ? '\u8f6c\u8d26\u6210\u529f' : 'Transfer sent');
+      _showMsg(msgEl, 'ok', label + ' \u2713');
+      amtEl.value = '';
+      // Update local credits
+      if (window._profile) window._profile.zeus_credits = Math.max(0, credits - amount);
+      _refreshCreditsUI();
+      // Refresh data
+      loadCreditsEconomy();
+      if (type === 'loan') loadLoans();
+      loadTransferLog();
+    });
+  };
+
+  function loadLoans() {
+    var user = window._currentUser;
+    if (!user) return;
+    _sb.from('credit_transfers').select('id,from_user_id,to_user_id,amount,type,loan_status,created_at').eq('type', 'loan').eq('loan_status', 'active').then(function(r) {
+      var loans = (r.data || []).filter(function(l) { return l.from_user_id === user.id || l.to_user_id === user.id; });
+      var card = document.getElementById('loans-card');
+      var list = document.getElementById('loans-list');
+      if (!card || !list) return;
+      if (!loans.length) { card.style.display = 'none'; return; }
+      card.style.display = 'block';
+      var html = '';
+      loans.forEach(function(l) {
+        var isBorrower = l.to_user_id === user.id;
+        var otherUser = _findUser(isBorrower ? l.from_user_id : l.to_user_id);
+        var otherName = otherUser ? otherUser.display_name : '???';
+        var roleLabel = isBorrower
+          ? (getLang() === 'zh' ? '\u6b20 ' + otherName : 'Owe ' + otherName)
+          : (getLang() === 'zh' ? '\u501f\u7ed9 ' + otherName : 'Lent to ' + otherName);
+        html += '<div class="loan-row"><span>' + roleLabel + ': <strong>' + l.amount + ' Credits</strong></span>';
+        if (isBorrower) {
+          html += '<button class="repay-btn" onclick="doRepay(' + l.id + ')"><span class="zh-only">\u8fd8\u6b3e</span><span class="en-only">Repay</span></button>';
+        }
+        html += '</div>';
+      });
+      list.innerHTML = html;
+      if (window.applyLang) applyLang(getLang());
+    });
+  }
+
+  window.doRepay = function(loanId) {
+    var user = window._currentUser;
+    if (!user) return;
+    _sb.rpc('repay_loan', { p_loan_id: loanId, p_borrower: user.id }).then(function(r) {
+      if (r.error || (r.data && !r.data.ok)) {
+        alert((r.data && r.data.error) || (r.error && r.error.message) || 'Repay failed');
+        return;
+      }
+      // Refresh
+      _sb.from('profiles').select('zeus_credits').eq('id', user.id).single().then(function(pr) {
+        if (pr.data && window._profile) { window._profile.zeus_credits = pr.data.zeus_credits; _refreshCreditsUI(); }
+      });
+      loadLoans();
+      loadTransferLog();
+      loadCreditsEconomy();
+    });
+  };
+
+  function loadTransferLog() {
+    var user = window._currentUser;
+    if (!user) return;
+    _sb.from('credit_transfers').select('id,from_user_id,to_user_id,amount,type,loan_status,created_at').order('created_at', { ascending: false }).limit(20).then(function(r) {
+      var txns = (r.data || []).filter(function(t) { return t.from_user_id === user.id || t.to_user_id === user.id; });
+      var card = document.getElementById('xfer-log-card');
+      var logEl = document.getElementById('xfer-log');
+      if (!card || !logEl) return;
+      if (!txns.length) { card.style.display = 'none'; return; }
+      card.style.display = 'block';
+      var html = '';
+      txns.forEach(function(t) {
+        var isSender = t.from_user_id === user.id;
+        var otherUser = _findUser(isSender ? t.to_user_id : t.from_user_id);
+        var otherName = otherUser ? otherUser.display_name : '???';
+        var typeLabel = t.type === 'loan' ? (getLang() === 'zh' ? '\u501f' : 'Loan') : (getLang() === 'zh' ? '\u8f6c' : 'Xfer');
+        var arrow = isSender ? '\u2192' : '\u2190';
+        var sign = isSender ? '-' : '+';
+        var color = isSender ? 'var(--red)' : 'var(--green)';
+        var statusTag = '';
+        if (t.type === 'loan') {
+          statusTag = t.loan_status === 'repaid'
+            ? ' <span style="color:var(--green);font-size:9px;">\u2713</span>'
+            : ' <span style="color:var(--gold);font-size:9px;">\u25cf</span>';
+        }
+        var d = new Date(t.created_at);
+        var dateStr = (d.getMonth() + 1) + '/' + d.getDate();
+        html += '<div class="xlog-row"><span>[' + typeLabel + '] ' + arrow + ' ' + otherName + statusTag + '</span><span style="color:' + color + ';font-weight:700;">' + sign + t.amount + '</span><span style="color:var(--text4);font-size:10px;">' + dateStr + '</span></div>';
+      });
+      logEl.innerHTML = html;
+      if (window.applyLang) applyLang(getLang());
+    });
+  }
+
+  function _findUser(id) {
+    for (var i = 0; i < _allUsers.length; i++) { if (_allUsers[i].id === id) return _allUsers[i]; }
+    return null;
+  }
+
+  function _showMsg(el, type, text) {
+    if (!el) return;
+    el.className = 'xfer-msg ' + type;
+    el.textContent = text;
+    el.style.display = 'block';
+    setTimeout(function() { el.style.display = 'none'; }, 3000);
+  }
+
+  window._refreshCreditsUI = function() {
+    var c = (window._profile && window._profile.zeus_credits) || 0;
+    var el = document.getElementById('stat-credits'); if (el) el.textContent = c;
+    var el2 = document.getElementById('prof-credits'); if (el2) el2.textContent = c;
+    var el3 = document.getElementById('home-credits'); if (el3) el3.textContent = c;
+  }
 })();
 
 // ── ACHIEVEMENT BADGE SVG GENERATOR ──
