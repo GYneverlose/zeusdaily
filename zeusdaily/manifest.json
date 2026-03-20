@@ -1,17 +1,48 @@
 {
   "name": "Zeus Daily — The God's Eye View",
   "short_name": "Zeus Daily",
-  "description": "每日一份神眼视角全球要闻",
+  "description": "每日一份神眼视角全球要闻 · AI精选 · 上帝视角",
   "start_url": "/dashboard",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#faf8f4",
+  "orientation": "portrait",
+  "background_color": "#03010a",
   "theme_color": "#1a0a2e",
+  "categories": ["news", "finance"],
+  "lang": "zh",
+  "dir": "ltr",
   "icons": [
     {
-      "src": "/og-cover.png",
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "今日日报",
+      "short_name": "日报",
+      "url": "/dashboard#home",
+      "icons": [{"src": "/icon.svg", "sizes": "any"}]
+    },
+    {
+      "name": "预测追踪",
+      "short_name": "预测",
+      "url": "/dashboard#predictions",
+      "icons": [{"src": "/icon.svg", "sizes": "any"}]
     }
   ]
 }

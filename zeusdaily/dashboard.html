@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a0a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zeus Daily">
 <link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-192.png">
 <title>Zeus Daily · Dashboard</title>
 <meta property="og:type"        content="website"/>
 <meta property="og:site_name"   content="Zeus Daily"/>
@@ -2001,6 +2006,58 @@ applyLang(getLang());
     </div>
   </div>
 </div>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}</script>
+<!-- PWA Install Banner -->
+<div id="pwa-install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#1a0a2e,#03010a);border-top:1px solid rgba(184,150,74,0.3);padding:14px 16px;box-shadow:0 -4px 20px rgba(0,0,0,0.4);">
+  <div style="display:flex;align-items:center;gap:12px;max-width:600px;margin:0 auto;">
+    <img src="/icon.svg" alt="Zeus" style="width:40px;height:40px;border-radius:10px;flex-shrink:0;">
+    <div style="flex:1;min-width:0;">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:13px;color:rgba(184,150,74,0.9);letter-spacing:1px;">Install Zeus Daily</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">Add to home screen for the full app experience</div>
+    </div>
+    <button id="pwa-install-btn" style="flex-shrink:0;padding:8px 18px;background:linear-gradient(135deg,#5c3d8f,#3a1f6e);border:1px solid rgba(184,150,74,0.3);border-radius:6px;color:rgba(255,255,255,0.9);font-size:11px;letter-spacing:1px;cursor:pointer;font-family:'DM Sans',sans-serif;">Install</button>
+    <button id="pwa-dismiss-btn" onclick="document.getElementById('pwa-install-banner').style.display='none';localStorage.setItem('pwa-dismissed','1');" style="flex-shrink:0;background:none;border:none;color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;padding:4px 8px;line-height:1;">&times;</button>
+  </div>
+</div>
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}
+// PWA Install Prompt
+(function(){
+  var deferredPrompt = null;
+  var banner = document.getElementById('pwa-install-banner');
+  var btn = document.getElementById('pwa-install-btn');
+  // Don't show if already installed as PWA or dismissed
+  var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (isStandalone || localStorage.getItem('pwa-dismissed') === '1') return;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    banner.style.display = 'block';
+  });
+  btn.addEventListener('click', function() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(result) {
+      if (result.outcome === 'accepted') {
+        banner.style.display = 'none';
+      }
+      deferredPrompt = null;
+    });
+  });
+  window.addEventListener('appinstalled', function() {
+    banner.style.display = 'none';
+    localStorage.setItem('pwa-dismissed', '1');
+  });
+  // iOS Safari — show manual instructions
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  if (isIOS && isSafari) {
+    banner.style.display = 'block';
+    btn.textContent = 'How?';
+    btn.onclick = function() {
+      alert('Tap the Share button (square with arrow) at the bottom of Safari, then tap "Add to Home Screen".\n\n点击 Safari 底部的分享按钮，然后选择"添加到主屏幕"。');
+    };
+  }
+})();
+</script>
 </body>
 </html>
