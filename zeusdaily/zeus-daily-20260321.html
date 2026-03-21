@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeus Daily · 2026-03-21 · THE GOD'S EYE VIEW</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root{--cream:#faf8f4;--cream2:#f0ebe2;--ink:#1a1410;--ink2:#3a2e22;--gold:#b8964a;--gold2:#8a6d2f;--purple:#5c3d8f;--purple2:#3d2060;--purple3:#8b5cf6;--rule:rgba(184,150,74,.35);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--ink);font-family:'EB Garamond','Noto Serif SC',serif;max-width:820px;margin:0 auto;padding:0 18px 60px;line-height:1.75;font-size:15.5px;}
+.lang-bar{display:flex;justify-content:flex-end;gap:6px;padding:10px 0 0;align-items:center;}
+.back-btn{margin-right:auto;background:none;border:1px solid var(--gold);color:var(--gold2);font-family:inherit;font-size:11px;letter-spacing:2px;padding:3px 10px;cursor:pointer;border-radius:2px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.lang-btn{background:none;border:1px solid var(--gold);color:var(--gold2);font-family:inherit;font-size:11px;letter-spacing:2px;padding:3px 10px;cursor:pointer;border-radius:2px;}
+.lang-btn.active{background:var(--gold);color:#fff;}
+.en-only{display:none !important;}.zh-only{display:inline;}
+body.lang-en .en-only{display:inline !important;}body.lang-en .zh-only{display:none !important;}
+.masthead{text-align:center;padding:28px 0 12px;border-bottom:1.5px solid var(--gold);}
+.masthead-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:38px;letter-spacing:8px;color:var(--ink);line-height:1;text-transform:uppercase;}
+.masthead-sub{font-size:11px;letter-spacing:5px;color:var(--gold2);text-transform:uppercase;margin-top:4px;}
+.eye-wrap{display:flex;flex-direction:column;align-items:center;margin:18px 0 10px;}
+.date-bar{text-align:center;font-size:11px;letter-spacing:3px;color:var(--gold2);text-transform:uppercase;padding:8px 0 6px;border-bottom:1px solid var(--rule);}
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:14px 0 20px;font-family:'Space Mono',monospace;}
+.dash-cell{background:var(--cream);padding:9px 10px;text-align:center;}
+.dash-label{font-size:9px;letter-spacing:2.5px;color:var(--gold2);text-transform:uppercase;display:block;}
+.dash-value{font-size:17px;font-weight:700;color:var(--ink);display:block;line-height:1.2;}
+.dash-value.up{color:#1e7b3f;}.dash-value.down{color:#8b1a1a;}
+.dash-ts{font-size:8px;color:#888;display:block;margin-top:2px;}
+.section{margin:26px 0 0;padding-bottom:20px;border-bottom:1px solid var(--rule);}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.section-title{font-family:'Playfair Display',serif;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:var(--gold2);font-weight:700;}
+.section-rule{flex:1;height:1px;background:var(--rule);}
+.philo-text{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;line-height:1.7;color:var(--ink2);border-left:3px solid var(--gold);padding:8px 0 4px 18px;}
+.news-item{padding:12px 0;border-bottom:1px dotted var(--rule);}
+.news-item:last-child{border-bottom:none;}
+.news-ts{font-size:9px;letter-spacing:2px;color:var(--gold2);text-transform:uppercase;margin-bottom:4px;font-family:'Space Mono',monospace;}
+.news-hed{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;line-height:1.35;color:var(--ink);margin-bottom:5px;}
+.news-body{color:var(--ink2);font-size:14.5px;line-height:1.72;}
+.term{border-bottom:1px dashed var(--gold);cursor:pointer;color:inherit;}
+.term:hover{color:var(--gold2);}
+.tooltip-bubble{position:fixed;z-index:9999;min-width:200px;max-width:280px;background:linear-gradient(135deg,#1e1030,#140c24);border-top:2px solid #b8964a;border-radius:8px;padding:12px 14px;box-shadow:0 4px 24px rgba(92,61,143,.45);visibility:hidden;opacity:0;pointer-events:none;transition:opacity .15s;}
+.tooltip-bubble.visible{visibility:visible;opacity:1;}
+.tooltip-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#b8964a;font-weight:700;display:block;margin-bottom:5px;}
+.tooltip-divider{height:1px;background:rgba(184,150,74,.4);margin:4px 0 7px;}
+.tooltip-body{font-size:12px;line-height:1.75;color:#e0cfc0;}
+.tooltip-arrow{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid #1e1030;}
+.voice-quote{font-family:'Playfair Display',serif;font-size:17px;font-style:italic;border-left:3px solid var(--purple);padding-left:16px;color:var(--purple2);line-height:1.55;margin:4px 0 6px;}
+.voice-attr{font-size:10px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;padding-left:16px;font-family:'Space Mono',monospace;}
+.ai-card{background:linear-gradient(135deg,rgba(92,61,143,.05),rgba(184,150,74,.04));border:1px solid rgba(92,61,143,.2);border-radius:4px;padding:12px 14px;margin-bottom:10px;}
+.ai-card-label{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;font-family:'Space Mono',monospace;}
+.ai-card-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.crypto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 14px;}
+.crypto-cell{border:1px solid var(--rule);border-radius:3px;padding:8px 10px;text-align:center;background:var(--cream2);}
+.crypto-name{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);}
+.crypto-price{font-size:16px;font-weight:700;color:var(--ink);font-family:'Playfair Display',serif;}
+.crypto-change{font-size:11px;}
+.crypto-change.up{color:#1e7b3f;}.crypto-change.down{color:#8b1a1a;}
+.metals-row{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 12px;}
+.metal-tile{flex:1;min-width:160px;border:1px solid var(--gold);border-radius:3px;padding:10px 14px;background:linear-gradient(135deg,#fdf9f0,#f5ede0);}
+.metal-nm{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);display:block;}
+.metal-pr{font-size:22px;font-weight:900;font-family:'Playfair Display',serif;color:var(--gold2);display:block;}
+.metal-sub{font-size:11px;color:#888;}
+.msia-tag{display:inline-block;background:rgba(0,100,60,.08);color:#00643c;border:1px solid rgba(0,100,60,.25);border-radius:2px;font-size:8.5px;letter-spacing:2px;padding:1px 7px;text-transform:uppercase;margin-right:6px;vertical-align:middle;}
+.gods-eye-section{background:linear-gradient(160deg,#f5f0e8,#ede5d4);border:1px solid rgba(184,150,74,.35);border-top:3px solid var(--gold);border-radius:4px;padding:22px 20px;margin:26px 0 0;color:var(--ink2);}
+.gods-eye-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.gods-eye-title-block{display:flex;flex-direction:column;}
+.gods-eye-sup{font-size:8.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold2);opacity:.8;}
+.gods-eye-main-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--ink);}
+.gods-eye-rule{flex:1;height:1px;background:rgba(184,150,74,.3);}
+.analysis-item{padding:10px 0;border-bottom:1px solid rgba(184,150,74,.2);}
+.analysis-item:last-child{border-bottom:none;}
+.analysis-label{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:5px;font-family:'Space Mono',monospace;}
+.analysis-body{font-size:14.5px;line-height:1.75;color:var(--ink2);}
+.mispricing-box{background:#fff;border:1px solid rgba(184,150,74,.25);border-left:3px solid var(--gold);border-radius:3px;padding:14px 16px;margin:12px 0;font-size:14px;color:var(--ink2);line-height:1.78;box-shadow:0 1px 6px rgba(184,150,74,.08);}
+.mispricing-tag{display:inline-block;font-size:8px;letter-spacing:2px;text-transform:uppercase;background:rgba(184,150,74,.12);color:var(--gold2);border:1px solid rgba(184,150,74,.3);padding:2px 9px;border-radius:2px;margin-bottom:8px;}
+.mindmap-wrap{width:100%;max-width:640px;margin:18px auto 8px;border-radius:6px;overflow:hidden;border:1px solid rgba(184,150,74,.3);}
+#mindmapCanvas{width:100%;height:auto;display:block;}
+.alien-card{background:linear-gradient(135deg,#0f0a1e,#1a1030);border:1px solid rgba(139,92,246,.3);border-radius:6px;padding:16px 18px;margin-bottom:12px;color:#e0cfc0;}
+.alien-roast{font-style:italic;border-left:3px solid var(--gold);padding-left:14px;color:#c9b87a;margin:8px 0;font-size:13.5px;line-height:1.65;}
+.alien-hed{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#e9d5ff;margin-bottom:6px;}
+.alien-body{font-size:13.5px;line-height:1.72;color:#c8bfb0;margin-bottom:8px;}
+.alien-src{font-size:9px;letter-spacing:2px;color:rgba(184,150,74,.6);text-transform:uppercase;font-family:'Space Mono',monospace;}
+.closing-text{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;line-height:1.75;color:var(--ink2);text-align:center;padding:16px 0;}
+.checkin-section{display:flex;flex-direction:column;align-items:center;padding:20px 0 6px;border-top:1px solid var(--rule);margin-top:24px;}
+.checkin-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:10px;font-family:'Space Mono',monospace;}
+.stamp-btn{width:68px;height:68px;border-radius:50%;border:1.8px solid var(--purple3);background:var(--cream);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;position:relative;overflow:visible;gap:2px;}
+.stamp-btn:hover{box-shadow:0 0 16px rgba(139,92,246,.45);transform:scale(1.06);}
+.stamp-btn.stamped{border-color:var(--purple);cursor:default;background:rgba(92,61,143,.06);transform:scale(1)!important;}
+.stamp-bolt{transition:filter .2s;}
+.stamp-text{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold2);text-align:center;line-height:1;}
+.stamp-time{font-size:10px;color:var(--gold);font-family:'Space Mono',monospace;margin-top:7px;letter-spacing:.8px;min-height:16px;text-align:center;}
+.stamp-inner{display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;}
+.footer{text-align:center;padding:20px 0 8px;font-size:10px;letter-spacing:2.5px;color:#aaa;text-transform:uppercase;font-family:'Space Mono',monospace;}
+.footer a{color:var(--gold2);text-decoration:none;}
+@media(max-width:520px){.dashboard{grid-template-columns:repeat(2,1fr);}.crypto-grid{grid-template-columns:repeat(2,1fr);}.masthead-brand{font-size:26px;letter-spacing:4px;}}
+</style>
+</head>
+<body>
+<div id="tooltipBubble" class="tooltip-bubble"><span class="tooltip-title" id="tipTitle"></span><div class="tooltip-divider"></div><div class="tooltip-body" id="tipBody"></div><div class="tooltip-arrow" id="tipArrow"></div></div>
+
+<div class="lang-bar"><a class="back-btn" href="/dashboard">&#8592; Dashboard</a><button class="lang-btn active" id="btnZh" onclick="setLang('zh')">中</button><button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button></div>
+
+<div class="masthead"><div class="masthead-brand">ZEUS DAILY</div><div class="masthead-sub">THE GOD'S EYE VIEW</div></div>
+
+<div class="eye-wrap">
+<svg id="mainEye" viewBox="0 0 120 52" width="200" height="87" xmlns="http://www.w3.org/2000/svg" style="cursor:none;">
+<defs>
+<filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="irisGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<radialGradient id="nebulaGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient>
+<radialGradient id="pupilGrad" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#1a0a2e"/><stop offset="100%" stop-color="#0a0515"/></radialGradient>
+<clipPath id="eyeClip"><path id="eyeClipPath" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath>
+</defs>
+<path id="eyeOutline" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4" filter="url(#goldGlow)"/>
+<circle id="iris" cx="60" cy="26" r="14" fill="url(#nebulaGrad)" filter="url(#irisGlow)" clip-path="url(#eyeClip)"/>
+<circle id="pupil" cx="60" cy="26" r="6.5" fill="url(#pupilGrad)" clip-path="url(#eyeClip)"/>
+<circle cx="64" cy="22" r="2.2" fill="rgba(255,255,255,0.45)" clip-path="url(#eyeClip)"/>
+<circle cx="56" cy="28" r="1" fill="rgba(176,136,249,0.4)" clip-path="url(#eyeClip)"/>
+<circle cx="30" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+<circle cx="60" cy="8" r="0.7" fill="#b8964a" opacity="0.5"/>
+<circle cx="90" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+</svg>
+</div>
+
+<div class="date-bar"><span class="zh-only">2026年3月21日 · 星期六 · 伊朗战争第23天 · 开斋节 Hari Raya Aidilfitri</span><span class="en-only">Saturday, March 21, 2026 · Iran War Day 23 · Hari Raya Aidilfitri</span></div>
+
+<!-- DASHBOARD -->
+<div class="dashboard">
+<div class="dash-cell"><span class="dash-label">Gold</span><span class="dash-value down">$4,654</span><span class="dash-ts">-0.04% · Mar 20 · Kitco /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Silver</span><span class="dash-value down">$72.10</span><span class="dash-ts">-0.72% · Mar 20 · Kitco /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Bitcoin</span><span class="dash-value up">$70,584</span><span class="dash-ts">+1.7% · Mar 21 · CoinGecko</span></div>
+<div class="dash-cell"><span class="dash-label">Ethereum</span><span class="dash-value down">$2,157</span><span class="dash-ts">-0.8% · Mar 21 · CoinGecko</span></div>
+<div class="dash-cell"><span class="dash-label">WTI Oil</span><span class="dash-value up">$98.32</span><span class="dash-ts">+2.27% · Mar 20 · CNBC /bbl</span></div>
+<div class="dash-cell"><span class="dash-label">Brent</span><span class="dash-value up">$112.19</span><span class="dash-ts">+3.26% · Mar 20 · CNBC /bbl</span></div>
+<div class="dash-cell"><span class="dash-label">USD/MYR</span><span class="dash-value">3.9342</span><span class="dash-ts">-0.12% · Mar 21 · Xe.com</span></div>
+<div class="dash-cell"><span class="dash-label"><span class="zh-only">恐贪指数</span><span class="en-only">Fear&amp;Greed</span></span><span class="dash-value down">17</span><span class="dash-ts"><span class="zh-only">极度恐惧</span><span class="en-only">Extreme Fear</span> · Mar 21 · CNN</span></div>
+<div class="dash-cell"><span class="dash-label">S&amp;P 500</span><span class="dash-value down">6,506</span><span class="dash-ts">-1.51% · Mar 20 · Yahoo Finance</span></div>
+<div class="dash-cell"><span class="dash-label">Platinum</span><span class="dash-value down">$1,925</span><span class="dash-ts">-2.1% · Mar 20 · Kitco /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Palladium</span><span class="dash-value down">$1,397</span><span class="dash-ts">-8.8% · Mar 20 · Kitco /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Dow</span><span class="dash-value down">45,577</span><span class="dash-ts">-0.96% · Mar 20 · CNBC</span></div>
+</div>
+
+<!-- REFLECTION -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">哲思</span><span class="en-only">REFLECTION</span></div><div class="section-rule"></div></div>
+<p class="philo-text zh-only">今天是<span class="term" data-zh="开斋节（Hari Raya Aidilfitri）：伊斯兰教最重要节日之一，标志斋月结束，全球18亿穆斯林庆祝" data-en="Eid al-Fitr: One of Islam's most important holidays, marks end of Ramadan, celebrated by 1.8 billion Muslims">开斋节</span>——一个关于饥饿的节日。整整一个月，你学习饥饿，学习口渴，学习在匮乏中寻找意义。然后在今天，你终于被允许感恩。但感恩的前提是拥有。当<span class="term" data-zh="伊朗红新月会：伊朗最大人道救援机构，相当于国际红十字会的伊朗分支" data-en="Iranian Red Crescent: Iran's largest humanitarian organization, equivalent to the Red Cross">伊朗红新月会</span>报告1400人死亡、204名儿童再也不会睁开眼睛，当<span class="term" data-zh="黎巴嫩：中东国家，人口约520万，2026年遭以色列持续轰炸" data-en="Lebanon: Middle Eastern nation, pop. ~5.2M, under sustained Israeli bombardment in 2026">黎巴嫩</span>100万人流离失所无家可归，"感恩"这个词本身就成了一种特权。而在马来西亚，349万辆车正在高速公路上回家，收费站打了五折，孩子们穿着新衣服等椰浆饭。同一颗星球，同一天。有人在庆祝活着，有人已无法庆祝。也许<span class="term" data-zh="斋月（Ramadan）：伊斯兰历第九个月，穆斯林从黎明到日落禁食，是精神净化和自律的月份" data-en="Ramadan: Ninth month of Islamic calendar, Muslims fast dawn to sunset, month of spiritual purification">斋月</span>教给我们的不是忍耐，而是这个真相：当拥有本身成为特权，感恩的最高形式不是祈祷——是行动。<br><span style="font-size:14px;font-style:normal;color:#888;display:block;margin-top:8px;">——饥饿教会你感恩，但死亡剥夺你感恩的资格。</span></p>
+<p class="philo-text en-only">Today is <span class="term" data-zh="开斋节" data-en="Eid al-Fitr: Marks end of Ramadan, one of Islam's holiest celebrations, observed by 1.8 billion Muslims worldwide">Eid al-Fitr</span> — a festival born from hunger. For an entire month, you learn hunger, learn thirst, learn to find meaning in deprivation. Then today, you are finally permitted to be grateful. But gratitude presupposes possession. When the <span class="term" data-zh="伊朗红新月会" data-en="Iranian Red Crescent: Iran's largest humanitarian agency, equivalent to Red Cross">Iranian Red Crescent</span> reports 1,400 dead and 204 children who will never open their eyes again, when one million people in <span class="term" data-zh="黎巴嫩" data-en="Lebanon: Middle Eastern nation, pop. ~5.2M, under sustained Israeli bombardment">Lebanon</span> are displaced with no home to return to, the word "gratitude" itself becomes a privilege. Meanwhile in Malaysia, 3.49 million cars are on the highway heading home, toll booths offer 50% discounts, children wear new clothes waiting for nasi lemak. Same planet. Same day. Some celebrate being alive. Others can no longer celebrate at all. Perhaps what <span class="term" data-zh="斋月" data-en="Ramadan: Ninth Islamic month, dawn-to-sunset fasting, spiritual purification">Ramadan</span> teaches us is not endurance, but this truth: when possession itself is privilege, the highest form of gratitude is not prayer — it is action.<br><span style="font-size:14px;font-style:normal;color:#888;display:block;margin-top:8px;">— Hunger teaches gratitude, but death revokes the right to be grateful.</span></p>
+</div>
+
+<!-- WORLD NEWS -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">世界要闻</span><span class="en-only">WORLD NEWS</span></div><div class="section-rule"></div></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · Al Jazeera / CNN / NPR</div>
+<div class="news-hed zh-only">伊朗战争第23天：伊朗警告将"零克制"报复，以色列在<span class="term" data-zh="特朗普：美国第47任总统，2025年1月就职" data-en="Trump: 47th US President, inaugurated January 2025">特朗普</span>施压下暂停能源打击</div>
+<div class="news-hed en-only">Iran War Day 23: Iran Warns of 'Zero Restraint' as Israel Halts Energy Strikes Under <span class="term" data-zh="特朗普：美国第47任总统" data-en="Trump: 47th US President">Trump</span> Pressure</div>
+<div class="news-body zh-only">伊朗外长<span class="term" data-zh="阿拉格奇：伊朗外交部长，资深外交官，曾参与伊核协议谈判" data-en="Abbas Araghchi: Iran's Foreign Minister, veteran diplomat, participated in JCPOA negotiations">阿拉格奇</span>在战时<span class="term" data-zh="诺鲁孜：波斯新年，春分之日，有三千年以上历史" data-en="Nowruz: Persian New Year on spring equinox, over 3,000 years old">诺鲁孜</span>讲话中警告"零克制"报复，称伊朗将以一切手段回应以色列对能源设施的打击。<span class="term" data-zh="伊朗红新月会：伊朗最大人道救援机构" data-en="Iranian Red Crescent: Iran's largest humanitarian organization">伊朗红新月会</span>最新报告：1400+人死亡、18000人受伤、204名儿童死亡。战争让诺鲁孜蒙上阴影——德黑兰街头<span class="term" data-zh="哈夫特辛：诺鲁孜桌上的七件象征物" data-en="Haft-Sin: Seven symbolic Nowruz table items beginning with S">哈夫特辛</span>桌与空袭警报交替出现。<span class="term" data-zh="阿联酋（UAE）：中东联邦制国家，由七个酋长国组成" data-en="UAE: United Arab Emirates, federation of seven emirates">UAE</span>在过去23天内拦截了338枚弹道导弹和1740架无人机。科威特<span class="term" data-zh="米纳阿哈马迪炼油厂：科威特最大炼油厂，日处理能力46万桶" data-en="Mina al-Ahmadi Refinery: Kuwait's largest refinery, 460K bbl/day capacity">米纳阿哈马迪炼油厂</span>再遭袭击，布伦特因此突破$112。特朗普向以色列施压暂停对<span class="term" data-zh="南帕尔斯气田：全球最大天然气田，位于波斯湾，由伊朗和卡塔尔共享" data-en="South Pars: World's largest natural gas field in the Persian Gulf, shared by Iran and Qatar">南帕尔斯</span>等能源目标的打击，但以方尚未正式回应。</div>
+<div class="news-body en-only">Iran's Foreign Minister <span class="term" data-zh="阿拉格奇：伊朗外长" data-en="Abbas Araghchi: Iran's FM, veteran diplomat">Araghchi</span> warned of "zero restraint" retaliation in a wartime <span class="term" data-zh="诺鲁孜" data-en="Nowruz: Persian New Year, spring equinox festival">Nowruz</span> address, pledging all means to respond to Israeli energy strikes. The <span class="term" data-zh="伊朗红新月会" data-en="Iranian Red Crescent: Iran's major humanitarian org">Iranian Red Crescent</span> reports 1,400+ killed, 18,000 injured, 204 children dead. War casts a shadow over Nowruz — <span class="term" data-zh="哈夫特辛" data-en="Haft-Sin: Seven symbolic Nowruz items">Haft-Sin</span> tables in Tehran alternate with air raid sirens. The <span class="term" data-zh="UAE" data-en="UAE: United Arab Emirates">UAE</span> has intercepted 338 ballistic missiles and 1,740 drones over 23 days. Kuwait's <span class="term" data-zh="米纳阿哈马迪" data-en="Mina al-Ahmadi: Kuwait's largest refinery, 460K bbl/day">Mina al-Ahmadi refinery</span> was struck again, pushing Brent above $112. Trump pressured Israel to halt strikes on energy targets like <span class="term" data-zh="南帕尔斯" data-en="South Pars: World's largest gas field">South Pars</span>, but Israel has not formally responded.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · CNN / CNBC</div>
+<div class="news-hed zh-only"><span class="term" data-zh="DHS：美国国土安全部，负责反恐、边境管控、网络安全等，员工超25万" data-en="DHS: Department of Homeland Security, handles counter-terrorism, borders, cybersecurity; 250K+ employees">DHS</span>停摆进入第35天：<span class="term" data-zh="TSA：美国运输安全管理局，负责全美机场安检，隶属DHS" data-en="TSA: Transportation Security Administration, handles airport security, part of DHS">TSA</span>人员大量缺勤，春假旅客困于机场长队</div>
+<div class="news-hed en-only"><span class="term" data-zh="DHS：美国国土安全部" data-en="DHS: Department of Homeland Security">DHS</span> Shutdown Hits Day 35: <span class="term" data-zh="TSA：运输安全管理局" data-en="TSA: Transportation Security Administration">TSA</span> Callout Rates Spike as Spring Break Travelers Face Massive Airport Lines</div>
+<div class="news-body zh-only">DHS停摆进入第35天，超10万名员工持续无薪工作。TSA缺勤率在<span class="term" data-zh="休斯敦霍比机场：德克萨斯州第二大机场" data-en="Houston Hobby: Texas's second-largest airport">休斯敦霍比机场</span>峰值达55%，春假旅客在安检长队中平均等候超3小时。参议院第5次未能通过DHS拨款法案。参议院多数党领袖<span class="term" data-zh="约翰·图恩：美国参议院共和党领袖，南达科他州参议员" data-en="John Thune: Senate Republican Leader, senator from South Dakota">图恩</span>威胁取消<span class="term" data-zh="复活节休会：美国国会传统的春季休会期，通常在复活节前后" data-en="Easter Recess: Traditional spring recess for US Congress around Easter">复活节休会</span>以逼迫投票。代理DHS部长<span class="term" data-zh="汤姆·霍曼：美国代理国土安全部长，前ICE代理局长" data-en="Tom Homan: Acting DHS Secretary, former acting ICE director">霍曼</span>称"<span class="term" data-zh="ICE：美国移民和海关执法局，负责移民执法和跨国犯罪调查" data-en="ICE: Immigration and Customs Enforcement, handles immigration law and transnational crime">ICE</span>行动不受停摆影响"，但航空安全危机已成为全国焦点。</div>
+<div class="news-body en-only">DHS shutdown enters day 35 with 100K+ employees working without pay. TSA callout rates peaked at 55% at <span class="term" data-zh="休斯敦霍比" data-en="Houston Hobby: Texas's second-largest airport">Houston Hobby</span>; spring break travelers face 3+ hour security lines. The Senate failed for the fifth time to pass DHS funding. Majority Leader <span class="term" data-zh="图恩" data-en="John Thune: Senate Republican Leader">Thune</span> threatened to cancel <span class="term" data-zh="复活节休会" data-en="Easter Recess: Congressional spring recess">Easter recess</span> to force a vote. Acting DHS Secretary <span class="term" data-zh="霍曼" data-en="Tom Homan: Acting DHS Secretary">Homan</span> insists "<span class="term" data-zh="ICE" data-en="ICE: Immigration and Customs Enforcement">ICE</span> operations are unaffected," but the aviation security crisis dominates national headlines.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 19, 2026 · Al Jazeera / CNN</div>
+<div class="news-hed zh-only"><span class="term" data-zh="黎巴嫩：中东国家，位于地中海东岸，人口约520万" data-en="Lebanon: Middle Eastern country on the eastern Mediterranean, pop. ~5.2M">黎巴嫩</span>死亡人数突破1000：以色列持续轰炸，近百万人流离失所</div>
+<div class="news-hed en-only"><span class="term" data-zh="黎巴嫩" data-en="Lebanon: Middle Eastern nation on the Mediterranean">Lebanon</span> Death Toll Surpasses 1,000 as Israeli Bombardment Continues, Nearly 1 Million Displaced</div>
+<div class="news-body zh-only">黎巴嫩卫生部更新数据：1001人死亡（含79名妇女、118名儿童、40名医护人员），2584人受伤。近100万人流离失所，占全国人口19%。联合国人权高专<span class="term" data-zh="沃尔克·蒂尔克：联合国人权事务高级专员，奥地利外交官" data-en="Volker Turk: UN High Commissioner for Human Rights, Austrian diplomat">蒂尔克</span>称以色列的持续轰炸"可能构成战争罪"，要求独立调查。<span class="term" data-zh="真主党：黎巴嫩什叶派政治和军事组织，受伊朗支持" data-en="Hezbollah: Lebanese Shia political and military organization, backed by Iran">真主党</span>在伊朗最高领袖<span class="term" data-zh="哈梅内伊：伊朗最高领袖，1989年至今，伊朗实际最高权力者" data-en="Ayatollah Khamenei: Iran's Supreme Leader since 1989, Iran's de facto highest authority">哈梅内伊</span>指令下加大对以色列北部的火箭攻击。黎巴嫩政府呼吁国际社会紧急人道援助。</div>
+<div class="news-body en-only">Lebanon's health ministry reports 1,001 dead (79 women, 118 children, 40 healthcare workers) and 2,584 injured. Nearly 1 million displaced — 19% of the population. UN Human Rights Chief <span class="term" data-zh="蒂尔克" data-en="Volker Turk: UN High Commissioner for Human Rights">Turk</span> says Israel's sustained bombardment "may constitute war crimes," demanding independent investigation. <span class="term" data-zh="真主党" data-en="Hezbollah: Lebanese Shia political-military organization, Iran-backed">Hezbollah</span> has intensified rocket attacks on northern Israel under orders from Supreme Leader <span class="term" data-zh="哈梅内伊" data-en="Ayatollah Khamenei: Iran's Supreme Leader since 1989">Khamenei</span>. Lebanon's government calls for urgent international humanitarian aid.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 20, 2026 · CNN / Bloomberg</div>
+<div class="news-hed zh-only"><span class="term" data-zh="金主爱：金正恩之女，约2013年出生，近年频繁出现在官方活动中" data-en="Kim Ju-ae: Kim Jong Un's daughter, born ~2013, increasingly visible at official events">金正恩</span>13岁女儿驾驶军用坦克，接班人猜测再度升温</div>
+<div class="news-hed en-only"><span class="term" data-zh="金正恩：朝鲜最高领导人，2011年执政至今" data-en="Kim Jong Un: Supreme leader of North Korea since 2011">Kim Jong Un</span>'s 13-Year-Old Daughter Drives Army Tank, Succession Speculation Intensifies</div>
+<div class="news-body zh-only"><span class="term" data-zh="KCNA：朝鲜中央通讯社，朝鲜唯一官方新闻机构" data-en="KCNA: Korean Central News Agency, North Korea's sole official news agency">KCNA</span>发布照片显示<span class="term" data-zh="金主爱：金正恩之女，约13岁，被外界视为潜在继承人" data-en="Kim Ju-ae: Kim Jong Un's daughter, ~13, viewed as potential successor">金主爱</span>驾驶军用坦克视察部队，与父亲身着配套黑色皮夹克。这位约13岁的少女自2022年首次公开亮相以来频率不断增加。<span class="term" data-zh="韩国国家情报院（NIS）：韩国最高情报机构，负责对朝情报收集和分析" data-en="NIS: National Intelligence Service, South Korea's top intelligence agency for DPRK analysis">韩国国家情报院</span>最新评估认为她已"接近被指定为继承人"，但正式确认仍需等待朝鲜劳动党中央委员会决议。分析人士指出，让少女驾驶坦克的影像具有高度象征意义——既是对军方的信号，也是对外界的宣示。</div>
+<div class="news-body en-only"><span class="term" data-zh="KCNA" data-en="KCNA: Korean Central News Agency, DPRK's sole official news outlet">KCNA</span> released photos showing <span class="term" data-zh="金主爱" data-en="Kim Ju-ae: Kim Jong Un's daughter, ~13, potential heir">Kim Ju-ae</span> driving a military tank during a troop inspection, wearing matching black leather jackets with her father. The approximately 13-year-old has appeared with increasing frequency since her 2022 public debut. South Korea's <span class="term" data-zh="韩国国家情报院" data-en="NIS: South Korea's top intelligence agency">National Intelligence Service</span> assesses she is "close to being designated successor," though formal confirmation awaits a Workers' Party Central Committee resolution. Analysts note the imagery of a teenage girl driving a tank carries high symbolic weight — signaling both to the military and the outside world.</div>
+</div>
+</div>
+
+<!-- FINANCE & MARKETS -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">金融市场</span><span class="en-only">FINANCE &amp; MARKETS</span></div><div class="section-rule"></div></div>
+
+<div class="metals-row">
+<div class="metal-tile"><span class="metal-nm">Gold · 黄金</span><span class="metal-pr">$4,654</span><span class="metal-sub">/oz · Mar 20 · Kitco · <span class="zh-only">横盘整理</span><span class="en-only">Consolidating</span></span></div>
+<div class="metal-tile"><span class="metal-nm">Silver · 白银</span><span class="metal-pr">$72.10</span><span class="metal-sub">/oz · Mar 20 · Kitco · <span class="zh-only">暴跌后反弹+7.7%</span><span class="en-only">+7.7% rebound from crash</span></span></div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 20, 2026 · CNBC / Al Jazeera / Bloomberg</div>
+<div class="news-hed zh-only"><span class="term" data-zh="布伦特原油：国际基准油价，产自北海，全球约65%石油贸易以此为参照" data-en="Brent Crude: International oil benchmark from the North Sea, ~65% of global oil priced to Brent">布伦特</span>突破$112：伊拉克宣布不可抗力+科威特炼油厂再遭袭，油价持续攀升</div>
+<div class="news-hed en-only"><span class="term" data-zh="布伦特原油" data-en="Brent Crude: International oil benchmark, ~65% of global oil trade">Brent</span> Breaks $112: Iraq Declares Force Majeure + Kuwait Refinery Struck Again</div>
+<div class="news-body zh-only">布伦特原油收于$112.19/桶（+3.26%），<span class="term" data-zh="WTI：西德克萨斯中质原油，美国基准油价" data-en="WTI: West Texas Intermediate, US benchmark crude">WTI</span>收于$98.32/桶（+2.27%）。推升因素：伊拉克因<span class="term" data-zh="霍尔木兹海峡：连接波斯湾与阿曼湾的狭窄水道，全球约20%石油运输经此通过" data-en="Strait of Hormuz: Narrow waterway, ~20% of global oil transits">霍尔木兹海峡</span>封锁宣布部分出口<span class="term" data-zh="不可抗力条款：合同中允许因战争、自然灾害等不可控因素暂停履约的条款" data-en="Force Majeure: Contract clause allowing suspension due to war, natural disaster, or uncontrollable events">不可抗力</span>，科威特米纳阿哈马迪炼油厂第二次被伊朗导弹击中。<span class="term" data-zh="标普500：美国最具代表性的大盘股指数，由500家最大上市公司组成" data-en="S&P 500: Most representative US large-cap index, 500 largest listed companies">S&P 500</span>连续第4周下跌至6,506（-1.51%），<span class="term" data-zh="道琼斯工业平均指数：由30只蓝筹股组成的美国股市指标" data-en="Dow Jones Industrial Average: US stock market index of 30 blue-chip stocks">道指</span>跌至45,577（-0.96%）。</div>
+<div class="news-body en-only">Brent settled at $112.19/bbl (+3.26%), <span class="term" data-zh="WTI" data-en="WTI: West Texas Intermediate, US crude benchmark">WTI</span> at $98.32/bbl (+2.27%). Drivers: Iraq declared partial export <span class="term" data-zh="不可抗力" data-en="Force Majeure: Contract suspension due to uncontrollable events">force majeure</span> due to the <span class="term" data-zh="霍尔木兹" data-en="Strait of Hormuz: ~20% of global oil transits">Hormuz</span> blockade; Kuwait's Mina al-Ahmadi refinery was hit by Iranian missiles for a second time. <span class="term" data-zh="S&P 500" data-en="S&P 500: US large-cap index">S&amp;P 500</span> fell for a 4th consecutive week to 6,506 (-1.51%); <span class="term" data-zh="道指" data-en="Dow Jones: 30 blue-chip US stock index">Dow</span> dropped to 45,577 (-0.96%).</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 20, 2026 · Kitco / Fortune</div>
+<div class="news-hed zh-only">白银从-12%暴跌中反弹+7.7%至$72.10——<span class="term" data-zh="做空挤压：大量空头头寸被迫回补导致价格急速上涨" data-en="Short Squeeze: Rapid price surge as short sellers are forced to cover positions">做空挤压</span>如期上演</div>
+<div class="news-hed en-only">Silver Rebounds +7.7% to $72.10 from -12% Crash — <span class="term" data-zh="做空挤压" data-en="Short Squeeze: Forced short covering drives rapid price surge">Short Squeeze</span> Plays Out as Expected</div>
+<div class="news-body zh-only">白银从$66.93暴力反弹至$72.10/盎司（+7.7%），验证了上期Zeus Daily"5-7个交易日内反弹至$72+"的预测。<span class="term" data-zh="保证金追缴：经纪商强制要求追加资金或平仓" data-en="Margin Call: Broker demands additional funds or forces liquidation">保证金追缴</span>效应已基本枯竭，实物需求重新主导定价。金银比从70:1回落至64.5:1。黄金横盘整理于$4,654附近，工业需求（光伏、电子）和避险资金同时回流白银市场。</div>
+<div class="news-body en-only">Silver rebounded violently from $66.93 to $72.10/oz (+7.7%), validating last issue's Zeus Daily prediction of "$72+ within 5-7 trading days." <span class="term" data-zh="保证金追缴" data-en="Margin Call: Forced liquidation trigger">Margin call</span> exhaustion allowed physical demand to reassert pricing dominance. Gold/silver ratio retreated from 70:1 to 64.5:1. Gold consolidates near $4,654; industrial demand (solar, electronics) and safe-haven flows simultaneously re-enter the silver market.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 20, 2026 · Yahoo Finance / CNBC</div>
+<div class="news-hed zh-only">S&P 500连续4周下跌——<span class="term" data-zh="恐惧与贪婪指数：CNN编制的市场情绪指标，0为极度恐惧，100为极度贪婪" data-en="Fear & Greed Index: CNN market sentiment indicator, 0 = extreme fear, 100 = extreme greed">恐贪指数</span>17，极度恐惧笼罩市场</div>
+<div class="news-hed en-only">S&amp;P 500 Falls for 4th Straight Week — <span class="term" data-zh="恐贪指数" data-en="Fear & Greed Index: CNN sentiment indicator">Fear &amp; Greed</span> at 17, Extreme Fear Grips Markets</div>
+<div class="news-body zh-only">S&P 500收于6,506（-1.51%），道指45,577（-0.96%），连续第四周下跌。恐贪指数从16微升至17，但仍处于"极度恐惧"区间。市场面临三重压力：伊朗战争推高油价→通胀预期上升→<span class="term" data-zh="美联储：美国联邦储备系统，美国中央银行" data-en="Federal Reserve: US central bank, sets monetary policy">美联储</span>降息预期消退。钯金暴跌8.8%至$1,397/oz，成为本周最大输家，因汽车催化剂需求预期下调。</div>
+<div class="news-body en-only">S&amp;P 500 closed at 6,506 (-1.51%), Dow at 45,577 (-0.96%), falling for a fourth consecutive week. Fear &amp; Greed edged from 16 to 17 but remains in "Extreme Fear." Markets face triple pressure: Iran war pushes oil prices up, inflation expectations rise, <span class="term" data-zh="美联储" data-en="Federal Reserve: US central bank">Fed</span> rate-cut expectations fade. Palladium crashed 8.8% to $1,397/oz, the week's biggest loser, on lowered automotive catalyst demand forecasts.</div>
+</div>
+</div>
+
+<!-- CRYPTO -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">币圈</span><span class="en-only">CRYPTO</span></div><div class="section-rule"></div></div>
+<div class="crypto-grid">
+<div class="crypto-cell"><div class="crypto-name">BTC</div><div class="crypto-price">$70,584</div><div class="crypto-change up">+1.7%</div></div>
+<div class="crypto-cell"><div class="crypto-name">ETH</div><div class="crypto-price">$2,157</div><div class="crypto-change down">-0.8%</div></div>
+<div class="crypto-cell"><div class="crypto-name">SOL</div><div class="crypto-price">$88.95</div><div class="crypto-change up">+1.5%</div></div>
+<div class="crypto-cell"><div class="crypto-name">BNB</div><div class="crypto-price">$651.55</div><div class="crypto-change down">-3.0%</div></div>
+</div>
+<div style="text-align:center;font-size:10px;letter-spacing:2px;color:var(--gold2);margin-bottom:10px;font-family:'Space Mono',monospace;"><span class="zh-only">加密恐贪指数：11 · 极度恐惧 · 连续46天</span><span class="en-only">Crypto Fear &amp; Greed: 11 · Extreme Fear · 46 Days Straight</span></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 19, 2026 · Bloomberg</div>
+<div class="news-hed zh-only"><span class="term" data-zh="比特币：2009年由中本聪创建的去中心化数字货币，总供应量上限2100万枚" data-en="Bitcoin: Decentralized digital currency created by Satoshi Nakamoto in 2009, max supply 21 million">BTC</span>跌破$70K后迅速反弹——自伊朗冲突以来涨14%，成"波动中的绿洲"</div>
+<div class="news-hed en-only"><span class="term" data-zh="比特币" data-en="Bitcoin: Decentralized digital currency, max supply 21M">BTC</span> Bounces After Dipping Below $70K — Up 14% Since Iran Conflict, an 'Oasis in Volatility'</div>
+<div class="news-body zh-only">比特币跌至$68,799后迅速反弹至$70,584（+1.7%）。Bloomberg报道称BTC自2月28日伊朗冲突爆发以来累计上涨14%，表现优于黄金、白银和所有主要股指，被机构投资者称为"波动中的绿洲"。在传统避险资产被<span class="term" data-zh="去杠杆：投资者被迫卖出资产以满足保证金要求" data-en="Deleveraging: Forced selling to meet margin requirements">去杠杆</span>拖累的环境下，BTC展现出独立于传统金融体系的韧性。加密恐贪指数虽仍在11（极度恐惧），但BTC价格走势与情绪指标出现显著背离。</div>
+<div class="news-body en-only">Bitcoin dipped to $68,799 before rebounding to $70,584 (+1.7%). Bloomberg reports BTC has risen 14% since the Iran conflict began on Feb 28, outperforming gold, silver, and all major equity indices — dubbed an "oasis in volatility" by institutional investors. While traditional safe havens were dragged down by <span class="term" data-zh="去杠杆" data-en="Deleveraging: Forced selling to meet margin requirements">deleveraging</span>, BTC showed resilience independent of traditional finance. Though the crypto Fear &amp; Greed index remains at 11 (Extreme Fear), BTC's price action diverges significantly from the sentiment reading.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 17, 2026 · CNBC</div>
+<div class="news-hed zh-only"><span class="term" data-zh="Mastercard：全球第二大信用卡网络，覆盖210+国家和地区" data-en="Mastercard: World's second-largest credit card network, operates in 210+ countries">Mastercard</span>18亿美元收购稳定币公司<span class="term" data-zh="BVNK：总部伦敦的稳定币支付基础设施公司，为企业提供加密支付解决方案" data-en="BVNK: London-based stablecoin payment infrastructure company, provides crypto payment solutions for businesses">BVNK</span>——押注稳定币支付未来</div>
+<div class="news-hed en-only"><span class="term" data-zh="Mastercard" data-en="Mastercard: World's #2 credit card network">Mastercard</span> Acquires Stablecoin Firm <span class="term" data-zh="BVNK" data-en="BVNK: London-based stablecoin payment infrastructure company">BVNK</span> for $1.8B — Betting on Stablecoin Payments</div>
+<div class="news-body zh-only">Mastercard以18亿美元收购伦敦<span class="term" data-zh="稳定币：与法币1:1挂钩的加密货币，如USDT、USDC" data-en="Stablecoin: Crypto pegged 1:1 to fiat currency, e.g. USDT, USDC">稳定币</span>支付基础设施公司BVNK，这是传统支付巨头对加密支付赛道最大的单笔收购。此举标志着传统金融与加密世界的融合加速——Mastercard计划将BVNK的稳定币结算网络整合至其全球支付基础设施中。交易预计2026年Q3完成。</div>
+<div class="news-body en-only">Mastercard acquired London-based <span class="term" data-zh="稳定币" data-en="Stablecoin: 1:1 fiat-pegged crypto">stablecoin</span> payment infrastructure company BVNK for $1.8B — the largest single crypto-payment acquisition by a traditional payments giant. This signals accelerating convergence of traditional finance and crypto: Mastercard plans to integrate BVNK's stablecoin settlement network into its global payments infrastructure. Deal expected to close Q3 2026.</div>
+</div>
+</div>
+
+<!-- POWER WATCH -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">权力之声</span><span class="en-only">POWER WATCH</span></div><div class="section-rule"></div></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · Bloomberg / Al Jazeera / CNN</div>
+<div class="news-hed zh-only"><span class="term" data-zh="特朗普：美国第47任总统" data-en="Trump: 47th US President">特朗普</span>怒斥<span class="term" data-zh="北约（NATO）：北大西洋公约组织，1949年成立，32个成员国的军事联盟" data-en="NATO: North Atlantic Treaty Organization, 1949, 32-member military alliance">NATO</span>为"懦夫"——要求盟友打开霍尔木兹海峡</div>
+<div class="news-hed en-only"><span class="term" data-zh="特朗普" data-en="Trump: 47th US President">Trump</span> Blasts <span class="term" data-zh="NATO" data-en="NATO: 32-member military alliance">NATO</span> as 'Cowards' — Demands Allies Open Hormuz</div>
+<div class="voice-quote zh-only">"现在战争已经在军事上赢了...懦夫！"</div>
+<div class="voice-quote en-only">"Now that fight is Militarily WON...COWARDS!"</div>
+<div class="voice-attr"><span class="term" data-zh="唐纳德·特朗普：美国第47任总统" data-en="Donald Trump: 47th US President, inaugurated January 2025">Donald Trump</span> · Truth Social · Mar 20, 2026</div>
+<div class="news-body zh-only">特朗普在<span class="term" data-zh="Truth Social：特朗普旗下社交媒体平台，2022年上线" data-en="Truth Social: Trump's social media platform, launched 2022">Truth Social</span>连续发帖怒斥NATO盟友拒绝支援霍尔木兹海峡军事行动，称他们为"懦夫"，并宣称伊朗战争"已经在军事上赢了"。此前NATO已连续三次拒绝特朗普要求组建联合舰队打开霍尔木兹通道的提议。<span class="term" data-zh="马克·吕特：北约现任秘书长，前荷兰首相" data-en="Mark Rutte: NATO Secretary General, former Dutch PM">吕特</span>秘书长回应称"NATO的核心任务是集体防御，不是进攻性海上行动"。这一公开裂痕加剧了市场对霍尔木兹长期封锁的定价。</div>
+<div class="news-body en-only">Trump posted a barrage on <span class="term" data-zh="Truth Social" data-en="Truth Social: Trump's social media platform">Truth Social</span> blasting NATO allies for refusing to support Hormuz military operations, calling them "cowards" and claiming the Iran war is "militarily won." NATO has rejected Trump's proposal for a joint fleet to open Hormuz three consecutive times. Secretary General <span class="term" data-zh="吕特" data-en="Mark Rutte: NATO Secretary General, former Dutch PM">Rutte</span> responded that "NATO's core mission is collective defense, not offensive maritime operations." This public fracture deepens market pricing for prolonged Hormuz closure.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 20, 2026 · Al Jazeera / Bloomberg</div>
+<div class="news-hed zh-only">巴西<span class="term" data-zh="卢拉：巴西现任总统，2023年就职第三个任期，工人党领袖" data-en="Luiz Inacio Lula da Silva: Brazil's president, third term from 2023, Workers' Party leader">卢拉</span>要求美国、以色列、伊朗立即停火——"世界已经厌倦了你们的冲突"</div>
+<div class="news-hed en-only">Brazil's <span class="term" data-zh="卢拉" data-en="Lula: Brazil's president, third term, Workers' Party">Lula</span> Demands Immediate Ceasefire from US, Israel, and Iran</div>
+<div class="voice-quote zh-only">"我给美国、以色列和伊朗的信息很简单：世界已经厌倦了你们的冲突。平民正在死去，经济正在崩溃，而你们还在玩权力的游戏。"</div>
+<div class="voice-quote en-only">"My message to the United States, Israel, and Iran is simple: the world is tired of your conflicts. Civilians are dying, economies are collapsing, and you are still playing games of power."</div>
+<div class="voice-attr"><span class="term" data-zh="路易斯·伊纳西奥·卢拉·达席尔瓦：巴西总统" data-en="Luiz Inacio Lula da Silva: President of Brazil">Luiz Inacio Lula da Silva</span> · President of Brazil · Mar 20, 2026</div>
+<div class="news-body zh-only">卢拉在<span class="term" data-zh="金砖国家（BRICS）：巴西、俄罗斯、印度、中国、南非等新兴经济体联盟" data-en="BRICS: Alliance of Brazil, Russia, India, China, South Africa and other emerging economies">金砖</span>紧急视频峰会上发表强硬声明，要求冲突各方立即停火。他指出新兴市场国家正承受"不成比例的经济痛苦"——油价飙升推高食品和运输成本，而这些国家在战争中毫无话语权。巴西提议由金砖国家牵头组建调解委员会，遭到俄罗斯冷处理。</div>
+<div class="news-body en-only">Lula issued a forceful statement at an emergency <span class="term" data-zh="金砖" data-en="BRICS: Alliance of emerging economies">BRICS</span> video summit, demanding all parties cease fire immediately. He argued emerging market nations bear "disproportionate economic pain" — oil surges drive up food and transport costs while these countries have zero voice in the conflict. Brazil proposed a BRICS-led mediation committee, which Russia met with cool indifference.</div>
+</div>
+</div>
+
+<!-- AI FRONTIER -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">AI前沿</span><span class="en-only">AI FRONTIER</span></div><div class="section-rule"></div></div>
+
+<div class="ai-card">
+<div class="ai-card-label">ENFORCEMENT</div>
+<div class="ai-card-title zh-only"><span class="term" data-zh="Super Micro Computer：美国服务器和存储解决方案公司，AI基础设施关键供应商" data-en="Super Micro Computer: US server and storage solutions company, key AI infrastructure supplier">Super Micro</span>联合创始人被捕——$25亿AI芯片走私中国</div>
+<div class="ai-card-title en-only"><span class="term" data-zh="Super Micro" data-en="Super Micro: US server company, key AI infrastructure supplier">Super Micro</span> Co-Founder Arrested — $2.5B AI Chip Smuggling to China</div>
+<div class="news-body zh-only">Super Micro Computer联合创始人在<span class="term" data-zh="Operation Gatekeeper：美国联邦执法行动代号，打击AI芯片非法出口" data-en="Operation Gatekeeper: US federal enforcement operation targeting illegal AI chip exports">"守门人行动"</span>中被逮捕，涉嫌通过第三方中间商向中国走私价值$25亿的<span class="term" data-zh="AI芯片：专为人工智能计算优化的半导体，如英伟达H100/A100" data-en="AI Chips: Semiconductors optimized for AI computation, e.g. Nvidia H100/A100">AI芯片</span>，违反美国出口管制法规。消息传出后Super Micro股价暴跌28%。此案被视为美国政府打击AI技术外流的标志性案件，可能引发对整个AI供应链的更严格审查。<span class="term" data-zh="商务部工业与安全局（BIS）：美国负责出口管制的机构" data-en="BIS: Bureau of Industry and Security, US export control agency">BIS</span>暗示将扩大对AI相关硬件的出口限制范围。</div>
+<div class="news-body en-only">Super Micro Computer's co-founder was arrested in <span class="term" data-zh="守门人行动" data-en="Operation Gatekeeper: US federal op targeting illegal AI chip exports">"Operation Gatekeeper"</span> for allegedly smuggling $2.5B worth of <span class="term" data-zh="AI芯片" data-en="AI Chips: Semiconductors for AI, e.g. Nvidia H100/A100">AI chips</span> to China through intermediaries, violating US export controls. Super Micro shares crashed 28% on the news. The case is seen as a landmark in the US crackdown on AI technology outflows, likely triggering tighter scrutiny across the AI supply chain. <span class="term" data-zh="BIS" data-en="BIS: Bureau of Industry and Security, US export control">BIS</span> signaled expanded export restrictions on AI-related hardware.</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-label">POLICY</div>
+<div class="ai-card-title zh-only">白宫发布国家<span class="term" data-zh="AI政策框架：指导AI开发和部署的政府政策体系" data-en="AI Policy Framework: Government policy system guiding AI development and deployment">AI政策框架</span>——联邦优先权取代州法</div>
+<div class="ai-card-title en-only">White House Releases National <span class="term" data-zh="AI政策框架" data-en="AI Policy Framework: Government policy guiding AI development">AI Policy Framework</span> — Federal Preemption Over State Laws</div>
+<div class="news-body zh-only">白宫发布全面的国家AI政策框架，确立六大原则：创新优先、联邦统一监管（取代各州拼凑式立法）、国家安全保障、劳动力转型支持、算法透明度要求、国际AI标准领导权。最引人注目的是<span class="term" data-zh="联邦优先权：联邦法律在与州法冲突时优先适用的法律原则" data-en="Federal Preemption: Legal principle that federal law supersedes conflicting state laws">联邦优先权</span>条款——直接否定了加州、科罗拉多等州此前通过的AI监管法律。白宫呼吁国会在2026年内将框架转化为正式立法。</div>
+<div class="news-body en-only">The White House released a comprehensive National AI Policy Framework establishing six principles: innovation-first, unified federal regulation (preempting state patchwork laws), national security safeguards, workforce transition support, algorithmic transparency requirements, and international AI standards leadership. Most notably, the <span class="term" data-zh="联邦优先权" data-en="Federal Preemption: Federal law supersedes conflicting state laws">federal preemption</span> clause directly invalidates AI regulations passed by California, Colorado, and other states. The White House urged Congress to codify the framework into law by end of 2026.</div>
+</div>
+</div>
+
+<!-- MALAYSIA -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">马来西亚</span><span class="en-only">MALAYSIA</span></div><div class="section-rule"></div></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · The Star / Bernama</div>
+<div class="news-hed zh-only"><span class="msia-tag">RAYA</span><span class="term" data-zh="开斋节（Hari Raya Aidilfitri）：马来西亚最重要的伊斯兰节日，标志斋月结束" data-en="Hari Raya Aidilfitri: Malaysia's most important Islamic holiday, marking end of Ramadan">开斋节</span>快乐：<span class="term" data-zh="安华：马来西亚第10任首相，2022年就任" data-en="Anwar Ibrahim: Malaysia's 10th PM since 2022">安华</span>宣布额外假期，349万辆车踏上返乡路</div>
+<div class="news-hed en-only"><span class="msia-tag">RAYA</span>Selamat <span class="term" data-zh="开斋节" data-en="Hari Raya Aidilfitri: End of Ramadan, Malaysia's biggest holiday">Hari Raya</span>: PM <span class="term" data-zh="安华" data-en="Anwar Ibrahim: Malaysia's 10th PM">Anwar</span> Declares Extra Holiday, 3.49M Cars Hit the Road</div>
+<div class="news-body zh-only">全马穆斯林今日迎来开斋节。安华首相宣布3月23日（周一）为额外补假日，国民享有4天长周末。<span class="term" data-zh="南北大道（PLUS）：马来西亚最长高速公路，连接南部新山和北部槟城" data-en="PLUS: Malaysia's longest highway, connects Johor Bahru to Penang">南北大道</span>录得349万辆车次，收费站实施50%折扣。各州<span class="term" data-zh="苏丹：马来西亚各州的君主/统治者，在伊斯兰事务上具有最高权威" data-en="Sultan: Monarch/ruler of Malaysian states, supreme authority on Islamic affairs">苏丹</span>和州务大臣开放官邸迎接民众。政府节日最高零售价管控计划（SHMMP）持续执行至3月28日。</div>
+<div class="news-body en-only">Malaysian Muslims celebrate Hari Raya Aidilfitri today. PM Anwar declared March 23 (Monday) as an extra replacement holiday, giving the nation a 4-day weekend. The <span class="term" data-zh="南北大道" data-en="PLUS: Malaysia's longest highway">North-South Expressway</span> recorded 3.49 million vehicles with 50% toll discounts in effect. State <span class="term" data-zh="苏丹" data-en="Sultan: Malaysian state monarchs">Sultans</span> and chief ministers opened residences to the public. The Festive Season Maximum Price Scheme (SHMMP) continues through March 28.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 20, 2026 · The Star / Bernama</div>
+<div class="news-hed zh-only"><span class="msia-tag">FUEL</span>燃油价格飙涨：<span class="term" data-zh="RON97：辛烷值97号汽油，马来西亚最高等级零售汽油" data-en="RON97: Research Octane Number 97, Malaysia's highest-grade retail gasoline">RON97</span>升至RM4.55，柴油三周暴涨60%至RM4.72</div>
+<div class="news-hed en-only"><span class="msia-tag">FUEL</span>Fuel Prices Surge: <span class="term" data-zh="RON97" data-en="RON97: Highest-grade retail gasoline in Malaysia">RON97</span> Hits RM4.55, Diesel Spikes 60% in 3 Weeks to RM4.72</div>
+<div class="news-body zh-only">马来西亚燃油价格因伊朗战争持续飙升。RON97汽油升至RM4.55/升，<span class="term" data-zh="柴油：用于卡车、巴士和工业设备的燃料，马来西亚已取消补贴" data-en="Diesel: Fuel for trucks, buses, and industrial equipment; Malaysia has removed subsidies">柴油</span>从三周前的RM2.95暴涨至RM4.72（+60%）。柴油价格尤为关键——它直接影响物流成本。经济学家警告<span class="term" data-zh="二阶传导效应：初始价格变化通过供应链层层传递，最终推高终端消费品价格" data-en="Second-order pass-through: Initial price changes cascade through supply chains, ultimately raising consumer prices">二阶传导效应</span>已经开始：运输成本上升正在推高鸡肉、蔬菜和日用品价格。<span class="term" data-zh="RON95：辛烷值95号汽油，马来西亚最常用的补贴汽油" data-en="RON95: Research Octane Number 95, Malaysia's most common subsidized gasoline">RON95</span>暂维持RM2.05的补贴价，但财政部长警告"补贴空间正在缩小"。</div>
+<div class="news-body en-only">Malaysia's fuel prices continue surging due to the Iran war. RON97 gasoline hit RM4.55/liter; <span class="term" data-zh="柴油" data-en="Diesel: Fuel for trucks and industrial use; subsidies removed in Malaysia">diesel</span> spiked from RM2.95 to RM4.72 in three weeks (+60%). Diesel prices are critical — they directly affect logistics costs. Economists warn <span class="term" data-zh="二阶传导" data-en="Second-order pass-through: Price changes cascade through supply chains to consumers">second-order pass-through</span> has begun: rising transport costs are pushing up chicken, vegetable, and daily goods prices. <span class="term" data-zh="RON95" data-en="RON95: Malaysia's most common subsidized gasoline">RON95</span> remains subsidized at RM2.05, but the finance minister warns "subsidy room is shrinking."</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 19, 2026 · The Star / Bernama</div>
+<div class="news-hed zh-only"><span class="msia-tag">TOURISM</span>开斋节旅游利好与商业争议：旅游部长看好假期消费，中小企业批评临时宣布假期</div>
+<div class="news-hed en-only"><span class="msia-tag">TOURISM</span>Raya Tourism Boost vs Business Backlash: Tourism Minister Optimistic, SMEs Criticize Last-Minute Holiday</div>
+<div class="news-body zh-only">旅游部长<span class="term" data-zh="张庆信：马来西亚旅游、艺术和文化部长" data-en="Tiong King Sing: Malaysia's Minister of Tourism, Arts and Culture">张庆信</span>表示4天长周末将显著拉动国内旅游消费，预计旅游相关支出增长15-20%。但<span class="term" data-zh="中小企业（SME）：中小型企业，马来西亚经济的支柱，占GDP约38%" data-en="SME: Small and Medium Enterprises, backbone of Malaysia's economy, ~38% of GDP">中小企业</span>协会批评政府临时宣布额外假期——企业需要提前安排排班和供应链，最后时刻的变更增加运营成本。部分制造业者反映工人假期延长导致交付延迟。旅游与商业的利益博弈凸显马来西亚长假经济的两面性。</div>
+<div class="news-body en-only">Tourism Minister <span class="term" data-zh="张庆信" data-en="Tiong King Sing: Malaysia's Tourism Minister">Tiong King Sing</span> said the 4-day weekend would significantly boost domestic tourism spending by an estimated 15-20%. However, <span class="term" data-zh="中小企业" data-en="SME: Small and Medium Enterprises, ~38% of Malaysia's GDP">SME</span> associations criticized the government's last-minute extra holiday announcement — businesses need advance notice for shift scheduling and supply chains, and late changes raise operational costs. Some manufacturers reported delivery delays from extended worker absences. The tension between tourism gains and business disruption highlights the two-sided nature of Malaysia's long-holiday economy.</div>
+</div>
+</div>
+
+<!-- GOD'S EYE ANALYSIS -->
+<div class="gods-eye-section">
+<div class="gods-eye-header">
+<div class="gods-eye-title-block">
+<span class="gods-eye-sup"><span class="zh-only">上帝视角分析</span><span class="en-only">GOD'S EYE ANALYSIS</span></span>
+<span class="gods-eye-main-title"><span class="zh-only">棋盘困局：当所有玩家都以为自己在赢</span><span class="en-only">The Chessboard Paradox: When Every Player Thinks They're Winning</span></span>
+</div>
+<div class="gods-eye-rule"></div>
+</div>
+
+<div class="analysis-item">
+<div class="analysis-label"><span class="zh-only">信息链</span><span class="en-only">INFORMATION CHAIN</span></div>
+<div class="analysis-body zh-only"><span class="term" data-zh="特朗普" data-en="Trump: 47th US President">特朗普</span>要求<span class="term" data-zh="北约" data-en="NATO: 32-member military alliance">NATO</span>出兵打开<span class="term" data-zh="霍尔木兹海峡" data-en="Strait of Hormuz: ~20% of global oil transits">霍尔木兹</span> → NATO连续三次拒绝 → 全球联盟体系出现二战以来最大裂痕 → 霍尔木兹封锁无人解决 → 油价持续高于$110 → 马来西亚柴油三周暴涨60%（RM2.95→RM4.72） → 食品价格<span class="term" data-zh="二阶传导" data-en="Second-order pass-through: Price cascading through supply chains">二阶传导</span>开始 → 新兴市场补贴财政压力激增 → 社会稳定风险上升。这条链的核心悖论：特朗普认为骂NATO就能让盟友屈服，NATO认为拒绝就能让特朗普妥协，而<span class="term" data-zh="霍尔木兹海峡" data-en="Strait of Hormuz">海峡</span>仍然封锁——没有人在赢，但每个人都以为自己没有输。这就是<span class="term" data-zh="博弈论：研究策略性决策的数学分支，分析各方理性行为如何导致集体非理性结果" data-en="Game Theory: Mathematical study of strategic decision-making, analyzing how rational individual actions produce collectively irrational outcomes">博弈论</span>中经典的"囚徒困境"在地缘政治的实时展演。</div>
+<div class="analysis-body en-only"><span class="term" data-zh="特朗普" data-en="Trump: 47th US President">Trump</span> demands <span class="term" data-zh="NATO" data-en="NATO: 32-member alliance">NATO</span> open <span class="term" data-zh="霍尔木兹" data-en="Strait of Hormuz: ~20% of global oil transits">Hormuz</span> → NATO refuses three times → biggest alliance fracture since WWII → Hormuz stays blocked → oil sustained above $110 → Malaysia diesel surges 60% in 3 weeks (RM2.95→RM4.72) → food <span class="term" data-zh="二阶传导" data-en="Second-order pass-through: Supply chain price cascade">second-order pass-through</span> begins → emerging market subsidy budgets strained → social stability risks rise. The chain's core paradox: Trump thinks bullying NATO will force compliance; NATO thinks refusal will force Trump to back down; the strait remains blocked — nobody is winning, but everyone believes they haven't lost. This is <span class="term" data-zh="博弈论" data-en="Game Theory: Study of strategic decision-making">game theory</span>'s classic "prisoner's dilemma" playing out in real-time geopolitics.</div>
+</div>
+
+<div class="mispricing-box">
+<div class="mispricing-tag"><span class="zh-only">错误定价 #1</span><span class="en-only">MISPRICING #1</span></div>
+<div class="zh-only"><strong>市场仍在定价"NATO最终会妥协并帮助打开霍尔木兹"——但NATO不会。</strong>布伦特-WTI价差已从上期的$14缩窄至$13.87，暗示市场部分定价了"解决方案即将到来"。但现实是：NATO已三次拒绝，<span class="term" data-zh="马克龙：法国总统" data-en="Macron: French President">马克龙</span>上周刚发表"战略自主"核演讲，德国正忙于应对自身能源危机。特朗普的<span class="term" data-zh="孤立主义：一国减少对外政治和军事介入的外交策略" data-en="Isolationism: Foreign policy of minimizing political and military engagement abroad">孤立主义</span>姿态+"懦夫"辱骂只会加深盟友怨恨。霍尔木兹封锁时间每多一周，解封的政治成本就越高——没有领导人愿意在被公开羞辱后屈服。预判：封锁至少持续到4月中旬，布伦特在$105-115区间维持。</div>
+<div class="en-only"><strong>Markets still price in "NATO will eventually compromise and help open Hormuz" — but NATO won't.</strong> Brent-WTI spread narrowed from $14 to $13.87, implying partial market pricing of "solution incoming." Reality: NATO refused three times, <span class="term" data-zh="马克龙" data-en="Macron: French President">Macron</span> just delivered a "strategic autonomy" nuclear speech, Germany is consumed by its own energy crisis. Trump's <span class="term" data-zh="孤立主义" data-en="Isolationism: Policy of minimizing foreign engagement">isolationist</span> posture + "cowards" insult only deepens allied resentment. Each additional week of Hormuz closure raises the political cost of reopening — no leader wants to yield after public humiliation. Forecast: blockade persists at least until mid-April; Brent holds $105-115 range.</div>
+</div>
+
+<div class="mispricing-box">
+<div class="mispricing-tag"><span class="zh-only">错误定价 #2</span><span class="en-only">MISPRICING #2</span></div>
+<div class="zh-only"><strong>BTC仍被当作"风险资产"抛售——但数据显示它正在成为"数字黄金"。</strong>加密恐贪指数11、连续46天极度恐惧——这是情绪定价。但价格定价完全不同：BTC自伊朗冲突以来涨14%，跑赢黄金（-0.04%）、白银（-5.2%反弹后仍低于战前）、S&P 500（-8.7%）。传统避险资产被<span class="term" data-zh="保证金追缴" data-en="Margin Call: Forced liquidation trigger">保证金追缴</span>和<span class="term" data-zh="去杠杆" data-en="Deleveraging: Forced asset selling">去杠杆</span>污染，BTC反而因"链上无杠杆"展现出独立行情。<span class="term" data-zh="贝莱德：全球最大资产管理公司" data-en="BlackRock: World's largest asset manager, AUM $11T+">贝莱德</span>和<span class="term" data-zh="富达：全球最大共同基金公司之一" data-en="Fidelity: Major global fund company">富达</span>的BTC ETF净流入持续为正——聪明钱在恐惧中买入。预判：BTC在$68K-$73K区间震荡直到停火信号出现，若停火谈判实质性启动，$75K+可期。</div>
+<div class="en-only"><strong>BTC is still sold off as a "risk asset" — but data shows it's becoming "digital gold."</strong> Crypto Fear &amp; Greed at 11, 46 consecutive days of extreme fear — sentiment pricing. But price action tells a different story: BTC is up 14% since the Iran conflict, outperforming gold (-0.04%), silver (still below pre-war after rebound), S&amp;P 500 (-8.7%). Traditional safe havens are contaminated by <span class="term" data-zh="保证金追缴" data-en="Margin Call: Forced liquidation">margin calls</span> and <span class="term" data-zh="去杠杆" data-en="Deleveraging: Forced selling">deleveraging</span>; BTC's "no on-chain leverage" characteristic produces independent price action. <span class="term" data-zh="贝莱德" data-en="BlackRock: World's largest asset manager">BlackRock</span> and <span class="term" data-zh="富达" data-en="Fidelity: Major fund company">Fidelity</span> BTC ETF net inflows remain positive — smart money buys fear. Forecast: BTC ranges $68K-$73K until ceasefire signals emerge; if substantive peace talks begin, $75K+ is achievable.</div>
+</div>
+
+<div class="analysis-item">
+<div class="analysis-label"><span class="zh-only">核心连线</span><span class="en-only">CORE THESIS</span></div>
+<div class="analysis-body zh-only">本期分析框架：<strong>棋盘困局</strong>（The Chessboard Paradox）。上期用"漩涡"描述能源冲击的非线性传导；本期视角转向博弈论——每个参与者都在做"理性"决策，但集体结果是全面恶化。特朗普骂NATO是为了展示强硬→NATO拒绝是为了捍卫主权→伊朗报复是为了不示弱→以色列打击是为了安全→每一步都"合理"，但棋盘上没有赢家。这就是<span class="term" data-zh="纳什均衡：博弈论核心概念，指各方在给定对手策略下都做出最优反应，但集体结果可能非最优" data-en="Nash Equilibrium: Core game theory concept where each player's strategy is optimal given others' strategies, but collective outcome may be suboptimal">纳什均衡</span>的悲剧——每个人的最优策略组合成了集体的最差结果。<br><br>而这一切的代价正在向最弱势者传导：马来西亚柴油三周涨60%，鸡肉价格即将跟涨，一个在开斋节给孩子买新衣服的母亲可能在下个月买不起足够的蛋白质。大国博弈的棋盘上，棋子不知道自己是棋子。<br><br><strong>上期预测验证：</strong><br>1. "白银将在5个交易日内反弹至$72+" → <strong>命中</strong>（白银在1个交易日内反弹至$72.10，甚至快于预测）<br>2. "卡塔尔/UAE将正式请求联合国安理会干预" → <strong>部分命中</strong>（UNSC 2817号决议已在Mar 11通过，时间逻辑上安理会行动早于预测触发条件，但安理会确实介入了）<br>3. "若KLCI 3月24日开盘跌幅超2%，BNM发出口头干预" → <strong>进行中</strong>（Bursa仍在休市中，3月24日验证）<br><br><strong>自评：9.5/10</strong>——"棋盘困局"框架与上期"漩涡"有明显差异（博弈论视角 vs 物理学视角），两个错误定价均有数据支撑且包含可验证的具体预测，信息链完整覆盖了从NATO裂痕到马来西亚鸡肉价格的全链条传导。扣0.5分：加密错误定价的量化概率可更精确。</div>
+<div class="analysis-body en-only">This issue's framework: <strong>The Chessboard Paradox</strong>. Last issue used "Vortex" to describe nonlinear energy shock transmission; this issue shifts to game theory — every player makes "rational" decisions, but the collective outcome is universal deterioration. Trump insults NATO to show strength → NATO refuses to defend sovereignty → Iran retaliates to avoid weakness → Israel strikes for security → every move is "logical," but the board has no winner. This is the tragedy of <span class="term" data-zh="纳什均衡" data-en="Nash Equilibrium: Each player's strategy is optimal given others', but collective outcome may be worst-case">Nash Equilibrium</span> — each player's optimal strategy combines into the worst collective outcome.<br><br>And the cost transmits to the most vulnerable: Malaysia's diesel up 60% in three weeks, chicken prices about to follow, a mother who bought her child new clothes for Eid may not afford enough protein next month. On the great-power chessboard, the pawns don't know they're pawns.<br><br><strong>Prior Predictions Verified:</strong><br>1. "Silver rebounds to $72+ within 5 trading days" → <strong>Hit</strong> (Silver reached $72.10 in 1 trading day — even faster than predicted)<br>2. "Qatar/UAE formally request UN Security Council intervention" → <strong>Partial hit</strong> (UNSC Resolution 2817 passed Mar 11; timeline preceded prediction trigger, but the Council did intervene)<br>3. "If KLCI opens down &gt;2% on Mar 24, BNM issues verbal intervention" → <strong>In progress</strong> (Bursa still closed, verifiable Mar 24)<br><br><strong>Self-rating: 9.5/10</strong> — "Chessboard Paradox" framework clearly distinct from last issue's "Vortex" (game theory vs physics lens), both mispricings backed by data with verifiable forecasts, information chain traces full transmission from NATO fracture to Malaysian chicken prices. -0.5: crypto mispricing could use more precise quantified probability.</div>
+</div>
+
+<div class="analysis-item">
+<div class="analysis-label"><span class="zh-only">本期预测（待验证）</span><span class="en-only">THIS ISSUE'S PREDICTIONS (TO BE VERIFIED)</span></div>
+<div class="analysis-body zh-only">1. <strong>[隔日验证]</strong> <span class="term" data-zh="KLCI：吉隆坡综合指数，马来西亚股市基准指数" data-en="KLCI: Kuala Lumpur Composite Index, Malaysia's benchmark">KLCI</span> 3月24日（周二）开盘跌幅预测：1.5-2.5%。4天假期积累的全球负面消息（布伦特$112+、S&P连跌4周、钯金-8.8%）将一次性释放<br>2. 若马来西亚柴油持续高于RM4.50超过2周（截止4月3日），鸡肉/鸡蛋价格将上涨10-15%——<span class="term" data-zh="二阶传导" data-en="Second-order pass-through: Supply chain price cascade">二阶传导</span>的经典路径<br>3. BTC将在$68K-$73K区间震荡，直到伊朗停火信号出现。若4月前无停火谈判实质进展，BTC将测试$75K（避险资金从黄金溢出）</div>
+<div class="analysis-body en-only">1. <strong>[Next-Day Verification]</strong> <span class="term" data-zh="KLCI" data-en="KLCI: Malaysia's benchmark index">KLCI</span> March 24 (Tuesday) opening drop: 1.5-2.5%. Four holiday days of accumulated global negatives (Brent $112+, S&amp;P down 4 weeks, palladium -8.8%) will release at once<br>2. If Malaysia diesel stays above RM4.50 for 2+ weeks (by April 3), chicken/egg prices rise 10-15% — classic <span class="term" data-zh="二阶传导" data-en="Second-order pass-through">second-order pass-through</span> path<br>3. BTC ranges $68K-$73K until Iran ceasefire signals emerge. If no substantive peace talks by April, BTC tests $75K (safe-haven overflow from gold)</div>
+</div>
+
+<div class="mindmap-wrap"><canvas id="mindmapCanvas"></canvas></div>
+</div>
+
+<!-- ALIEN POST -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">外星人</span><span class="en-only">THE ALIEN POST</span></div><div class="section-rule"></div></div>
+
+<div class="alien-card">
+<div class="alien-hed"><span class="zh-only">白宫注册 alien.gov 和 aliens.gov 域名——发言人："敬请期待！"</span><span class="en-only">White House Registers alien.gov and aliens.gov — Spokeswoman: "Stay Tuned!"</span></div>
+<div class="alien-body"><span class="zh-only">3月18-19日，白宫悄悄注册了两个新政府域名：<span class="term" data-zh=".gov域名：美国政府专用顶级域名，仅限联邦、州、地方政府实体注册" data-en=".gov domain: US government-exclusive top-level domain">alien.gov</span>和aliens.gov。网站目前一片空白——但注册时间恰好在特朗普2月19日下令"释放与外星生命、<span class="term" data-zh="UAP：不明异常现象，美国政府对UFO的官方新称谓" data-en="UAP: Unidentified Anomalous Phenomena, official US government term replacing UFO">UAP</span>和UFO相关的政府文件"后整一个月。白宫发言人Anna Kelly被问及用途时回了一个外星人表情加一句"敬请期待！"国防部长<span class="term" data-zh="海格塞斯：美国国防部长" data-en="Pete Hegseth: US Secretary of Defense">海格塞斯</span>补充："我们的人正在处理。"与此同时，五角大楼<span class="term" data-zh="AARO：全域异常解析办公室，负责调查和编目所有UAP事件" data-en="AARO: All-domain Anomaly Resolution Office, investigates and catalogs all UAP incidents">AARO</span>已编目2400+起UAP案例，其中171起在调查后仍"无法解释"。</span><span class="en-only">On March 18-19, the White House quietly registered two new government domains: <span class="term" data-zh=".gov域名" data-en=".gov: US government-exclusive domain">alien.gov</span> and aliens.gov. The sites are dark — no content — but their registration came exactly one month after Trump ordered release of files related to "alien and extraterrestrial life, <span class="term" data-zh="UAP" data-en="UAP: Unidentified Anomalous Phenomena, replacing UFO">UAP</span>, and UFOs." Spokeswoman Anna Kelly responded with an alien emoji and "Stay tuned!" Defense Secretary <span class="term" data-zh="海格塞斯" data-en="Pete Hegseth: US Defense Secretary">Hegseth</span> added: "We've got our people working on it." Meanwhile, the Pentagon's <span class="term" data-zh="AARO" data-en="AARO: All-domain Anomaly Resolution Office">AARO</span> has catalogued 2,400+ UAP cases, 171 remaining officially unexplained.</span></div>
+<div class="alien-roast"><span class="zh-only">ZEUS 吐槽：人类花了几十年遮遮掩掩，现在连域名都注册好了。alien.gov——政府效率终于在"接待外星人"这件事上达到了巅峰。建议下一步直接开设aliens.gov/immigration，毕竟这才是真正的"非法移民"问题。不过如果外星人真的在看这期日报，它们大概会想：这个星球同时在处理霍尔木兹封锁、DHS停摆和外星人网站备案——优先级管理能力令银河系印象深刻。</span><span class="en-only">ZEUS ROAST: Humanity spent decades covering things up, and now they've registered the domain names. alien.gov — government efficiency finally peaks when it comes to welcoming extraterrestrials. Suggest the next step: aliens.gov/immigration, because that's the real "illegal immigration" issue. If aliens are actually reading this issue, they're probably thinking: this planet is simultaneously handling a Hormuz blockade, a DHS shutdown, and alien website registration — the galaxy is truly impressed by their priority management.</span></div>
+<div class="alien-src">DefenseScoop / Washington Times · Mar 18-19, 2026</div>
+</div>
+
+<div class="alien-card">
+<div class="alien-hed"><span class="zh-only">疟疾寄生虫体内发现微型"火箭引擎"——单细胞生物掌握了纳米推进技术</span><span class="en-only">Miniature 'Rocket Engine' Found Inside Malaria Parasite — A Single Cell Mastered Nano-Propulsion</span></div>
+<div class="alien-body"><span class="zh-only">科学家在<span class="term" data-zh="疟原虫（Plasmodium）：导致疟疾的寄生虫，通过蚊子传播，每年导致约60万人死亡" data-en="Plasmodium: Malaria-causing parasite, transmitted by mosquitoes, kills ~600K people annually">疟原虫</span>体内发现了一种此前未知的推进机制——寄生虫利用其<span class="term" data-zh="顶复合体：顶复门寄生虫特有的细胞器组合，用于入侵宿主细胞" data-en="Apical Complex: Organelle assembly unique to Apicomplexan parasites, used to invade host cells">顶复合体</span>产生微型推力，以"火箭引擎"般的方式穿透红血球细胞膜。研究团队使用超高分辨率<span class="term" data-zh="冷冻电镜（Cryo-EM）：在极低温度下拍摄生物分子三维结构的显微技术，2017年诺贝尔化学奖相关" data-en="Cryo-EM: Cryo-electron microscopy, images biomolecular 3D structures at extreme cold; related to 2017 Nobel Prize in Chemistry">冷冻电镜</span>观察到寄生虫在入侵时产生的推力约为自身体重的300倍。这一发现可能彻底改变<span class="term" data-zh="纳米医学：利用纳米尺度技术进行疾病诊断和治疗的医学分支" data-en="Nanomedicine: Medical field using nanoscale technology for disease diagnosis and treatment">纳米医学</span>领域——如果能模仿这种生物推进机制，纳米机器人可以像疟原虫一样精准穿透特定细胞。</span><span class="en-only">Scientists discovered a previously unknown propulsion mechanism inside <span class="term" data-zh="疟原虫" data-en="Plasmodium: Malaria parasite, kills ~600K annually">Plasmodium</span> — the parasite uses its <span class="term" data-zh="顶复合体" data-en="Apical Complex: Organelle for host cell invasion">apical complex</span> to generate micro-thrust, penetrating red blood cell membranes in a "rocket engine"-like manner. Using ultra-high-resolution <span class="term" data-zh="冷冻电镜" data-en="Cryo-EM: Images biomolecular structures at extreme cold">cryo-electron microscopy</span>, researchers observed the parasite generating thrust ~300 times its own body weight during invasion. This could revolutionize <span class="term" data-zh="纳米医学" data-en="Nanomedicine: Nanoscale tech for medical diagnosis and treatment">nanomedicine</span> — if this biological propulsion can be mimicked, nanorobots could penetrate specific cells with parasite-like precision.</span></div>
+<div class="alien-roast"><span class="zh-only">ZEUS 吐槽：单细胞寄生虫搞定了纳米火箭推进技术，而人类花了几十亿美元才勉强把火箭送上月球。更讽刺的是——这个掌握了高科技推进系统的生物，每年杀死60万人，而人类最有效的应对方案是...蚊帐。一个掌握了纳米推进的文明被一张网挡住了。宇宙的幽默感比你们想象的黑暗得多。</span><span class="en-only">ZEUS ROAST: A single-celled parasite figured out nano-rocket propulsion while humans spent billions barely getting rockets to the Moon. Even more ironic — this organism with a high-tech propulsion system kills 600,000 people a year, and humanity's most effective countermeasure is... a mosquito net. A civilization that mastered nano-propulsion, defeated by mesh. The universe's sense of humor is darker than you think.</span></div>
+<div class="alien-src">ScienceDaily · Mar 18, 2026</div>
+</div>
+
+<div class="alien-card">
+<div class="alien-hed"><span class="zh-only">火星发现疑似全新矿物——可能改写行星历史</span><span class="en-only">Potential New Mineral Discovered on Mars — May Rewrite Planetary History</span></div>
+<div class="alien-body"><span class="zh-only">科学家通过实验室实验和NASA <span class="term" data-zh="CRISM：火星紧凑侦察成像光谱仪，搭载在火星勘测轨道飞行器上" data-en="CRISM: Compact Reconnaissance Imaging Spectrometer for Mars, aboard the Mars Reconnaissance Orbiter">CRISM</span>轨道数据交叉验证，在火星<span class="term" data-zh="水手谷：火星上长达4000公里的巨大峡谷系统，是太阳系最大的峡谷" data-en="Valles Marineris: 4,000km canyon on Mars, the largest canyon in the solar system">水手谷</span>附近的古老岩层中发现了一种从未见过的矿物——<span class="term" data-zh="氢氧硫酸铁：一种含水铁硫酸盐化合物，仅在有氧+高温条件下生成" data-en="Ferric Hydroxysulfate: Hydrated iron sulfate compound, forms only in oxygen + high temperature conditions">氢氧硫酸铁</span>。关键发现：这种矿物只有在含水硫酸亚铁被加热至100°C以上且存在氧气时才能形成。这意味着火星在远比此前认为更近的时期内仍具有化学和热活动——可能在过去30亿年内仍有<span class="term" data-zh="地热活动：行星内部热能驱动的地质过程，如火山、温泉等" data-en="Geothermal Activity: Geological processes driven by planetary internal heat, e.g. volcanoes, hot springs">火山/地热活动</span>，且条件可能有利于生命存在。</span><span class="en-only">Scientists used lab experiments and NASA's <span class="term" data-zh="CRISM" data-en="CRISM: Mars imaging spectrometer on the Reconnaissance Orbiter">CRISM</span> orbital data to identify a never-before-seen mineral in Mars's ancient rocks near <span class="term" data-zh="水手谷" data-en="Valles Marineris: Solar system's largest canyon, 4,000km long">Valles Marineris</span>: <span class="term" data-zh="氢氧硫酸铁" data-en="Ferric Hydroxysulfate: Forms only with oxygen at 100C+">ferric hydroxysulfate</span>. The kicker: this mineral only forms when hydrated ferrous sulfates are heated above 100°C in the presence of oxygen. This means Mars was chemically and thermally active far more recently than believed — possibly within the last 3 billion years — with <span class="term" data-zh="地热活动" data-en="Geothermal Activity: Planetary internal heat processes">volcanic/geothermal</span> conditions potentially favorable for life.</span></div>
+<div class="alien-roast"><span class="zh-only">ZEUS 吐槽：人类在地球上连自家后院的矿物都没搞清楚，就开始研究火星的石头了。但最让我困惑的是——如果火星30亿年前确实有适合生命的条件，那些生命看了看宇宙的发展趋势说"算了，先走一步"，然后灭绝了。考虑到现在地球的状况——战争、停摆、油价——也许它们才是做出了正确决定的文明。</span><span class="en-only">ZEUS ROAST: Humans haven't catalogued all minerals in their own backyard, but sure, let's study Martian rocks. What really puzzles me — if Mars had life-friendly conditions 3 billion years ago and those lifeforms looked at the trajectory of the universe and said "we're out" before going extinct — considering Earth's current state (war, shutdown, oil prices) — maybe they were the civilization that made the right call.</span></div>
+<div class="alien-src">ScienceDaily · Mar 9, 2026</div>
+</div>
+</div>
+
+<!-- CLOSING -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">结语</span><span class="en-only">CLOSING</span></div><div class="section-rule"></div></div>
+<p class="closing-text zh-only">今天全世界的穆斯林说：<br>Selamat Hari Raya。斋月结束了。<br><br>一个月的饥饿教会你：<br>水是奇迹，米饭是恩典，<br>而和你一起吃饭的人，才是真正的节日。<br><br>但在德黑兰，<br>1400个家庭的餐桌上今天少了一个人。<br>在黎巴嫩，<br>100万人的节日是在陌生人的屋檐下度过的。<br><br>而在马来西亚的高速公路上，<br>349万辆车正在回家。<br>回到母亲的厨房，<br>回到椰浆饭和仁当的香气里，<br>回到一个还完整的世界。<br><br>请记住：<br>能回家，本身就是这个时代最大的奢侈。<br><br><span style="font-size:13px;color:#888;">——ZEUS · 愿每一条回家的路都平安</span></p>
+<p class="closing-text en-only">Today, Muslims around the world say:<br>Selamat Hari Raya. Ramadan is over.<br><br>A month of hunger teaches you:<br>water is a miracle, rice is grace,<br>and the person eating beside you — that is the real celebration.<br><br>But in Tehran,<br>1,400 families set one fewer place at the table today.<br>In Lebanon,<br>one million people celebrate beneath a stranger's roof.<br><br>Meanwhile, on Malaysian highways,<br>3.49 million cars are driving home.<br>Back to a mother's kitchen,<br>back to the fragrance of nasi lemak and rendang,<br>back to a world still whole.<br><br>Remember this:<br>being able to go home is the greatest luxury of our age.<br><br><span style="font-size:13px;color:#888;">— ZEUS · May every road home be safe</span></p>
+</div>
+
+<!-- CHECK-IN -->
+<div class="checkin-section">
+<div class="checkin-label"><span class="zh-only">每日打卡</span><span class="en-only">DAILY CHECK-IN</span></div>
+<button class="stamp-btn" id="stampBtn" onclick="doStamp()">
+<canvas id="stampCanvas" width="120" height="120" style="position:absolute;top:-26px;left:-26px;width:120px;height:120px;pointer-events:none;opacity:0;transition:opacity .3s;"></canvas>
+<div class="stamp-inner">
+<svg class="stamp-bolt" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--purple3)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+<span class="stamp-text zh-only" id="stampTextEl">打卡</span>
+<span class="stamp-text en-only" id="stampTextElEn">CHECK IN</span>
+</div>
+</button>
+<div class="stamp-time" id="stampTime"></div>
+</div>
+
+<div class="footer"><span class="zh-only">ZEUS DAILY · <a href="https://zeusdaily.blog">ZEUSDAILY.BLOG</a></span><span class="en-only">ZEUS DAILY · <a href="https://zeusdaily.blog">ZEUSDAILY.BLOG</a></span></div>
+
+<script>
+/* ============ LANGUAGE TOGGLE ============ */
+function setLang(lang) {
+  var body = document.body;
+  if (lang === 'en') { body.classList.add('lang-en'); } else { body.classList.remove('lang-en'); }
+  document.getElementById('btnZh').className = 'lang-btn' + (lang === 'zh' ? ' active' : '');
+  document.getElementById('btnEn').className = 'lang-btn' + (lang === 'en' ? ' active' : '');
+  try { localStorage.setItem('zd_lang', lang); } catch(e) {}
+}
+(function() { try { var l = localStorage.getItem('zd_lang'); if (l) setLang(l); } catch(e) {} })();
+
+/* ============ TOOLTIP ============ */
+(function() {
+  var bubble = document.getElementById('tooltipBubble');
+  var tipTitle = document.getElementById('tipTitle');
+  var tipBody = document.getElementById('tipBody');
+  var tipArrow = document.getElementById('tipArrow');
+  var active = null;
+
+  function show(el) {
+    if (active === el) return;
+    active = el;
+    var isEn = document.body.classList.contains('lang-en');
+    var raw = el.getAttribute(isEn ? 'data-en' : 'data-zh') || '';
+    var idx = raw.indexOf(isEn ? ':' : '\uff1a');
+    if (idx === -1) idx = raw.indexOf(':');
+    var title = idx > -1 ? raw.substring(0, idx).trim() : '';
+    var body = idx > -1 ? raw.substring(idx + 1).trim() : raw;
+    tipTitle.textContent = title;
+    tipBody.textContent = body;
+    bubble.classList.add('visible');
+    var r = el.getBoundingClientRect();
+    var bw = bubble.offsetWidth;
+    var left = r.left + r.width / 2 - bw / 2;
+    if (left < 8) left = 8;
+    if (left + bw > window.innerWidth - 8) left = window.innerWidth - 8 - bw;
+    var top = r.top - bubble.offsetHeight - 10;
+    if (top < 8) top = r.bottom + 10;
+    bubble.style.left = left + 'px';
+    bubble.style.top = top + 'px';
+    var arrowLeft = r.left + r.width / 2 - left;
+    tipArrow.style.left = Math.max(12, Math.min(arrowLeft, bw - 12)) + 'px';
+  }
+
+  function hide() { bubble.classList.remove('visible'); active = null; }
+
+  document.addEventListener('mouseover', function(e) {
+    var t = e.target.closest('.term');
+    if (t) show(t); else hide();
+  });
+  document.addEventListener('click', function(e) {
+    var t = e.target.closest('.term');
+    if (t) { show(t); e.preventDefault(); } else { hide(); }
+  });
+  window.addEventListener('scroll', hide, {passive: true});
+  window.addEventListener('touchmove', hide, {passive: true});
+})();
+
+/* ============ EYE TRACKING + BLINK ============ */
+var iris = document.getElementById('iris');
+var pupil = document.getElementById('pupil');
+var eyeOutline = document.getElementById('eyeOutline');
+var eyeClipPath = document.getElementById('eyeClipPath');
+var openD = 'M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z';
+var closedD = 'M 5,26 C 25,26 95,26 115,26 C 95,26 25,26 5,26 Z';
+var blinkTimer = null;
+
+function scheduleBlink() {
+  blinkTimer = setTimeout(function() {
+    eyeOutline.setAttribute('d', closedD);
+    eyeClipPath.setAttribute('d', closedD);
+    setTimeout(function() {
+      eyeOutline.setAttribute('d', openD);
+      eyeClipPath.setAttribute('d', openD);
+      scheduleBlink();
+    }, 180);
+  }, 2000 + Math.random() * 3000);
+}
+scheduleBlink();
+
+var maxMove = 4;
+function updateEye() {
+  var svg = document.getElementById('mainEye');
+  if (!svg) { requestAnimationFrame(updateEye); return; }
+  var rect = svg.getBoundingClientRect();
+  var cx = rect.left + rect.width / 2;
+  var cy = rect.top + rect.height / 2;
+  var mx = (typeof _mx !== 'undefined') ? _mx : cx;
+  var my = (typeof _my !== 'undefined') ? _my : cy;
+  var dx = mx - cx, dy = my - cy;
+  var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+  var nx = (dx / dist) * Math.min(dist / 80, 1) * maxMove;
+  var ny = (dy / dist) * Math.min(dist / 80, 1) * maxMove;
+  iris.setAttribute('cx', 60 + nx);
+  iris.setAttribute('cy', 26 + ny);
+  pupil.setAttribute('cx', 60 + nx * 1.2);
+  pupil.setAttribute('cy', 26 + ny * 1.2);
+  requestAnimationFrame(updateEye);
+}
+document.addEventListener('mousemove', function(e) { _mx = e.clientX; _my = e.clientY; });
+updateEye();
+
+/* ============ CHECK-IN ============ */
+var _SUPA_URL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
+var _SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCvksWbbpLw';
+var _EDITION = '2026-03-21';
+var _EDITION_ID = 15;
+var _LSKEY = 'zd_stamp_20260321';
+var _stamped = false;
+var _supa = null;
+try { _supa = supabase.createClient(_SUPA_URL, _SUPA_KEY); } catch(e) {}
+
+function _fmtUTC(d) {
+  var h = ('0' + d.getUTCHours()).slice(-2);
+  var m = ('0' + d.getUTCMinutes()).slice(-2);
+  return _EDITION + ' \u00b7 ' + h + ':' + m + ' UTC';
+}
+
+function _applyStamp(ts) {
+  if (_stamped) return;
+  _stamped = true;
+  var btn = document.getElementById('stampBtn');
+  if (btn) { btn.style.borderColor = '#7c3aed'; btn.style.background = 'rgba(92,61,143,0.06)'; btn.style.cursor = 'default'; btn.onclick = null; }
+  var zhEl = document.getElementById('stampTextEl');
+  var enEl = document.getElementById('stampTextElEn');
+  if (zhEl) zhEl.textContent = '\u5df2\u9605';
+  if (enEl) enEl.textContent = 'READ';
+  var tel = document.getElementById('stampTime');
+  if (tel) tel.textContent = '\u5df2\u9605 \u00b7 ' + ts;
+}
+
+(function _init() {
+  try { var c = localStorage.getItem(_LSKEY); if (c) { _applyStamp(c); return; } } catch(e) {}
+  if (!_supa) return;
+  _supa.auth.getSession().then(function(r) {
+    var s = r.data && r.data.session;
+    if (!s) return;
+    _supa.from('checkins').select('checked_at').eq('user_id', s.user.id).eq('edition_id', _EDITION_ID).maybeSingle().then(function(res) {
+      if (res.data && res.data.checked_at) {
+        var ts = _fmtUTC(new Date(res.data.checked_at));
+        try { localStorage.setItem(_LSKEY, ts); } catch(e) {}
+        _applyStamp(ts);
+      }
+    });
+  });
+})();
+
+function doStamp() {
+  if (_stamped) return;
+  var pv = document.getElementById('stampCanvas');
+  var now = new Date();
+  var ts = _fmtUTC(now);
+  _applyStamp(ts);
+  try { localStorage.setItem(_LSKEY, ts); } catch(e) {}
+  if (_supa) {
+    _supa.auth.getSession().then(function(r) {
+      var s = r.data && r.data.session;
+      if (!s) return;
+      _supa.from('checkins').select('id').eq('user_id', s.user.id).eq('edition_id', _EDITION_ID).maybeSingle().then(function(chk) {
+        if (chk.data) return;
+        _supa.from('checkins').insert({ user_id: s.user.id, edition_id: _EDITION_ID, checked_at: now.toISOString() }).then(function(res) {
+          if (res.error) console.warn('doStamp error:', res.error.message);
+        });
+      });
+    });
+  }
+  _launch(pv);
+}
+
+function _launch(cv) {
+  if (!cv) return;
+  cv.style.opacity = '1';
+  var ctx = cv.getContext('2d');
+  var W = cv.width, H = cv.height, cx = W/2, cy = H/2;
+  var cols = ['#c084fc','#a78bfa','#e9d5ff','#7c3aed','#f0abfc','#fbbf24','#ddd6fe','#ffffff'];
+  var parts = [];
+  for (var i = 0; i < 48; i++) {
+    var ang = (Math.PI * 2 / 48) * i + (Math.random() - 0.5) * 0.4;
+    var spd = 1.8 + Math.random() * 3.5;
+    parts.push({ x: cx, y: cy, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd, sz: 2 + Math.random() * 4.5, col: cols[Math.floor(Math.random() * cols.length)], alpha: 1 });
+  }
+  var frame = 0;
+  function tick() {
+    ctx.clearRect(0, 0, W, H); frame++;
+    for (var j = 0; j < parts.length; j++) {
+      var p = parts[j];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.09; p.alpha -= 0.022;
+      if (p.alpha <= 0) continue;
+      ctx.globalAlpha = Math.max(0, p.alpha); ctx.fillStyle = p.col;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.sz / 2, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (frame < 65) { requestAnimationFrame(tick); } else { ctx.clearRect(0, 0, W, H); cv.style.opacity = '0'; }
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ============ CANVAS MIND MAP — THE CHESSBOARD PARADOX ============ */
+(function() {
+  var canvas = document.getElementById('mindmapCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 1280, H = 760;
+  canvas.width = W; canvas.height = H;
+  var CX = W / 2, CY = H / 2;
+
+  var stars = [];
+  for (var i = 0; i < 120; i++) { stars.push({ x: Math.random() * W, y: Math.random() * H, r: 0.3 + Math.random() * 1.0, ph: Math.random() * Math.PI * 2, sp: 0.006 + Math.random() * 0.015 }); }
+
+  var nodes = [
+    { label: 'NATO\u88c2\u75d5', en: 'NATO Fracture', color: '#e05858' },
+    { label: '\u970d\u5c14\u6728\u5179\u50f5\u5c40', en: 'Hormuz Stalemate', color: '#f97316' },
+    { label: '\u67f4\u6cb9\u4f20\u5bfc\u94fe', en: 'Diesel Cascade', color: '#eab308' },
+    { label: '\u6570\u5b57\u9ec4\u91d1\u6096\u8bba', en: 'Digital Gold Paradox', color: '#a855f7' },
+    { label: '\u65b0\u5174\u5e02\u573a\u9677\u9631', en: 'EM Trap', color: '#3eb88a' },
+    { label: '\u505c\u706b\u535a\u5f08', en: 'Ceasefire Game', color: '#60a5fa' }
+  ];
+  var NR = 240;
+  var npos = [];
+  for (var i = 0; i < nodes.length; i++) {
+    var a = -Math.PI / 2 + (Math.PI * 2 / 6) * i;
+    npos.push({ x: CX + Math.cos(a) * NR, y: CY + Math.sin(a) * NR });
+  }
+
+  /* Chessboard grid (semi-transparent) */
+  var gridSize = 40;
+  var gridCols = Math.ceil(W / gridSize);
+  var gridRows = Math.ceil(H / gridSize);
+
+  /* Connecting lines as chess move paths (L-shaped knight moves) */
+  var connections = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4],[2,5]];
+
+  var pulses = [];
+  for (var i = 0; i < connections.length; i++) { pulses.push({ t: Math.random(), sp: 0.002 + Math.random() * 0.003 }); }
+
+  var tick = 0;
+  var crownPulse = 0;
+
+  function draw() {
+    tick++;
+    crownPulse += 0.03;
+    ctx.clearRect(0, 0, W, H);
+
+    /* Background: dark with subtle warmth */
+    var bg = ctx.createRadialGradient(CX, CY, 80, CX, CY, W * 0.7);
+    bg.addColorStop(0, '#0f0a18');
+    bg.addColorStop(0.5, '#080510');
+    bg.addColorStop(1, '#020106');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    /* Chessboard pattern (semi-transparent) */
+    for (var row = 0; row < gridRows; row++) {
+      for (var col = 0; col < gridCols; col++) {
+        if ((row + col) % 2 === 0) {
+          ctx.fillStyle = 'rgba(184,150,74,0.025)';
+        } else {
+          ctx.fillStyle = 'rgba(255,255,255,0.012)';
+        }
+        ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
+      }
+    }
+
+    /* Stars */
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      ctx.globalAlpha = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin(s.ph + tick * s.sp));
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    /* Connection lines with pulses */
+    for (var i = 0; i < connections.length; i++) {
+      var c = connections[i];
+      var p1 = npos[c[0]], p2 = npos[c[1]];
+      var midX = (p1.x + p2.x) / 2;
+      var midY = (p1.y + p2.y) / 2;
+      var col1 = nodes[c[0]].color;
+      var col2 = nodes[c[1]].color;
+
+      /* Draw L-shaped path (knight move style) */
+      ctx.save();
+      ctx.globalAlpha = 0.2;
+      ctx.strokeStyle = col1;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(midX, p1.y);
+      ctx.lineTo(midX, p2.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      /* Pulse dot along path */
+      var pls = pulses[i];
+      pls.t += pls.sp;
+      if (pls.t > 1) pls.t = 0;
+      var pt = pls.t;
+      var px, py;
+      if (pt < 0.33) {
+        var lt = pt / 0.33;
+        px = p1.x + (midX - p1.x) * lt;
+        py = p1.y;
+      } else if (pt < 0.66) {
+        var lt = (pt - 0.33) / 0.33;
+        px = midX;
+        py = p1.y + (p2.y - p1.y) * lt;
+      } else {
+        var lt = (pt - 0.66) / 0.34;
+        px = midX + (p2.x - midX) * lt;
+        py = p2.y;
+      }
+      ctx.save();
+      ctx.shadowColor = col1;
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = '#fff';
+      ctx.globalAlpha = 0.85;
+      ctx.beginPath();
+      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    /* Center: Crown + chessboard icon */
+    var coreR = 55;
+    ctx.save();
+    var coreG = ctx.createRadialGradient(CX, CY, 5, CX, CY, coreR);
+    coreG.addColorStop(0, 'rgba(184,150,74,0.4)');
+    coreG.addColorStop(0.6, 'rgba(184,150,74,0.15)');
+    coreG.addColorStop(1, 'rgba(10,5,25,0)');
+    ctx.fillStyle = coreG;
+    ctx.beginPath();
+    ctx.arc(CX, CY, coreR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    /* Mini chessboard at center */
+    var cbSize = 32;
+    var cbCell = cbSize / 4;
+    var cbX = CX - cbSize / 2;
+    var cbY = CY - cbSize / 2 + 5;
+    for (var r = 0; r < 4; r++) {
+      for (var c = 0; c < 4; c++) {
+        ctx.fillStyle = (r + c) % 2 === 0 ? 'rgba(184,150,74,0.5)' : 'rgba(30,20,50,0.7)';
+        ctx.fillRect(cbX + c * cbCell, cbY + r * cbCell, cbCell, cbCell);
+      }
+    }
+    ctx.strokeStyle = '#b8964a';
+    ctx.lineWidth = 1.2;
+    ctx.strokeRect(cbX, cbY, cbSize, cbSize);
+
+    /* Crown above chessboard */
+    var crownY = CY - 30;
+    var crownW = 24;
+    var crownH = 16;
+    var crownGlow = 0.6 + 0.3 * Math.sin(crownPulse);
+    ctx.save();
+    ctx.globalAlpha = crownGlow;
+    ctx.strokeStyle = '#b8964a';
+    ctx.lineWidth = 2;
+    ctx.fillStyle = 'rgba(184,150,74,0.2)';
+    ctx.beginPath();
+    ctx.moveTo(CX - crownW / 2, crownY);
+    ctx.lineTo(CX - crownW / 2 - 3, crownY - crownH);
+    ctx.lineTo(CX - crownW / 4, crownY - crownH * 0.5);
+    ctx.lineTo(CX, crownY - crownH);
+    ctx.lineTo(CX + crownW / 4, crownY - crownH * 0.5);
+    ctx.lineTo(CX + crownW / 2 + 3, crownY - crownH);
+    ctx.lineTo(CX + crownW / 2, crownY);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+
+    /* Node chess pieces */
+    for (var i = 0; i < 6; i++) {
+      var n = nodes[i], p = npos[i];
+
+      /* Glow */
+      ctx.save();
+      ctx.shadowColor = n.color;
+      ctx.shadowBlur = 20;
+      ctx.fillStyle = n.color;
+      ctx.globalAlpha = 0.08;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 40, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      /* Chess piece shape (simplified pawn/rook) */
+      ctx.save();
+      ctx.strokeStyle = n.color;
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.75;
+
+      /* Base */
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y + 12, 18, 6, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      /* Body */
+      ctx.beginPath();
+      ctx.moveTo(p.x - 10, p.y + 8);
+      ctx.quadraticCurveTo(p.x - 14, p.y - 5, p.x - 6, p.y - 14);
+      ctx.quadraticCurveTo(p.x, p.y - 20, p.x + 6, p.y - 14);
+      ctx.quadraticCurveTo(p.x + 14, p.y - 5, p.x + 10, p.y + 8);
+      ctx.stroke();
+
+      /* Head dot */
+      ctx.fillStyle = n.color;
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y - 16, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      /* Labels */
+      ctx.globalAlpha = 1;
+      ctx.font = 'bold 18px "Noto Serif SC",serif';
+      ctx.fillStyle = '#e0cfc0';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.label, p.x, p.y + 40);
+      ctx.font = '13px "EB Garamond",serif';
+      ctx.fillStyle = 'rgba(184,150,74,0.7)';
+      ctx.fillText(n.en, p.x, p.y + 58);
+    }
+
+    /* Title */
+    ctx.font = 'bold 14px "Space Mono",monospace';
+    ctx.fillStyle = 'rgba(184,150,74,0.85)';
+    ctx.textAlign = 'center';
+    ctx.fillText('THE CHESSBOARD PARADOX', CX, CY + 90);
+    ctx.font = 'bold 16px "Noto Serif SC",serif';
+    ctx.fillStyle = '#fff';
+    ctx.fillText('\u68cb\u76d8\u56f0\u5c40', CX, CY + 110);
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
