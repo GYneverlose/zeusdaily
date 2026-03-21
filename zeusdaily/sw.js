@@ -1,4 +1,4 @@
-var CACHE_NAME = 'zeus-daily-v6';
+var CACHE_NAME = 'zeus-daily-v7';
 var STATIC_ASSETS = [
   '/dashboard',
   '/login',
@@ -32,6 +32,35 @@ self.addEventListener('activate', function(event) {
     })
   );
   self.clients.claim();
+});
+
+// ── Push Notification ──
+self.addEventListener('push', function(event) {
+  var data = {};
+  try { data = event.data.json(); } catch(e) {
+    data = { title: 'Zeus Daily', body: event.data ? event.data.text() : 'A new issue is live.' };
+  }
+  var title = data.title || 'Zeus Daily';
+  var options = {
+    body: data.body || 'A new issue is live.',
+    icon: '/icon.svg',
+    badge: '/icon.svg',
+    data: { url: data.url || '/dashboard' }
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  var url = (event.notification.data && event.notification.data.url) || '/dashboard';
+  event.waitUntil(
+    clients.matchAll({ type: 'window' }).then(function(list) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].url.indexOf(url) >= 0 && 'focus' in list[i]) return list[i].focus();
+      }
+      return clients.openWindow(url);
+    })
+  );
 });
 
 self.addEventListener('fetch', function(event) {
