@@ -1,4 +1,4 @@
-var CACHE_NAME = 'zeus-daily-v12';
+var CACHE_NAME = 'zeus-daily-v13';
 var STATIC_ASSETS = [
   '/dashboard',
   '/login',
