@@ -478,6 +478,6 @@ function switchTab(tab){
   }
 })();
 </script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'}).then(function(r){r.update();});}</script>
 </body>
 </html>
