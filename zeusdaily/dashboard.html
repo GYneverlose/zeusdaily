@@ -2081,16 +2081,19 @@ function togglePush(el) {
         }).then(function(sub) {
           syncPushToggles(true);
           var user = window._currentUser;
-          if (user) {
-            var keys = sub.toJSON().keys;
-            _sb.from('push_subscriptions').upsert({
-              user_id: user.id,
-              endpoint: sub.endpoint,
-              keys_p256dh: keys.p256dh,
-              keys_auth: keys.auth
-            }, { onConflict: 'endpoint' });
-          }
-        }).catch(function() { syncPushToggles(false); });
+          var keys = sub.toJSON().keys;
+          var payload = {
+            endpoint: sub.endpoint,
+            keys_p256dh: keys.p256dh,
+            keys_auth: keys.auth
+          };
+          if (user) payload.user_id = user.id;
+          _sb.from('push_subscriptions').upsert(payload, { onConflict: 'endpoint' }).then(function(res) {
+            if (res.error) {
+              alert('Push save error: ' + res.error.message);
+            }
+          });
+        }).catch(function(err) { syncPushToggles(false); alert('Push subscribe error: ' + (err.message || err)); });
       });
     });
   }
