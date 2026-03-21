@@ -2055,7 +2055,7 @@ function initPushState() {
 }
 
 function togglePush(el) {
-  if (!('PushManager' in window)) return;
+  if (!('PushManager' in window)) { alert('PushManager not supported'); return; }
   var isOn = el.classList.contains('on');
   if (isOn) {
     navigator.serviceWorker.ready.then(function(reg) {
@@ -2073,7 +2073,7 @@ function togglePush(el) {
     });
   } else {
     Notification.requestPermission().then(function(perm) {
-      if (perm !== 'granted') { syncPushToggles(false); return; }
+      if (perm !== 'granted') { alert('Permission denied: ' + perm); syncPushToggles(false); return; }
       navigator.serviceWorker.ready.then(function(reg) {
         reg.pushManager.subscribe({
           userVisibleOnly: true,
@@ -2081,19 +2081,22 @@ function togglePush(el) {
         }).then(function(sub) {
           syncPushToggles(true);
           var user = window._currentUser;
-          var keys = sub.toJSON().keys;
+          var keys = sub.toJSON().keys || {};
           var payload = {
             endpoint: sub.endpoint,
-            keys_p256dh: keys.p256dh,
-            keys_auth: keys.auth
+            keys_p256dh: keys.p256dh || '',
+            keys_auth: keys.auth || ''
           };
           if (user) payload.user_id = user.id;
+          alert('Saving: endpoint=' + sub.endpoint.slice(0,50) + '... user=' + (user ? user.id : 'none'));
           _sb.from('push_subscriptions').upsert(payload, { onConflict: 'endpoint' }).then(function(res) {
             if (res.error) {
-              alert('Push save error: ' + res.error.message);
+              alert('DB error: ' + res.error.message);
+            } else {
+              alert('Saved OK!');
             }
           });
-        }).catch(function(err) { syncPushToggles(false); alert('Push subscribe error: ' + (err.message || err)); });
+        }).catch(function(err) { syncPushToggles(false); alert('Subscribe error: ' + (err.message || err)); });
       });
     });
   }
