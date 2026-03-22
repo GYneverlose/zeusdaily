@@ -1,4 +1,4 @@
-var CACHE_NAME = 'zeus-daily-v13';
+var CACHE_NAME = 'zeus-daily-v14';
 var STATIC_ASSETS = [
   '/dashboard',
   '/login',
@@ -73,11 +73,12 @@ self.addEventListener('fetch', function(event) {
   if (url.hostname.indexOf('supabase') >= 0) return;
 
   // Daily HTML files: stale-while-revalidate
-  if (url.pathname.match(/zeus-daily-\d{8}\.html$/)) {
+  // Match both /zeus-daily-YYYYMMDD.html and /zeus-daily-YYYYMMDD (Cloudflare strips .html)
+  if (url.pathname.match(/zeus-daily-\d{8}(\.html)?$/)) {
     event.respondWith(
       caches.open(CACHE_NAME).then(function(cache) {
         return cache.match(event.request).then(function(cached) {
-          var fetchPromise = fetch(event.request).then(function(response) {
+          var fetchPromise = fetch(event.request, { redirect: 'follow' }).then(function(response) {
             if (response.ok) cache.put(event.request, response.clone());
             return response;
           }).catch(function() { return cached; });
