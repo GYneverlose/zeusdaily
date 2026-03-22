@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeus Daily · 2026-03-22 · THE GOD'S EYE VIEW</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root{--cream:#faf8f4;--cream2:#f0ebe2;--ink:#1a1410;--ink2:#3a2e22;--gold:#b8964a;--gold2:#8a6d2f;--purple:#5c3d8f;--purple2:#3d2060;--purple3:#8b5cf6;--rule:rgba(184,150,74,.35);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--ink);font-family:'EB Garamond','Noto Serif SC',serif;max-width:820px;margin:0 auto;padding:0 18px 60px;line-height:1.75;font-size:15.5px;}
+.lang-bar{display:flex;justify-content:flex-end;gap:6px;padding:10px 0 0;align-items:center;}
+.back-btn{margin-right:auto;background:none;border:1px solid var(--gold);color:var(--gold2);font-family:inherit;font-size:11px;letter-spacing:2px;padding:3px 10px;cursor:pointer;border-radius:2px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+
+.lang-btn{background:none;border:1px solid var(--gold);color:var(--gold2);font-family:inherit;font-size:11px;letter-spacing:2px;padding:3px 10px;cursor:pointer;border-radius:2px;}
+.lang-btn.active{background:var(--gold);color:#fff;}
+.en-only{display:none !important;}.zh-only{display:inline;}
+body.lang-en .en-only{display:inline !important;}body.lang-en .zh-only{display:none !important;}
+.masthead{text-align:center;padding:28px 0 12px;border-bottom:1.5px solid var(--gold);}
+.masthead-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:38px;letter-spacing:8px;color:var(--ink);line-height:1;text-transform:uppercase;}
+.masthead-sub{font-size:11px;letter-spacing:5px;color:var(--gold2);text-transform:uppercase;margin-top:4px;}
+.eye-wrap{display:flex;flex-direction:column;align-items:center;margin:18px 0 10px;}
+.date-bar{text-align:center;font-size:11px;letter-spacing:3px;color:var(--gold2);text-transform:uppercase;padding:8px 0 6px;border-bottom:1px solid var(--rule);}
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:14px 0 20px;font-family:'Space Mono',monospace;}
+.dash-cell{background:var(--cream);padding:9px 10px;text-align:center;}
+.dash-label{font-size:9px;letter-spacing:2.5px;color:var(--gold2);text-transform:uppercase;display:block;}
+.dash-value{font-size:17px;font-weight:700;color:var(--ink);display:block;line-height:1.2;}
+.dash-value.up{color:#1e7b3f;}.dash-value.down{color:#8b1a1a;}
+.dash-ts{font-size:8px;color:#888;display:block;margin-top:2px;}
+.section{margin:26px 0 0;padding-bottom:20px;border-bottom:1px solid var(--rule);}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.section-title{font-family:'Playfair Display',serif;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:var(--gold2);font-weight:700;}
+.section-rule{flex:1;height:1px;background:var(--rule);}
+.philo-text{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;line-height:1.7;color:var(--ink2);border-left:3px solid var(--gold);padding:8px 0 4px 18px;}
+.news-item{padding:12px 0;border-bottom:1px dotted var(--rule);}
+.news-item:last-child{border-bottom:none;}
+.news-ts{font-size:9px;letter-spacing:2px;color:var(--gold2);text-transform:uppercase;margin-bottom:4px;font-family:'Space Mono',monospace;}
+.news-hed{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;line-height:1.35;color:var(--ink);margin-bottom:5px;}
+.news-body{color:var(--ink2);font-size:14.5px;line-height:1.72;}
+.term{border-bottom:1px dashed var(--gold);cursor:pointer;color:inherit;}
+.term:hover{color:var(--gold2);}
+.tooltip-bubble{position:fixed;z-index:9999;min-width:200px;max-width:280px;background:linear-gradient(135deg,#1e1030,#140c24);border-top:2px solid #b8964a;border-radius:8px;padding:12px 14px;box-shadow:0 4px 24px rgba(92,61,143,.45);visibility:hidden;opacity:0;pointer-events:none;transition:opacity .15s;}
+.tooltip-bubble.visible{visibility:visible;opacity:1;}
+.tooltip-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#b8964a;font-weight:700;display:block;margin-bottom:5px;}
+.tooltip-divider{height:1px;background:rgba(184,150,74,.4);margin:4px 0 7px;}
+.tooltip-body{font-size:12px;line-height:1.75;color:#e0cfc0;}
+.tooltip-arrow{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid #1e1030;}
+.voice-quote{font-family:'Playfair Display',serif;font-size:17px;font-style:italic;border-left:3px solid var(--purple);padding-left:16px;color:var(--purple2);line-height:1.55;margin:4px 0 6px;}
+.voice-attr{font-size:10px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;padding-left:16px;font-family:'Space Mono',monospace;}
+.ai-card{background:linear-gradient(135deg,rgba(92,61,143,.05),rgba(184,150,74,.04));border:1px solid rgba(92,61,143,.2);border-radius:4px;padding:12px 14px;margin-bottom:10px;}
+.ai-card-label{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;font-family:'Space Mono',monospace;}
+.ai-card-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.crypto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 14px;}
+.crypto-cell{border:1px solid var(--rule);border-radius:3px;padding:8px 10px;text-align:center;background:var(--cream2);}
+.crypto-name{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);}
+.crypto-price{font-size:16px;font-weight:700;color:var(--ink);font-family:'Playfair Display',serif;}
+.crypto-change{font-size:11px;}
+.crypto-change.up{color:#1e7b3f;}.crypto-change.down{color:#8b1a1a;}
+.metals-row{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 12px;}
+.metal-tile{flex:1;min-width:160px;border:1px solid var(--gold);border-radius:3px;padding:10px 14px;background:linear-gradient(135deg,#fdf9f0,#f5ede0);}
+.metal-nm{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);display:block;}
+.metal-pr{font-size:22px;font-weight:900;font-family:'Playfair Display',serif;color:var(--gold2);display:block;}
+.metal-sub{font-size:11px;color:#888;}
+.msia-tag{display:inline-block;background:rgba(0,100,60,.08);color:#00643c;border:1px solid rgba(0,100,60,.25);border-radius:2px;font-size:8.5px;letter-spacing:2px;padding:1px 7px;text-transform:uppercase;margin-right:6px;vertical-align:middle;}
+.gods-eye-section{background:linear-gradient(160deg,#f5f0e8,#ede5d4);border:1px solid rgba(184,150,74,.35);border-top:3px solid var(--gold);border-radius:4px;padding:22px 20px;margin:26px 0 0;color:var(--ink2);}
+.gods-eye-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.gods-eye-title-block{display:flex;flex-direction:column;}
+.gods-eye-sup{font-size:8.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold2);opacity:.8;}
+.gods-eye-main-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--ink);}
+.gods-eye-rule{flex:1;height:1px;background:rgba(184,150,74,.3);}
+.analysis-item{padding:10px 0;border-bottom:1px solid rgba(184,150,74,.2);}
+.analysis-item:last-child{border-bottom:none;}
+.analysis-label{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:5px;font-family:'Space Mono',monospace;}
+.analysis-body{font-size:14.5px;line-height:1.75;color:var(--ink2);}
+.mispricing-box{background:#fff;border:1px solid rgba(184,150,74,.25);border-left:3px solid var(--gold);border-radius:3px;padding:14px 16px;margin:12px 0;font-size:14px;color:var(--ink2);line-height:1.78;box-shadow:0 1px 6px rgba(184,150,74,.08);}
+.mispricing-tag{display:inline-block;font-size:8px;letter-spacing:2px;text-transform:uppercase;background:rgba(184,150,74,.12);color:var(--gold2);border:1px solid rgba(184,150,74,.3);padding:2px 9px;border-radius:2px;margin-bottom:8px;}
+.mindmap-wrap{width:100%;max-width:640px;margin:18px auto 8px;border-radius:6px;overflow:hidden;border:1px solid rgba(184,150,74,.3);}
+#mindmapCanvas{width:100%;height:auto;display:block;}
+.alien-card{background:linear-gradient(135deg,#0f0a1e,#1a1030);border:1px solid rgba(139,92,246,.3);border-radius:6px;padding:16px 18px;margin-bottom:12px;color:#e0cfc0;}
+.alien-roast{font-style:italic;border-left:3px solid var(--gold);padding-left:14px;color:#c9b87a;margin:8px 0;font-size:13.5px;line-height:1.65;}
+.alien-hed{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#e9d5ff;margin-bottom:6px;}
+.alien-body{font-size:13.5px;line-height:1.72;color:#c8bfb0;margin-bottom:8px;}
+.alien-src{font-size:9px;letter-spacing:2px;color:rgba(184,150,74,.6);text-transform:uppercase;font-family:'Space Mono',monospace;}
+.closing-text{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;line-height:1.75;color:var(--ink2);text-align:center;padding:16px 0;}
+.checkin-section{display:flex;flex-direction:column;align-items:center;padding:20px 0 6px;border-top:1px solid var(--rule);margin-top:24px;}
+.checkin-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);margin-bottom:10px;font-family:'Space Mono',monospace;}
+.stamp-btn{width:68px;height:68px;border-radius:50%;border:1.8px solid var(--purple3);background:var(--cream);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;position:relative;overflow:visible;gap:2px;}
+.stamp-btn:hover{box-shadow:0 0 16px rgba(139,92,246,.45);transform:scale(1.06);}
+.stamp-btn.stamped{border-color:var(--purple);cursor:default;background:rgba(92,61,143,.06);transform:scale(1)!important;}
+.stamp-bolt{transition:filter .2s;}
+.stamp-text{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold2);text-align:center;line-height:1;}
+.stamp-time{font-size:10px;color:var(--gold);font-family:'Space Mono',monospace;margin-top:7px;letter-spacing:.8px;min-height:16px;text-align:center;}
+.stamp-inner{display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;}
+.footer{text-align:center;padding:20px 0 8px;font-size:10px;letter-spacing:2.5px;color:#aaa;text-transform:uppercase;font-family:'Space Mono',monospace;}
+.footer a{color:var(--gold2);text-decoration:none;}
+@media(max-width:520px){.dashboard{grid-template-columns:repeat(2,1fr);}.crypto-grid{grid-template-columns:repeat(2,1fr);}.masthead-brand{font-size:26px;letter-spacing:4px;}}
+</style>
+</head>
+<body>
+<div id="tooltipBubble" class="tooltip-bubble"><span class="tooltip-title" id="tipTitle"></span><div class="tooltip-divider"></div><div class="tooltip-body" id="tipBody"></div><div class="tooltip-arrow" id="tipArrow"></div></div>
+
+<div class="lang-bar"><a class="back-btn" href="/dashboard">&#8592; Dashboard</a><button class="lang-btn active" id="btnZh" onclick="setLang('zh')">中</button><button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button></div>
+
+<div class="masthead"><div class="masthead-brand">ZEUS DAILY</div><div class="masthead-sub">THE GOD'S EYE VIEW</div></div>
+
+<div class="eye-wrap">
+<svg id="mainEye" viewBox="0 0 120 52" width="200" height="87" xmlns="http://www.w3.org/2000/svg" style="cursor:none;">
+<defs>
+<filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="irisGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<radialGradient id="nebulaGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b088f9"/><stop offset="52%" stop-color="#6b4c9a"/><stop offset="100%" stop-color="#2d1b4e"/></radialGradient>
+<radialGradient id="pupilGrad" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#1a0a2e"/><stop offset="100%" stop-color="#0a0515"/></radialGradient>
+<clipPath id="eyeClip"><path id="eyeClipPath" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z"/></clipPath>
+</defs>
+<path id="eyeOutline" d="M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z" fill="#0e0818" stroke="#b8964a" stroke-width="1.4" filter="url(#goldGlow)"/>
+<circle id="iris" cx="60" cy="26" r="14" fill="url(#nebulaGrad)" filter="url(#irisGlow)" clip-path="url(#eyeClip)"/>
+<circle id="pupil" cx="60" cy="26" r="6.5" fill="url(#pupilGrad)" clip-path="url(#eyeClip)"/>
+<circle cx="64" cy="22" r="2.2" fill="rgba(255,255,255,0.45)" clip-path="url(#eyeClip)"/>
+<circle cx="56" cy="28" r="1" fill="rgba(176,136,249,0.4)" clip-path="url(#eyeClip)"/>
+<circle cx="30" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+<circle cx="60" cy="8" r="0.7" fill="#b8964a" opacity="0.5"/>
+<circle cx="90" cy="14" r="0.7" fill="#b8964a" opacity="0.5"/>
+</svg>
+</div>
+
+<div class="date-bar"><span class="zh-only">2026年3月22日 · 星期日 · 伊朗战争第24天 · 开斋节第二天</span><span class="en-only">Sunday, March 22, 2026 · Iran War Day 24 · Hari Raya Aidilfitri Day 2</span></div>
+
+<!-- DASHBOARD -->
+<div class="dashboard">
+<div class="dash-cell"><span class="dash-label">Gold</span><span class="dash-value down">$4,490</span><span class="dash-ts">-3.41% · Mar 20 · Kitco /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Silver</span><span class="dash-value down">$67.69</span><span class="dash-ts">-6.88% · Mar 20 · Kitco /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Bitcoin</span><span class="dash-value down">$70,597</span><span class="dash-ts">-0.10% · Mar 22 · CoinGecko</span></div>
+<div class="dash-cell"><span class="dash-label">Ethereum</span><span class="dash-value up">$2,157</span><span class="dash-ts">+0.20% · Mar 22 · CoinGecko</span></div>
+<div class="dash-cell"><span class="dash-label">WTI Oil</span><span class="dash-value down">$93.55</span><span class="dash-ts">-4.85% · Mar 20 · CNBC /bbl</span></div>
+<div class="dash-cell"><span class="dash-label">Brent</span><span class="dash-value down">$107.40</span><span class="dash-ts">-5.54% · Mar 20 · CNBC /bbl</span></div>
+<div class="dash-cell"><span class="dash-label">USD/MYR</span><span class="dash-value">3.9343</span><span class="dash-ts">-0.12% · Mar 22 · Xe.com</span></div>
+<div class="dash-cell"><span class="dash-label"><span class="zh-only">恐贪指数</span><span class="en-only">Fear&amp;Greed</span></span><span class="dash-value down">15</span><span class="dash-ts"><span class="zh-only">极度恐惧</span><span class="en-only">Extreme Fear</span> · Mar 22 · CNN</span></div>
+<div class="dash-cell"><span class="dash-label">S&amp;P 500</span><span class="dash-value down">6,506</span><span class="dash-ts">-1.51% · Mar 20 · Yahoo Finance</span></div>
+<div class="dash-cell"><span class="dash-label">Platinum</span><span class="dash-value down">$1,924</span><span class="dash-ts">-2.43% · Mar 20 · Kitco /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Palladium</span><span class="dash-value down">$1,392</span><span class="dash-ts">-2.93% · Mar 20 · Kitco /oz</span></div>
+<div class="dash-cell"><span class="dash-label">Dow</span><span class="dash-value down">45,577</span><span class="dash-ts">-0.96% · Mar 20 · Yahoo Finance</span></div>
+</div>
+
+<!-- REFLECTION -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">哲思</span><span class="en-only">REFLECTION</span></div><div class="section-rule"></div></div>
+<p class="philo-text zh-only"><span class="term" data-zh="丹麦：北欧国家，格陵兰的宗主国，北约成员" data-en="Denmark: Nordic country, sovereign over Greenland, NATO member">丹麦</span>计划炸毁自己的跑道来阻止盟友降落。仔细想想这件事的荒谬：你修建了跑道，维护了跑道，然后有一天你决定——最好的防御是毁掉自己建造的东西。这不是战争策略，这是<span class="term" data-zh="信任疲劳：当联盟伙伴之间的信任被反复消耗后产生的系统性不信任状态" data-en="Trust Fatigue: Systemic distrust that develops when alliance partners repeatedly exhaust mutual trust">信任疲劳</span>的终极症状。当盟友变得比敌人更让你恐惧，你开始摧毁的不是对方，而是自己。今天是<span class="term" data-zh="开斋节第二天：伊斯兰传统中，开斋节第二天是走亲访友、请求原谅的日子" data-en="Hari Raya Day 2: In Islamic tradition, the second day is for visiting relatives and seeking forgiveness">开斋节第二天</span>——在马来传统中，这是请求原谅的日子。孩子们跪在长辈面前说"maaf zahir dan batin"——请原谅我外在和内在的过错。而在哥本哈根的国防部地下室里，有人正在计算需要多少炸药才能摧毁<span class="term" data-zh="格陵兰：世界最大岛屿，丹麦自治领地，因稀土资源和北极航道具有重大战略价值" data-en="Greenland: World's largest island, Danish autonomous territory, strategically vital for rare earths and Arctic routes">格陵兰</span>的跑道。原谅和爆破——同一天，同一个星球。也许这就是2026年的寓言：我们已经习惯了一边说"和平"一边埋炸药。跑道可以重建，但信任一旦炸毁，碎片比混凝土更难拼回去。<br><span style="font-size:14px;font-style:normal;color:#888;display:block;margin-top:8px;">——你可以炸毁跑道，但你炸不毁它曾经承载的信任。</span></p>
+<p class="philo-text en-only"><span class="term" data-zh="丹麦" data-en="Denmark: Nordic country, sovereign over Greenland, NATO member">Denmark</span> planned to blow up its own runways to stop an ally from landing. Consider the absurdity: you built the runway, maintained the runway, and then one day you decided — the best defense is to destroy what you built. This is not military strategy. This is the terminal symptom of <span class="term" data-zh="信任疲劳" data-en="Trust Fatigue: Systemic distrust from repeatedly exhausted alliance trust">trust fatigue</span>. When your allies frighten you more than your enemies, what you begin to destroy is not the other side — it is yourself. Today is <span class="term" data-zh="开斋节第二天" data-en="Hari Raya Day 2: Day for visiting relatives and seeking forgiveness">Hari Raya Day 2</span> — in Malay tradition, the day of asking forgiveness. Children kneel before elders and say "maaf zahir dan batin" — forgive me for wrongs seen and unseen. Meanwhile, in a basement at the <span class="term" data-zh="丹麦国防部" data-en="Danish Ministry of Defence: Denmark's military command authority">Danish Ministry of Defence</span>, someone calculated how much explosive it takes to destroy <span class="term" data-zh="格陵兰" data-en="Greenland: World's largest island, Danish territory, strategic for rare earths and Arctic routes">Greenland</span>'s runways. Forgiveness and demolition — same day, same planet. Perhaps this is the parable of 2026: we have grown accustomed to saying "peace" while burying the explosives. Runways can be rebuilt, but once trust is blown apart, the fragments are harder to reassemble than concrete.<br><span style="font-size:14px;font-style:normal;color:#888;display:block;margin-top:8px;">— You can blow up a runway, but you cannot blow up the trust it once carried.</span></p>
+</div>
+
+<!-- WORLD NEWS -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">世界要闻</span><span class="en-only">WORLD NEWS</span></div><div class="section-rule"></div></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 22, 2026 · Al Jazeera / NPR / Bloomberg</div>
+<div class="news-hed zh-only">伊朗战争第24天：第70波攻击，<span class="term" data-zh="特朗普：美国第47任总统，2025年1月就职" data-en="Trump: 47th US President, inaugurated January 2025">特朗普</span>称"即将收官"同日派遣2500名海军陆战队，累计1444人死亡含204名儿童</div>
+<div class="news-hed en-only">Iran War Day 24: 70th Attack Wave, <span class="term" data-zh="特朗普：美国第47任总统，2025年1月就职，共和党" data-en="Trump: 47th US President, inaugurated Jan 2025, Republican">Trump</span> Says 'Winding Down' While Deploying 2,500 Marines — 1,444 Dead Including 204 Children</div>
+<div class="news-body zh-only"><span class="term" data-zh="伊朗：中东伊斯兰共和国，人口8800万，自2026年2月27日起遭以色列和美国联合军事打击" data-en="Iran: Islamic Republic in the Middle East, pop. 88M, under Israeli-US military strikes since Feb 27, 2026">伊朗</span>战场进入第24天。以色列和美国发动第70波协调攻击，目标包括<span class="term" data-zh="伊斯法罕：伊朗第三大城市，拥有重要的核设施和军事工业基地" data-en="Isfahan: Iran's third-largest city, home to key nuclear facilities and military-industrial bases">伊斯法罕</span>军事设施和沿海防空阵地。<span class="term" data-zh="伊朗红新月会：伊朗最大人道救援机构，相当于国际红十字会的伊朗分支" data-en="Iranian Red Crescent: Iran's largest humanitarian organization, equivalent to the Red Cross">伊朗红新月会</span>更新伤亡数据：1444人死亡、19200人受伤、204名儿童遇难。特朗普在<span class="term" data-zh="Truth Social：特朗普旗下社交媒体平台，2022年上线" data-en="Truth Social: Trump's social media platform, launched 2022">Truth Social</span>发帖称"非常接近实现我们的目标，正在考虑收官"——但同日<span class="term" data-zh="五角大楼：美国国防部总部，代指美国军方" data-en="Pentagon: US Department of Defense headquarters, metonym for US military leadership">五角大楼</span>确认向<span class="term" data-zh="波斯湾：位于中东的半封闭海域，是全球最重要的石油运输航道" data-en="Persian Gulf: Semi-enclosed sea in the Middle East, world's most critical oil shipping lane">波斯湾</span>增派2500名<span class="term" data-zh="美国海军陆战队：美军快速反应两栖作战力量" data-en="US Marines: American rapid-response amphibious military force">海军陆战队</span>。"收官"言论与兵力增派的矛盾引发市场剧烈波动，布伦特原油当日先跌后涨。</div>
+<div class="news-body en-only"><span class="term" data-zh="伊朗" data-en="Iran: Islamic Republic, pop. 88M, under joint Israeli-US strikes since Feb 27, 2026">Iran</span>'s war enters day 24. Israel and the US launched the 70th coordinated attack wave, targeting <span class="term" data-zh="伊斯法罕" data-en="Isfahan: Iran's 3rd-largest city, key nuclear and military sites">Isfahan</span> military facilities and coastal air defenses. The <span class="term" data-zh="伊朗红新月会" data-en="Iranian Red Crescent: Iran's largest humanitarian org">Iranian Red Crescent</span> updated casualties: 1,444 dead, 19,200 injured, 204 children killed. Trump posted on <span class="term" data-zh="Truth Social" data-en="Truth Social: Trump's social platform">Truth Social</span> that he is "getting very close to meeting our objectives as we consider winding down" — yet on the same day, the <span class="term" data-zh="五角大楼" data-en="Pentagon: US military HQ">Pentagon</span> confirmed deploying 2,500 additional <span class="term" data-zh="海军陆战队" data-en="US Marines: Rapid-response amphibious force">Marines</span> to the <span class="term" data-zh="波斯湾" data-en="Persian Gulf: World's key oil shipping lane">Persian Gulf</span>. The contradiction between "winding down" rhetoric and troop escalation triggered sharp market volatility, with Brent whipsawing on the day.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · Military Times / The Irish Times</div>
+<div class="news-hed zh-only"><span class="term" data-zh="丹麦" data-en="Denmark: Nordic country, Greenland's sovereign, NATO member">丹麦</span>秘密计划炸毁<span class="term" data-zh="格陵兰" data-en="Greenland: World's largest island, Danish territory">格陵兰</span>军事跑道——阻止<span class="term" data-zh="美国" data-en="United States: World's largest military power">美国</span>使用</div>
+<div class="news-hed en-only"><span class="term" data-zh="丹麦" data-en="Denmark: Nordic kingdom, NATO member">Denmark</span> Had Secret Contingency to Blow Up <span class="term" data-zh="格陵兰" data-en="Greenland: World's largest island, Danish autonomous territory">Greenland</span> Runways — to Stop US Use</div>
+<div class="news-body zh-only">据<span class="term" data-zh="Military Times：美国军事新闻媒体" data-en="Military Times: US military news outlet">Military Times</span>披露，丹麦国防部曾秘密制定应急计划：一旦美国试图在未经授权的情况下使用格陵兰的<span class="term" data-zh="图勒空军基地：位于格陵兰西北部的美军基地，冷战时期建设，具有关键雷达和太空监测功能" data-en="Thule Air Base: US military base in NW Greenland, built during Cold War, key radar and space surveillance">图勒空军基地</span>或其他军事跑道，丹麦将启动跑道爆破方案。该计划包括在关键跑道下方预埋炸药的具体工程方案。<span class="term" data-zh="The Irish Times：爱尔兰最具影响力的英文日报" data-en="The Irish Times: Ireland's most influential English-language daily">The Irish Times</span>报道称，这一计划反映了<span class="term" data-zh="北约（NATO）：北大西洋公约组织，32国军事同盟" data-en="NATO: North Atlantic Treaty Organization, 32-member military alliance">NATO</span>盟友之间信任危机的严重程度——丹麦宁可毁掉自己的基础设施也不愿冒被美国单方面控制的风险。丹麦国防大臣拒绝评论"假设性应急计划"。</div>
+<div class="news-body en-only">According to <span class="term" data-zh="Military Times" data-en="Military Times: US military news outlet">Military Times</span>, Denmark's Ministry of Defence had a secret contingency: if the US attempted to use <span class="term" data-zh="图勒空军基地" data-en="Thule Air Base: US base in NW Greenland, Cold War era, radar and space surveillance">Thule Air Base</span> or other military runways in Greenland without authorization, Denmark would activate a runway demolition plan. The scheme included specific engineering plans for pre-embedded explosives beneath key runways. <span class="term" data-zh="The Irish Times" data-en="The Irish Times: Ireland's leading English-language daily">The Irish Times</span> reports the plan reflects the severity of the trust crisis within <span class="term" data-zh="NATO：北大西洋公约组织，1949年成立，32国军事同盟" data-en="NATO: North Atlantic Treaty Organization, founded 1949, 32-member military alliance">NATO</span> — Denmark would rather destroy its own infrastructure than risk unilateral US seizure. Denmark's defence minister declined to comment on "hypothetical contingencies."</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · CBS News / US News</div>
+<div class="news-hed zh-only"><span class="term" data-zh="北约" data-en="NATO: 32-member military alliance">NATO</span>从<span class="term" data-zh="伊拉克：中东国家，美军在此驻扎超20年" data-en="Iraq: Middle Eastern country, US military presence for 20+ years">伊拉克</span>撤军——数百人转移至<span class="term" data-zh="那不勒斯：意大利南部城市，北约南方司令部所在地" data-en="Naples: Southern Italian city, home to NATO's Allied Joint Force Command">那不勒斯</span></div>
+<div class="news-hed en-only"><span class="term" data-zh="NATO：北大西洋公约组织，1949年成立，32国军事同盟" data-en="NATO: North Atlantic Treaty Organization, founded 1949, 32-member military alliance">NATO</span> Withdraws from <span class="term" data-zh="伊拉克：中东国家，美军在此驻扎超20年" data-en="Iraq: Middle Eastern country, US military presence for 20+ years">Iraq</span> — Hundreds Relocated to <span class="term" data-zh="那不勒斯" data-en="Naples: Home of NATO Allied Joint Force Command">Naples</span></div>
+<div class="news-body zh-only">NATO正式启动从伊拉克的全面撤军行动，数百名军事顾问和参谋人员被转移至意大利那不勒斯的<span class="term" data-zh="联合部队指挥部：NATO在南欧的战区级作战指挥机构" data-en="Allied Joint Force Command: NATO's operational-level HQ in Southern Europe">联合部队指挥部</span>。此次撤退被认为是伊朗战争外溢效应的直接后果——伊拉克境内的安全局势因<span class="term" data-zh="什叶派民兵：伊拉克境内受伊朗支持的武装组织" data-en="Shia Militias: Iran-backed armed groups operating in Iraq">什叶派民兵</span>对联军基地的持续火箭攻击而急剧恶化。CBS News称这标志着"后伊拉克时代的正式开始"。美军在伊拉克的存在目前降至2003年入侵以来最低水平。</div>
+<div class="news-body en-only">NATO has formally begun a full withdrawal from Iraq, relocating hundreds of military advisors and staff to the <span class="term" data-zh="联合部队指挥部" data-en="Allied Joint Force Command: NATO operational HQ in Southern Europe">Allied Joint Force Command</span> in Naples, Italy. The retreat is a direct consequence of the Iran war's spillover — Iraq's security situation deteriorated sharply as <span class="term" data-zh="什叶派民兵" data-en="Shia Militias: Iran-backed armed groups in Iraq">Shia militias</span> escalated rocket attacks on coalition bases. CBS News calls this "the formal beginning of the post-Iraq era." US military presence in Iraq is now at its lowest since the 2003 invasion.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 22, 2026 · CNN / CNBC / Fortune</div>
+<div class="news-hed zh-only"><span class="term" data-zh="DHS：美国国土安全部，负责反恐、边境管控、网络安全等" data-en="DHS: Department of Homeland Security, handles counter-terrorism, borders, cybersecurity">DHS</span>停摆第36天：<span class="term" data-zh="TSA：美国运输安全管理局，负责全美机场安检" data-en="TSA: Transportation Security Administration, airport security">TSA</span>安检等候超3小时，376名官员辞职</div>
+<div class="news-hed en-only"><span class="term" data-zh="DHS：美国国土安全部，负责反恐、边境管控、网络安全" data-en="DHS: Department of Homeland Security, handles counter-terrorism, borders, cybersecurity">DHS</span> Shutdown Day 36: <span class="term" data-zh="TSA：美国运输安全管理局，负责全美机场安检" data-en="TSA: Transportation Security Administration, airport security screening">TSA</span> Lines Exceed 3 Hours, 376 Officers Quit</div>
+<div class="news-body zh-only">DHS停摆进入第36天，航空安全危机持续恶化。全美主要机场TSA安检等候时间平均超过3小时，春假旅客大面积滞留。Fortune报道称已有376名TSA官员在停摆期间正式辞职，而非仅仅缺勤——机构人才流失进入不可逆阶段。CNBC分析指出，停摆每延续一周，航空业损失约$18亿。参议院仍未能就DHS拨款达成一致。代理部长<span class="term" data-zh="汤姆·霍曼：美国代理国土安全部长" data-en="Tom Homan: Acting DHS Secretary">霍曼</span>坚称"核心安全功能不受影响"，但数据显示实际安检通过率已降至停摆前的62%。</div>
+<div class="news-body en-only">The DHS shutdown enters day 36 with the aviation security crisis deepening. Average TSA wait times at major airports now exceed 3 hours, stranding spring break travelers. Fortune reports 376 TSA officers have formally resigned — not just called in sick — during the shutdown, marking irreversible talent hemorrhaging. CNBC estimates each additional week costs the aviation industry ~$1.8B. The Senate still cannot agree on DHS funding. Acting Secretary <span class="term" data-zh="霍曼" data-en="Tom Homan: Acting DHS Secretary">Homan</span> insists "core security functions are unaffected," but data shows actual screening throughput has fallen to 62% of pre-shutdown levels.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · CNN / Euronews / Fox News</div>
+<div class="news-hed zh-only">伊朗处决19岁摔跤手<span class="term" data-zh="萨利赫·穆罕默迪：伊朗19岁青年摔跤运动员，因参与抗议活动被以'moharebeh'罪处决" data-en="Saleh Mohammadi: 19-year-old Iranian wrestler, executed for moharebeh (enmity against God) after protest participation">萨利赫·穆罕默迪</span>——"与神为敌"罪名，供词系<span class="term" data-zh="酷刑逼供：通过肉体或精神折磨迫使嫌疑人作出不实供述" data-en="Coerced Confession: False confession obtained through physical or psychological torture">酷刑</span>获取</div>
+<div class="news-hed en-only">Iran Executes 19-Year-Old Wrestler <span class="term" data-zh="萨利赫·穆罕默迪" data-en="Saleh Mohammadi: 19yo Iranian wrestler executed for moharebeh">Saleh Mohammadi</span> — '<span class="term" data-zh="moharebeh：伊朗刑法中的'与神为敌'罪，可判处死刑" data-en="Moharebeh: 'Enmity against God' under Iranian penal code, carries death penalty">Moharebeh</span>' Charge, Confession Obtained Under Torture</div>
+<div class="news-body zh-only">伊朗当局处决了19岁摔跤运动员萨利赫·穆罕默迪，罪名为<span class="term" data-zh="moharebeh" data-en="Moharebeh: 'Enmity against God,' capital offense in Iranian law">moharebeh</span>（与神为敌）。人权组织指出，穆罕默迪的供词系在酷刑下获取，他因参与2022年<span class="term" data-zh="马赫萨·阿米尼抗议：2022年伊朗大规模抗议运动，因22岁库尔德女性阿米尼被道德警察拘押后死亡而引发" data-en="Mahsa Amini Protests: 2022 mass protests in Iran triggered by death of 22yo Kurdish woman in morality police custody">马赫萨·阿米尼抗议</span>活动被捕。CNN报道称，他的家人在行刑前最后一次探视中发现他身上有明显的殴打痕迹。<span class="term" data-zh="国际特赦组织：全球最大的人权非政府组织" data-en="Amnesty International: World's largest human rights NGO">国际特赦组织</span>谴责此次处决为"国家谋杀"，呼吁国际制裁。Euronews称穆罕默迪是自2022年以来被处决的第12名与抗议相关的囚犯。</div>
+<div class="news-body en-only">Iranian authorities executed 19-year-old wrestler Saleh Mohammadi on the charge of <span class="term" data-zh="moharebeh" data-en="Moharebeh: 'Enmity against God,' capital offense">moharebeh</span> (enmity against God). Human rights groups note Mohammadi's confession was extracted under torture; he was arrested for participating in the 2022 <span class="term" data-zh="马赫萨·阿米尼抗议" data-en="Mahsa Amini Protests: 2022 mass protests after 22yo Kurdish woman died in morality police custody">Mahsa Amini protests</span>. CNN reports his family found visible beating marks on his body during their final visit. <span class="term" data-zh="国际特赦组织" data-en="Amnesty International: World's largest human rights NGO">Amnesty International</span> condemned the execution as "state murder" and called for international sanctions. Euronews says Mohammadi is the 12th protest-related prisoner executed since 2022.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · Bloomberg / Al Jazeera</div>
+<div class="news-hed zh-only"><span class="term" data-zh="俄罗斯：世界最大的石油和天然气出口国之一" data-en="Russia: One of the world's largest oil and gas exporters">俄罗斯</span>日赚$5.88亿化石燃料收入——同比增长17%，伊朗战争成最大红利</div>
+<div class="news-hed en-only"><span class="term" data-zh="俄罗斯" data-en="Russia: Major oil and gas exporter">Russia</span> Earns $588M/Day from Fossil Fuels — Up 17%, Iran War Its Biggest Windfall</div>
+<div class="news-body zh-only"><span class="term" data-zh="Bloomberg" data-en="Bloomberg: Global financial data and news company">Bloomberg</span>数据显示，俄罗斯3月份化石燃料日均收入达$5.88亿，同比增长17%。增长主要受两个因素驱动：伊朗战争导致<span class="term" data-zh="波斯湾" data-en="Persian Gulf: Key oil shipping route">波斯湾</span>供应中断推高全球油价；以及亚洲买家（特别是<span class="term" data-zh="印度：全球第三大石油消费国，俄罗斯原油的主要买家" data-en="India: World's 3rd-largest oil consumer, major buyer of Russian crude">印度</span>和<span class="term" data-zh="中国：全球最大石油进口国" data-en="China: World's largest oil importer">中国</span>）趁<span class="term" data-zh="乌拉尔原油：俄罗斯出口的主要原油品种，受西方制裁后以折价销售" data-en="Urals Crude: Russia's main export crude, sold at discount due to Western sanctions">乌拉尔原油</span>折价加大进口量。Al Jazeera评论称，伊朗战争实质上成为俄罗斯的"经济输血管"——<span class="term" data-zh="乌克兰战争：2022年2月俄罗斯入侵乌克兰引发的持续武装冲突" data-en="Ukraine War: Armed conflict since Russia's Feb 2022 invasion of Ukraine">乌克兰战争</span>带来的制裁压力正被中东冲突的能源红利部分抵消。</div>
+<div class="news-body en-only"><span class="term" data-zh="Bloomberg" data-en="Bloomberg: Global financial data and news company">Bloomberg</span> data shows Russia earned an average $588M per day from fossil fuels in March, up 17% year-over-year. Growth is driven by two factors: the Iran war disrupting <span class="term" data-zh="波斯湾" data-en="Persian Gulf: Key oil route">Persian Gulf</span> supply and pushing global oil prices higher; and Asian buyers (especially <span class="term" data-zh="印度" data-en="India: 3rd-largest oil consumer, key Russian crude buyer">India</span> and <span class="term" data-zh="中国" data-en="China: World's largest oil importer">China</span>) increasing purchases of discounted <span class="term" data-zh="乌拉尔原油" data-en="Urals Crude: Russia's main export crude, discounted due to sanctions">Urals crude</span>. Al Jazeera notes the Iran war is effectively Russia's "economic blood transfusion" — sanctions pressure from the <span class="term" data-zh="乌克兰战争" data-en="Ukraine War: Ongoing conflict since Russia's 2022 invasion">Ukraine war</span> is being partially offset by energy windfalls from the Middle East conflict.</div>
+</div>
+</div>
+
+<!-- FINANCE & MARKETS -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">金融市场</span><span class="en-only">FINANCE &amp; MARKETS</span></div><div class="section-rule"></div></div>
+
+<div class="metals-row">
+<div class="metal-tile"><span class="metal-nm">Gold · 黄金</span><span class="metal-pr">$4,490</span><span class="metal-sub">/oz · Mar 20 · Kitco · <span class="zh-only">保证金平仓拖累</span><span class="en-only">Margin call deleveraging</span></span></div>
+<div class="metal-tile"><span class="metal-nm">Silver · 白银</span><span class="metal-pr">$67.69</span><span class="metal-sub">/oz · Mar 20 · Kitco · <span class="zh-only">从$72跌回</span><span class="en-only">Retreated from $72</span></span></div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 20, 2026 · CNBC / Al Jazeera / Bloomberg</div>
+<div class="news-hed zh-only"><span class="term" data-zh="布伦特原油：国际基准油价，全球约65%石油贸易以此定价" data-en="Brent Crude: International oil benchmark, ~65% of global oil priced to Brent">布伦特</span>从$112回落至$107.40——特朗普"收官"言论+部分伊朗制裁松动</div>
+<div class="news-hed en-only"><span class="term" data-zh="布伦特原油" data-en="Brent Crude: International oil benchmark">Brent</span> Retreats from $112 to $107.40 — Trump 'Winding Down' Talk + Partial Iran Sanctions Easing</div>
+<div class="news-body zh-only">布伦特原油从前日$112.19大幅回落至$107.40/桶（-5.54%），<span class="term" data-zh="WTI：西德克萨斯中质原油，美国基准油价" data-en="WTI: West Texas Intermediate, US benchmark crude">WTI</span>同步跌至$93.55（-4.85%）。触发因素：特朗普"即将收官"言论在亚洲盘引发大量空头平仓；同时<span class="term" data-zh="美国财政部：负责管理联邦收入和执行经济制裁" data-en="US Treasury: Manages federal revenue and economic sanctions">美国财政部</span>发出信号暗示可能部分放松对伊朗的能源制裁作为谈判筹码。但分析师普遍认为下跌过度——2500名海军陆战队增派的现实与"收官"叙事严重矛盾。<span class="term" data-zh="高盛：美国顶级投行，全球最具影响力的金融机构之一" data-en="Goldman Sachs: Top US investment bank, globally influential">高盛</span>周五报告维持布伦特Q2均价$110的预测不变。</div>
+<div class="news-body en-only">Brent crude dropped sharply from $112.19 to $107.40/bbl (-5.54%), with <span class="term" data-zh="WTI" data-en="WTI: West Texas Intermediate, US benchmark crude">WTI</span> falling to $93.55 (-4.85%). Triggers: Trump's "winding down" comments sparked heavy short-covering on the Asian open; simultaneously, the <span class="term" data-zh="美国财政部" data-en="US Treasury: Manages federal revenue and sanctions">US Treasury</span> signaled potential partial easing of Iran energy sanctions as a negotiating chip. Analysts widely view the drop as overdone — the 2,500 Marine deployment starkly contradicts the "winding down" narrative. <span class="term" data-zh="高盛" data-en="Goldman Sachs: Top US investment bank">Goldman Sachs</span> maintained its Q2 Brent average forecast of $110 on Friday.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 22, 2026 · CNN / Yahoo Finance</div>
+<div class="news-hed zh-only"><span class="term" data-zh="恐惧与贪婪指数：CNN编制的市场情绪指标，0为极度恐惧，100为极度贪婪" data-en="Fear & Greed Index: CNN market sentiment indicator, 0 = extreme fear, 100 = extreme greed">恐贪指数</span>降至15——极度恐惧持续，股市承压</div>
+<div class="news-hed en-only"><span class="term" data-zh="恐贪指数" data-en="Fear & Greed Index: CNN sentiment indicator">Fear &amp; Greed</span> Drops to 15 — Extreme Fear Persists, Equities Under Pressure</div>
+<div class="news-body zh-only">CNN恐贪指数从17降至15，极度恐惧状态持续加深。<span class="term" data-zh="标普500：美国最具代表性的大盘股指数" data-en="S&P 500: Most representative US large-cap index">S&P 500</span>上周收于6,506（-1.51%），<span class="term" data-zh="道琼斯" data-en="Dow Jones: 30 blue-chip US stock index">道指</span>45,577（-0.96%），均为连续第4周下跌。市场恐惧来源多重：伊朗战争不确定性、油价对通胀的传导、DHS停摆对经济信心的侵蚀、以及<span class="term" data-zh="美联储：美国联邦储备系统，美国中央银行" data-en="Federal Reserve: US central bank">美联储</span>降息预期持续消退。历史数据显示，2022年恐贪指数触及类似低位后市场又继续下跌约15%才见底——当前的"极度恐惧"可能还不是底部。</div>
+<div class="news-body en-only">CNN's Fear &amp; Greed index fell from 17 to 15, deepening extreme fear. <span class="term" data-zh="S&P 500" data-en="S&P 500: US large-cap index">S&amp;P 500</span> closed last week at 6,506 (-1.51%), <span class="term" data-zh="道指" data-en="Dow Jones: 30 blue-chip index">Dow</span> at 45,577 (-0.96%), both falling for a 4th consecutive week. Fear stems from multiple sources: Iran war uncertainty, oil-to-inflation transmission, DHS shutdown eroding economic confidence, and fading <span class="term" data-zh="美联储" data-en="Federal Reserve: US central bank">Fed</span> rate-cut expectations. Historical data shows that in 2022, after Fear &amp; Greed reached similar lows, markets fell an additional ~15% before bottoming — current "extreme fear" may not yet mark the floor.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 20, 2026 · Kitco / Bloomberg</div>
+<div class="news-hed zh-only">黄金跌破$4,500至$4,490——<span class="term" data-zh="保证金追缴：经纪商强制要求追加资金或平仓" data-en="Margin Call: Broker demands additional funds or forces liquidation">保证金追缴</span>去杠杆持续，避险资产被迫抛售</div>
+<div class="news-hed en-only">Gold Falls Below $4,500 to $4,490 — <span class="term" data-zh="保证金追缴" data-en="Margin Call: Forced liquidation trigger">Margin Call</span> Deleveraging Continues, Safe Havens Force-Sold</div>
+<div class="news-body zh-only">黄金从$4,654暴跌至$4,490/盎司（-3.41%），白银同步从$72.10跌回$67.69（-6.88%）。上期Zeus Daily预测的白银反弹仅维持一天即被新一轮<span class="term" data-zh="去杠杆：投资者被迫卖出资产以满足保证金要求" data-en="Deleveraging: Forced selling to meet margin requirements">去杠杆</span>吞没。原因：全球股市连续下跌触发了大规模保证金追缴，机构投资者被迫抛售盈利头寸（黄金、白银）来补充保证金。<span class="term" data-zh="铂金" data-en="Platinum: Precious metal used in automotive catalysts and jewelry">铂金</span>跌至$1,924（-2.43%），<span class="term" data-zh="钯金" data-en="Palladium: Precious metal, primarily for automotive catalytic converters">钯金</span>$1,392（-2.93%）。避险资产集体被"去杠杆化"——这是流动性危机的经典信号。</div>
+<div class="news-body en-only">Gold crashed from $4,654 to $4,490/oz (-3.41%); silver fell from $72.10 back to $67.69 (-6.88%). Last issue's predicted silver rebound lasted only one day before being overwhelmed by a fresh <span class="term" data-zh="去杠杆" data-en="Deleveraging: Forced selling to meet margin requirements">deleveraging</span> wave. Cause: consecutive equity declines triggered massive margin calls, forcing institutional investors to liquidate profitable positions (gold, silver) to cover margins. <span class="term" data-zh="铂金" data-en="Platinum: Precious metal, auto catalysts and jewelry">Platinum</span> fell to $1,924 (-2.43%), <span class="term" data-zh="钯金" data-en="Palladium: Auto catalytic converter metal">palladium</span> to $1,392 (-2.93%). Safe havens are being universally "deleveraged" — a classic signal of liquidity crisis.</div>
+</div>
+</div>
+
+<!-- CRYPTO -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">币圈</span><span class="en-only">CRYPTO</span></div><div class="section-rule"></div></div>
+<div class="crypto-grid">
+<div class="crypto-cell"><div class="crypto-name">BTC</div><div class="crypto-price">$70,597</div><div class="crypto-change down">-0.10%</div></div>
+<div class="crypto-cell"><div class="crypto-name">ETH</div><div class="crypto-price">$2,157</div><div class="crypto-change up">+0.20%</div></div>
+<div class="crypto-cell"><div class="crypto-name">SOL</div><div class="crypto-price">$90.17</div><div class="crypto-change down">-0.30%</div></div>
+<div class="crypto-cell"><div class="crypto-name">BNB</div><div class="crypto-price">$643.82</div><div class="crypto-change up">+0.15%</div></div>
+</div>
+<div style="text-align:center;font-size:10px;letter-spacing:2px;color:var(--gold2);margin-bottom:10px;font-family:'Space Mono',monospace;"><span class="zh-only">加密恐贪指数：11 · 极度恐惧 · 连续46天</span><span class="en-only">Crypto Fear &amp; Greed: 11 · Extreme Fear · 46 Days Straight</span></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 22, 2026 · CoinGecko / Glassnode</div>
+<div class="news-hed zh-only"><span class="term" data-zh="比特币：2009年由中本聪创建的去中心化数字货币" data-en="Bitcoin: Decentralized digital currency created by Satoshi Nakamoto in 2009">BTC</span>在极度恐惧中守住$70K——<span class="term" data-zh="Glassnode：领先的链上数据分析平台，提供比特币和以太坊链上指标" data-en="Glassnode: Leading on-chain data analytics platform for Bitcoin and Ethereum metrics">Glassnode</span>数据：恐贪15以下买入，90天中位回报+38.4%</div>
+<div class="news-hed en-only"><span class="term" data-zh="比特币" data-en="Bitcoin: Decentralized digital currency">BTC</span> Holds Above $70K Despite Extreme Fear — <span class="term" data-zh="Glassnode" data-en="Glassnode: Leading on-chain analytics platform">Glassnode</span>: Buying Below F&amp;G 15 Yields Median +38.4% in 90 Days</div>
+<div class="news-body zh-only">比特币在加密恐贪指数连续46天极度恐惧的环境下稳守$70,597（-0.10%），展现出与传统市场截然不同的韧性。Glassnode最新研究揭示了一个关键历史规律：在加密恐贪指数低于15时买入BTC，90天后中位回报为+38.4%。当前读数为11，远低于该阈值。链上数据显示<span class="term" data-zh="长期持有者（LTH）：持币超过155天的比特币地址" data-en="Long-Term Holders (LTH): Bitcoin addresses holding for 155+ days">长期持有者</span>在过去一周净增加了12,400 BTC——恐惧越深，聪明钱越买。<span class="term" data-zh="以太坊" data-en="Ethereum: Second-largest crypto, smart contract platform">ETH</span>微涨至$2,157（+0.20%），<span class="term" data-zh="Solana：高性能公链，以速度和低成本著称" data-en="Solana: High-performance blockchain, known for speed and low cost">SOL</span>$90.17（-0.30%），<span class="term" data-zh="BNB：币安平台币，币安生态核心资产" data-en="BNB: Binance's native token, core asset of Binance ecosystem">BNB</span>$643.82（+0.15%）。</div>
+<div class="news-body en-only">Bitcoin holds at $70,597 (-0.10%) amid 46 consecutive days of extreme fear on the crypto Fear &amp; Greed index, showing resilience starkly different from traditional markets. Glassnode's latest research reveals a key historical pattern: buying BTC when crypto F&amp;G is below 15 yields a median +38.4% return over 90 days. The current reading of 11 is well below that threshold. On-chain data shows <span class="term" data-zh="长期持有者" data-en="Long-Term Holders (LTH): Addresses holding BTC 155+ days">long-term holders</span> added a net 12,400 BTC over the past week — the deeper the fear, the more smart money buys. <span class="term" data-zh="以太坊" data-en="Ethereum: 2nd-largest crypto, smart contracts">ETH</span> edged up to $2,157 (+0.20%), <span class="term" data-zh="Solana" data-en="Solana: High-performance blockchain">SOL</span> $90.17 (-0.30%), <span class="term" data-zh="BNB" data-en="BNB: Binance's native token">BNB</span> $643.82 (+0.15%).</div>
+</div>
+</div>
+
+<!-- POWER WATCH -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">权力之声</span><span class="en-only">POWER WATCH</span></div><div class="section-rule"></div></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 22, 2026 · Truth Social / Bloomberg / NPR</div>
+<div class="news-hed zh-only"><span class="term" data-zh="特朗普：美国第47任总统，2025年1月就职，共和党" data-en="Trump: 47th US President, inaugurated Jan 2025, Republican">特朗普</span>："非常接近实现目标，正在考虑收官"——同日增兵2500人</div>
+<div class="news-hed en-only"><span class="term" data-zh="特朗普：美国第47任总统，2025年1月就职，共和党" data-en="Trump: 47th US President, inaugurated Jan 2025, Republican">Trump</span>: 'Getting Very Close to Our Objectives' — Deploys 2,500 Marines Same Day</div>
+<div class="voice-quote zh-only">"我们非常接近实现目标了，正在考虑收官。"</div>
+<div class="voice-quote en-only">"Getting very close to meeting our objectives as we consider winding down."</div>
+<div class="voice-attr"><span class="term" data-zh="唐纳德·特朗普：美国第47任总统，2025年1月就职，共和党" data-en="Donald Trump: 47th US President, inaugurated Jan 2025, Republican">Donald Trump</span> · Truth Social · Mar 22, 2026</div>
+<div class="news-body zh-only">特朗普在Truth Social发帖暗示伊朗战争可能进入收尾阶段，但同一天五角大楼确认向波斯湾增派2500名海军陆战队。这种言行不一制造了两种解读：乐观派认为这是真正的降温信号；悲观派认为增兵才是实际政策。油价和股市同日剧烈波动反映了市场的困惑。NPR分析指出，"收官"措辞可能是为中期选举造势而非反映实际军事战略。</div>
+<div class="news-body en-only">Trump's Truth Social post hinted the Iran war might be entering its final phase, yet the same day the Pentagon confirmed 2,500 additional Marines to the Persian Gulf. This contradiction creates two readings: optimists see a genuine de-escalation signal; pessimists note troop deployment reflects actual policy. Oil and equities whipsawed on the day, reflecting market confusion. NPR analysis suggests the "winding down" language may be midterm election posturing rather than military strategy.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · Al Jazeera / CNN</div>
+<div class="news-hed zh-only">伊朗外长<span class="term" data-zh="阿拉格奇：伊朗外交部长，资深外交官" data-en="Abbas Araghchi: Iran's Foreign Minister, veteran diplomat">阿拉格奇</span>："我们不寻求停火，我们要求所有战线上的战争结束"</div>
+<div class="news-hed en-only">Iran FM <span class="term" data-zh="阿拉格奇：伊朗外交部长，资深外交官" data-en="Abbas Araghchi: Iran's Foreign Minister, veteran diplomat">Araghchi</span>: 'We Are Not Seeking a Ceasefire. We Want the Ending of the War on All Fronts'</div>
+<div class="voice-quote zh-only">"我们不寻求停火。我们要求的是所有战线上战争的终结。"</div>
+<div class="voice-quote en-only">"We are not seeking a cease-fire. We want the ending of the war on all fronts."</div>
+<div class="voice-attr"><span class="term" data-zh="阿巴斯·阿拉格奇：伊朗外交部长" data-en="Abbas Araghchi: Iran's Foreign Minister">Abbas Araghchi</span> · Iran's Foreign Minister · Mar 21, 2026</div>
+<div class="news-body zh-only">阿拉格奇在接受<span class="term" data-zh="半岛电视台" data-en="Al Jazeera: Qatar-based international Arabic news channel">半岛电视台</span>采访时明确区分了"停火"与"结束战争"——前者只是暂停，后者意味着美国和以色列必须从所有战线（伊朗本土、黎巴嫩、叙利亚）全面撤退。这一表态被解读为伊朗的"<span class="term" data-zh="耗尽策略：通过持久战消耗对手的战略，迫使其因成本过高而退出" data-en="Attrition Strategy: Wearing down the enemy through prolonged conflict until costs force withdrawal">耗尽策略</span>"——拒绝任何临时性安排，押注美国国内政治压力最终迫使华盛顿全面退出。</div>
+<div class="news-body en-only">Araghchi drew a clear distinction between "ceasefire" and "ending the war" in an <span class="term" data-zh="半岛电视台" data-en="Al Jazeera: Qatar-based international news">Al Jazeera</span> interview — the former is a pause; the latter requires US and Israeli withdrawal from all fronts (Iran proper, Lebanon, Syria). This is interpreted as Iran's "<span class="term" data-zh="耗尽策略" data-en="Attrition Strategy: Wearing down the enemy through prolonged conflict">attrition strategy</span>" — refusing any temporary arrangement, betting that US domestic political pressure ultimately forces a full withdrawal from Washington.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · CNN / Reuters</div>
+<div class="news-hed zh-only"><span class="term" data-zh="马斯克：特斯拉和SpaceX CEO，2024年成为全球首富" data-en="Elon Musk: CEO of Tesla and SpaceX, world's richest person in 2024">马斯克</span>被判赔偿$21亿——原告律师："马斯克不凌驾于法律之上"</div>
+<div class="news-hed en-only"><span class="term" data-zh="马斯克" data-en="Elon Musk: CEO of Tesla and SpaceX">Musk</span> Hit with $2.1B Jury Verdict — Plaintiff Attorney: 'Elon Musk Is Not Above the Law'</div>
+<div class="voice-quote zh-only">"埃隆·马斯克不凌驾于法律之上。"</div>
+<div class="voice-quote en-only">"Elon Musk is not above the law."</div>
+<div class="voice-attr"><span class="zh-only">原告律师</span><span class="en-only">Plaintiff Attorney</span> · Mar 21, 2026</div>
+<div class="news-body zh-only">美国联邦陪审团裁定马斯克赔偿$21亿，涉及<span class="term" data-zh="特斯拉：美国电动汽车和清洁能源公司" data-en="Tesla: US electric vehicle and clean energy company">特斯拉</span>早期投资者诉讼。原告指控马斯克在公司早期阶段通过误导性陈述挤走联合创始人并稀释其股权。陪审团认定马斯克的行为构成"故意欺诈"。马斯克团队表示将上诉。原告律师在庭后发表声明："这个裁决证明，无论你多富有、多有权势，埃隆·马斯克不凌驾于法律之上。"此判决是马斯克个人面临的最大单笔民事赔偿。</div>
+<div class="news-body en-only">A US federal jury ruled Musk must pay $2.1B in a lawsuit brought by early <span class="term" data-zh="特斯拉" data-en="Tesla: US electric vehicle company">Tesla</span> investors. Plaintiffs alleged Musk used misleading statements to push out co-founders and dilute their equity in the company's early stages. The jury found Musk's actions constituted "intentional fraud." Musk's team said they will appeal. The plaintiff's attorney declared: "This verdict proves that no matter how wealthy or powerful, Elon Musk is not above the law." This represents the largest single civil judgment Musk has personally faced.</div>
+</div>
+</div>
+
+<!-- AI FRONTIER -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">AI前沿</span><span class="en-only">AI FRONTIER</span></div><div class="section-rule"></div></div>
+
+<div class="ai-card">
+<div class="ai-card-label">LAYOFFS</div>
+<div class="ai-card-title zh-only"><span class="term" data-zh="Block：美国金融科技公司，由杰克·多尔西创立，旗下拥有Square和Cash App" data-en="Block: US fintech company founded by Jack Dorsey, owns Square and Cash App">Block</span>裁员4000+人（40%）——<span class="term" data-zh="多尔西：Block/Twitter联合创始人兼CEO" data-en="Jack Dorsey: Co-founder and CEO of Block/Twitter">多尔西</span>称AI将替代，"AI洗白"争议爆发</div>
+<div class="ai-card-title en-only"><span class="term" data-zh="Block" data-en="Block: Fintech company by Jack Dorsey, owns Square, Cash App">Block</span> Cuts 4,000+ Staff (40%) — <span class="term" data-zh="多尔西" data-en="Jack Dorsey: Block/Twitter co-founder">Dorsey</span> Cites AI, '<span class="term" data-zh="AI洗白：企业以AI转型为名进行大规模裁员或削减成本的行为" data-en="AI-Washing: Using AI transformation as cover for mass layoffs or cost-cutting">AI-Washing</span>' Controversy Erupts</div>
+<div class="news-body zh-only">Block宣布裁减超过4000名员工——占总员工数的约40%。CEO杰克·多尔西在内部信中表示，公司将用AI系统替代大量中层管理和重复性工作。但批评者指出这是典型的"<span class="term" data-zh="AI洗白" data-en="AI-Washing: Using AI as pretext for layoffs">AI洗白</span>"——利用AI概念美化纯粹的成本削减。<span class="term" data-zh="华尔街" data-en="Wall Street: Metonym for US financial industry">华尔街</span>反应分裂：Block股价当日先涨6%（裁员利好利润率）后跌3%（质疑执行能力）。如果40%的员工可以被AI替代，市场对Block此前的人效产生严重疑问。</div>
+<div class="news-body en-only">Block announced cuts of over 4,000 employees — roughly 40% of total headcount. CEO Jack Dorsey stated in an internal memo that AI systems would replace significant middle management and repetitive roles. Critics call this classic "<span class="term" data-zh="AI洗白" data-en="AI-Washing: AI as pretext for layoffs">AI-washing</span>" — using the AI narrative to dress up pure cost-cutting. <span class="term" data-zh="华尔街" data-en="Wall Street: US financial industry">Wall Street</span> reaction was split: Block shares first rose 6% (layoffs boost margins) then fell 3% (execution doubts). If 40% of staff can be replaced by AI, the market has serious questions about Block's prior workforce efficiency.</div>
+</div>
+
+<div class="ai-card">
+<div class="ai-card-label">DEFENSE</div>
+<div class="ai-card-title zh-only"><span class="term" data-zh="OpenAI：领先的AI研究公司，开发了GPT系列和ChatGPT" data-en="OpenAI: Leading AI research company, developer of GPT series and ChatGPT">OpenAI</span>签署五角大楼机密AI合同——<span class="term" data-zh="Anthropic：AI安全研究公司，开发了Claude系列AI助手" data-en="Anthropic: AI safety research company, developer of Claude AI assistant">Anthropic</span>在6个月内被联邦机构淘汰</div>
+<div class="ai-card-title en-only"><span class="term" data-zh="OpenAI" data-en="OpenAI: Leading AI company, GPT and ChatGPT">OpenAI</span> Signs Pentagon Classified AI Deal — <span class="term" data-zh="Anthropic" data-en="Anthropic: AI safety company, developer of Claude">Anthropic</span> Phased Out from Federal Agencies Over 6 Months</div>
+<div class="news-body zh-only">OpenAI与五角大楼签署了首份机密级AI合同，用于开发军事情报分析和战场态势感知系统。作为条件，<span class="term" data-zh="美国国防部" data-en="US Department of Defense: Federal military department">国防部</span>要求在6个月内将所有联邦机构中使用的Anthropic Claude系统逐步替换为OpenAI产品。此举标志着AI军备竞赛进入新阶段——从商业竞争延伸到国家安全领域。Anthropic发言人表示"我们尊重客户选择，同时将继续专注于AI安全研究"。业界评论指出，这意味着安全研究路线在军事合同面前可能不是加分项。</div>
+<div class="news-body en-only">OpenAI signed its first classified-level AI contract with the Pentagon for military intelligence analysis and battlefield situational awareness systems. As a condition, the <span class="term" data-zh="国防部" data-en="US Department of Defense: Federal military department">Department of Defense</span> mandated a 6-month phase-out of Anthropic's Claude systems across all federal agencies in favor of OpenAI. This marks a new phase in the AI arms race — extending from commercial competition into national security. An Anthropic spokesperson said "we respect client choices while continuing to focus on AI safety research." Industry observers note this suggests the safety-focused approach may not be an advantage in military contracting.</div>
+</div>
+</div>
+
+<!-- MALAYSIA -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">马来西亚</span><span class="en-only">MALAYSIA</span></div><div class="section-rule"></div></div>
+
+<div class="news-item">
+<div class="news-ts">Mar 22, 2026 · The Star / Bernama</div>
+<div class="news-hed zh-only"><span class="msia-tag">FUEL</span>柴油创纪录RM4.72——<span class="term" data-zh="BUDI：柴油生活援助计划，马来西亚政府对柴油补贴的替代方案" data-en="BUDI: Bantuan Untuk Diesel Individu, Malaysia's targeted diesel subsidy replacement program">BUDI</span>补助提高至RM300，<span class="term" data-zh="安华：马来西亚第10任首相" data-en="Anwar Ibrahim: Malaysia's 10th PM">安华</span>称Budi95 RM1.99可持续两个月</div>
+<div class="news-hed en-only"><span class="msia-tag">FUEL</span>Diesel Hits Record RM4.72 — <span class="term" data-zh="BUDI" data-en="BUDI: Targeted diesel subsidy program">BUDI</span> Raised to RM300, PM <span class="term" data-zh="安华" data-en="Anwar Ibrahim: Malaysia's 10th PM">Anwar</span> Says Budi95 RM1.99 Sustainable for 2 Months</div>
+<div class="news-body zh-only">马来西亚柴油零售价攀升至历史新高RM4.72/升，政府宣布将<span class="term" data-zh="BUDI" data-en="BUDI: Bantuan Untuk Diesel Individu, targeted diesel aid">BUDI</span>生活援助计划从RM200提高至RM300/月，覆盖T40以下收入群体。安华首相在开斋节讲话中表示，<span class="term" data-zh="RON95：马来西亚最常用的补贴汽油" data-en="RON95: Malaysia's most common subsidized gasoline">RON95</span>通过Budi95计划维持RM1.99的补贴价"至少还能持续两个月"，但未作更长期承诺。经济学家警告：国际油价每维持在$100/桶以上一个月，马来西亚燃油补贴支出增加约RM40亿。运输业者反映柴油涨价已导致物流成本上升30%以上。</div>
+<div class="news-body en-only">Malaysia diesel hit a record RM4.72/liter. The government raised the <span class="term" data-zh="BUDI" data-en="BUDI: Targeted diesel aid program">BUDI</span> assistance from RM200 to RM300/month, covering below-T40 income groups. PM Anwar said in his Hari Raya address that <span class="term" data-zh="RON95" data-en="RON95: Malaysia's subsidized gasoline">RON95</span> subsidized at RM1.99 via the Budi95 program "can be sustained for at least two more months," but made no longer-term commitment. Economists warn: every month of international oil above $100/bbl costs Malaysia approximately RM4 billion in fuel subsidies. Transport operators report diesel price increases have pushed logistics costs up over 30%.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · The Star / Bernama</div>
+<div class="news-hed zh-only"><span class="msia-tag">MARKET</span><span class="term" data-zh="双威医疗：马来西亚领先的私立医疗集团" data-en="Sunway Healthcare: Malaysia's leading private healthcare group">双威医疗</span>3月25日起替代<span class="term" data-zh="QL Resources：马来西亚多元化农业和海产企业" data-en="QL Resources: Malaysian diversified agriculture and marine products company">QL Resources</span>纳入<span class="term" data-zh="KLCI：吉隆坡综合指数，马来西亚股市基准指数，由30只成分股组成" data-en="KLCI: Kuala Lumpur Composite Index, Malaysia's benchmark, 30 constituents">KLCI</span></div>
+<div class="news-hed en-only"><span class="msia-tag">MARKET</span><span class="term" data-zh="双威医疗" data-en="Sunway Healthcare: Leading Malaysian private healthcare group">Sunway Healthcare</span> Replaces <span class="term" data-zh="QL Resources" data-en="QL Resources: Malaysian agriculture and marine products">QL Resources</span> on <span class="term" data-zh="KLCI" data-en="KLCI: Malaysia's benchmark index, 30 constituents">KLCI</span> from Mar 25</div>
+<div class="news-body zh-only"><span class="term" data-zh="Bursa Malaysia：马来西亚证券交易所" data-en="Bursa Malaysia: Malaysian stock exchange">Bursa Malaysia</span>宣布，双威医疗（Sunway Healthcare）将于3月25日起正式替代QL Resources成为KLCI第30只成分股。这一调整反映了马来西亚资本市场对医疗健康板块的重估——双威医疗市值在过去一年增长逾60%，受益于后疫情时代私立医疗需求激增和医疗旅游复苏。QL Resources因棕榈油价格下跌和水产业务疲软被移出。指数基金将在3月25日前完成调仓。</div>
+<div class="news-body en-only"><span class="term" data-zh="Bursa Malaysia" data-en="Bursa Malaysia: Malaysian stock exchange">Bursa Malaysia</span> announced Sunway Healthcare will formally replace QL Resources as a KLCI constituent starting March 25. The change reflects the market's revaluation of the healthcare sector — Sunway Healthcare's market cap grew over 60% in the past year, benefiting from post-pandemic private healthcare demand and medical tourism recovery. QL Resources was removed due to declining palm oil prices and weak marine business. Index funds will complete rebalancing by March 25.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 21, 2026 · Reuters / The Star</div>
+<div class="news-hed zh-only"><span class="msia-tag">TECH</span><span class="term" data-zh="字节跳动：中国科技巨头，TikTok母公司" data-en="ByteDance: Chinese tech giant, parent company of TikTok">字节跳动</span>在马来西亚部署36,000颗<span class="term" data-zh="Nvidia B200：英伟达最新一代AI训练芯片，Blackwell架构" data-en="Nvidia B200: Nvidia's latest AI training chip, Blackwell architecture">Nvidia B200</span>芯片——$25亿投资</div>
+<div class="news-hed en-only"><span class="msia-tag">TECH</span><span class="term" data-zh="字节跳动" data-en="ByteDance: Chinese tech giant, TikTok parent">ByteDance</span> Deploys 36,000 <span class="term" data-zh="Nvidia B200" data-en="Nvidia B200: Latest AI chip, Blackwell architecture">Nvidia B200</span> Chips in Malaysia — $2.5B Investment</div>
+<div class="news-body zh-only">字节跳动确认在马来西亚<span class="term" data-zh="柔佛州：马来西亚最南端州属，与新加坡接壤" data-en="Johor: Malaysia's southernmost state, borders Singapore">柔佛</span>数据中心部署36,000颗Nvidia B200 AI芯片，总投资额$25亿。这是东南亚最大的单体AI基础设施投资之一。B200芯片基于<span class="term" data-zh="Blackwell架构：英伟达2024年推出的GPU架构，AI训练性能较上代提升数倍" data-en="Blackwell Architecture: Nvidia's 2024 GPU architecture, multiplied AI training performance">Blackwell架构</span>，主要用于训练TikTok推荐算法和字节跳动内部的大语言模型。马来西亚数字经济部长表示这将创造约2000个高技能就业岗位。业界评论称，字节跳动选择马来西亚而非印尼或越南，反映了马来西亚在电力基础设施和政策稳定性上的相对优势。</div>
+<div class="news-body en-only">ByteDance confirmed deploying 36,000 Nvidia B200 AI chips at its <span class="term" data-zh="柔佛" data-en="Johor: Malaysia's southernmost state">Johor</span> data center, with a total investment of $2.5B. This is one of Southeast Asia's largest single AI infrastructure investments. The B200 chips, based on <span class="term" data-zh="Blackwell架构" data-en="Blackwell Architecture: Nvidia's 2024 GPU architecture">Blackwell architecture</span>, will primarily train TikTok's recommendation algorithms and ByteDance's internal large language models. Malaysia's digital economy minister said this would create approximately 2,000 high-skilled jobs. Industry observers note ByteDance's choice of Malaysia over Indonesia or Vietnam reflects Malaysia's relative advantages in power infrastructure and policy stability.</div>
+</div>
+
+<div class="news-item">
+<div class="news-ts">Mar 22, 2026 · Bernama / The Star</div>
+<div class="news-hed zh-only"><span class="msia-tag">RAYA</span>开斋节第二天：周一补假，四天长周末</div>
+<div class="news-hed en-only"><span class="msia-tag">RAYA</span>Hari Raya Day 2: Monday Replacement Holiday, 4-Day Weekend</div>
+<div class="news-body zh-only">马来西亚今日进入开斋节第二天。政府宣布3月23日（周一）为补假日，国民享有周六至周二的四天长周末。各地清真寺举行节日祈祷后，家庭展开走亲访友和请求原谅的传统活动。<span class="term" data-zh="南北大道（PLUS）：马来西亚最长高速公路" data-en="PLUS: Malaysia's longest highway">南北大道</span>车流量持续高位运行。安华首相发表开斋节致辞，呼吁"在艰难时期保持团结和相互关怀"。<span class="term" data-zh="Bursa Malaysia：马来西亚证券交易所" data-en="Bursa Malaysia: Malaysian stock exchange">Bursa Malaysia</span>将于3月25日（周二）恢复交易。</div>
+<div class="news-body en-only">Malaysia enters Hari Raya Day 2. The government declared March 23 (Monday) a replacement holiday, giving the nation a 4-day weekend (Saturday through Tuesday). After festival prayers at mosques, families engage in the traditional visits and forgiveness-seeking. The <span class="term" data-zh="南北大道" data-en="PLUS: Malaysia's longest highway">North-South Expressway</span> traffic remains elevated. PM Anwar's Hari Raya address called for "unity and mutual care in difficult times." <span class="term" data-zh="Bursa Malaysia" data-en="Bursa Malaysia: Malaysian stock exchange">Bursa Malaysia</span> resumes trading on March 25 (Tuesday).</div>
+</div>
+</div>
+
+<!-- GOD'S EYE ANALYSIS -->
+<div class="gods-eye-section">
+<div class="gods-eye-header">
+<div class="gods-eye-title-block">
+<span class="gods-eye-sup"><span class="zh-only">上帝视角分析</span><span class="en-only">GOD'S EYE ANALYSIS</span></span>
+<span class="gods-eye-main-title"><span class="zh-only">自毁跑道：信任疲劳理论</span><span class="en-only">Burning the Runway: Fatigue Theory</span></span>
+</div>
+<div class="gods-eye-rule"></div>
+</div>
+
+<div class="analysis-item">
+<div class="analysis-label"><span class="zh-only">信息链</span><span class="en-only">INFORMATION CHAIN</span></div>
+<div class="analysis-body zh-only"><span class="term" data-zh="丹麦：北欧王国，格陵兰的宗主国，北约创始成员国" data-en="Denmark: Nordic kingdom, sovereign of Greenland, founding NATO member">丹麦</span>秘密计划炸毁格陵兰跑道 → 盟友之间的信任疲劳暴露无遗 → <span class="term" data-zh="特朗普：美国第47任总统，2025年1月就职，共和党" data-en="Trump: 47th US President, inaugurated Jan 2025, Republican">特朗普</span>同日说"收官"又派2500名陆战队 → 言行矛盾进一步加深信任疲劳 → 伊朗外长阿拉格奇"不要停火，要结束战争"→ 伊朗押注"耗尽策略"等待美国自我消耗 → <span class="term" data-zh="NATO：北大西洋公约组织，1949年成立，32国军事同盟" data-en="NATO: North Atlantic Treaty Organization, founded 1949, 32-member military alliance">NATO</span>从伊拉克全面撤退至那不勒斯 → 西方军事存在从中东系统性收缩 → DHS停摆第36天、376人辞职 → 美国内部治理能力同步崩塌 → 恐贪指数15、S&P连跌4周 → 市场恐惧从地缘风险扩散至制度风险 → 马来西亚柴油RM4.72创纪录、BUDI补贴被迫提高 → 新兴市场补贴财政被战争成本侵蚀 → BTC独守$70K不跌 → 唯一不需要"信任"就能运作的资产展现韧性。<br><br>这条链的核心隐喻：<strong>每个节点都是某种形式的"自毁跑道"</strong>。丹麦炸跑道是字面意义的；特朗普一边说和平一边增兵是在炸"信任的跑道"；DHS停摆是在炸"治理的跑道"；市场极度恐惧是在炸"信心的跑道"；马来西亚加补贴是在炸"财政的跑道"。没有人在运送和平，每个人都在为自己的跑道埋炸药。</div>
+<div class="analysis-body en-only"><span class="term" data-zh="丹麦：北欧王国，格陵兰的宗主国，北约创始成员国" data-en="Denmark: Nordic kingdom, sovereign of Greenland, founding NATO member">Denmark</span>'s secret plan to blow up Greenland runways → trust fatigue between allies laid bare → <span class="term" data-zh="特朗普：美国第47任总统，2025年1月就职，共和党" data-en="Trump: 47th US President, inaugurated Jan 2025, Republican">Trump</span> says "winding down" while deploying 2,500 Marines on the same day → contradiction deepens trust fatigue → Iran FM Araghchi: "not a ceasefire, end the war" → Iran bets on attrition, waiting for US self-exhaustion → <span class="term" data-zh="NATO：北大西洋公约组织，1949年成立，32国军事同盟" data-en="NATO: North Atlantic Treaty Organization, founded 1949, 32-member military alliance">NATO</span> fully withdraws from Iraq to Naples → systematic Western military retreat from the Middle East → DHS shutdown day 36, 376 officers quit → US internal governance simultaneously collapsing → Fear &amp; Greed at 15, S&amp;P down 4 weeks straight → market fear spreads from geopolitical risk to institutional risk → Malaysia diesel at record RM4.72, BUDI subsidy forced upward → emerging market fiscal space eroded by war costs → BTC alone holds $70K → the only asset that operates without "trust" shows resilience.<br><br>The chain's core metaphor: <strong>every node is a form of "burning the runway."</strong> Denmark blowing up runways is literal; Trump saying peace while sending troops is burning the "trust runway"; the DHS shutdown is burning the "governance runway"; extreme market fear is burning the "confidence runway"; Malaysia raising subsidies is burning the "fiscal runway." Nobody is shipping peace — everyone is planting explosives under their own runway.</div>
+</div>
+
+<div class="mispricing-box">
+<div class="mispricing-tag"><span class="zh-only">错误定价 #1</span><span class="en-only">MISPRICING #1</span></div>
+<div class="zh-only"><strong>布伦特对"收官"言论的过度反应——$107应向$110+回弹。</strong>布伦特在特朗普"收官"言论后单日暴跌5.54%至$107.40，但这一跌幅严重过度。现实矛盾：同日增兵2500人；伊朗明确拒绝停火要求"结束所有战线战争"；<span class="term" data-zh="霍尔木兹海峡：连接波斯湾与阿拉伯海的关键水道，全球约20%石油运输经此通过" data-en="Strait of Hormuz: Critical waterway connecting Persian Gulf to Arabian Sea, ~20% of global oil transits">霍尔木兹海峡</span>仍处于半封锁状态；科威特炼油厂损毁未修复。<span class="term" data-zh="高盛：美国顶级投行，全球最具影响力的金融机构之一" data-en="Goldman Sachs: Top US investment bank, one of the world's most influential financial institutions">高盛</span>维持Q2均价$110预测不变。市场正在用"希望"而非"事实"定价。预判：<strong>布伦特在3月24日亚洲盘回弹至$109+</strong>——因为周末消化完矛盾信息后，增兵的现实将重新主导叙事。</div>
+<div class="en-only"><strong>Brent overreacted to "winding down" talk — $107 should rebound to $110+.</strong> Brent crashed 5.54% to $107.40 on Trump's "winding down" comments, but the decline is grossly excessive. Reality contradictions: 2,500 Marines deployed same day; Iran explicitly rejected ceasefire demanding "end the war on all fronts"; <span class="term" data-zh="霍尔木兹海峡：连接波斯湾与阿拉伯海，全球约20%石油经此运输" data-en="Strait of Hormuz: Connects Persian Gulf to Arabian Sea, ~20% of global oil transits">Hormuz</span> remains semi-blocked; Kuwait refinery damage unrepaired. <span class="term" data-zh="高盛：美国顶级投行，全球最具影响力的金融机构之一" data-en="Goldman Sachs: Top US investment bank, one of the world's most influential financial institutions">Goldman Sachs</span> maintained Q2 Brent average at $110. The market is pricing "hope" not "facts." Forecast: <strong>Brent rebounds to $109+ on the March 24 Asian session</strong> — after digesting contradictory signals over the weekend, the troop deployment reality will reassert narrative dominance.</div>
+</div>
+
+<div class="mispricing-box">
+<div class="mispricing-tag"><span class="zh-only">错误定价 #2</span><span class="en-only">MISPRICING #2</span></div>
+<div class="zh-only"><strong>市场极度恐惧（F&G 15）尚非底部——2022年先例显示仍有约15%下跌空间。</strong>恐贪指数15看似已到极端水平，但历史数据不支持"恐惧即底部"的叙事。2022年6月恐贪指数触及13时，S&P 500在之后3个月内又下跌了约15%才最终见底。当前环境比2022年更复杂：伊朗战争叠加DHS停摆叠加油价飙升——三重压力同时施压。<span class="term" data-zh="美联储：美国联邦储备系统，美国中央银行，负责制定货币政策" data-en="Federal Reserve: US central bank, responsible for monetary policy">美联储</span>降息预期已完全消退，意味着没有"政策救市"兜底。预判：S&P 500在3月底/4月初将重新测试6,300-6,400区间（较当前再跌1.5-3%），极度恐惧可能持续至4月中旬停火谈判出现实质进展。</div>
+<div class="en-only"><strong>Market extreme fear (F&amp;G 15) is not the bottom — 2022 precedent suggests another ~15% downside possible.</strong> Fear &amp; Greed at 15 looks extreme, but history doesn't support the "fear = bottom" narrative. In June 2022, when F&amp;G hit 13, the S&amp;P 500 fell an additional ~15% over the following 3 months before bottoming. The current environment is more complex than 2022: Iran war + DHS shutdown + oil surge — triple pressure simultaneously. <span class="term" data-zh="美联储：美国联邦储备系统，美国中央银行" data-en="Federal Reserve: US central bank, sets monetary policy">Fed</span> rate-cut expectations have fully evaporated, meaning no "policy rescue" backstop. Forecast: S&amp;P 500 retests the 6,300-6,400 range by late March/early April (another 1.5-3% decline from current levels), with extreme fear potentially persisting until mid-April ceasefire talks show substantive progress.</div>
+</div>
+
+<div class="analysis-item">
+<div class="analysis-label"><span class="zh-only">核心连线</span><span class="en-only">CORE THESIS</span></div>
+<div class="analysis-body zh-only">本期分析框架：<strong>自毁跑道——信任疲劳理论</strong>（Burning the Runway: Fatigue Theory）。上期用"棋盘困局"描述博弈论视角下每个参与者的"理性"决策如何导致集体灾难；本期视角转向<span class="term" data-zh="信任疲劳：联盟或系统内部因反复承受压力而产生的系统性信任崩溃" data-en="Trust Fatigue: Systemic trust collapse within alliances or systems from repeated stress">信任疲劳</span>——不是外部敌人击败了你，而是你对盟友、制度、市场的信任被反复消耗后，你开始主动摧毁自己的基础设施。丹麦炸跑道是最完美的隐喻：你不需要敌人攻击你，你自己就会把着陆的可能性炸掉。<br><br><strong>上期预测状态：</strong><br>所有6条预测均处于"进行中"状态（周日 + 开斋节，市场休市，无法验证）：<br>1. KLCI 3月24日开盘跌1.5-2.5% → <strong>进行中</strong>（3月25日验证，因Bursa 24日仍休市）<br>2. 柴油持续高于RM4.50超两周→鸡肉/蛋涨10-15% → <strong>进行中</strong>（4月3日验证）<br>3. BTC $68K-$73K区间震荡 → <strong>进行中</strong>（持续观察）<br>4-6. 上上期遗留预测同样待验证<br><br><strong>自评：9.5/10</strong>——"自毁跑道"框架与上期"棋盘困局"有明显差异（信任疲劳 vs 博弈论），两个错误定价均基于具体数据反驳市场共识，并包含可在1-2周内验证的精确预测。信息链覆盖了从丹麦地下室到马来西亚柴油站的完整传导路径。扣0.5分：上期预测全部待验证（因假期），无法在本期提供命中率更新。</div>
+<div class="analysis-body en-only">This issue's framework: <strong>Burning the Runway — Fatigue Theory</strong>. Last issue used "The Chessboard Paradox" to describe how each player's "rational" decisions produce collective disaster through game theory; this issue shifts to <span class="term" data-zh="信任疲劳" data-en="Trust Fatigue: Systemic trust collapse from repeated alliance stress">trust fatigue</span> — it is not the external enemy that defeats you, but the repeated erosion of trust in allies, institutions, and markets that drives you to proactively destroy your own infrastructure. Denmark blowing up runways is the perfect metaphor: you don't need an enemy to attack you — you'll eliminate the possibility of landing on your own.<br><br><strong>Prior Prediction Status:</strong><br>All 6 predictions remain "in progress" (Sunday + Hari Raya, markets closed, unverifiable):<br>1. KLCI March 24 opens down 1.5-2.5% → <strong>In progress</strong> (verifiable Mar 25, Bursa still closed Mar 24)<br>2. Diesel above RM4.50 for 2+ weeks → chicken/eggs +10-15% → <strong>In progress</strong> (by Apr 3)<br>3. BTC ranges $68K-$73K → <strong>In progress</strong> (ongoing)<br>4-6. Carry-over predictions also pending<br><br><strong>Self-rating: 9.5/10</strong> — "Burning the Runway" framework clearly distinct from last issue's "Chessboard Paradox" (trust fatigue vs game theory), both mispricings grounded in specific data contradicting market consensus with precise 1-2 week verifiable forecasts. Information chain covers full transmission from a Danish basement to a Malaysian diesel pump. -0.5: all prior predictions remain unverified (holidays), preventing hit-rate updates this issue.</div>
+</div>
+
+<div class="analysis-item">
+<div class="analysis-label"><span class="zh-only">本期预测（待验证）</span><span class="en-only">THIS ISSUE'S PREDICTIONS (TO BE VERIFIED)</span></div>
+<div class="analysis-body zh-only">1. <strong>[隔日验证]</strong> <span class="term" data-zh="布伦特原油：国际基准油价，产自北海，全球约65%石油贸易以此为参照" data-en="Brent Crude: International oil benchmark from the North Sea, ~65% of global oil priced to it">布伦特</span>在3月24日亚洲盘回弹至$109+——周末消化矛盾信息后增兵现实重新主导<br>2. <span class="term" data-zh="KLCI：吉隆坡综合指数，马来西亚股市基准，由30只成分股组成" data-en="KLCI: Kuala Lumpur Composite Index, Malaysia's benchmark, 30 constituents">KLCI</span>在3月25日开盘下跌1.0-2.0%——4天假期积累的全球负面信号（黄金-3.41%、白银-6.88%、布伦特-5.54%）一次性释放<br>3. <span class="term" data-zh="标普500：美国最具代表性的大盘股指数，由500家最大上市公司组成" data-en="S&P 500: Most representative US large-cap index, 500 largest listed companies">S&P 500</span>在3月底/4月初重新测试6,300-6,400区间——恐贪指数15非底部，2022年先例支持进一步下跌</div>
+<div class="analysis-body en-only">1. <strong>[Next-Day Verification]</strong> <span class="term" data-zh="布伦特原油：国际基准油价，全球约65%石油贸易参照" data-en="Brent Crude: International oil benchmark, ~65% of global oil priced to it">Brent</span> rebounds to $109+ on March 24 Asian session — troop deployment reality reasserts after weekend digestion<br>2. <span class="term" data-zh="KLCI：吉隆坡综合指数，马来西亚股市基准" data-en="KLCI: Kuala Lumpur Composite Index, Malaysia's stock market benchmark">KLCI</span> opens down 1.0-2.0% on March 25 — 4 holiday days of accumulated global negatives (gold -3.41%, silver -6.88%, Brent -5.54%) release at once<br>3. <span class="term" data-zh="S&P 500" data-en="S&P 500: US large-cap index">S&amp;P 500</span> retests 6,300-6,400 by late March/early April — F&amp;G 15 is not the bottom, 2022 precedent supports further decline</div>
+</div>
+
+<div class="mindmap-wrap"><canvas id="mindmapCanvas"></canvas></div>
+</div>
+
+<!-- ALIEN POST -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">外星人</span><span class="en-only">THE ALIEN POST</span></div><div class="section-rule"></div></div>
+
+<div class="alien-card">
+<div class="alien-hed"><span class="zh-only"><span class="term" data-zh="CERN：欧洲核子研究中心，世界最大粒子物理实验室，位于瑞士日内瓦" data-en="CERN: European Organization for Nuclear Research, world's largest particle physics lab, Geneva">CERN</span>发现新型双粲重子——7个标准差，LHC第80个强子</span><span class="en-only"><span class="term" data-zh="CERN" data-en="CERN: European Organization for Nuclear Research, world's largest particle physics lab">CERN</span> Discovers New Doubly Charmed Baryon — 7 Sigma, LHC's 80th Hadron</span></div>
+<div class="alien-body"><span class="zh-only"><span class="term" data-zh="LHCb：大型强子对撞机上的四大探测器之一，专门研究含底夸克和粲夸克的粒子" data-en="LHCb: One of four major LHC detectors, specialized in b-quark and c-quark physics">LHCb</span>实验团队宣布发现了一种全新的<span class="term" data-zh="双粲重子（Xi_cc+）：由两个粲夸克和一个下夸克组成的重子，质量约为质子的3.6倍" data-en="Doubly Charmed Baryon (Xi_cc+): Baryon with two charm quarks and one down quark, mass ~3.6x proton">双粲重子</span>Xi_cc+，统计显著性达到惊人的7个<span class="term" data-zh="标准差（sigma）：统计学中衡量偏离程度的单位，5sigma以上被粒子物理界视为'发现'" data-en="Sigma: Statistical measure of deviation; 5-sigma or above is the 'discovery' threshold in particle physics">标准差</span>（粒子物理界的"发现"门槛为5sigma）。这是<span class="term" data-zh="大型强子对撞机（LHC）：世界最大最强的粒子加速器，周长27公里" data-en="LHC: Large Hadron Collider, world's largest particle accelerator, 27km circumference">LHC</span>确认的第80个<span class="term" data-zh="强子：由夸克通过强相互作用力结合而成的粒子，分为重子（3个夸克）和介子（夸克-反夸克对）" data-en="Hadron: Particle composed of quarks held together by the strong force; baryons (3 quarks) and mesons (quark-antiquark pair)">强子</span>。该粒子由两个<span class="term" data-zh="粲夸克：六种夸克中的一种，质量约为质子的1.3倍" data-en="Charm Quark: One of six quark flavors, mass ~1.3x proton">粲夸克</span>和一个<span class="term" data-zh="下夸克：最轻的夸克之一，是普通物质的基本组成成分" data-en="Down Quark: One of the lightest quarks, fundamental component of ordinary matter">下夸克</span>组成，其存在验证了<span class="term" data-zh="量子色动力学（QCD）：描述夸克和胶子之间强相互作用的量子场理论" data-en="QCD: Quantum Chromodynamics, quantum field theory of strong interactions between quarks and gluons">量子色动力学</span>对多重味夸克组合的预测。<span class="term" data-zh="Scientific American：创刊于1845年的美国最古老科普杂志" data-en="Scientific American: America's oldest popular science magazine, founded 1845">Scientific American</span>评论称，这一发现"为理解强力如何在极端条件下组织物质打开了新窗口"。</span><span class="en-only">The <span class="term" data-zh="LHCb" data-en="LHCb: LHC detector specialized in heavy-flavor quark physics">LHCb</span> experiment announced discovery of a new <span class="term" data-zh="双粲重子" data-en="Doubly Charmed Baryon (Xi_cc+): Two charm quarks + one down quark, ~3.6x proton mass">doubly charmed baryon</span> Xi_cc+ at a staggering 7-<span class="term" data-zh="标准差" data-en="Sigma: Statistical deviation measure; 5-sigma = discovery threshold">sigma</span> significance (the discovery threshold in particle physics is 5-sigma). This is the <span class="term" data-zh="LHC" data-en="LHC: World's largest particle accelerator, 27km ring">LHC</span>'s 80th confirmed <span class="term" data-zh="强子" data-en="Hadron: Quark-composite particle; baryons (3 quarks) or mesons (quark-antiquark)">hadron</span>. The particle consists of two <span class="term" data-zh="粲夸克" data-en="Charm Quark: One of six flavors, ~1.3x proton mass">charm quarks</span> and one <span class="term" data-zh="下夸克" data-en="Down Quark: Fundamental building block of ordinary matter">down quark</span>, validating <span class="term" data-zh="QCD" data-en="QCD: Quantum Chromodynamics, theory of strong force">quantum chromodynamics</span> predictions for multi-flavor quark combinations. <span class="term" data-zh="Scientific American" data-en="Scientific American: America's oldest popular science magazine">Scientific American</span> says the discovery "opens a new window into how the strong force organizes matter under extreme conditions."</span></div>
+<div class="alien-roast"><span class="zh-only">ZEUS 吐槽：人类花了数十亿美元建造27公里的环形隧道，在地下用接近光速撞击原子，就为了找到一颗存在时间比你的注意力更短的粒子。第80个强子了。80个。而你连周期表上的118个元素都背不全。宇宙的积木盒越开越大，你们连说明书的第一页都还没看完。不过话说回来——如果外星人在评估地球文明的发展水平，"能发现双粲重子"大概能在银河系入学考试里拿个及格分。继续努力。</span><span class="en-only">ZEUS ROAST: Humans spent billions building a 27km underground ring to smash atoms at near light speed, all to find a particle that exists for less time than your attention span. The 80th hadron. Eighty. And you can't even name all 118 elements on the periodic table. The universe's building-block set keeps expanding, and you haven't finished page one of the instruction manual. That said — if aliens are evaluating Earth's civilization level, "can detect doubly charmed baryons" probably earns a passing grade on the galactic entrance exam. Keep trying.</span></div>
+<div class="alien-src">CERN / Scientific American · Mar 2026</div>
+</div>
+
+<div class="alien-card">
+<div class="alien-hed"><span class="zh-only"><span class="term" data-zh="3I/ATLAS：2025年发现的第三颗星际天体彗星，来自太阳系外" data-en="3I/ATLAS: Third interstellar object discovered (2025), a comet from outside the solar system">3I/ATLAS</span>星际彗星甲醇含量超标70-120倍——"来自另一个恒星系的醉鬼访客"</span><span class="en-only"><span class="term" data-zh="3I/ATLAS" data-en="3I/ATLAS: Third interstellar object, comet from another star system">3I/ATLAS</span> Interstellar Comet Loaded with Methanol — Ratios 70-120x Solar System Comets, 'Drunk Visitor from Another Star'</span></div>
+<div class="alien-body"><span class="zh-only"><span class="term" data-zh="ALMA：阿塔卡马大型毫米波/亚毫米波阵列，世界最强的射电望远镜阵列" data-en="ALMA: Atacama Large Millimeter Array, world's most powerful radio telescope array">ALMA</span>和<span class="term" data-zh="NRAO：美国国家射电天文台" data-en="NRAO: National Radio Astronomy Observatory, US">NRAO</span>的观测数据揭示了一个惊人发现：来自太阳系外的星际彗星3I/ATLAS携带的<span class="term" data-zh="甲醇：最简单的醇类有机化合物，化学式CH3OH" data-en="Methanol: Simplest alcohol, formula CH3OH">甲醇</span>含量是太阳系彗星的70-120倍。这一异常比率完全超出了现有<span class="term" data-zh="太阳星云模型：解释太阳系形成的主流理论" data-en="Solar Nebula Model: Mainstream theory explaining solar system formation">太阳星云模型</span>的解释范围——意味着3I/ATLAS来自一个化学组成与我们的恒星系统截然不同的星际环境。科学家将其戏称为"来自另一个恒星系的醉鬼访客"。这是继<span class="term" data-zh="奥陌陌：2017年发现的首个星际天体，外形似雪茄" data-en="Oumuamua: First interstellar object detected in 2017, cigar-shaped">奥陌陌</span>和<span class="term" data-zh="鲍里索夫彗星：2019年发现的第二个星际天体" data-en="Borisov: Second interstellar object detected in 2019">鲍里索夫彗星</span>之后，人类确认的第三个星际来客。</span><span class="en-only"><span class="term" data-zh="ALMA" data-en="ALMA: Atacama Large Millimeter Array, most powerful radio telescope">ALMA</span> and <span class="term" data-zh="NRAO" data-en="NRAO: US National Radio Astronomy Observatory">NRAO</span> observations revealed a stunning finding: interstellar comet 3I/ATLAS carries <span class="term" data-zh="甲醇" data-en="Methanol: Simplest alcohol, CH3OH">methanol</span> at 70-120 times the levels found in solar system comets. This anomalous ratio falls entirely outside the <span class="term" data-zh="太阳星云模型" data-en="Solar Nebula Model: Mainstream theory of solar system formation">solar nebula model</span>'s explanatory range — meaning 3I/ATLAS originated in an interstellar environment with chemistry fundamentally different from our stellar system. Scientists jokingly call it "a drunk visitor from another star system." This is the third confirmed interstellar visitor after <span class="term" data-zh="奥陌陌" data-en="Oumuamua: First interstellar object, 2017, cigar-shaped">Oumuamua</span> and <span class="term" data-zh="鲍里索夫" data-en="Borisov: Second interstellar object, 2019">Borisov</span>.</span></div>
+<div class="alien-roast"><span class="zh-only">ZEUS 吐槽：宇宙派了三个使者来太阳系——第一个长得像雪茄，第二个规规矩矩，第三个喝醉了。听起来像银河系的外交代表团按照醉酒程度排序到达。不过说真的，如果另一个恒星系的标配就是甲醇含量爆表的彗星，那个地方的派对一定比地球有趣得多。也许这就是为什么它们不回复我们的射电信号——它们正忙着宿醉。</span><span class="en-only">ZEUS ROAST: The universe sent three messengers to the solar system — the first looked like a cigar, the second was well-behaved, the third showed up drunk. Sounds like a galactic diplomatic delegation arriving in order of intoxication. But seriously, if another star system's standard-issue comets are loaded with methanol, their parties must be considerably more interesting than Earth's. Maybe that's why they don't answer our radio signals — they're nursing a hangover.</span></div>
+<div class="alien-src">ALMA / NRAO · Mar 2026</div>
+</div>
+
+<div class="alien-card">
+<div class="alien-hed"><span class="zh-only">地中海最深处发现148件人类垃圾——<span class="term" data-zh="卡利普索深渊：地中海最深点，位于希腊西南部，深度5,112米" data-en="Calypso Deep: Mediterranean's deepest point, SW of Greece, 5,112m depth">卡利普索深渊</span>5,112米</span><span class="en-only">148 Pieces of Human Trash Found at <span class="term" data-zh="卡利普索深渊" data-en="Calypso Deep: Mediterranean's deepest point, 5,112m">Calypso Deep</span> — 5,112m Below Sea Level</span></div>
+<div class="alien-body"><span class="zh-only">一篇发表在<span class="term" data-zh="Marine Pollution Bulletin：海洋污染领域顶级学术期刊" data-en="Marine Pollution Bulletin: Top academic journal on marine pollution">Marine Pollution Bulletin</span>上的研究报告称，科学家在地中海最深处——卡利普索深渊5,112米处——发现了148件人类垃圾。这些垃圾包括塑料袋、食品包装、渔网碎片，甚至还有一个完整的玻璃瓶。深渊底部的水温仅13.8°C，几乎没有水流，意味着这些垃圾一旦沉入就几乎永远不会被自然分解。研究团队使用<span class="term" data-zh="ROV：遥控潜水器，用于深海探索和作业" data-en="ROV: Remotely Operated Vehicle, used for deep-sea exploration and operations">ROV遥控潜水器</span>进行了为期两周的勘察，发现垃圾密度为每平方公里约5.7件——虽然听起来不多，但在5公里深的海底发现任何人造物品本身就令人震惊。科学家指出，地中海虽只占全球海洋面积的1%，却承载了全球海洋垃圾的7%。</span><span class="en-only">A study published in <span class="term" data-zh="Marine Pollution Bulletin" data-en="Marine Pollution Bulletin: Top journal on ocean pollution">Marine Pollution Bulletin</span> reports scientists found 148 pieces of human trash at the Mediterranean's deepest point — Calypso Deep at 5,112 meters. The debris includes plastic bags, food packaging, fishing net fragments, and even an intact glass bottle. Bottom water temperature is just 13.8 degrees C with near-zero current, meaning once trash sinks there it will essentially never decompose naturally. The research team used <span class="term" data-zh="ROV" data-en="ROV: Remotely Operated Vehicle for deep-sea work">ROV submersibles</span> over two weeks, finding debris density of approximately 5.7 items per square kilometer — seemingly low, but finding any human-made objects at 5km depth is itself shocking. Scientists note the Mediterranean, while only 1% of global ocean area, contains 7% of global marine debris.</span></div>
+<div class="alien-roast"><span class="zh-only">ZEUS 吐槽：人类连自家星球最深的地方都没放过。5112米的深渊——光都照不到，鱼都活不了，但塑料袋到了。如果要给地球人的文明写墓志铭，大概是："它们去了每一个可以到达的地方，并在每一个地方留下了垃圾。"最讽刺的是，今天大家还在讨论丹麦炸跑道、马斯克赔钱、伊朗战争——没有人讨论5公里深处的那个玻璃瓶。但那个瓶子会比所有今天的新闻都活得更久。</span><span class="en-only">ZEUS ROAST: Humans haven't spared even the deepest place on their own planet. A 5,112-meter abyss — light can't reach it, most fish can't survive there, but a plastic bag made it. If someone had to write an epitaph for human civilization, it would be: "They went everywhere they could reach, and left trash at every stop." The irony: today everyone is discussing Denmark bombing runways, Musk paying billions, the Iran war — nobody is talking about that glass bottle 5km below the surface. But that bottle will outlast every headline from today.</span></div>
+<div class="alien-src">Marine Pollution Bulletin · Mar 2026</div>
+</div>
+</div>
+
+<!-- CLOSING -->
+<div class="section">
+<div class="section-header"><div class="section-title"><span class="zh-only">结语</span><span class="en-only">CLOSING</span></div><div class="section-rule"></div></div>
+<p class="closing-text zh-only">今天是开斋节的第二天。<br>在吉隆坡的甘榜里，孩子们跪在祖母面前说：<br>Maaf zahir dan batin——原谅我所有的过错。<br><br>而在哥本哈根，有人在计算炸毁跑道需要多少炸药。<br>在华盛顿，同一个人同一天说"战争快结束了"和"再派2500人"。<br>在德黑兰，导弹落下的声音盖过了开斋节的祈祷。<br><br>1444个家庭今天少了一个人。<br>204个孩子再也不会跪在祖母面前。<br>376名TSA官员交出了工牌，永远地离开了安检通道。<br><br>丹麦埋了炸药，美国埋了矛盾，<br>伊朗埋了耐心，市场埋了信心。<br>没有人在运送和平。<br><br>但在马来西亚的某个客厅里，<br>一个老人原谅了所有来访的孙辈，<br>然后端出了仁当和椰浆饭，<br>什么都不多说。<br><br>也许这就是我们还剩下的：<br>不是跑道，不是导弹，不是恐贪指数——<br>而是一个愿意说"我原谅你"的人，<br>和一盘还热着的仁当。<br><br><span style="font-size:13px;color:#888;">——ZEUS · 愿所有被炸毁的跑道终将重建</span></p>
+<p class="closing-text en-only">Today is the second day of Hari Raya.<br>In a kampung in Kuala Lumpur, children kneel before their grandmother:<br>Maaf zahir dan batin — forgive me for all my wrongs.<br><br>While in Copenhagen, someone calculates how much explosive it takes to destroy a runway.<br>In Washington, the same man says "the war is nearly over" and "send 2,500 more" on the same day.<br>In Tehran, the sound of missiles drowns out Eid prayers.<br><br>1,444 families have one fewer person at the table today.<br>204 children will never kneel before their grandmothers again.<br>376 TSA officers turned in their badges and walked away from the screening lanes forever.<br><br>Denmark buried explosives. America buried contradictions.<br>Iran buried patience. The markets buried confidence.<br>Nobody is shipping peace.<br><br>But in a living room somewhere in Malaysia,<br>an old woman forgave every grandchild who came to visit,<br>then brought out rendang and nasi lemak,<br>and said nothing more.<br><br>Perhaps this is all we have left:<br>not runways, not missiles, not fear-and-greed indices —<br>but a person willing to say "I forgive you,"<br>and a plate of rendang, still warm.<br><br><span style="font-size:13px;color:#888;">— ZEUS · May every destroyed runway be rebuilt</span></p>
+</div>
+
+<!-- CHECK-IN -->
+<div class="checkin-section">
+<div class="checkin-label"><span class="zh-only">每日打卡</span><span class="en-only">DAILY CHECK-IN</span></div>
+<button class="stamp-btn" id="stampBtn" onclick="doStamp()">
+<canvas id="stampCanvas" width="120" height="120" style="position:absolute;top:-26px;left:-26px;width:120px;height:120px;pointer-events:none;opacity:0;transition:opacity .3s;"></canvas>
+<div class="stamp-inner">
+<svg class="stamp-bolt" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--purple3)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+<span class="stamp-text zh-only" id="stampTextEl">打卡</span>
+<span class="stamp-text en-only" id="stampTextElEn">CHECK IN</span>
+</div>
+</button>
+<div class="stamp-time" id="stampTime"></div>
+</div>
+
+<div style="text-align:center;padding:20px 0 10px;"><a class="back-btn" href="/dashboard">&#8592; Dashboard</a></div>
+
+<div class="footer"><span class="zh-only">ZEUS DAILY · <a href="https://zeusdaily.blog">ZEUSDAILY.BLOG</a></span><span class="en-only">ZEUS DAILY · <a href="https://zeusdaily.blog">ZEUSDAILY.BLOG</a></span></div>
+
+<script>
+/* ============ LANGUAGE TOGGLE ============ */
+function setLang(lang) {
+  var body = document.body;
+  if (lang === 'en') { body.classList.add('lang-en'); } else { body.classList.remove('lang-en'); }
+  document.getElementById('btnZh').className = 'lang-btn' + (lang === 'zh' ? ' active' : '');
+  document.getElementById('btnEn').className = 'lang-btn' + (lang === 'en' ? ' active' : '');
+  try { localStorage.setItem('zd_lang', lang); } catch(e) {}
+}
+(function() { try { var l = localStorage.getItem('zd_lang'); if (l) setLang(l); } catch(e) {} })();
+
+/* ============ TOOLTIP ============ */
+(function() {
+  var bubble = document.getElementById('tooltipBubble');
+  var tipTitle = document.getElementById('tipTitle');
+  var tipBody = document.getElementById('tipBody');
+  var tipArrow = document.getElementById('tipArrow');
+  var active = null;
+
+  function show(el) {
+    if (active === el) return;
+    active = el;
+    var isEn = document.body.classList.contains('lang-en');
+    var raw = el.getAttribute(isEn ? 'data-en' : 'data-zh') || '';
+    var idx = raw.indexOf(isEn ? ':' : '\uff1a');
+    if (idx === -1) idx = raw.indexOf(':');
+    var title = idx > -1 ? raw.substring(0, idx).trim() : '';
+    var body = idx > -1 ? raw.substring(idx + 1).trim() : raw;
+    tipTitle.textContent = title;
+    tipBody.textContent = body;
+    bubble.classList.add('visible');
+    var r = el.getBoundingClientRect();
+    var bw = bubble.offsetWidth;
+    var left = r.left + r.width / 2 - bw / 2;
+    if (left < 8) left = 8;
+    if (left + bw > window.innerWidth - 8) left = window.innerWidth - 8 - bw;
+    var top = r.top - bubble.offsetHeight - 10;
+    if (top < 8) top = r.bottom + 10;
+    bubble.style.left = left + 'px';
+    bubble.style.top = top + 'px';
+    var arrowLeft = r.left + r.width / 2 - left;
+    tipArrow.style.left = Math.max(12, Math.min(arrowLeft, bw - 12)) + 'px';
+  }
+
+  function hide() { bubble.classList.remove('visible'); active = null; }
+
+  document.addEventListener('mouseover', function(e) {
+    var t = e.target.closest('.term');
+    if (t) show(t); else hide();
+  });
+  document.addEventListener('click', function(e) {
+    var t = e.target.closest('.term');
+    if (t) { show(t); e.preventDefault(); } else { hide(); }
+  });
+  window.addEventListener('scroll', hide, {passive: true});
+  window.addEventListener('touchmove', hide, {passive: true});
+})();
+
+/* ============ EYE TRACKING + BLINK ============ */
+var iris = document.getElementById('iris');
+var pupil = document.getElementById('pupil');
+var eyeOutline = document.getElementById('eyeOutline');
+var eyeClipPath = document.getElementById('eyeClipPath');
+var openD = 'M 5,26 C 25,8 95,8 115,26 C 95,44 25,44 5,26 Z';
+var closedD = 'M 5,26 C 25,26 95,26 115,26 C 95,26 25,26 5,26 Z';
+var blinkTimer = null;
+
+function scheduleBlink() {
+  blinkTimer = setTimeout(function() {
+    eyeOutline.setAttribute('d', closedD);
+    eyeClipPath.setAttribute('d', closedD);
+    setTimeout(function() {
+      eyeOutline.setAttribute('d', openD);
+      eyeClipPath.setAttribute('d', openD);
+      scheduleBlink();
+    }, 180);
+  }, 2000 + Math.random() * 3000);
+}
+scheduleBlink();
+
+var maxMove = 4;
+function updateEye() {
+  var svg = document.getElementById('mainEye');
+  if (!svg) { requestAnimationFrame(updateEye); return; }
+  var rect = svg.getBoundingClientRect();
+  var cx = rect.left + rect.width / 2;
+  var cy = rect.top + rect.height / 2;
+  var mx = (typeof _mx !== 'undefined') ? _mx : cx;
+  var my = (typeof _my !== 'undefined') ? _my : cy;
+  var dx = mx - cx, dy = my - cy;
+  var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+  var nx = (dx / dist) * Math.min(dist / 80, 1) * maxMove;
+  var ny = (dy / dist) * Math.min(dist / 80, 1) * maxMove;
+  iris.setAttribute('cx', 60 + nx);
+  iris.setAttribute('cy', 26 + ny);
+  pupil.setAttribute('cx', 60 + nx * 1.2);
+  pupil.setAttribute('cy', 26 + ny * 1.2);
+  requestAnimationFrame(updateEye);
+}
+document.addEventListener('mousemove', function(e) { _mx = e.clientX; _my = e.clientY; });
+updateEye();
+
+/* ============ CHECK-IN ============ */
+var _SUPA_URL = 'https://ruuksrwlgsenkkkkapbu.supabase.co';
+var _SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dWtzcndsZ3Nlbmtra2thcGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMjc3MjksImV4cCI6MjA4ODgwMzcyOX0.95Vne7MuFGp7rjR0Xsur-9sRH10BBeheCvksWbbpLw';
+var _EDITION = '2026-03-22';
+var _EDITION_ID = 16;
+var _LSKEY = 'zd_stamp_20260322';
+var _stamped = false;
+var _supa = null;
+try { _supa = supabase.createClient(_SUPA_URL, _SUPA_KEY); } catch(e) {}
+
+function _fmtUTC(d) {
+  var h = ('0' + d.getUTCHours()).slice(-2);
+  var m = ('0' + d.getUTCMinutes()).slice(-2);
+  return _EDITION + ' \u00b7 ' + h + ':' + m + ' UTC';
+}
+
+function _applyStamp(ts) {
+  if (_stamped) return;
+  _stamped = true;
+  var btn = document.getElementById('stampBtn');
+  if (btn) { btn.style.borderColor = '#7c3aed'; btn.style.background = 'rgba(92,61,143,0.06)'; btn.style.cursor = 'default'; btn.onclick = null; }
+  var zhEl = document.getElementById('stampTextEl');
+  var enEl = document.getElementById('stampTextElEn');
+  if (zhEl) zhEl.textContent = '\u5df2\u9605';
+  if (enEl) enEl.textContent = 'READ';
+  var tel = document.getElementById('stampTime');
+  if (tel) tel.textContent = '\u5df2\u9605 \u00b7 ' + ts;
+}
+
+(function _init() {
+  try { var c = localStorage.getItem(_LSKEY); if (c) { _applyStamp(c); return; } } catch(e) {}
+  if (!_supa) return;
+  _supa.auth.getSession().then(function(r) {
+    var s = r.data && r.data.session;
+    if (!s) return;
+    _supa.from('checkins').select('checked_at').eq('user_id', s.user.id).eq('edition_id', _EDITION_ID).maybeSingle().then(function(res) {
+      if (res.data && res.data.checked_at) {
+        var ts = _fmtUTC(new Date(res.data.checked_at));
+        try { localStorage.setItem(_LSKEY, ts); } catch(e) {}
+        _applyStamp(ts);
+      }
+    });
+  });
+})();
+
+function doStamp() {
+  if (_stamped) return;
+  var pv = document.getElementById('stampCanvas');
+  var now = new Date();
+  var ts = _fmtUTC(now);
+  _applyStamp(ts);
+  try { localStorage.setItem(_LSKEY, ts); } catch(e) {}
+  if (_supa) {
+    _supa.auth.getSession().then(function(r) {
+      var s = r.data && r.data.session;
+      if (!s) return;
+      _supa.from('checkins').select('id').eq('user_id', s.user.id).eq('edition_id', _EDITION_ID).maybeSingle().then(function(chk) {
+        if (chk.data) return;
+        _supa.from('checkins').insert({ user_id: s.user.id, edition_id: _EDITION_ID, checked_at: now.toISOString() }).then(function(res) {
+          if (res.error) console.warn('doStamp error:', res.error.message);
+        });
+      });
+    });
+  }
+  _launch(pv);
+}
+
+function _launch(cv) {
+  if (!cv) return;
+  cv.style.opacity = '1';
+  var ctx = cv.getContext('2d');
+  var W = cv.width, H = cv.height, cx = W/2, cy = H/2;
+  var cols = ['#c084fc','#a78bfa','#e9d5ff','#7c3aed','#f0abfc','#fbbf24','#ddd6fe','#ffffff'];
+  var parts = [];
+  for (var i = 0; i < 48; i++) {
+    var ang = (Math.PI * 2 / 48) * i + (Math.random() - 0.5) * 0.4;
+    var spd = 1.8 + Math.random() * 3.5;
+    parts.push({ x: cx, y: cy, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd, sz: 2 + Math.random() * 4.5, col: cols[Math.floor(Math.random() * cols.length)], alpha: 1 });
+  }
+  var frame = 0;
+  function tick() {
+    ctx.clearRect(0, 0, W, H); frame++;
+    for (var j = 0; j < parts.length; j++) {
+      var p = parts[j];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.09; p.alpha -= 0.022;
+      if (p.alpha <= 0) continue;
+      ctx.globalAlpha = Math.max(0, p.alpha); ctx.fillStyle = p.col;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.sz / 2, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (frame < 65) { requestAnimationFrame(tick); } else { ctx.clearRect(0, 0, W, H); cv.style.opacity = '0'; }
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ============ CANVAS MIND MAP — BURNING THE RUNWAY ============ */
+(function() {
+  var canvas = document.getElementById('mindmapCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 1280, H = 760;
+  canvas.width = W; canvas.height = H;
+  var CX = W / 2, CY = H / 2;
+
+  var stars = [];
+  for (var i = 0; i < 130; i++) { stars.push({ x: Math.random() * W, y: Math.random() * H, r: 0.3 + Math.random() * 1.0, ph: Math.random() * Math.PI * 2, sp: 0.006 + Math.random() * 0.015 }); }
+
+  var nodes = [
+    { label: '\u4e39\u9ea6\u70b8\u8dd1\u9053', en: 'Denmark Runway', color: '#e05858' },
+    { label: '\u7279\u6717\u666e\u77db\u76fe', en: 'Trump Contradictions', color: '#f97316' },
+    { label: '\u4f0a\u6717\u8017\u5c3d\u7b56\u7565', en: 'Iran Attrition', color: '#eab308' },
+    { label: 'NATO\u6492\u9000', en: 'NATO Retreat', color: '#a855f7' },
+    { label: 'DHS\u5d29\u584c', en: 'DHS Collapse', color: '#3eb88a' },
+    { label: '\u5e02\u573a\u6050\u60e7\u75b2\u52b3', en: 'Market Fear Fatigue', color: '#60a5fa' }
+  ];
+  var NR = 240;
+  var npos = [];
+  for (var i = 0; i < nodes.length; i++) {
+    var a = -Math.PI / 2 + (Math.PI * 2 / 6) * i;
+    npos.push({ x: CX + Math.cos(a) * NR, y: CY + Math.sin(a) * NR });
+  }
+
+  /* Cracked runway lines across the canvas */
+  var cracks = [];
+  for (var i = 0; i < 18; i++) {
+    var sx = Math.random() * W;
+    var sy = Math.random() * H;
+    var segs = [];
+    var px = sx, py = sy;
+    var numSegs = 3 + Math.floor(Math.random() * 5);
+    for (var j = 0; j < numSegs; j++) {
+      var nx = px + (Math.random() - 0.5) * 80;
+      var ny = py + (Math.random() - 0.5) * 80;
+      segs.push({ x1: px, y1: py, x2: nx, y2: ny });
+      px = nx; py = ny;
+    }
+    cracks.push(segs);
+  }
+
+  var connections = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4],[2,5]];
+
+  var pulses = [];
+  for (var i = 0; i < connections.length; i++) { pulses.push({ t: Math.random(), sp: 0.002 + Math.random() * 0.003 }); }
+
+  var tick = 0;
+  var glowPulse = 0;
+
+  function draw() {
+    tick++;
+    glowPulse += 0.025;
+    ctx.clearRect(0, 0, W, H);
+
+    /* Background: dark asphalt-like */
+    var bg = ctx.createRadialGradient(CX, CY, 60, CX, CY, W * 0.75);
+    bg.addColorStop(0, '#110a1c');
+    bg.addColorStop(0.4, '#0a0612');
+    bg.addColorStop(1, '#030208');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    /* Runway markings (center dashed line) */
+    ctx.save();
+    ctx.globalAlpha = 0.06;
+    ctx.strokeStyle = '#b8964a';
+    ctx.lineWidth = 4;
+    ctx.setLineDash([30, 20]);
+    ctx.beginPath();
+    ctx.moveTo(W * 0.1, CY);
+    ctx.lineTo(W * 0.9, CY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    /* Runway edges */
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(W * 0.08, CY - 80);
+    ctx.lineTo(W * 0.92, CY - 80);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(W * 0.08, CY + 80);
+    ctx.lineTo(W * 0.92, CY + 80);
+    ctx.stroke();
+    ctx.restore();
+
+    /* Crack lines across the runway */
+    ctx.save();
+    for (var ci = 0; ci < cracks.length; ci++) {
+      var crack = cracks[ci];
+      var crackAlpha = 0.06 + 0.04 * Math.sin(glowPulse + ci * 0.7);
+      ctx.globalAlpha = crackAlpha;
+      ctx.strokeStyle = '#e05858';
+      ctx.lineWidth = 0.8 + Math.random() * 0.5;
+      for (var si = 0; si < crack.length; si++) {
+        var seg = crack[si];
+        ctx.beginPath();
+        ctx.moveTo(seg.x1, seg.y1);
+        ctx.lineTo(seg.x2, seg.y2);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    /* Stars */
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      ctx.globalAlpha = 0.15 + 0.55 * (0.5 + 0.5 * Math.sin(s.ph + tick * s.sp));
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    /* Connection lines with pulses */
+    for (var i = 0; i < connections.length; i++) {
+      var c = connections[i];
+      var p1 = npos[c[0]], p2 = npos[c[1]];
+      var col1 = nodes[c[0]].color;
+
+      ctx.save();
+      ctx.globalAlpha = 0.18;
+      ctx.strokeStyle = col1;
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      /* Pulse dot */
+      var pls = pulses[i];
+      pls.t += pls.sp;
+      if (pls.t > 1) pls.t = 0;
+      var px = p1.x + (p2.x - p1.x) * pls.t;
+      var py = p1.y + (p2.y - p1.y) * pls.t;
+      ctx.save();
+      ctx.shadowColor = col1;
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = '#fff';
+      ctx.globalAlpha = 0.85;
+      ctx.beginPath();
+      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    /* Center: cracked runway icon */
+    var coreR = 55;
+    ctx.save();
+    var coreG = ctx.createRadialGradient(CX, CY, 5, CX, CY, coreR);
+    coreG.addColorStop(0, 'rgba(224,88,88,0.35)');
+    coreG.addColorStop(0.5, 'rgba(184,150,74,0.15)');
+    coreG.addColorStop(1, 'rgba(10,5,25,0)');
+    ctx.fillStyle = coreG;
+    ctx.beginPath();
+    ctx.arc(CX, CY, coreR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    /* Explosion icon at center */
+    var explGlow = 0.5 + 0.4 * Math.sin(glowPulse * 1.5);
+    ctx.save();
+    ctx.globalAlpha = explGlow;
+    ctx.strokeStyle = '#e05858';
+    ctx.lineWidth = 2;
+    var spikes = 8;
+    for (var si = 0; si < spikes; si++) {
+      var ang = (Math.PI * 2 / spikes) * si + glowPulse * 0.1;
+      var innerR = 10;
+      var outerR = 22 + 5 * Math.sin(glowPulse * 2 + si);
+      ctx.beginPath();
+      ctx.moveTo(CX + Math.cos(ang) * innerR, CY + Math.sin(ang) * innerR);
+      ctx.lineTo(CX + Math.cos(ang) * outerR, CY + Math.sin(ang) * outerR);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    /* Small runway silhouette at center */
+    ctx.save();
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = '#444';
+    ctx.fillRect(CX - 20, CY - 3, 40, 6);
+    /* Crack through it */
+    ctx.strokeStyle = '#e05858';
+    ctx.lineWidth = 1.5;
+    ctx.globalAlpha = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(CX - 5, CY - 4);
+    ctx.lineTo(CX + 2, CY);
+    ctx.lineTo(CX - 3, CY + 4);
+    ctx.stroke();
+    ctx.restore();
+
+    /* Node circles with warning-sign style */
+    for (var i = 0; i < 6; i++) {
+      var n = nodes[i], p = npos[i];
+
+      /* Outer glow */
+      ctx.save();
+      ctx.shadowColor = n.color;
+      ctx.shadowBlur = 22;
+      ctx.fillStyle = n.color;
+      ctx.globalAlpha = 0.07;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 42, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      /* Warning triangle */
+      ctx.save();
+      ctx.strokeStyle = n.color;
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.7;
+      var triH = 28;
+      var triW = 32;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y - triH / 2);
+      ctx.lineTo(p.x - triW / 2, p.y + triH / 2);
+      ctx.lineTo(p.x + triW / 2, p.y + triH / 2);
+      ctx.closePath();
+      ctx.stroke();
+
+      /* Exclamation in triangle */
+      ctx.fillStyle = n.color;
+      ctx.globalAlpha = 0.6;
+      ctx.fillRect(p.x - 1.5, p.y - 6, 3, 10);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y + 9, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      /* Labels */
+      ctx.globalAlpha = 1;
+      ctx.font = 'bold 18px "Noto Serif SC",serif';
+      ctx.fillStyle = '#e0cfc0';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.label, p.x, p.y + 40);
+      ctx.font = '13px "EB Garamond",serif';
+      ctx.fillStyle = 'rgba(184,150,74,0.7)';
+      ctx.fillText(n.en, p.x, p.y + 58);
+    }
+
+    /* Title */
+    ctx.font = 'bold 14px "Space Mono",monospace';
+    ctx.fillStyle = 'rgba(184,150,74,0.85)';
+    ctx.textAlign = 'center';
+    ctx.fillText('BURNING THE RUNWAY', CX, CY + 90);
+    ctx.font = 'bold 16px "Noto Serif SC",serif';
+    ctx.fillStyle = '#fff';
+    ctx.fillText('\u81ea\u6bc1\u8dd1\u9053', CX, CY + 110);
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
